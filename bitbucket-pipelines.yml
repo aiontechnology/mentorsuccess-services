@@ -1,9 +1,9 @@
-image: openjdk:11
+image: openjdk:13
 
 pipelines:
   default:
     - step:
         caches:
           - gradle
-        script: 
+        script:
           - bash ./gradlew build
