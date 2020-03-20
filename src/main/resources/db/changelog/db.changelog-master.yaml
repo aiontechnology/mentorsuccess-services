@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - preConditions:
+    - runningAs:
+        username: sa
+
+  - changeSet:
+      id: 1
+      author: whitney
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
