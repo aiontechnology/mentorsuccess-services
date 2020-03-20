@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.api.model;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import lombok.Data;
+import org.springframework.hateoas.RepresentationModel;
 
-@SpringBootTest
-class MentorsuccessApplicationTests {
+@Data
+public class SchoolModel extends RepresentationModel<SchoolModel> {
 
-    @Test
-    void contextLoads() {
-    }
+    private final String name;
+
+    private final AddressModel address;
+
+    private final String phone;
 
 }
