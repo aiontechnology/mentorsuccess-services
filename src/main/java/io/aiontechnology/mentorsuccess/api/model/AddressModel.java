@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.api.model;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import lombok.Data;
 
-@SpringBootTest
-class MentorsuccessApplicationTests {
+@Data
+public class AddressModel {
 
-    @Test
-    void contextLoads() {
-    }
+    private final String street1;
+
+    private final String street2;
+
+    private final String city;
+
+    private final String state;
+
+    private final String zip;
 
 }

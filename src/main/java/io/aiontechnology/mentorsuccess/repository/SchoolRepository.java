@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.repository;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import io.aiontechnology.mentorsuccess.entity.School;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-@SpringBootTest
-class MentorsuccessApplicationTests {
+import java.util.UUID;
 
-    @Test
-    void contextLoads() {
-    }
-
+@Repository
+public interface SchoolRepository extends CrudRepository<School, UUID> {
 }
