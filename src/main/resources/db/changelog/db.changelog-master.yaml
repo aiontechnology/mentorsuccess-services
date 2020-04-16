@@ -1,8 +1,4 @@
 databaseChangeLog:
-  - preConditions:
-    - runningAs:
-        username: sa
-
   - changeSet:
       id: 1
       author: whitney
