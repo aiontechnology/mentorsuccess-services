@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -36,6 +37,10 @@ public class SchoolService {
         return schoolRepository.save(school);
     }
 
+    public Optional<School> findSchool(UUID id) {
+        return schoolRepository.findById(id);
+    }
+
     public Iterable<School> getAllSchools() {
         return schoolRepository.findAll();
     }
@@ -43,6 +48,11 @@ public class SchoolService {
     @Transactional
     public void removeSchool(UUID id) {
         schoolRepository.deleteById(id);
+    }
+
+    @Transactional
+    public School updateSchool(School school) {
+        return schoolRepository.save(school);
     }
 
 }

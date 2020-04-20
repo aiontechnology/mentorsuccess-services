@@ -56,6 +56,7 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
                 school.getZip()
         );
         SchoolModel schoolModel = new SchoolModel(
+                school.getId(),
                 school.getName(),
                 addressModel,
                 school.getPhone());
