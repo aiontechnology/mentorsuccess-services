@@ -19,6 +19,8 @@ package io.aiontechnology.mentorsuccess.configuration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.mediatype.hal.HalConfiguration;
+import org.springframework.web.filter.ForwardedHeaderFilter;
+import org.springframework.web.server.adapter.ForwardedHeaderTransformer;
 
 import static org.springframework.hateoas.mediatype.hal.HalConfiguration.RenderSingleLinks;
 
@@ -29,6 +31,16 @@ public class RestConfiguration {
     public HalConfiguration patternBasedPolicy() {
         return new HalConfiguration()
                 .withRenderSingleLinks(RenderSingleLinks.AS_ARRAY);
+    }
+
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
+
+    @Bean
+    public ForwardedHeaderTransformer forwardedHeaderTransformer() {
+        return new ForwardedHeaderTransformer();
     }
 
 }
