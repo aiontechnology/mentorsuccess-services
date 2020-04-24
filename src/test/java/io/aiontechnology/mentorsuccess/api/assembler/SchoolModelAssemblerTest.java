@@ -50,6 +50,7 @@ public class SchoolModelAssemblerTest {
         SchoolModel schoolModel = assembler.toModel(school);
 
         // validation
+        assertThat(schoolModel.getId()).isEqualTo(id);
         assertThat(schoolModel.getName()).isEqualTo(name);
         assertThat(schoolModel.getAddress().getStreet1()).isEqualTo(street1);
         assertThat(schoolModel.getAddress().getStreet2()).isEqualTo(street2);

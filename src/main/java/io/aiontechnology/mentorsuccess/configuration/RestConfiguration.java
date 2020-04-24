@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.model;
+package io.aiontechnology.mentorsuccess.configuration;
 
-import lombok.Data;
-import org.springframework.hateoas.RepresentationModel;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.hateoas.mediatype.hal.HalConfiguration;
 
-import java.util.UUID;
+import static org.springframework.hateoas.mediatype.hal.HalConfiguration.RenderSingleLinks;
 
-@Data
-public class SchoolModel extends RepresentationModel<SchoolModel> {
+@Configuration
+public class RestConfiguration {
 
-    private final UUID id;
-
-    private final String name;
-
-    private final AddressModel address;
-
-    private final String phone;
+    @Bean
+    public HalConfiguration patternBasedPolicy() {
+        return new HalConfiguration()
+                .withRenderSingleLinks(RenderSingleLinks.AS_ARRAY);
+    }
 
 }

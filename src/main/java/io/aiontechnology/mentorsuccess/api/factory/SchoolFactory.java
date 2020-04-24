@@ -25,6 +25,10 @@ public class SchoolFactory {
 
     public School fromModel(SchoolModel schoolModel) {
         School school = new School();
+        return fromModel(schoolModel, school);
+    }
+
+    public School fromModel(SchoolModel schoolModel, School school) {
         school.setName(schoolModel.getName());
         school.setStreet1(schoolModel.getAddress().getStreet1());
         school.setStreet2(schoolModel.getAddress().getStreet2());
