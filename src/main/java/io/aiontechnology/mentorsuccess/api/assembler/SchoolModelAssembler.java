@@ -48,18 +48,21 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
      */
     @Override
     public SchoolModel toModel(School school) {
-        AddressModel addressModel = new AddressModel(
-                school.getStreet1(),
-                school.getStreet2(),
-                school.getCity(),
-                school.getState(),
-                school.getZip()
-        );
-        SchoolModel schoolModel = new SchoolModel(
-                school.getId(),
-                school.getName(),
-                addressModel,
-                school.getPhone());
+        AddressModel addressModel = AddressModel.builder()
+                .withStreet1(school.getStreet1())
+                .withStreet2(school.getStreet2())
+                .withCity(school.getCity())
+                .withState(school.getState())
+                .withZip(school.getZip())
+                .build();
+        SchoolModel schoolModel = SchoolModel.builder()
+                .withId(school.getId())
+                .withName(school.getName())
+                .withAddress(addressModel)
+                .withPhone(school.getPhone())
+                .withDistrict(school.getDistrict())
+                .withIsPrivate(school.getIsPrivate())
+                .build();
         schoolModel.add(linkTo(SchoolController.class).slash(school.getId()).withSelfRel());
         return schoolModel;
     }

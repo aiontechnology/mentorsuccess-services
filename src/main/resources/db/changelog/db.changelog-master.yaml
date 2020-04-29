@@ -35,3 +35,16 @@ databaseChangeLog:
               - column:
                   name: phone
                   type: varchar(10)
+  - changeSet:
+      id: 2
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: school
+            columns:
+              - column:
+                  name: district
+                  type: varchar(50)
+              - column:
+                  name: is_private
+                  type: boolean

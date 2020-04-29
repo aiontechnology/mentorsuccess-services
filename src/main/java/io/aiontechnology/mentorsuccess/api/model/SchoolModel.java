@@ -16,12 +16,16 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.UUID;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
+@Builder(setterPrefix = "with")
 public class SchoolModel extends RepresentationModel<SchoolModel> {
 
     private final UUID id;
@@ -31,5 +35,9 @@ public class SchoolModel extends RepresentationModel<SchoolModel> {
     private final AddressModel address;
 
     private final String phone;
+
+    private final String district;
+
+    private final Boolean isPrivate;
 
 }
