@@ -39,7 +39,9 @@ public class SchoolTest {
         String state = "ST";
         String zip = "123456789";
         String phone = "1234567890";
-        School school = new School(null, name, street1, street2, city, state, zip, phone);
+        String district = "DISTRICT";
+        Boolean isPrivate = Boolean.TRUE;
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate);
 
         // execute the SUT
         entityManager.persist(school);

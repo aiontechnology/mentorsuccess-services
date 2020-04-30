@@ -44,7 +44,9 @@ public class SchoolModelAssemblerTest {
         String state = "ST";
         String zip = "123456789";
         String phone = "1234567890";
-        School school = new School(id, name, street1, street2, city, state, zip, phone);
+        String district = "DISTRICT";
+        Boolean isPrivate = Boolean.TRUE;
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate);
 
         // execute the SUT
         SchoolModel schoolModel = assembler.toModel(school);
@@ -58,6 +60,8 @@ public class SchoolModelAssemblerTest {
         assertThat(schoolModel.getAddress().getState()).isEqualTo(state);
         assertThat(schoolModel.getAddress().getZip()).isEqualTo(zip);
         assertThat(schoolModel.getPhone()).isEqualTo(phone);
+        assertThat(schoolModel.getDistrict()).isEqualTo(district);
+        assertThat(schoolModel.getIsPrivate()).isTrue();
         assertThat(schoolModel.getLink(IanaLinkRelations.SELF).get()).isNotNull();
     }
 }

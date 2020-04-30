@@ -59,4 +59,10 @@ public class School {
     @Column
     private String phone;
 
+    @Column
+    private String district;
+
+    @Column
+    private Boolean isPrivate;
+
 }

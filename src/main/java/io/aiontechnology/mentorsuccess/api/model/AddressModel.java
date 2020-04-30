@@ -16,9 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder(setterPrefix = "with")
 public class AddressModel {
 
     private final String street1;
