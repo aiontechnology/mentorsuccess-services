@@ -14,21 +14,26 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.api.mapping;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.aiontechnology.mentorsuccess.api.model.PersonModel;
+import io.aiontechnology.mentorsuccess.entity.Person;
+import org.springframework.stereotype.Component;
 
 /**
- * Entry point into application.
- *
  * @author Whitney Hunter
  */
-@SpringBootApplication
-public class MentorsuccessApplication {
+@Component
+public class ToPersonModelMapper implements ImmutableMapper<Person, PersonModel> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
+    @Override
+    public PersonModel map(Person person) {
+        return PersonModel.builder()
+                .withId(person.getId())
+                .withName(person.getName())
+                .withPhone(person.getPhone())
+                .withEmail(person.getEmail())
+                .build();
     }
 
 }

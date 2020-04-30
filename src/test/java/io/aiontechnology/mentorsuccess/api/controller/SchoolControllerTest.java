@@ -17,8 +17,13 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.aiontechnology.mentorsuccess.api.assembler.LinkHelper;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
-import io.aiontechnology.mentorsuccess.api.factory.SchoolFactory;
+import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
+import io.aiontechnology.mentorsuccess.api.mapping.FromSchoolModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.ToAddressModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.ToSchoolModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
@@ -211,13 +216,18 @@ public class SchoolControllerTest {
     static class TestContext {
 
         @Bean
-        SchoolFactory schoolFactory() {
-            return new SchoolFactory();
+        FromSchoolModelMapper schoolFactory() {
+            return new FromSchoolModelMapper();
         }
 
         @Bean
         SchoolModelAssembler schoolModelAssembler() {
-            return new SchoolModelAssembler();
+            return new SchoolModelAssembler(new ToSchoolModelMapper(new ToAddressModelMapper()), new LinkHelper<>());
+        }
+
+        @Bean
+        TeacherModelAssembler teacherModelAssembler() {
+            return new TeacherModelAssembler(new ToTeacherModelMapper(), new LinkHelper<>());
         }
 
     }

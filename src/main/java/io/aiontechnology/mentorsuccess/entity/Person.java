@@ -25,15 +25,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Collection;
 import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class School {
+public class Person {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -44,36 +42,9 @@ public class School {
     private String name;
 
     @Column
-    private String street1;
-
-    @Column
-    private String street2;
-
-    @Column
-    private String city;
-
-    @Column
-    private String state;
-
-    @Column
-    private String zip;
-
-    @Column
     private String phone;
 
     @Column
-    private String district;
-
-    @Column
-    private Boolean isPrivate;
-
-    @OneToMany(mappedBy = "school")
-    private Collection<Teacher> teachers;
-
-    public Teacher addTeacher(Teacher teacher) {
-        teacher.setSchool(this);
-        teachers.add(teacher);
-        return teacher;
-    }
+    private String email;
 
 }

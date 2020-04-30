@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.factory;
+package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SchoolFactoryTest {
+public class SchoolModelToSchoolMutableMapperTest {
 
     private static final String NAME = "NAME";
     private static final String STREET1 = "STREET1";
@@ -42,10 +43,10 @@ public class SchoolFactoryTest {
         // setup the fixture
         SchoolModel schoolModel = generateSchoolModel();
 
-        SchoolFactory schoolFactory = new SchoolFactory();
+        FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper();
 
         // execute the SUT
-        School school = schoolFactory.fromModel(schoolModel);
+        School school = schoolFactory.map(schoolModel);
 
         // validation
         assertThat(school.getId()).isNull();
@@ -64,12 +65,12 @@ public class SchoolFactoryTest {
         // setup the fixture
         SchoolModel schoolModel = generateSchoolModel();
         UUID id = UUID.randomUUID();
-        School school = new School(id, "n", "s1", "s2", "c", "s", "z", "p", "d", true);
+        School school = new School(id, "n", "s1", "s2", "c", "s", "z", "p", "d", true, Collections.EMPTY_LIST);
 
-        SchoolFactory schoolFactory = new SchoolFactory();
+        FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper();
 
         // execute the SUT
-        School updated = schoolFactory.fromModel(schoolModel, school);
+        School updated = schoolFactory.map(schoolModel, school);
 
         // validation
         assertThat(updated.getId()).isEqualTo(id);

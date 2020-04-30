@@ -21,59 +21,44 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import java.util.Collection;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class School {
+public class Teacher {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @ManyToOne(cascade = CascadeType.DETACH)
+    @JoinColumn(name = "school_id", referencedColumnName = "id")
+    private School school;
+
     @Column
     private String name;
-
-    @Column
-    private String street1;
-
-    @Column
-    private String street2;
-
-    @Column
-    private String city;
-
-    @Column
-    private String state;
-
-    @Column
-    private String zip;
 
     @Column
     private String phone;
 
     @Column
-    private String district;
+    private String email;
 
     @Column
-    private Boolean isPrivate;
+    private Integer grade1;
 
-    @OneToMany(mappedBy = "school")
-    private Collection<Teacher> teachers;
-
-    public Teacher addTeacher(Teacher teacher) {
-        teacher.setSchool(this);
-        teachers.add(teacher);
-        return teacher;
-    }
+    @Column
+    private Integer grade2;
 
 }

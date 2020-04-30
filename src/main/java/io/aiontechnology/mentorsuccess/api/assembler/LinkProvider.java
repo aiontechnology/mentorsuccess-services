@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.api.assembler;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.hateoas.Link;
+
+import java.util.List;
+import java.util.function.BiFunction;
 
 /**
- * Entry point into application.
+ * Interface for classes that provide a list of {@link Link Links}.
  *
+ * @param <M> The class of the model object.
+ * @param <E> The class of the entity object.
  * @author Whitney Hunter
  */
-@SpringBootApplication
-public class MentorsuccessApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
-
+@FunctionalInterface
+public interface LinkProvider<M, E> extends BiFunction<M, E, List<Link>> {
 }
