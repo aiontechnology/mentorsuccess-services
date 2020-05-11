@@ -23,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Optional;
 
 @DataJpaTest
@@ -46,7 +47,7 @@ public class SchoolRepositoryTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate);
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.EMPTY_LIST);
         entityManager.persist(school);
 
         // execute the SUT
@@ -69,7 +70,7 @@ public class SchoolRepositoryTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate);
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
         entityManager.persist(school);
 
         // exercise the SUT
@@ -91,7 +92,7 @@ public class SchoolRepositoryTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate);
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
 
         // execute the SUT
         schoolRepository.save(school);

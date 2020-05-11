@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.service;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.aiontechnology.mentorsuccess.entity.Teacher;
+import io.aiontechnology.mentorsuccess.repository.TeacherRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 /**
- * Entry point into application.
+ * Service for managing teachers.
  *
  * @author Whitney Hunter
  */
-@SpringBootApplication
-public class MentorsuccessApplication {
+@Service
+@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+public class TeacherService {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
+    private final TeacherRepository teacherRepository;
+
+    @Transactional
+    public Teacher createTeacher(Teacher teacher) {
+        return teacherRepository.save(teacher);
     }
 
 }

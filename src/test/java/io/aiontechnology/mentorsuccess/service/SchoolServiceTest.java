@@ -17,10 +17,13 @@
 package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.Teacher;
 import io.aiontechnology.mentorsuccess.repository.SchoolRepository;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -41,6 +44,7 @@ public class SchoolServiceTest {
     private static String PHONE = "1234567890";
     private static String DISTRICT = "DISTRICT";
     private static Boolean IS_PRIVATE = Boolean.TRUE;
+    private static Collection<Teacher> TEACHERS = Collections.EMPTY_LIST;
 
     @Test
     void shouldCreateASchool() {
@@ -150,7 +154,7 @@ public class SchoolServiceTest {
     }
 
     private School generateSchool(UUID id) {
-        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE);
+        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, TEACHERS);
     }
 
 }

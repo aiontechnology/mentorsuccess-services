@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: whitney
+      changes:
+        - createTable:
+            tableName: person
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+              - column:
+                  name: phone
+                  type: varchar(10)
+              - column:
+                  name: email
+                  type: varchar(50)
+        - createTable:
+            tableName: teacher
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+              - column:
+                  name: phone
+                  type: varchar(10)
+              - column:
+                  name: email
+                  type: varchar(50)
+              - column:
+                  name: grade1
+                  type: integer
+              - column:
+                  name: grade2
+                  type: integer
+              - column:
+                  name: school_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_teacher_school
+                    references: school(id)

@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+package io.aiontechnology.mentorsuccess.api.mapping;
 
 /**
- * Entry point into application.
+ * Interface for mapping objects of two different classes. The input value should be treated as immutable.
  *
+ * @param <F> The class of the object to map from.
+ * @param <T> The class of the object to map from.
  * @author Whitney Hunter
  */
-@SpringBootApplication
-public class MentorsuccessApplication {
+public interface ImmutableMapper<F, T> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
+    /**
+     * Create new object and map the given object to it.
+     *
+     * @param from The object from which to map.
+     * @return The created object which was mapped to.
+     */
+    T map(F from);
 
 }

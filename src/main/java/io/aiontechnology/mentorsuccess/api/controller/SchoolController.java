@@ -16,8 +16,9 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
+import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
-import io.aiontechnology.mentorsuccess.api.factory.SchoolFactory;
+import io.aiontechnology.mentorsuccess.api.mapping.FromSchoolModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -34,14 +35,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 /**
  * Controller for managing schools.
+ *
+ * @author Whitney Hunter
  */
 @RestController
 @RequestMapping("/api/v1/schools")
@@ -52,8 +58,8 @@ public class SchoolController {
     /** Assembler for creating {@link SchoolModel} instances */
     private final SchoolModelAssembler schoolModelAssembler;
 
-    /** Factory for converting {@link SchoolModel} instances to {@link School Schools} */
-    private final SchoolFactory schoolFactory;
+    /** Mapper for converting {@link SchoolModel} instances to {@link School Schools} */
+    private final FromSchoolModelMapper fromSchoolModelMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -66,10 +72,11 @@ public class SchoolController {
      */
     @PostMapping()
     public SchoolModel createSchool(@RequestBody SchoolModel schoolModel) {
-        return Optional.of(schoolModel)
-                .map(schoolFactory::fromModel)
+        log.debug("Creating school: {}", schoolModel);
+        return Optional.ofNullable(schoolModel)
+                .map(fromSchoolModelMapper::map)
                 .map(schoolService::createSchool)
-                .map(schoolModelAssembler::toModel)
+                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
     }
 
@@ -80,8 +87,9 @@ public class SchoolController {
      */
     @GetMapping
     public CollectionModel<SchoolModel> getAllSchools() {
+        log.debug("Getting all schools");
         List<SchoolModel> schools = StreamSupport.stream(schoolService.getAllSchools().spliterator(), false)
-                .map(schoolModelAssembler::toModel)
+                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .collect(Collectors.toList());
         return new CollectionModel<>(schools);
     }
@@ -93,24 +101,31 @@ public class SchoolController {
      */
     @DeleteMapping("/{id}")
     public void removeSchool(@PathVariable("id") UUID id) {
+        log.debug("Removing school: {}", id);
         schoolService.removeSchool(id);
     }
 
     /**
      * A REST endpoint for updating a school.
      *
-     * @param id          The id of the school to update.
+     * @param id The id of the school to update.
      * @param schoolModel The model that represents the updated school.
      * @return A model that represents the school that has been updated.
      */
     @PutMapping("/{id}")
     public SchoolModel updateSchool(@PathVariable("id") UUID id, @RequestBody SchoolModel schoolModel) {
-        log.debug("Updating");
+        log.debug("Updating school {} with {}", id, schoolModel);
         return schoolService.findSchool(id)
-                .map(school -> schoolFactory.fromModel(schoolModel, school))
+                .map(school -> fromSchoolModelMapper.map(schoolModel, school))
                 .map(schoolService::updateSchool)
-                .map(schoolModelAssembler::toModel)
+                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));
     }
+
+    private LinkProvider<SchoolModel, School> linkProvider = (schoolModel, school) ->
+            Arrays.asList(
+                    linkTo(SchoolController.class).slash(school.getId()).withSelfRel(),
+                    linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers")
+            );
 
 }

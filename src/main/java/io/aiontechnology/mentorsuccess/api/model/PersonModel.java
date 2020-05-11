@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.api.model;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
-/**
- * Entry point into application.
- *
- * @author Whitney Hunter
- */
-@SpringBootApplication
-public class MentorsuccessApplication {
+import java.util.UUID;
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder(setterPrefix = "with")
+@ToString
+public class PersonModel extends RepresentationModel<PersonModel> {
+
+    private final UUID id;
+
+    private final String name;
+
+    private final String email;
+
+    private final String phone;
 
 }

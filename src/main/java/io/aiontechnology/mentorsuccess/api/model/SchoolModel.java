@@ -19,25 +19,36 @@ package io.aiontechnology.mentorsuccess.api.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.UUID;
 
+/**
+ * Model that represents a school in the API.
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
+@ToString
 public class SchoolModel extends RepresentationModel<SchoolModel> {
 
+    /** The school's id */
     private final UUID id;
 
+    /** The name of the school */
     private final String name;
 
+    /** The school's address */
     private final AddressModel address;
 
+    /** The school's phone number */
     private final String phone;
 
+    /** The school district that the school is in */
     private final String district;
 
+    /** Indicates whether the school is private or public */
     private final Boolean isPrivate;
 
 }

@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.inject.Inject;
+import java.util.Collections;
 
 @DataJpaTest
 public class SchoolTest {
@@ -41,7 +42,7 @@ public class SchoolTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate);
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
 
         // execute the SUT
         entityManager.persist(school);

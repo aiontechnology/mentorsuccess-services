@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
+import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.junit.jupiter.api.Test;
@@ -23,9 +24,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.IanaLinkRelations;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class SchoolModelAssemblerTest {
@@ -34,7 +38,7 @@ public class SchoolModelAssemblerTest {
     private SchoolModelAssembler assembler;
 
     @Test
-    void testToModel() {
+    void shouldMapToModel() {
         // setup the fixture
         UUID id = UUID.randomUUID();
         String name = "NAME";
@@ -46,7 +50,7 @@ public class SchoolModelAssemblerTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate);
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
 
         // execute the SUT
         SchoolModel schoolModel = assembler.toModel(school);
@@ -62,6 +66,34 @@ public class SchoolModelAssemblerTest {
         assertThat(schoolModel.getPhone()).isEqualTo(phone);
         assertThat(schoolModel.getDistrict()).isEqualTo(district);
         assertThat(schoolModel.getIsPrivate()).isTrue();
+    }
+
+    @Test
+    void shouldContainLinks() {
+        // setup the fixture
+        UUID id = UUID.randomUUID();
+        String name = "NAME";
+        String street1 = "STREET1";
+        String street2 = "STREET2";
+        String city = "CITY";
+        String state = "ST";
+        String zip = "123456789";
+        String phone = "1234567890";
+        String district = "DISTRICT";
+        Boolean isPrivate = Boolean.TRUE;
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
+
+        LinkProvider<SchoolModel, School> linkProvider = (schoolModel, s) ->
+                Arrays.asList(
+                        linkTo(SchoolController.class).slash(school.getId()).withSelfRel(),
+                        linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers")
+                );
+
+        // execute the SUT
+        SchoolModel schoolModel = assembler.toModel(school, linkProvider);
+
+        // validation
         assertThat(schoolModel.getLink(IanaLinkRelations.SELF).get()).isNotNull();
     }
+
 }

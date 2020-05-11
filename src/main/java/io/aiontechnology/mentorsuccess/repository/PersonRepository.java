@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import io.aiontechnology.mentorsuccess.entity.Person;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-/**
- * Entry point into application.
- *
- * @author Whitney Hunter
- */
-@SpringBootApplication
-public class MentorsuccessApplication {
+import java.util.UUID;
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
-
+@Repository
+public interface PersonRepository extends CrudRepository<Person, UUID> {
 }

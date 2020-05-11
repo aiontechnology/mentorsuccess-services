@@ -18,21 +18,34 @@ package io.aiontechnology.mentorsuccess.api.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
+/**
+ * Model that represents a teacher in the API.
+ *
+ * @author Whitney Hunter
+ */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class AddressModel {
+public class TeacherModel extends RepresentationModel<TeacherModel> {
 
-    private final String street1;
+    /** The name of the teacher. */
+    private final String name;
 
-    private final String street2;
+    /** The teacher's email address. */
+    private final String email;
 
-    private final String city;
+    /** The teacher's phone number. */
+    private final String phone;
 
-    private final String state;
+    /** First grade taught by teacher. */
+    private final Integer grade1;
 
-    private final String zip;
+    /** Second grade taught by teacher. Null if there is only one grade. */
+    private final Integer grade2;
 
 }

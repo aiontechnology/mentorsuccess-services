@@ -17,13 +17,14 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
-import io.aiontechnology.mentorsuccess.api.model.AddressModel;
+import io.aiontechnology.mentorsuccess.api.mapping.ToSchoolModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import javax.inject.Inject;
+import java.util.Optional;
 
 /**
  * Assembles {@link SchoolModel} instances from {@link School} entity instances.
@@ -33,11 +34,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Component
 public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<School, SchoolModel> {
 
+    private final LinkHelper<SchoolModel> linkHelper;
+
+    /** Mapper to map from {@link School} to {@link SchoolModel} */
+    private final ToSchoolModelMapper toSchoolModelMapper;
+
     /**
-     * Construct an instance
+     * Constructor
      */
-    public SchoolModelAssembler() {
+    @Inject
+    public SchoolModelAssembler(ToSchoolModelMapper toSchoolModelMapper, LinkHelper<SchoolModel> linkHelper) {
         super(SchoolController.class, SchoolModel.class);
+        this.toSchoolModelMapper = toSchoolModelMapper;
+        this.linkHelper = linkHelper;
     }
 
     /**
@@ -48,23 +57,16 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
      */
     @Override
     public SchoolModel toModel(School school) {
-        AddressModel addressModel = AddressModel.builder()
-                .withStreet1(school.getStreet1())
-                .withStreet2(school.getStreet2())
-                .withCity(school.getCity())
-                .withState(school.getState())
-                .withZip(school.getZip())
-                .build();
-        SchoolModel schoolModel = SchoolModel.builder()
-                .withId(school.getId())
-                .withName(school.getName())
-                .withAddress(addressModel)
-                .withPhone(school.getPhone())
-                .withDistrict(school.getDistrict())
-                .withIsPrivate(school.getIsPrivate())
-                .build();
-        schoolModel.add(linkTo(SchoolController.class).slash(school.getId()).withSelfRel());
-        return schoolModel;
+        return Optional.ofNullable(school)
+                .map(toSchoolModelMapper::map)
+                .orElse(null);
+    }
+
+    public SchoolModel toModel(School school, LinkProvider<SchoolModel, School> linkProvider) {
+        return Optional.ofNullable(school)
+                .map(this::toModel)
+                .map(model -> linkHelper.addLinks(model, linkProvider.apply(model, school)))
+                .orElse(null);
     }
 
 }
