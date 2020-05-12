@@ -45,6 +45,7 @@ public class FromTeacherModelMapper implements MutableMapper<TeacherModel, Teach
         teacher.setPhone(phone);
         teacher.setGrade1(teacherModel.getGrade1());
         teacher.setGrade2(teacherModel.getGrade2());
+        teacher.setIsActive(true);
         return teacher;
     }
 

@@ -26,6 +26,7 @@ import io.aiontechnology.mentorsuccess.service.TeacherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,7 +48,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  * @author Whitney Hunter
  */
 @RestController
-@RequestMapping("/api/v1/schools/{id}/teachers")
+@RequestMapping("/api/v1/schools/{schoolId}/teachers")
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 @Slf4j
 public class TeacherController {
@@ -72,7 +73,7 @@ public class TeacherController {
      * @return A model that represents the created teacher.
      */
     @PostMapping
-    public TeacherModel createTeacher(@PathVariable("id") UUID schoolId, @RequestBody TeacherModel teacherModel) {
+    public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody TeacherModel teacherModel) {
         log.debug("Creating teacher: {}", teacherModel);
         return schoolService.findSchool(schoolId)
                 .map(school -> Optional.ofNullable(teacherModel)
@@ -85,14 +86,21 @@ public class TeacherController {
     }
 
     @GetMapping
-    public CollectionModel<TeacherModel> getTeachers(@PathVariable("id") UUID id) {
-        log.debug("Getting all teachers for school {}", id);
-        return schoolService.findSchool(id)
+    public CollectionModel<TeacherModel> getTeachers(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Getting all teachers for school {}", schoolId);
+        return schoolService.findSchool(schoolId)
                 .map(school -> school.getTeachers().stream()
                         .map(t -> teacherModelAssembler.toModel(t, linkProvider))
                         .collect(Collectors.toList()))
                 .map(teachers -> new CollectionModel<>(teachers))
                 .orElseThrow(() -> new IllegalArgumentException("Requested school not found"));
+    }
+
+    @DeleteMapping("/{teacherId}")
+    public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
+        log.debug("Deactivating teacher");
+        teacherService.findTeacher(teacherId)
+                .ifPresent(teacherService::deactivateTeacher);
     }
 
     private LinkProvider<TeacherModel, Teacher> linkProvider = (teacherModel, teacher) ->

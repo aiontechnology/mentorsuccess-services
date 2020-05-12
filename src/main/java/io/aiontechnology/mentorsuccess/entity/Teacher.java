@@ -61,4 +61,7 @@ public class Teacher {
     @Column
     private Integer grade2;
 
+    @Column
+    private Boolean isActive;
+
 }

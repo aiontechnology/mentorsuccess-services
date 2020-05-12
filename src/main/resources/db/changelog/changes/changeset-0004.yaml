@@ -14,15 +14,18 @@
 
 databaseChangeLog:
   - changeSet:
-      id: 2
+      id: 3
       author: whitney
       changes:
         - addColumn:
-            tableName: school
+            tableName: teacher
             columns:
               - column:
-                  name: district
-                  type: varchar(50)
-              - column:
-                  name: is_private
+                  name: is_active
                   type: boolean
+                  constraints:
+                    nullable: false
+        - addDefaultValue:
+            tableName: teacher
+            columnName: is_active
+            defaultValueBoolean: true
