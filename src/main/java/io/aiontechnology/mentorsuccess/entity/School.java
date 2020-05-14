@@ -20,6 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -68,6 +69,7 @@ public class School {
     private Boolean isPrivate;
 
     @OneToMany(mappedBy = "school")
+    @Where(clause = "is_active = true")
     private Collection<Teacher> teachers;
 
     public Teacher addTeacher(Teacher teacher) {

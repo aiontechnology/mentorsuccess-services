@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Service for managing teachers.
@@ -38,6 +40,17 @@ public class TeacherService {
     @Transactional
     public Teacher createTeacher(Teacher teacher) {
         return teacherRepository.save(teacher);
+    }
+
+    @Transactional
+    public Teacher deactivateTeacher(Teacher teacher) {
+        teacher.setIsActive(false);
+        teacherRepository.save(teacher);
+        return teacher;
+    }
+
+    public Optional<Teacher> findTeacher(UUID id) {
+        return teacherRepository.findById(id);
     }
 
 }
