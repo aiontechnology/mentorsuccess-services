@@ -20,11 +20,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 import java.util.UUID;
 
 @Entity
@@ -42,9 +45,16 @@ public class Person {
     private String name;
 
     @Column
-    private String phone;
+    private String homePhone;
+
+    @Column
+    private String cellPhone;
 
     @Column
     private String email;
+
+    @OneToMany(mappedBy = "person")
+    @Where(clause = "is_active = true")
+    private Collection<Role> roles;
 
 }

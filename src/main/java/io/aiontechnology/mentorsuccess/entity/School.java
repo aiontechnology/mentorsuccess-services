@@ -19,7 +19,10 @@ package io.aiontechnology.mentorsuccess.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
@@ -34,6 +37,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@FilterDef(name = "roleType", parameters = @ParamDef(name = "type", type = "string"))
 public class School {
 
     @Id
@@ -70,12 +74,13 @@ public class School {
 
     @OneToMany(mappedBy = "school")
     @Where(clause = "is_active = true")
-    private Collection<Teacher> teachers;
+    @Filter(name = "roleType", condition = "type = :type")
+    private Collection<Role> roles;
 
-    public Teacher addTeacher(Teacher teacher) {
-        teacher.setSchool(this);
-        teachers.add(teacher);
-        return teacher;
+    public Role addRole(Role role) {
+        role.setSchool(this);
+        roles.add(role);
+        return role;
     }
 
 }

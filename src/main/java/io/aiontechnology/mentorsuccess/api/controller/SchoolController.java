@@ -125,7 +125,8 @@ public class SchoolController {
     private LinkProvider<SchoolModel, School> linkProvider = (schoolModel, school) ->
             Arrays.asList(
                     linkTo(SchoolController.class).slash(school.getId()).withSelfRel(),
-                    linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers")
+                    linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers"),
+                    linkTo(SchoolController.class).slash(school.getId()).slash("programAdmins").withRel("programAdmins")
             );
 
 }

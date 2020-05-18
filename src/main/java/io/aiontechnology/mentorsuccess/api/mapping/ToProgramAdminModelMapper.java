@@ -16,24 +16,23 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.model.PersonModel;
-import io.aiontechnology.mentorsuccess.entity.Person;
+import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.stereotype.Component;
 
 /**
  * @author Whitney Hunter
  */
 @Component
-public class ToPersonModelMapper implements ImmutableMapper<Person, PersonModel> {
+public class ToProgramAdminModelMapper implements ImmutableMapper<Role, ProgramAdminModel> {
 
     @Override
-    public PersonModel map(Person person) {
-        return PersonModel.builder()
-                .withId(person.getId())
-                .withName(person.getName())
-                .withHomePhone(person.getHomePhone())
-                .withCellPhone(person.getCellPhone())
-                .withEmail(person.getEmail())
+    public ProgramAdminModel map(Role role) {
+        return ProgramAdminModel.builder()
+                .withName(role.getPerson().getName())
+                .withEmail(role.getPerson().getEmail())
+                .withHomePhone(role.getPerson().getHomePhone())
+                .withCellPhone(role.getPerson().getCellPhone())
                 .build();
     }
 

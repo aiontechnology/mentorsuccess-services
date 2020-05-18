@@ -16,41 +16,45 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
+import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
 
 /**
  * @author Whitney Hunter
  */
 @Component
 @RequiredArgsConstructor
-public class FromTeacherModelMapper implements MutableMapper<TeacherModel, Role> {
+public class FromProgramAdminModelMapper implements MutableMapper<ProgramAdminModel, Role> {
 
     private final PhoneService phoneService;
 
     @Override
-    public Role map(TeacherModel teacherModel) {
+    public Role map(ProgramAdminModel programAdminModel) {
         Role role = new Role();
-        return map(teacherModel, role);
+        return map(programAdminModel, role);
     }
 
     @Override
-    public Role map(TeacherModel teacherModel, Role role) {
-        Person person = new Person();
-        person.setName(teacherModel.getName());
-        person.setEmail(teacherModel.getEmail());
-        person.setHomePhone(phoneService.normalize(teacherModel.getHomePhone()));
-        person.setCellPhone(phoneService.normalize(teacherModel.getCellPhone()));
+    public Role map(ProgramAdminModel programAdminModel, Role role) {
+        String phone = programAdminModel.getHomePhone()
+                .replace("(", "")
+                .replace(")", "")
+                .replace("-", "")
+                .replace(" ", "");
 
-        role.setType(TEACHER);
-        role.setGrade1(teacherModel.getGrade1());
-        role.setGrade2(teacherModel.getGrade2());
+        Person person = new Person();
+        person.setName(programAdminModel.getName());
+        person.setEmail(programAdminModel.getEmail());
+        person.setHomePhone(phoneService.normalize(programAdminModel.getHomePhone()));
+        person.setCellPhone(phoneService.normalize(programAdminModel.getCellPhone()));
+
+        role.setType(PROGRAM_ADMIN);
         role.setPerson(person);
         role.setIsActive(true);
         return role;

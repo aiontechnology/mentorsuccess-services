@@ -23,32 +23,24 @@ import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Model that represents a teacher in the API.
- *
  * @author Whitney Hunter
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class TeacherModel extends RepresentationModel<TeacherModel> {
+public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> {
 
-    /** The name of the teacher. */
+    /** The name of the program admin. */
     private final String name;
 
-    /** The teacher's email address. */
+    /** The program admin's email address. */
     private final String email;
 
-    /** The teacher's phone number. */
+    /** The program admin's phone number. */
     private final String homePhone;
 
-    /** The teacher's cell phone */
+    /** The program admin's cell phone. */
     private final String cellPhone;
-
-    /** First grade taught by teacher. */
-    private final Integer grade1;
-
-    /** Second grade taught by teacher. Null if there is only one grade. */
-    private final Integer grade2;
 
 }

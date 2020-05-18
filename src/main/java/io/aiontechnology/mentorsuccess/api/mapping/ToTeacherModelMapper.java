@@ -17,25 +17,26 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
-import io.aiontechnology.mentorsuccess.entity.Teacher;
+import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper to create a {@link TeacherModel} from a {@link Teacher}.
+ * Mapper to create a {@link TeacherModel} from a {@link Role}.
  *
  * @author Whitney Hunter
  */
 @Component
-public class ToTeacherModelMapper implements ImmutableMapper<Teacher, TeacherModel> {
+public class ToTeacherModelMapper implements ImmutableMapper<Role, TeacherModel> {
 
     @Override
-    public TeacherModel map(Teacher teacher) {
+    public TeacherModel map(Role role) {
         return TeacherModel.builder()
-                .withName(teacher.getName())
-                .withEmail(teacher.getEmail())
-                .withPhone(teacher.getPhone())
-                .withGrade1(teacher.getGrade1())
-                .withGrade2(teacher.getGrade2())
+                .withName(role.getPerson().getName())
+                .withEmail(role.getPerson().getEmail())
+                .withHomePhone(role.getPerson().getHomePhone())
+                .withCellPhone(role.getPerson().getCellPhone())
+                .withGrade1(role.getGrade1())
+                .withGrade2(role.getGrade2())
                 .build();
     }
 

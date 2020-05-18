@@ -14,30 +14,14 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.model;
+package io.aiontechnology.mentorsuccess.repository;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
+import io.aiontechnology.mentorsuccess.entity.Role;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
-@Data
-@EqualsAndHashCode(callSuper = true)
-@Builder(setterPrefix = "with")
-@ToString
-public class PersonModel extends RepresentationModel<PersonModel> {
-
-    private final UUID id;
-
-    private final String name;
-
-    private final String email;
-
-    private final String homePhone;
-
-    private final String cellPhone;
-
+@Repository
+public interface RoleRepository extends CrudRepository<Role, UUID> {
 }
