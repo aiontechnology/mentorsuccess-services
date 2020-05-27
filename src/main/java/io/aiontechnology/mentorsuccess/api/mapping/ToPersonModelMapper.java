@@ -32,7 +32,7 @@ public class ToPersonModelMapper implements ImmutableMapper<Person, PersonModel>
                 .withId(person.getId())
                 .withFirstName(person.getFirstName())
                 .withLastName(person.getLastName())
-                .withHomePhone(person.getHomePhone())
+                .withWorkPhone(person.getWorkPhone())
                 .withCellPhone(person.getCellPhone())
                 .withEmail(person.getEmail())
                 .build();

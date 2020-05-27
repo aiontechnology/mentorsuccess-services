@@ -42,8 +42,8 @@ public class TeacherModel extends RepresentationModel<TeacherModel> {
     /** The teacher's email address. */
     private final String email;
 
-    /** The teacher's phone number. */
-    private final String homePhone;
+    /** The teacher's work phone number. */
+    private final String workPhone;
 
     /** The teacher's cell phone */
     private final String cellPhone;

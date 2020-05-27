@@ -18,6 +18,8 @@ package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +28,10 @@ import org.springframework.stereotype.Component;
  * @author Whitney Hunter
  */
 @Component
+@RequiredArgsConstructor
 public class FromSchoolModelMapper implements MutableMapper<SchoolModel, School> {
+
+    private final PhoneService phoneService;
 
     /**
      * Map the given {@link SchoolModel} to a new {@link School} instance.
@@ -55,12 +60,7 @@ public class FromSchoolModelMapper implements MutableMapper<SchoolModel, School>
             school.setState(schoolModel.getAddress().getState());
             school.setZip(schoolModel.getAddress().getZip());
         }
-        String phone = schoolModel.getPhone()
-                .replace("(", "")
-                .replace(")", "")
-                .replace("-", "")
-                .replace(" ", "");
-        school.setPhone(phone);
+        school.setPhone(phoneService.normalize(schoolModel.getPhone()));
         school.setDistrict(schoolModel.getDistrict());
         school.setIsPrivate(schoolModel.getIsPrivate());
         return school;

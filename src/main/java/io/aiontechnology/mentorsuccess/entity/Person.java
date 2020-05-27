@@ -48,7 +48,7 @@ public class Person {
     private String lastName;
 
     @Column
-    private String homePhone;
+    private String workPhone;
 
     @Column
     private String cellPhone;

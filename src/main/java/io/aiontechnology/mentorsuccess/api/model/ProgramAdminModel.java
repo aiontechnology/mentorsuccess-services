@@ -40,8 +40,8 @@ public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> {
     /** The program admin's email address. */
     private final String email;
 
-    /** The program admin's phone number. */
-    private final String homePhone;
+    /** The program admin's work phone number. */
+    private final String workPhone;
 
     /** The program admin's cell phone. */
     private final String cellPhone;

@@ -32,7 +32,7 @@ public class ToProgramAdminModelMapper implements ImmutableMapper<Role, ProgramA
                 .withFirstName(role.getPerson().getFirstName())
                 .withLastName(role.getPerson().getLastName())
                 .withEmail(role.getPerson().getEmail())
-                .withHomePhone(role.getPerson().getHomePhone())
+                .withWorkPhone(role.getPerson().getWorkPhone())
                 .withCellPhone(role.getPerson().getCellPhone())
                 .build();
     }

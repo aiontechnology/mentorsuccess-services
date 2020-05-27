@@ -46,7 +46,7 @@ public class FromTeacherModelMapper implements MutableMapper<TeacherModel, Role>
         person.setFirstName(teacherModel.getFirstName());
         person.setLastName(teacherModel.getLastName());
         person.setEmail(teacherModel.getEmail());
-        person.setHomePhone(phoneService.normalize(teacherModel.getHomePhone()));
+        person.setWorkPhone(phoneService.normalize(teacherModel.getWorkPhone()));
         person.setCellPhone(phoneService.normalize(teacherModel.getCellPhone()));
 
         role.setType(TEACHER);

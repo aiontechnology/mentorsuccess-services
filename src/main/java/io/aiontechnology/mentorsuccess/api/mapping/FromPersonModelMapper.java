@@ -51,7 +51,7 @@ public class FromPersonModelMapper implements MutableMapper<PersonModel, Person>
     public Person map(PersonModel personModel, Person person) {
         person.setFirstName(personModel.getFirstName());
         person.setLastName(personModel.getLastName());
-        person.setHomePhone(personModel.getHomePhone());
+        person.setWorkPhone(personModel.getWorkPhone());
         person.setCellPhone(personModel.getCellPhone());
         person.setEmail(personModel.getEmail());
         return person;
