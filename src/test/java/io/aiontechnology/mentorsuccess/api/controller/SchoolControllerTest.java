@@ -28,6 +28,7 @@ import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -217,7 +218,7 @@ public class SchoolControllerTest {
 
         @Bean
         FromSchoolModelMapper schoolFactory() {
-            return new FromSchoolModelMapper();
+            return new FromSchoolModelMapper(new PhoneService());
         }
 
         @Bean
