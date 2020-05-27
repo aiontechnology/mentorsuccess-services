@@ -31,8 +31,11 @@ import org.springframework.hateoas.RepresentationModel;
 @ToString
 public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> {
 
-    /** The name of the program admin. */
-    private final String name;
+    /** The first name of the program admin. */
+    private final String firstName;
+
+    /** The last name of the program admin. */
+    private final String lastName;
 
     /** The program admin's email address. */
     private final String email;

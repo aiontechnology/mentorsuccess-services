@@ -42,7 +42,10 @@ public class Person {
     private UUID id;
 
     @Column
-    private String name;
+    private String firstName;
+
+    @Column
+    private String lastName;
 
     @Column
     private String homePhone;

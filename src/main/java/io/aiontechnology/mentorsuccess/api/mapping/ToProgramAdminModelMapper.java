@@ -29,7 +29,8 @@ public class ToProgramAdminModelMapper implements ImmutableMapper<Role, ProgramA
     @Override
     public ProgramAdminModel map(Role role) {
         return ProgramAdminModel.builder()
-                .withName(role.getPerson().getName())
+                .withFirstName(role.getPerson().getFirstName())
+                .withLastName(role.getPerson().getLastName())
                 .withEmail(role.getPerson().getEmail())
                 .withHomePhone(role.getPerson().getHomePhone())
                 .withCellPhone(role.getPerson().getCellPhone())

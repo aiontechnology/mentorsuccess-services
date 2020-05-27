@@ -43,7 +43,8 @@ public class FromTeacherModelMapper implements MutableMapper<TeacherModel, Role>
     @Override
     public Role map(TeacherModel teacherModel, Role role) {
         Person person = new Person();
-        person.setName(teacherModel.getName());
+        person.setFirstName(teacherModel.getFirstName());
+        person.setLastName(teacherModel.getLastName());
         person.setEmail(teacherModel.getEmail());
         person.setHomePhone(phoneService.normalize(teacherModel.getHomePhone()));
         person.setCellPhone(phoneService.normalize(teacherModel.getCellPhone()));

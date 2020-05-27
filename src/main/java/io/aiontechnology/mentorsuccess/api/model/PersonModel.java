@@ -32,7 +32,9 @@ public class PersonModel extends RepresentationModel<PersonModel> {
 
     private final UUID id;
 
-    private final String name;
+    private final String firstName;
+
+    private final String lastName;
 
     private final String email;
 

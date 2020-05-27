@@ -49,7 +49,8 @@ public class FromPersonModelMapper implements MutableMapper<PersonModel, Person>
      */
     @Override
     public Person map(PersonModel personModel, Person person) {
-        person.setName(personModel.getName());
+        person.setFirstName(personModel.getFirstName());
+        person.setLastName(personModel.getLastName());
         person.setHomePhone(personModel.getHomePhone());
         person.setCellPhone(personModel.getCellPhone());
         person.setEmail(personModel.getEmail());
