@@ -42,17 +42,11 @@ public class FromProgramAdminModelMapper implements MutableMapper<ProgramAdminMo
 
     @Override
     public Role map(ProgramAdminModel programAdminModel, Role role) {
-        String phone = programAdminModel.getHomePhone()
-                .replace("(", "")
-                .replace(")", "")
-                .replace("-", "")
-                .replace(" ", "");
-
         Person person = new Person();
         person.setFirstName(programAdminModel.getFirstName());
         person.setLastName(programAdminModel.getLastName());
         person.setEmail(programAdminModel.getEmail());
-        person.setHomePhone(phoneService.normalize(programAdminModel.getHomePhone()));
+        person.setWorkPhone(phoneService.normalize(programAdminModel.getWorkPhone()));
         person.setCellPhone(phoneService.normalize(programAdminModel.getCellPhone()));
 
         role.setType(PROGRAM_ADMIN);

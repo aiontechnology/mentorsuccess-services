@@ -38,7 +38,7 @@ public class PersonModel extends RepresentationModel<PersonModel> {
 
     private final String email;
 
-    private final String homePhone;
+    private final String workPhone;
 
     private final String cellPhone;
 

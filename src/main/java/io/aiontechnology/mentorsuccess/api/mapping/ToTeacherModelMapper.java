@@ -34,7 +34,7 @@ public class ToTeacherModelMapper implements ImmutableMapper<Role, TeacherModel>
                 .withFirstName(role.getPerson().getFirstName())
                 .withLastName(role.getPerson().getLastName())
                 .withEmail(role.getPerson().getEmail())
-                .withHomePhone(role.getPerson().getHomePhone())
+                .withWorkPhone(role.getPerson().getWorkPhone())
                 .withCellPhone(role.getPerson().getCellPhone())
                 .withGrade1(role.getGrade1())
                 .withGrade2(role.getGrade2())
