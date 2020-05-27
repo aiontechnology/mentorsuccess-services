@@ -17,9 +17,10 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
+import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
 import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
-import io.aiontechnology.mentorsuccess.entity.Teacher;
+import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +28,12 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles {@link TeacherModel} instances from {@link Teacher} entity instances.
+ * Assembles {@link TeacherModel} instances from {@link Role} entity instances.
  *
  * @author Whitney Hunter
  */
 @Component
-public class TeacherModelAssembler extends RepresentationModelAssemblerSupport<Teacher, TeacherModel> {
+public class TeacherModelAssembler extends RepresentationModelAssemblerSupport<Role, TeacherModel> {
 
     private final LinkHelper<TeacherModel> linkHelper;
 
@@ -43,28 +44,28 @@ public class TeacherModelAssembler extends RepresentationModelAssemblerSupport<T
      */
     @Inject
     public TeacherModelAssembler(ToTeacherModelMapper toTeacherModelMapper, LinkHelper<TeacherModel> linkHelper) {
-        super(SchoolController.class, TeacherModel.class);
+        super(TeacherController.class, TeacherModel.class);
         this.toTeacherModelMapper = toTeacherModelMapper;
         this.linkHelper = linkHelper;
     }
 
     /**
-     * Convert the given {@link Teacher}.
+     * Convert the given {@link Role}.
      *
-     * @param teacher The {@link Teacher} to convert.
-     * @return The {@link TeacherModel} produced from the {@link Teacher}.
+     * @param role The {@link Role} to convert.
+     * @return The {@link TeacherModel} produced from the {@link Role}.
      */
     @Override
-    public TeacherModel toModel(Teacher teacher) {
-        return Optional.ofNullable(teacher)
+    public TeacherModel toModel(Role role) {
+        return Optional.ofNullable(role)
                 .map(toTeacherModelMapper::map)
                 .orElse(null);
     }
 
-    public TeacherModel toModel(Teacher teacher, LinkProvider<TeacherModel, Teacher> linkProvider) {
-        return Optional.ofNullable(teacher)
+    public TeacherModel toModel(Role role, LinkProvider<TeacherModel, Role> linkProvider) {
+        return Optional.ofNullable(role)
                 .map(this::toModel)
-                .map(model -> linkHelper.addLinks(model, linkProvider.apply(model, teacher)))
+                .map(model -> linkHelper.addLinks(model, linkProvider.apply(model, role)))
                 .orElse(null);
     }
 

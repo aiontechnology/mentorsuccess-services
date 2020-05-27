@@ -16,8 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Teacher;
-import io.aiontechnology.mentorsuccess.repository.TeacherRepository;
+import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,24 +33,24 @@ import java.util.UUID;
  */
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class TeacherService {
+public class RoleService {
 
-    private final TeacherRepository teacherRepository;
+    private final RoleRepository roleRepository;
 
     @Transactional
-    public Teacher createTeacher(Teacher teacher) {
-        return teacherRepository.save(teacher);
+    public Role createRole(Role role) {
+        return roleRepository.save(role);
     }
 
     @Transactional
-    public Teacher deactivateTeacher(Teacher teacher) {
-        teacher.setIsActive(false);
-        teacherRepository.save(teacher);
-        return teacher;
+    public Role deactivateRole(Role role) {
+        role.setIsActive(false);
+        roleRepository.save(role);
+        return role;
     }
 
-    public Optional<Teacher> findTeacher(UUID id) {
-        return teacherRepository.findById(id);
+    public Optional<Role> findRole(UUID id) {
+        return roleRepository.findById(id);
     }
 
 }

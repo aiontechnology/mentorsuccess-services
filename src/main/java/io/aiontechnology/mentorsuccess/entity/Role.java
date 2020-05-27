@@ -24,18 +24,22 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import java.util.UUID;
 
+/**
+ * @author Whitney Hunter
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Teacher {
+public class Role {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -46,14 +50,13 @@ public class Teacher {
     @JoinColumn(name = "school_id", referencedColumnName = "id")
     private School school;
 
-    @Column
-    private String name;
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @JoinColumn(name = "person_id", referencedColumnName = "id")
+    private Person person;
 
     @Column
-    private String phone;
-
-    @Column
-    private String email;
+    @Enumerated(EnumType.STRING)
+    private RoleType type;
 
     @Column
     private Integer grade1;
@@ -63,5 +66,10 @@ public class Teacher {
 
     @Column
     private Boolean isActive;
+
+    public enum RoleType {
+        TEACHER,
+        PROGRAM_ADMIN
+    }
 
 }

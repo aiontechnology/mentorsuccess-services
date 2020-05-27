@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.repository;
+package io.aiontechnology.mentorsuccess.util;
 
-import io.aiontechnology.mentorsuccess.entity.Teacher;
-import org.springframework.data.repository.CrudRepository;
-
-import java.util.UUID;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Whitney Hunter
  */
-public interface TeacherRepository extends CrudRepository<Teacher, UUID> {
+@Component
+public class PhoneService {
+
+    public String normalize(String phoneNumber) {
+        return phoneNumber.replace("(", "")
+                .replace(")", "")
+                .replace("-", "")
+                .replace(" ", "");
+    }
+
 }
