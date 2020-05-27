@@ -19,6 +19,7 @@ package io.aiontechnology.mentorsuccess.api.mapping;
 import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -43,7 +44,7 @@ public class SchoolModelToSchoolMutableMapperTest {
         // setup the fixture
         SchoolModel schoolModel = generateSchoolModel();
 
-        FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper();
+        FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper(new PhoneService());
 
         // execute the SUT
         School school = schoolFactory.map(schoolModel);
@@ -67,7 +68,7 @@ public class SchoolModelToSchoolMutableMapperTest {
         UUID id = UUID.randomUUID();
         School school = new School(id, "n", "s1", "s2", "c", "s", "z", "p", "d", true, Collections.EMPTY_LIST);
 
-        FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper();
+        FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper(new PhoneService());
 
         // execute the SUT
         School updated = schoolFactory.map(schoolModel, school);
