@@ -49,7 +49,8 @@ public class FromProgramAdminModelMapper implements MutableMapper<ProgramAdminMo
                 .replace(" ", "");
 
         Person person = new Person();
-        person.setName(programAdminModel.getName());
+        person.setFirstName(programAdminModel.getFirstName());
+        person.setLastName(programAdminModel.getLastName());
         person.setEmail(programAdminModel.getEmail());
         person.setHomePhone(phoneService.normalize(programAdminModel.getHomePhone()));
         person.setCellPhone(phoneService.normalize(programAdminModel.getCellPhone()));

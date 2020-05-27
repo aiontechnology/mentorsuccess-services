@@ -30,7 +30,8 @@ public class ToPersonModelMapper implements ImmutableMapper<Person, PersonModel>
     public PersonModel map(Person person) {
         return PersonModel.builder()
                 .withId(person.getId())
-                .withName(person.getName())
+                .withFirstName(person.getFirstName())
+                .withLastName(person.getLastName())
                 .withHomePhone(person.getHomePhone())
                 .withCellPhone(person.getCellPhone())
                 .withEmail(person.getEmail())

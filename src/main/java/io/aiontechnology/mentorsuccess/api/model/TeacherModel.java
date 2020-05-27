@@ -33,8 +33,11 @@ import org.springframework.hateoas.RepresentationModel;
 @ToString
 public class TeacherModel extends RepresentationModel<TeacherModel> {
 
-    /** The name of the teacher. */
-    private final String name;
+    /** The first name of the teacher. */
+    private final String firstName;
+
+    /** The last name of the teacher. */
+    private final String lastName;
 
     /** The teacher's email address. */
     private final String email;

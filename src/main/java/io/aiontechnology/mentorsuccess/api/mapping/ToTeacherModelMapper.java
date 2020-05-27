@@ -31,7 +31,8 @@ public class ToTeacherModelMapper implements ImmutableMapper<Role, TeacherModel>
     @Override
     public TeacherModel map(Role role) {
         return TeacherModel.builder()
-                .withName(role.getPerson().getName())
+                .withFirstName(role.getPerson().getFirstName())
+                .withLastName(role.getPerson().getLastName())
                 .withEmail(role.getPerson().getEmail())
                 .withHomePhone(role.getPerson().getHomePhone())
                 .withCellPhone(role.getPerson().getCellPhone())
