@@ -31,7 +31,7 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class TeacherModel extends RepresentationModel<TeacherModel> {
+public class TeacherModel extends RepresentationModel<TeacherModel> implements Personnel {
 
     /** The first name of the teacher. */
     private final String firstName;

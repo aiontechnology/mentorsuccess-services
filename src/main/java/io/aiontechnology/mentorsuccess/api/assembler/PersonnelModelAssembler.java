@@ -16,28 +16,22 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.controller.PersonnelController;
+import io.aiontechnology.mentorsuccess.api.mapping.ToPersonnelModelMapper;
+import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
 /**
- * Assembles {@link TeacherModel} instances from {@link Role} entity instances.
- *
  * @author Whitney Hunter
  */
 @Component
-public class TeacherModelAssembler extends BaseRoleModelAssembler<TeacherModel> {
+public class PersonnelModelAssembler extends BaseRoleModelAssembler<PersonnelModel> {
 
-    /**
-     * Construct an instance.
-     */
     @Inject
-    public TeacherModelAssembler(ToTeacherModelMapper toTeacherModelMapper, LinkHelper<TeacherModel> linkHelper) {
-        super(TeacherController.class, TeacherModel.class, toTeacherModelMapper, linkHelper);
+    public PersonnelModelAssembler(ToPersonnelModelMapper toPersonnelModelMapper, LinkHelper<PersonnelModel> linkHelper) {
+        super(PersonnelController.class, PersonnelModel.class, toPersonnelModelMapper, linkHelper);
     }
 
 }

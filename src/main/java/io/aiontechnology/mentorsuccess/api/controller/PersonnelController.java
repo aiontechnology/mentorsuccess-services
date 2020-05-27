@@ -17,15 +17,14 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
-import io.aiontechnology.mentorsuccess.api.mapping.FromTeacherModelMapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
+import io.aiontechnology.mentorsuccess.api.mapping.FromFromPersonnelMapper;
+import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,36 +35,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
- * Controller for managing teachers in a school.
- *
  * @author Whitney Hunter
  */
 @RestController
-@RequestMapping("/api/v1/schools/{schoolId}/teachers")
+@RequestMapping("/api/v1/schools/{schoolId}/personnel")
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 @Slf4j
-public class TeacherController {
+public class PersonnelController {
 
-    private final EntityManager entityManager;
-
-    /** Mapper for converting {@link TeacherModel} instances to {@link Role Roles}. */
-    private final FromTeacherModelMapper fromTeacherModelMapper;
+    /** Mapper for converting {@link PersonnelModel} instances to {@link Role Roles}. */
+    private final FromFromPersonnelMapper fromFromPersonnelMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
 
-    /** Assembler for creating {@link TeacherModel} instances */
-    private final TeacherModelAssembler teacherModelAssembler;
+    /** Assembler for creating {@link PersonnelModel} instances */
+    private final PersonnelModelAssembler personnelModelAssembler;
 
     /** Service with business logic for teachers */
     private final RoleService roleService;
@@ -74,43 +69,43 @@ public class TeacherController {
      * A REST endpoint for creating a teacher for a particular school.
      *
      * @param schoolId The ID of the school.
-     * @param teacherModel The model that represents the desired new teacher.
+     * @param personnelModel The model that represents the desired new teacher.
      * @return A model that represents the created teacher.
      */
     @PostMapping
-    public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody TeacherModel teacherModel) {
-        log.debug("Creating teacher: {}", teacherModel);
+    public PersonnelModel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody PersonnelModel personnelModel) {
+        log.debug("Creating personnel: {}", personnelModel);
         return schoolService.findSchool(schoolId)
-                .map(school -> Optional.ofNullable(teacherModel)
-                        .map(fromTeacherModelMapper::map)
+                .map(school -> Optional.ofNullable(personnelModel)
+                        .map(fromFromPersonnelMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
-                        .map(role -> teacherModelAssembler.toModel(role, linkProvider))
-                        .orElseThrow(() -> new IllegalArgumentException("Unable to create teacher")))
+                        .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                        .orElseThrow(() -> new IllegalArgumentException("Unable to create personnel")))
                 .orElseThrow(() -> new IllegalArgumentException("School not found"));
     }
 
     @GetMapping
-    public CollectionModel<TeacherModel> getTeachers(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Getting all teachers for school {}", schoolId);
-        Session session = entityManager.unwrap(Session.class);
-        session.enableFilter("roleType").setParameter("type", TEACHER.toString());
+    public CollectionModel<PersonnelModel> getPersonnel(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Getting all personnel for school {}", schoolId);
         return schoolService.findSchool(schoolId)
                 .map(school -> school.getRoles().stream()
-                        .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                        .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                        .filter(role -> !role.getType().equals(TEACHER))
+                        .filter(role -> !role.getType().equals(PROGRAM_ADMIN))
                         .collect(Collectors.toList()))
                 .map(teachers -> CollectionModel.of(teachers))
                 .orElseThrow(() -> new IllegalArgumentException("Requested school not found"));
     }
 
-    @DeleteMapping("/{teacherId}")
-    public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
-        log.debug("Deactivating teacher");
-        roleService.findRole(teacherId)
+    @DeleteMapping("/{personnelId}")
+    public void deactivatePersonnel(@PathVariable("schoolId") UUID studentId, @PathVariable("personnelId") UUID personnelId) {
+        log.debug("Deactivating personnel");
+        roleService.findRole(personnelId)
                 .ifPresent(roleService::deactivateRole);
     }
 
-    private LinkProvider<TeacherModel, Role> linkProvider = (teacherModel, role) ->
+    private LinkProvider<PersonnelModel, Role> linkProvider = (personnelModel, role) ->
             Arrays.asList(
                     linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
                     linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")

@@ -14,30 +14,28 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.assembler;
+package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.stereotype.Component;
 
-import javax.inject.Inject;
-
 /**
- * Assembles {@link TeacherModel} instances from {@link Role} entity instances.
- *
  * @author Whitney Hunter
  */
 @Component
-public class TeacherModelAssembler extends BaseRoleModelAssembler<TeacherModel> {
+public class ToPersonnelModelMapper implements ImmutableMapper<Role, PersonnelModel> {
 
-    /**
-     * Construct an instance.
-     */
-    @Inject
-    public TeacherModelAssembler(ToTeacherModelMapper toTeacherModelMapper, LinkHelper<TeacherModel> linkHelper) {
-        super(TeacherController.class, TeacherModel.class, toTeacherModelMapper, linkHelper);
+    @Override
+    public PersonnelModel map(Role role) {
+        return PersonnelModel.builder()
+                .withFirstName(role.getPerson().getFirstName())
+                .withLastName(role.getPerson().getLastName())
+                .withEmail(role.getPerson().getEmail())
+                .withWorkPhone(role.getPerson().getWorkPhone())
+                .withCellPhone(role.getPerson().getCellPhone())
+                .withType(role.getType().name())
+                .build();
     }
 
 }

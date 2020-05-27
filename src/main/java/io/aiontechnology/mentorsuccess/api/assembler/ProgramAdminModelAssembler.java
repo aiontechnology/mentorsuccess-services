@@ -16,43 +16,22 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.controller.ProgramAdminController;
 import io.aiontechnology.mentorsuccess.api.mapping.ToProgramAdminModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import javax.inject.Inject;
 
 /**
  * @author Whitney Hunter
  */
 @Component
-public class ProgramAdminModelAssembler extends RepresentationModelAssemblerSupport<Role, ProgramAdminModel> {
+public class ProgramAdminModelAssembler extends BaseRoleModelAssembler<ProgramAdminModel> {
 
-    private final LinkHelper<ProgramAdminModel> linkHelper;
-
-    private final ToProgramAdminModelMapper toProgramAdminModelMapper;
-
-    ProgramAdminModelAssembler(ToProgramAdminModelMapper toProgramAdminModelMapper, LinkHelper<ProgramAdminModel> linkHelper) {
-        super(ProgramAdminController.class, ProgramAdminModel.class);
-        this.toProgramAdminModelMapper = toProgramAdminModelMapper;
-        this.linkHelper = linkHelper;
-    }
-
-    @Override
-    public ProgramAdminModel toModel(Role role) {
-        return Optional.ofNullable(role)
-                .map(toProgramAdminModelMapper::map)
-                .orElse(null);
-    }
-
-    public ProgramAdminModel toModel(Role role, LinkProvider<ProgramAdminModel, Role> linkProvider) {
-        return Optional.ofNullable(role)
-                .map(this::toModel)
-                .map(model -> linkHelper.addLinks(model, linkProvider.apply(model, role)))
-                .orElse(null);
+    @Inject
+    public ProgramAdminModelAssembler(ToProgramAdminModelMapper toProgramAdminModelMapper,
+                                      LinkHelper<ProgramAdminModel> linkHelper) {
+        super(ProgramAdminModel.class, ProgramAdminModel.class, toProgramAdminModelMapper, linkHelper);
     }
 
 }

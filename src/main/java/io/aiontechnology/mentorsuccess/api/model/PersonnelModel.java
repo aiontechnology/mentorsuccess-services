@@ -29,21 +29,24 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> implements Personnel {
+public class PersonnelModel extends RepresentationModel<PersonnelModel> implements Personnel {
 
-    /** The first name of the program admin. */
+    /** The personnel type */
+    private final String type;
+
+    /** The first name. */
     private final String firstName;
 
-    /** The last name of the program admin. */
+    /** The last name. */
     private final String lastName;
 
-    /** The program admin's email address. */
+    /** The email address. */
     private final String email;
 
-    /** The program admin's work phone number. */
+    /** The work phone number. */
     private final String workPhone;
 
-    /** The program admin's cell phone. */
+    /** The cell phone number. */
     private final String cellPhone;
 
 }
