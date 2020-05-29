@@ -17,11 +17,11 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
-import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
 
@@ -29,29 +29,15 @@ import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN
  * @author Whitney Hunter
  */
 @Component
-@RequiredArgsConstructor
-public class FromProgramAdminModelMapper implements MutableMapper<ProgramAdminModel, Role> {
+public class FromProgramAdminModelMapper extends BaseFromPersonnelModelMapper<ProgramAdminModel> {
 
-    private final PhoneService phoneService;
-
-    @Override
-    public Role map(ProgramAdminModel programAdminModel) {
-        Role role = new Role();
-        return map(programAdminModel, role);
+    @Inject
+    public FromProgramAdminModelMapper(PhoneService phoneService) {
+        super(phoneService);
     }
 
-    @Override
-    public Role map(ProgramAdminModel programAdminModel, Role role) {
-        Person person = new Person();
-        person.setFirstName(programAdminModel.getFirstName());
-        person.setLastName(programAdminModel.getLastName());
-        person.setEmail(programAdminModel.getEmail());
-        person.setWorkPhone(phoneService.normalize(programAdminModel.getWorkPhone()));
-        person.setCellPhone(phoneService.normalize(programAdminModel.getCellPhone()));
-
+    protected Role doMapRole(ProgramAdminModel programAdminModel, Role role) {
         role.setType(PROGRAM_ADMIN);
-        role.setPerson(person);
-        role.setIsActive(true);
         return role;
     }
 

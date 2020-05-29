@@ -17,11 +17,11 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
-import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import javax.inject.Inject;
 
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
 
@@ -29,31 +29,17 @@ import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
  * @author Whitney Hunter
  */
 @Component
-@RequiredArgsConstructor
-public class FromTeacherModelMapper implements MutableMapper<TeacherModel, Role> {
+public class FromTeacherModelMapper extends BaseFromPersonnelModelMapper<TeacherModel> {
 
-    private final PhoneService phoneService;
-
-    @Override
-    public Role map(TeacherModel teacherModel) {
-        Role role = new Role();
-        return map(teacherModel, role);
+    @Inject
+    public FromTeacherModelMapper(PhoneService phoneService) {
+        super(phoneService);
     }
 
-    @Override
-    public Role map(TeacherModel teacherModel, Role role) {
-        Person person = new Person();
-        person.setFirstName(teacherModel.getFirstName());
-        person.setLastName(teacherModel.getLastName());
-        person.setEmail(teacherModel.getEmail());
-        person.setWorkPhone(phoneService.normalize(teacherModel.getWorkPhone()));
-        person.setCellPhone(phoneService.normalize(teacherModel.getCellPhone()));
-
+    protected Role doMapRole(TeacherModel teacherModel, Role role) {
         role.setType(TEACHER);
         role.setGrade1(teacherModel.getGrade1());
         role.setGrade2(teacherModel.getGrade2());
-        role.setPerson(person);
-        role.setIsActive(true);
         return role;
     }
 

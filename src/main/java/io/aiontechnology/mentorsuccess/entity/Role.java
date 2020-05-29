@@ -69,7 +69,11 @@ public class Role {
 
     public enum RoleType {
         TEACHER,
-        PROGRAM_ADMIN
+        PROGRAM_ADMIN,
+        SOCIAL_WORKER,
+        PRINCIPAL,
+        COUNSELOR,
+        STAFF
     }
 
 }

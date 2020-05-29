@@ -14,30 +14,32 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.assembler;
+package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
+import static io.aiontechnology.mentorsuccess.entity.Role.RoleType;
+
 /**
- * Assembles {@link TeacherModel} instances from {@link Role} entity instances.
- *
  * @author Whitney Hunter
  */
 @Component
-public class TeacherModelAssembler extends BaseRoleModelAssembler<TeacherModel> {
+public class FromFromPersonnelMapper extends BaseFromPersonnelModelMapper<PersonnelModel> {
 
-    /**
-     * Construct an instance.
-     */
     @Inject
-    public TeacherModelAssembler(ToTeacherModelMapper toTeacherModelMapper, LinkHelper<TeacherModel> linkHelper) {
-        super(TeacherController.class, TeacherModel.class, toTeacherModelMapper, linkHelper);
+    public FromFromPersonnelMapper(PhoneService phoneService) {
+        super(phoneService);
+    }
+
+    @Override
+    protected Role doMapRole(PersonnelModel from, Role role) {
+        role.setType(RoleType.valueOf(from.getType()));
+        return role;
     }
 
 }

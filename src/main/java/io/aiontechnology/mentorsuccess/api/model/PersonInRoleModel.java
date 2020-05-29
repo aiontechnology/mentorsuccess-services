@@ -22,6 +22,8 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.UUID;
+
 /**
  * @author Whitney Hunter
  */
@@ -29,21 +31,20 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> implements Personnel {
+public class PersonInRoleModel extends RepresentationModel<PersonInRoleModel> {
 
-    /** The first name of the program admin. */
+    private final UUID id;
+
+    private final String roleName;
+
     private final String firstName;
 
-    /** The last name of the program admin. */
     private final String lastName;
 
-    /** The program admin's email address. */
     private final String email;
 
-    /** The program admin's work phone number. */
     private final String workPhone;
 
-    /** The program admin's cell phone. */
     private final String cellPhone;
 
 }
