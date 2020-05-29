@@ -27,12 +27,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -78,6 +80,7 @@ public class TeacherController {
      * @return A model that represents the created teacher.
      */
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody TeacherModel teacherModel) {
         log.debug("Creating teacher: {}", teacherModel);
         return schoolService.findSchool(schoolId)
@@ -104,6 +107,7 @@ public class TeacherController {
     }
 
     @DeleteMapping("/{teacherId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
         log.debug("Deactivating teacher");
         roleService.findRole(teacherId)

@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.ProgramAdminModelAssembler;
+import io.aiontechnology.mentorsuccess.api.exception.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.FromProgramAdminModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
@@ -27,11 +28,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -64,6 +67,7 @@ public class ProgramAdminController {
     private final SchoolService schoolService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ProgramAdminModel createProgramAdmin(@PathVariable("schoolId") UUID schoolId, @RequestBody ProgramAdminModel programAdminModel) {
         log.debug("Creating program administrator: {}", programAdminModel);
         return schoolService.findSchool(schoolId)
@@ -74,7 +78,7 @@ public class ProgramAdminController {
                         .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create program administrator"))
                 )
-                .orElseThrow(() -> new IllegalArgumentException(("School not found")));
+                .orElseThrow(() -> new NotFoundException("School not found"));
 
     }
 

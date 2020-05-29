@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
+import io.aiontechnology.mentorsuccess.api.exception.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.FromSchoolModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
@@ -25,6 +26,7 @@ import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
@@ -71,6 +74,7 @@ public class SchoolController {
      * @return A model that represents the created school.
      */
     @PostMapping()
+    @ResponseStatus(HttpStatus.CREATED)
     public SchoolModel createSchool(@RequestBody SchoolModel schoolModel) {
         log.debug("Creating school: {}", schoolModel);
         return Optional.ofNullable(schoolModel)
@@ -78,6 +82,20 @@ public class SchoolController {
                 .map(schoolService::createSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
+    }
+
+    /**
+     * A REST endpoint for retrieving a particular school.
+     *
+     * @param schoolId The id of the desired school
+     * @return The school if it is found.
+     */
+    @GetMapping("/{schoolId}")
+    public SchoolModel getSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Getting school with id {}", schoolId);
+        return schoolService.findSchool(schoolId)
+                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
+                .orElseThrow(() -> new NotFoundException("School was not found"));
     }
 
     /**
@@ -97,12 +115,13 @@ public class SchoolController {
     /**
      * A REST endpoint for deleting a school.
      *
-     * @param id The id of the school to remove.
+     * @param schoolId The schoolId of the school to remove.
      */
-    @DeleteMapping("/{id}")
-    public void removeSchool(@PathVariable("id") UUID id) {
-        log.debug("Removing school: {}", id);
-        schoolService.removeSchool(id);
+    @DeleteMapping("/{schoolId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Removing school: {}", schoolId);
+        schoolService.removeSchool(schoolId);
     }
 
     /**
