@@ -126,9 +126,59 @@ public class SchoolControllerTest {
                 .andExpect(jsonPath("$.phone", is(PHONE)))
                 .andExpect(jsonPath("$.district", is(DISTRICT)))
                 .andExpect(jsonPath("$.isPrivate", is(IS_PRIVITE)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         verify(schoolService).createSchool(any(School.class));
+    }
+
+    @Test
+    void shouldRetrieveASchool() throws Exception {
+        // setup the fixture
+        UUID id = UUID.randomUUID();
+        School school = new School();
+        school.setId(id);
+        school.setName(NAME);
+        school.setStreet1(STREET1);
+        school.setStreet2(STREET2);
+        school.setCity(CITY);
+        school.setState(STATE);
+        school.setZip(ZIP);
+        school.setPhone(PHONE);
+        school.setDistrict(DISTRICT);
+        school.setIsPrivate(IS_PRIVITE);
+
+        when(schoolService.findSchool(id)).thenReturn(Optional.of(school));
+
+        // execute the SUT
+        ResultActions resultActions = mockMvc.perform(get("/api/v1/schools/" + id.toString())
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // validation
+        resultActions.andExpect(jsonPath("$.id", is(id.toString())))
+                .andExpect(jsonPath("$.name", is(NAME)))
+                .andExpect(jsonPath("$.address.street1", is(STREET1)))
+                .andExpect(jsonPath("$.address.street2", is(STREET2)))
+                .andExpect(jsonPath("$.address.city", is(CITY)))
+                .andExpect(jsonPath("$.address.state", is(STATE)))
+                .andExpect(jsonPath("$.address.zip", is(ZIP)))
+                .andExpect(jsonPath("$.phone", is(PHONE)))
+                .andExpect(jsonPath("$.district", is(DISTRICT)))
+                .andExpect(jsonPath("$.isPrivate", is(IS_PRIVITE)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldNotFindSchool() throws Exception {
+        // setup the fixture
+        UUID id = UUID.randomUUID();
+        when(schoolService.findSchool(id)).thenReturn(Optional.empty());
+
+        // execute the SUT
+        ResultActions resultActions = mockMvc.perform(get("/api/v1/schools/" + id.toString())
+                .contentType(MediaType.APPLICATION_JSON));
+
+        // validation
+        resultActions.andExpect(status().isNotFound());
     }
 
     @Test
@@ -149,10 +199,10 @@ public class SchoolControllerTest {
         UUID id = UUID.randomUUID();
 
         // execute the SUT
-        mockMvc.perform(delete("/api/v1/schools/" + id.toString()))
-                .andExpect(status().isOk());
+        ResultActions resultActions = mockMvc.perform(delete("/api/v1/schools/" + id.toString()));
 
         // validation
+        resultActions.andExpect(status().isNoContent());
         verify(schoolService).removeSchool(id);
     }
 
