@@ -94,9 +94,9 @@ public class PersonnelController {
         log.debug("Getting all personnel for school {}", schoolId);
         return schoolService.findSchool(schoolId)
                 .map(school -> school.getRoles().stream()
-                        .map(role -> personnelModelAssembler.toModel(role, linkProvider))
                         .filter(role -> !role.getType().equals(TEACHER))
                         .filter(role -> !role.getType().equals(PROGRAM_ADMIN))
+                        .map(role -> personnelModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
                 .map(teachers -> CollectionModel.of(teachers))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));

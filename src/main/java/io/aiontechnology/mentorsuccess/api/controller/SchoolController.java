@@ -119,9 +119,10 @@ public class SchoolController {
      */
     @DeleteMapping("/{schoolId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void removeSchool(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Removing school: {}", schoolId);
-        schoolService.removeSchool(schoolId);
+    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Deactivating school: {}", schoolId);
+        schoolService.findSchool(schoolId)
+                .ifPresent(schoolService::deactivateSchool);
     }
 
     /**

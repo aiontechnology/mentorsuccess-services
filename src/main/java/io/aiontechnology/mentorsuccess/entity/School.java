@@ -37,6 +37,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Where(clause = "is_active = true")
 @FilterDef(name = "roleType", parameters = @ParamDef(name = "type", type = "string"))
 public class School {
 
@@ -71,6 +72,9 @@ public class School {
 
     @Column
     private Boolean isPrivate;
+
+    @Column
+    private Boolean isActive;
 
     @OneToMany(mappedBy = "school")
     @Where(clause = "is_active = true")
