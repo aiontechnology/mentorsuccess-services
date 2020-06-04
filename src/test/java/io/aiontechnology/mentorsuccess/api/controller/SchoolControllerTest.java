@@ -197,13 +197,26 @@ public class SchoolControllerTest {
     void shouldRemoveASchool() throws Exception {
         // setup the fixture
         UUID id = UUID.randomUUID();
+        School school = new School();
+        school.setId(id);
+        school.setName(NAME);
+        school.setStreet1(STREET1);
+        school.setStreet2(STREET2);
+        school.setCity(CITY);
+        school.setState(STATE);
+        school.setZip(ZIP);
+        school.setPhone(PHONE);
+        school.setDistrict(DISTRICT);
+        school.setIsPrivate(IS_PRIVITE);
+
+        when(schoolService.findSchool(id)).thenReturn(Optional.of(school));
 
         // execute the SUT
         ResultActions resultActions = mockMvc.perform(delete("/api/v1/schools/" + id.toString()));
 
         // validation
         resultActions.andExpect(status().isNoContent());
-        verify(schoolService).removeSchool(id);
+        verify(schoolService).deactivateSchool(school);
     }
 
     @Test()
