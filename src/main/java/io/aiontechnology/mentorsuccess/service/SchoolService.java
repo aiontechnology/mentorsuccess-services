@@ -67,13 +67,15 @@ public class SchoolService {
     }
 
     /**
-     * Remove a {@link School} from the system.
+     * Deactivate a {@link School} in the system.
      *
-     * @param id The id of the {@link School} to remove.
+     * @param school The {@link School} to deactivate.
      */
     @Transactional
-    public void removeSchool(UUID id) {
-        schoolRepository.deleteById(id);
+    public School deactivateSchool(School school) {
+        school.setIsActive(false);
+        schoolRepository.save(school);
+        return school;
     }
 
     /**

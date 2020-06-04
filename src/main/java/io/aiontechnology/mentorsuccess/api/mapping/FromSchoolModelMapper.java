@@ -63,6 +63,7 @@ public class FromSchoolModelMapper implements MutableMapper<SchoolModel, School>
         school.setPhone(phoneService.normalize(schoolModel.getPhone()));
         school.setDistrict(schoolModel.getDistrict());
         school.setIsPrivate(schoolModel.getIsPrivate());
+        school.setIsActive(true);
         return school;
     }
 
