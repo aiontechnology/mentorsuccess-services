@@ -47,7 +47,8 @@ public class SchoolRepositoryTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.EMPTY_LIST);
+        Boolean isActive = Boolean.TRUE;
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.EMPTY_LIST);
         entityManager.persist(school);
 
         // execute the SUT
@@ -70,7 +71,8 @@ public class SchoolRepositoryTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
+        Boolean isActive = Boolean.TRUE;
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.emptyList());
         entityManager.persist(school);
 
         // exercise the SUT
@@ -92,7 +94,8 @@ public class SchoolRepositoryTest {
         String phone = "1234567890";
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, Collections.emptyList());
+        Boolean isActive = Boolean.TRUE;
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.emptyList());
 
         // execute the SUT
         schoolRepository.save(school);

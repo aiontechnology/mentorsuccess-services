@@ -44,6 +44,7 @@ public class SchoolServiceTest {
     private static String PHONE = "1234567890";
     private static String DISTRICT = "DISTRICT";
     private static Boolean IS_PRIVATE = Boolean.TRUE;
+    private static Boolean IS_ACTIVE = Boolean.TRUE;
     private static Collection<Role> ROLES = Collections.EMPTY_LIST;
 
     @Test
@@ -122,16 +123,17 @@ public class SchoolServiceTest {
     @Test
     void shouldRemoveASchool() {
         // setup the fixture
-        UUID id = UUID.randomUUID();
+        School school = mock(School.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         SchoolService schoolService = new SchoolService(schoolRepository);
 
         // execute the SUT
-        schoolService.removeSchool(id);
+        schoolService.deactivateSchool(school);
 
         // validation
-        verify(schoolRepository).deleteById(id);
+        verify(school).setIsActive(false);
+        verify(schoolRepository).save(school);
     }
 
     @Test
@@ -154,7 +156,7 @@ public class SchoolServiceTest {
     }
 
     private School generateSchool(UUID id) {
-        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, ROLES);
+        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, IS_ACTIVE, ROLES);
     }
 
 }

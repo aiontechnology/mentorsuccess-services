@@ -66,7 +66,7 @@ public class SchoolModelToSchoolMutableMapperTest {
         // setup the fixture
         SchoolModel schoolModel = generateSchoolModel();
         UUID id = UUID.randomUUID();
-        School school = new School(id, "n", "s1", "s2", "c", "s", "z", "p", "d", true, Collections.EMPTY_LIST);
+        School school = new School(id, "n", "s1", "s2", "c", "s", "z", "p", "d", true, true, Collections.EMPTY_LIST);
 
         FromSchoolModelMapper schoolFactory = new FromSchoolModelMapper(new PhoneService());
 
