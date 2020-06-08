@@ -14,24 +14,31 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.controller;
+package io.aiontechnology.mentorsuccess.api.error;
 
-import io.aiontechnology.mentorsuccess.api.exception.NotFoundException;
+import lombok.Builder;
+import lombok.Data;
+import lombok.ToString;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
+import java.time.ZonedDateTime;
 
 /**
  * @author Whitney Hunter
  */
-@ControllerAdvice
-public class RestResponseExceptionHandler {
+@Data
+@Builder(setterPrefix = "with")
+@ToString
+public class ErrorModel<T> {
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NotFoundException.class)
-    public void handleNotFound() {
+    private final ZonedDateTime timestamp;
 
-    }
+    private final HttpStatus status;
+
+    private final T error;
+
+    private final String message;
+
+    private final String path;
 
 }

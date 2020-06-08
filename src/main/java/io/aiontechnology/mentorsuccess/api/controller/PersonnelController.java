@@ -18,7 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
-import io.aiontechnology.mentorsuccess.api.exception.NotFoundException;
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.FromFromPersonnelMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import io.aiontechnology.mentorsuccess.entity.Role;

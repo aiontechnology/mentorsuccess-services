@@ -20,19 +20,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 
+import javax.validation.constraints.Size;
+
 @Data
 @Builder(setterPrefix = "with")
 @ToString
 public class AddressModel {
 
+    @Size(max = 50)
     private final String street1;
 
+    @Size(max = 50)
     private final String street2;
 
+    @Size(max = 50)
     private final String city;
 
+    @Size(min = 2, max = 2)
     private final String state;
 
+    @Size(min = 5, max = 9)
     private final String zip;
 
 }
