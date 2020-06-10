@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.exception;
+package io.aiontechnology.mentorsuccess.api.error;
 
 /**
  * And exception that indicates that a requested resource could not be found.

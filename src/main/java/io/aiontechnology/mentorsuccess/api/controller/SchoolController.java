@@ -18,7 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
-import io.aiontechnology.mentorsuccess.api.exception.NotFoundException;
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.FromSchoolModelMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -75,7 +76,7 @@ public class SchoolController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public SchoolModel createSchool(@RequestBody SchoolModel schoolModel) {
+    public SchoolModel createSchool(@Valid @RequestBody SchoolModel schoolModel) {
         log.debug("Creating school: {}", schoolModel);
         return Optional.ofNullable(schoolModel)
                 .map(fromSchoolModelMapper::map)
