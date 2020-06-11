@@ -47,8 +47,7 @@ public class SchoolModel extends RepresentationModel<SchoolModel> {
     private final AddressModel address;
 
     /** The school's phone number */
-    @NotNull
-    @Size(min = 10, max = 10, message = "{school.phone.size}")
+    @Size(max = 10, message = "{school.phone.size}")
     private final String phone;
 
     /** The school district that the school is in */
@@ -56,7 +55,6 @@ public class SchoolModel extends RepresentationModel<SchoolModel> {
     private final String district;
 
     /** Indicates whether the school is private or public */
-    @NotNull
     private final Boolean isPrivate;
 
 }

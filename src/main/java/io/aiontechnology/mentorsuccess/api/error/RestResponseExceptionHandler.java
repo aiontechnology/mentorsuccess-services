@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.error;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +41,7 @@ import static java.util.AbstractMap.SimpleEntry;
  */
 @ControllerAdvice
 @RequiredArgsConstructor
+@Slf4j
 public class RestResponseExceptionHandler {
 
     private final MessageSource messageSource;
@@ -62,6 +64,7 @@ public class RestResponseExceptionHandler {
                 .withMessage("Validation failed")
                 .withPath(httpServletRequest.getRequestURI())
                 .build();
+        log.debug("Error {}", errorModel);
         return new ResponseEntity<>(errorModel, HttpStatus.BAD_REQUEST);
     }
 
