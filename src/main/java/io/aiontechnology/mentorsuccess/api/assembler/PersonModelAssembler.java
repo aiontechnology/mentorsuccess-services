@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.PersonController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToPersonModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.PersonMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -29,22 +29,23 @@ import java.util.Optional;
 /**
  * Assembles {@link PersonModel} instances from {@link Person} entity instances.
  *
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Component
 public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Person, PersonModel> {
 
     private final LinkHelper<PersonModel> linkHelper;
 
-    private final ToPersonModelMapper toPersonModelMapper;
+    private final PersonMapper personMapper;
 
     /**
      * Constructor
      */
     @Inject
-    public PersonModelAssembler(ToPersonModelMapper toPersonModelMapper, LinkHelper<PersonModel> linkHelper) {
+    public PersonModelAssembler(PersonMapper personMapper, LinkHelper<PersonModel> linkHelper) {
         super(PersonController.class, PersonModel.class);
-        this.toPersonModelMapper = toPersonModelMapper;
+        this.personMapper = personMapper;
         this.linkHelper = linkHelper;
     }
 
@@ -57,7 +58,7 @@ public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Pe
     @Override
     public PersonModel toModel(Person person) {
         return Optional.ofNullable(person)
-                .map(toPersonModelMapper::map)
+                .map(personMapper::mapEntityToModel)
                 .orElse(null);
     }
 

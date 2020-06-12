@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.TeacherMapper;
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.stereotype.Component;
@@ -36,8 +36,8 @@ public class TeacherModelAssembler extends BaseRoleModelAssembler<TeacherModel> 
      * Construct an instance.
      */
     @Inject
-    public TeacherModelAssembler(ToTeacherModelMapper toTeacherModelMapper, LinkHelper<TeacherModel> linkHelper) {
-        super(TeacherController.class, TeacherModel.class, toTeacherModelMapper, linkHelper);
+    public TeacherModelAssembler(TeacherMapper teacherMapper, LinkHelper<TeacherModel> linkHelper) {
+        super(TeacherController.class, TeacherModel.class, teacherMapper, linkHelper);
     }
 
 }

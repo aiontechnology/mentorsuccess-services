@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.mapping;
+package io.aiontechnology.mentorsuccess.api.model;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Interface for mapping objects of two different classes. The input value should be treated as immutable.
- *
- * @param <F> The class of the object to map from.
- * @param <T> The class of the object to map from.
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
-public interface ImmutableMapper<F, T> {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder(setterPrefix = "with")
+@ToString
+public class LeadershipTraitModel extends RepresentationModel<LeadershipTraitModel> {
 
-    /**
-     * Create new object and map the given object to it.
-     *
-     * @param from The object from which to map.
-     * @return The created object which was mapped to.
-     */
-    T map(F from);
+    /** The character trait's name */
+    private final String name;
 
 }

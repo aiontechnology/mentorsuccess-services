@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToSchoolModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -37,15 +37,15 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
     private final LinkHelper<SchoolModel> linkHelper;
 
     /** Mapper to map from {@link School} to {@link SchoolModel} */
-    private final ToSchoolModelMapper toSchoolModelMapper;
+    private final SchoolMapper schoolMapper;
 
     /**
      * Constructor
      */
     @Inject
-    public SchoolModelAssembler(ToSchoolModelMapper toSchoolModelMapper, LinkHelper<SchoolModel> linkHelper) {
+    public SchoolModelAssembler(SchoolMapper schoolMapper, LinkHelper<SchoolModel> linkHelper) {
         super(SchoolController.class, SchoolModel.class);
-        this.toSchoolModelMapper = toSchoolModelMapper;
+        this.schoolMapper = schoolMapper;
         this.linkHelper = linkHelper;
     }
 
@@ -58,7 +58,7 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
     @Override
     public SchoolModel toModel(School school) {
         return Optional.ofNullable(school)
-                .map(toSchoolModelMapper::map)
+                .map(schoolMapper::mapEntityToModel)
                 .orElse(null);
     }
 

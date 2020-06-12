@@ -16,12 +16,19 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
+import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
+/**
+ * Repository for {@link School} entities.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
+ */
 @Repository
 public interface SchoolRepository extends CrudRepository<School, UUID> {
 }

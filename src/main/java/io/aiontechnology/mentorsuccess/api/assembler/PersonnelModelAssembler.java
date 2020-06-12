@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.PersonnelController;
-import io.aiontechnology.mentorsuccess.api.mapping.ToPersonnelModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.PersonnelMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import org.springframework.stereotype.Component;
 
@@ -30,8 +30,8 @@ import javax.inject.Inject;
 public class PersonnelModelAssembler extends BaseRoleModelAssembler<PersonnelModel> {
 
     @Inject
-    public PersonnelModelAssembler(ToPersonnelModelMapper toPersonnelModelMapper, LinkHelper<PersonnelModel> linkHelper) {
-        super(PersonnelController.class, PersonnelModel.class, toPersonnelModelMapper, linkHelper);
+    public PersonnelModelAssembler(PersonnelMapper personnelMapper, LinkHelper<PersonnelModel> linkHelper) {
+        super(PersonnelController.class, PersonnelModel.class, personnelMapper, linkHelper);
     }
 
 }

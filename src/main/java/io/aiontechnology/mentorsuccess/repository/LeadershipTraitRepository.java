@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
+import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+import java.util.UUID;
 
 /**
- * Entry point into application.
+ * Repository for {@link LeadershipTrait} entities.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@SpringBootApplication
-@EnableCaching
-public class MentorsuccessApplication {
+@Repository
+public interface LeadershipTraitRepository extends CrudRepository<LeadershipTrait, UUID> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
+    @Cacheable("character_traits")
+    Optional<LeadershipTrait> findByName(String name);
 
 }

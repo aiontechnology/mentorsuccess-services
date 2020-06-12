@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.mapping.ToProgramAdminModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.ProgramAdminMapper;
 import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
 import org.springframework.stereotype.Component;
 
@@ -29,9 +29,9 @@ import javax.inject.Inject;
 public class ProgramAdminModelAssembler extends BaseRoleModelAssembler<ProgramAdminModel> {
 
     @Inject
-    public ProgramAdminModelAssembler(ToProgramAdminModelMapper toProgramAdminModelMapper,
+    public ProgramAdminModelAssembler(ProgramAdminMapper programAdminMapper,
                                       LinkHelper<ProgramAdminModel> linkHelper) {
-        super(ProgramAdminModel.class, ProgramAdminModel.class, toProgramAdminModelMapper, linkHelper);
+        super(ProgramAdminModel.class, ProgramAdminModel.class, programAdminMapper, linkHelper);
     }
 
 }

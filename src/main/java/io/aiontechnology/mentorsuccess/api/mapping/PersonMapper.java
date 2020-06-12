@@ -21,34 +21,34 @@ import io.aiontechnology.mentorsuccess.entity.Person;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper from {@link PersonModel} instances from {@link Person} instances.
+ * Mapper between {@link Person} and {@link PersonModel}.
  *
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Component
-public class FromPersonModelMapper implements MutableMapper<PersonModel, Person> {
+public class PersonMapper implements Mapper<Person, PersonModel> {
 
-    /**
-     * Map the given {@link PersonModel} to a new {@link Person} instance.
-     *
-     * @param personModel The {@link PersonModel} to map
-     * @return The generated {@link Person} instance.
-     */
     @Override
-    public Person map(PersonModel personModel) {
-        Person person = new Person();
-        return map(personModel, person);
+    public PersonModel mapEntityToModel(Person person) {
+        return PersonModel.builder()
+                .withId(person.getId())
+                .withFirstName(person.getFirstName())
+                .withLastName(person.getLastName())
+                .withWorkPhone(person.getWorkPhone())
+                .withCellPhone(person.getCellPhone())
+                .withEmail(person.getEmail())
+                .build();
     }
 
-    /**
-     * Map the given {@link Person} from the values in the given {@link PersonModel}.
-     *
-     * @param personModel The {@link PersonModel} to map from.
-     * @param person The {@link Person} to update.
-     * @return The updated {@link Person}.
-     */
     @Override
-    public Person map(PersonModel personModel, Person person) {
+    public Person mapModelToEntity(PersonModel personModel) {
+        Person person = new Person();
+        return mapModelToEntity(personModel, person);
+    }
+
+    @Override
+    public Person mapModelToEntity(PersonModel personModel, Person person) {
         person.setFirstName(personModel.getFirstName());
         person.setLastName(personModel.getLastName());
         person.setWorkPhone(personModel.getWorkPhone());

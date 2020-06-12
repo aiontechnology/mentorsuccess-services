@@ -23,33 +23,34 @@ import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
 
 /**
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @RequiredArgsConstructor
-public abstract class BaseFromPersonnelModelMapper<T extends Personnel> implements MutableMapper<T, Role> {
+public abstract class AbstractRoleMapper<Model extends Personnel> implements Mapper<Role, Model> {
 
     private final PhoneService phoneService;
 
     @Override
-    public Role map(T from) {
+    public Role mapModelToEntity(Model model) {
         Role role = new Role();
-        return map(from, role);
+        return mapModelToEntity(model, role);
     }
 
     @Override
-    public Role map(T from, Role to) {
+    public Role mapModelToEntity(Model model, Role role) {
         Person person = new Person();
-        person.setFirstName(from.getFirstName());
-        person.setLastName(from.getLastName());
-        person.setEmail(from.getEmail());
-        person.setWorkPhone(phoneService.normalize(from.getWorkPhone()));
-        person.setCellPhone(phoneService.normalize(from.getCellPhone()));
+        person.setFirstName(model.getFirstName());
+        person.setLastName(model.getLastName());
+        person.setEmail(model.getEmail());
+        person.setWorkPhone(phoneService.normalize(model.getWorkPhone()));
+        person.setCellPhone(phoneService.normalize(model.getCellPhone()));
 
-        to.setPerson(person);
-        to.setIsActive(true);
-        return doMapRole(from, to);
+        role.setPerson(person);
+        role.setIsActive(true);
+        return doMapRole(model, role);
     }
 
-    protected abstract Role doMapRole( T from, Role role);
+    protected abstract Role doMapRole(Model model, Role role);
 
 }

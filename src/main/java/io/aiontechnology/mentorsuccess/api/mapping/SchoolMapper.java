@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
+import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
@@ -23,35 +24,41 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper from {@link SchoolModel} instances to {@link School} instances.
+ * Mapper between {@link School} and {@link SchoolModel}.
  *
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Component
 @RequiredArgsConstructor
-public class FromSchoolModelMapper implements MutableMapper<SchoolModel, School> {
+public class SchoolMapper implements Mapper<School, SchoolModel> {
 
+    /** Mapper to for {@link School} to {@link AddressModel}. */
+    private final AddressMapper addressMapper;
+
+    /** Service for dealing with phone numbers. */
     private final PhoneService phoneService;
 
-    /**
-     * Map the given {@link SchoolModel} to a new {@link School} instance.
-     *
-     * @param schoolModel The {@link SchoolModel} to map
-     * @return The generated {@link School} instance.
-     */
-    public School map(SchoolModel schoolModel) {
-        School school = new School();
-        return map(schoolModel, school);
+    @Override
+    public SchoolModel mapEntityToModel(School school) {
+        return SchoolModel.builder()
+                .withId(school.getId())
+                .withName(school.getName())
+                .withAddress(addressMapper.mapEntityToModel(school))
+                .withPhone(school.getPhone())
+                .withDistrict(school.getDistrict())
+                .withIsPrivate(school.getIsPrivate())
+                .build();
     }
 
-    /**
-     * Map the given {@link School} from the values in the given {@link SchoolModel}.
-     *
-     * @param schoolModel The {@link SchoolModel} to map from.
-     * @param school The {@link School} to update.
-     * @return The updated {@link School}.
-     */
-    public School map(SchoolModel schoolModel, School school) {
+    @Override
+    public School mapModelToEntity(SchoolModel schoolModel) {
+        School school = new School();
+        return mapModelToEntity(schoolModel, school);
+    }
+
+    @Override
+    public School mapModelToEntity(SchoolModel schoolModel, School school) {
         school.setName(schoolModel.getName());
         if (schoolModel.getAddress() != null) {
             school.setStreet1(schoolModel.getAddress().getStreet1());

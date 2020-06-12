@@ -26,19 +26,32 @@ import javax.inject.Inject;
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
 
 /**
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Component
-public class FromProgramAdminModelMapper extends BaseFromPersonnelModelMapper<ProgramAdminModel> {
+public class ProgramAdminMapper extends AbstractRoleMapper<ProgramAdminModel> {
 
     @Inject
-    public FromProgramAdminModelMapper(PhoneService phoneService) {
+    public ProgramAdminMapper(PhoneService phoneService) {
         super(phoneService);
     }
 
+    @Override
     protected Role doMapRole(ProgramAdminModel programAdminModel, Role role) {
         role.setType(PROGRAM_ADMIN);
         return role;
+    }
+
+    @Override
+    public ProgramAdminModel mapEntityToModel(Role role) {
+        return ProgramAdminModel.builder()
+                .withFirstName(role.getPerson().getFirstName())
+                .withLastName(role.getPerson().getLastName())
+                .withEmail(role.getPerson().getEmail())
+                .withWorkPhone(role.getPerson().getWorkPhone())
+                .withCellPhone(role.getPerson().getCellPhone())
+                .build();
     }
 
 }

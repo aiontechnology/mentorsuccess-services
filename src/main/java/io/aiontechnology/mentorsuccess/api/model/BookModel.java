@@ -24,10 +24,10 @@ import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.UUID;
+import java.util.Collection;
 
 /**
- * Model that represents a school in the API.
+ * Model that represents a book in the API.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
@@ -36,28 +36,21 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class SchoolModel extends RepresentationModel<SchoolModel> {
+public class BookModel extends RepresentationModel<BookModel> {
 
-    /** The school's id */
-    private final UUID id;
+    @NotNull(message = "{book.title.notNull}")
+    @Size(max = 40, message = "{book.title.size}")
+    private final String title;
 
-    /** The name of the school */
-    @NotNull(message = "{school.name.notNull}")
-    @Size(max = 50, message = "{school.name.size}")
-    private final String name;
+    @Size(max = 30, message = "{book.author.size}")
+    private final String author;
 
-    /** The school's address */
-    private final AddressModel address;
+    private final Integer gradeLevel;
 
-    /** The school's phone number */
-    @Size(max = 10, message = "{school.phone.size}")
-    private final String phone;
+    private Collection<InterestModel> interests;
 
-    /** The school district that the school is in */
-    @Size(max = 50)
-    private final String district;
+    private Collection<LeadershipTraitModel> leadershipTraits;
 
-    /** Indicates whether the school is private or public */
-    private final Boolean isPrivate;
+    private Collection<LeadershipSkillModel> leadershipSkills;
 
 }

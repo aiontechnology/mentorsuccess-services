@@ -19,7 +19,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.FromSchoolModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -37,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +54,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  */
 @RestController
 @RequestMapping("/api/v1/schools")
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 @Slf4j
 public class SchoolController {
 
@@ -63,7 +62,7 @@ public class SchoolController {
     private final SchoolModelAssembler schoolModelAssembler;
 
     /** Mapper for converting {@link SchoolModel} instances to {@link School Schools} */
-    private final FromSchoolModelMapper fromSchoolModelMapper;
+    private final SchoolMapper schoolMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -79,7 +78,7 @@ public class SchoolController {
     public SchoolModel createSchool(@Valid @RequestBody SchoolModel schoolModel) {
         log.debug("Creating school: {}", schoolModel);
         return Optional.ofNullable(schoolModel)
-                .map(fromSchoolModelMapper::map)
+                .map(schoolMapper::mapModelToEntity)
                 .map(schoolService::createSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
@@ -94,7 +93,7 @@ public class SchoolController {
     @GetMapping("/{schoolId}")
     public SchoolModel getSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting school with id {}", schoolId);
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new NotFoundException("School was not found"));
     }
@@ -110,7 +109,7 @@ public class SchoolController {
         List<SchoolModel> schools = StreamSupport.stream(schoolService.getAllSchools().spliterator(), false)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .collect(Collectors.toList());
-        return new CollectionModel<>(schools);
+        return CollectionModel.of(schools);
     }
 
     /**
@@ -122,22 +121,22 @@ public class SchoolController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Deactivating school: {}", schoolId);
-        schoolService.findSchool(schoolId)
+        schoolService.getSchool(schoolId)
                 .ifPresent(schoolService::deactivateSchool);
     }
 
     /**
      * A REST endpoint for updating a school.
      *
-     * @param id The id of the school to update.
+     * @param schoolId The id of the school to update.
      * @param schoolModel The model that represents the updated school.
      * @return A model that represents the school that has been updated.
      */
-    @PutMapping("/{id}")
-    public SchoolModel updateSchool(@PathVariable("id") UUID id, @RequestBody SchoolModel schoolModel) {
-        log.debug("Updating school {} with {}", id, schoolModel);
-        return schoolService.findSchool(id)
-                .map(school -> fromSchoolModelMapper.map(schoolModel, school))
+    @PutMapping("/{schoolId}")
+    public SchoolModel updateSchool(@PathVariable("schoolId") UUID schoolId, @RequestBody SchoolModel schoolModel) {
+        log.debug("Updating school {} with {}", schoolId, schoolModel);
+        return schoolService.getSchool(schoolId)
+                .map(school -> schoolMapper.mapModelToEntity(schoolModel, school))
                 .map(schoolService::updateSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));

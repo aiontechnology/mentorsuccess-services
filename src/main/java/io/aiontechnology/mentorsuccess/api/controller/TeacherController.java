@@ -18,7 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
-import io.aiontechnology.mentorsuccess.api.mapping.FromTeacherModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.TeacherMapper;
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.service.RoleService;
@@ -61,7 +61,7 @@ public class TeacherController {
     private final EntityManager entityManager;
 
     /** Mapper for converting {@link TeacherModel} instances to {@link Role Roles}. */
-    private final FromTeacherModelMapper fromTeacherModelMapper;
+    private final TeacherMapper teacherMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -83,9 +83,9 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.CREATED)
     public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody TeacherModel teacherModel) {
         log.debug("Creating teacher: {}", teacherModel);
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(school -> Optional.ofNullable(teacherModel)
-                        .map(fromTeacherModelMapper::map)
+                        .map(teacherMapper::mapModelToEntity)
                         .map(school::addRole)
                         .map(roleService::createRole)
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
@@ -98,7 +98,7 @@ public class TeacherController {
         log.debug("Getting all teachers for school {}", schoolId);
         Session session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", TEACHER.toString());
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(school -> school.getRoles().stream()
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))

@@ -14,24 +14,17 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
+package io.aiontechnology.mentorsuccess.api.error;
 
 /**
- * Entry point into application.
+ * Exception that indicates that a method is not implemented.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@SpringBootApplication
-@EnableCaching
-public class MentorsuccessApplication {
+public class NotImplementedException extends RuntimeException {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
+    public NotImplementedException() {
     }
 
 }
