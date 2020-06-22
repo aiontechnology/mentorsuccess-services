@@ -16,20 +16,22 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
+import io.aiontechnology.mentorsuccess.api.error.NotImplementedException;
 import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.springframework.stereotype.Component;
 
 /**
- * Mapper from {@link School} instances from {@link AddressModel} instances.
+ * Mapper between {@link School} and {@link AddressModel}.
  *
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Component
-public class ToAddressModelMapper implements ImmutableMapper<School, AddressModel> {
+public class AddressMapper implements Mapper<School, AddressModel> {
 
     @Override
-    public AddressModel map(School school) {
+    public AddressModel mapEntityToModel(School school) {
         return AddressModel.builder()
                 .withStreet1(school.getStreet1())
                 .withStreet2(school.getStreet2())
@@ -37,6 +39,16 @@ public class ToAddressModelMapper implements ImmutableMapper<School, AddressMode
                 .withState(school.getState())
                 .withZip(school.getZip())
                 .build();
+    }
+
+    @Override
+    public School mapModelToEntity(AddressModel addressModel) {
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public School mapModelToEntity(AddressModel addressModel, School school) {
+        throw new NotImplementedException();
     }
 
 }

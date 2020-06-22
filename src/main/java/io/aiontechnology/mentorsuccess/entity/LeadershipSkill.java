@@ -14,21 +14,34 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.repository;
+package io.aiontechnology.mentorsuccess.entity;
 
-import io.aiontechnology.mentorsuccess.entity.Book;
-import io.aiontechnology.mentorsuccess.entity.Person;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.UUID;
 
 /**
- * Repository for {@link Person} entities.
- *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
  */
-@Repository
-public interface PersonRepository extends CrudRepository<Person, UUID> {
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+public class LeadershipSkill {
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID id;
+
+    @Column
+    private String name;
+
 }

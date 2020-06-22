@@ -14,24 +14,20 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
+import io.aiontechnology.mentorsuccess.entity.Book;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
 
 /**
- * Entry point into application.
+ * Repository for {@link Book} entities.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@SpringBootApplication
-@EnableCaching
-public class MentorsuccessApplication {
-
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
-
+@Repository
+public interface BookRepository extends CrudRepository<Book, UUID> {
 }

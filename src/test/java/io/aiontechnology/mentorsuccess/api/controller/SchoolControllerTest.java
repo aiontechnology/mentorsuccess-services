@@ -20,10 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkHelper;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
-import io.aiontechnology.mentorsuccess.api.mapping.FromSchoolModelMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.ToAddressModelMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.ToSchoolModelMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.ToTeacherModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.AddressMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.TeacherMapper;
 import io.aiontechnology.mentorsuccess.api.model.AddressModel;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
@@ -147,7 +146,7 @@ public class SchoolControllerTest {
         school.setDistrict(DISTRICT);
         school.setIsPrivate(IS_PRIVITE);
 
-        when(schoolService.findSchool(id)).thenReturn(Optional.of(school));
+        when(schoolService.getSchool(id)).thenReturn(Optional.of(school));
 
         // execute the SUT
         ResultActions resultActions = mockMvc.perform(get("/api/v1/schools/" + id.toString())
@@ -171,7 +170,7 @@ public class SchoolControllerTest {
     void shouldNotFindSchool() throws Exception {
         // setup the fixture
         UUID id = UUID.randomUUID();
-        when(schoolService.findSchool(id)).thenReturn(Optional.empty());
+        when(schoolService.getSchool(id)).thenReturn(Optional.empty());
 
         // execute the SUT
         ResultActions resultActions = mockMvc.perform(get("/api/v1/schools/" + id.toString())
@@ -209,7 +208,7 @@ public class SchoolControllerTest {
         school.setDistrict(DISTRICT);
         school.setIsPrivate(IS_PRIVITE);
 
-        when(schoolService.findSchool(id)).thenReturn(Optional.of(school));
+        when(schoolService.getSchool(id)).thenReturn(Optional.of(school));
 
         // execute the SUT
         ResultActions resultActions = mockMvc.perform(delete("/api/v1/schools/" + id.toString()));
@@ -252,7 +251,7 @@ public class SchoolControllerTest {
         school.setDistrict(DISTRICT);
         school.setIsPrivate(IS_PRIVITE);
 
-        when(schoolService.findSchool(id)).thenReturn(Optional.of(school));
+        when(schoolService.getSchool(id)).thenReturn(Optional.of(school));
         when(schoolService.updateSchool(any(School.class))).thenReturn(school);
 
         // execute the SUT
@@ -280,18 +279,23 @@ public class SchoolControllerTest {
     static class TestContext {
 
         @Bean
-        FromSchoolModelMapper schoolFactory() {
-            return new FromSchoolModelMapper(new PhoneService());
+        AddressMapper addressMapper() {
+            return new AddressMapper();
         }
 
         @Bean
-        SchoolModelAssembler schoolModelAssembler() {
-            return new SchoolModelAssembler(new ToSchoolModelMapper(new ToAddressModelMapper()), new LinkHelper<>());
+        SchoolMapper schoolMapper(AddressMapper addressMapper) {
+            return new SchoolMapper(addressMapper, new PhoneService());
+        }
+
+        @Bean
+        SchoolModelAssembler schoolModelAssembler(SchoolMapper schoolMapper) {
+            return new SchoolModelAssembler(schoolMapper, new LinkHelper<>());
         }
 
         @Bean
         TeacherModelAssembler teacherModelAssembler() {
-            return new TeacherModelAssembler(new ToTeacherModelMapper(), new LinkHelper<>());
+            return new TeacherModelAssembler(new TeacherMapper(new PhoneService()), new LinkHelper<>());
         }
 
     }

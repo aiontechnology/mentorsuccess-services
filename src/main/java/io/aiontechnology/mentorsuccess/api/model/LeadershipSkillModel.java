@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess;
+package io.aiontechnology.mentorsuccess.api.model;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.EnableCaching;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Entry point into application.
- *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@SpringBootApplication
-@EnableCaching
-public class MentorsuccessApplication {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder(setterPrefix = "with")
+@ToString
+public class LeadershipSkillModel extends RepresentationModel<LeadershipSkillModel> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MentorsuccessApplication.class, args);
-    }
+    /** The leadership skill's name */
+    private final String name;
 
 }

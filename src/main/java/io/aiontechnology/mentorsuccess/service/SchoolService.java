@@ -28,9 +28,12 @@ import java.util.UUID;
 
 /**
  * Service for managing school.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class SchoolService {
 
     /** Repository for the {@link School} Entity */
@@ -48,12 +51,24 @@ public class SchoolService {
     }
 
     /**
+     * Deactivate a {@link School} in the system.
+     *
+     * @param school The {@link School} to deactivate.
+     */
+    @Transactional
+    public School deactivateSchool(School school) {
+        school.setIsActive(false);
+        schoolRepository.save(school);
+        return school;
+    }
+
+    /**
      * Find a {@link School} by its id.
      *
      * @param id The id of the desired {@link School}.
      * @return The school if it could be found or empty if not.
      */
-    public Optional<School> findSchool(UUID id) {
+    public Optional<School> getSchool(UUID id) {
         return schoolRepository.findById(id);
     }
 
@@ -64,18 +79,6 @@ public class SchoolService {
      */
     public Iterable<School> getAllSchools() {
         return schoolRepository.findAll();
-    }
-
-    /**
-     * Deactivate a {@link School} in the system.
-     *
-     * @param school The {@link School} to deactivate.
-     */
-    @Transactional
-    public School deactivateSchool(School school) {
-        school.setIsActive(false);
-        schoolRepository.save(school);
-        return school;
     }
 
     /**

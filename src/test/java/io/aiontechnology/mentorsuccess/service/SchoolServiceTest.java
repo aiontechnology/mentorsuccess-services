@@ -78,7 +78,7 @@ public class SchoolServiceTest {
         SchoolService schoolService = new SchoolService(schoolRepository);
 
         // execute the SUT
-        Optional<School> result = schoolService.findSchool(id);
+        Optional<School> result = schoolService.getSchool(id);
 
         // validation
         assertThat(result.isPresent()).isTrue();
@@ -96,7 +96,7 @@ public class SchoolServiceTest {
         SchoolService schoolService = new SchoolService(schoolRepository);
 
         // execute the SUT
-        Optional<School> result = schoolService.findSchool(id);
+        Optional<School> result = schoolService.getSchool(id);
 
         // validation
         assertThat(result.isPresent()).isFalse();

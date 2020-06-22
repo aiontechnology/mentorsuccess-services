@@ -19,7 +19,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.FromFromPersonnelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.PersonnelMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.service.RoleService;
@@ -57,7 +57,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class PersonnelController {
 
     /** Mapper for converting {@link PersonnelModel} instances to {@link Role Roles}. */
-    private final FromFromPersonnelMapper fromFromPersonnelMapper;
+    private final PersonnelMapper personnelMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -79,9 +79,9 @@ public class PersonnelController {
     @ResponseStatus(HttpStatus.CREATED)
     public PersonnelModel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody PersonnelModel personnelModel) {
         log.debug("Creating personnel: {}", personnelModel);
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(school -> Optional.ofNullable(personnelModel)
-                        .map(fromFromPersonnelMapper::map)
+                        .map(personnelMapper::mapModelToEntity)
                         .map(school::addRole)
                         .map(roleService::createRole)
                         .map(role -> personnelModelAssembler.toModel(role, linkProvider))
@@ -92,7 +92,7 @@ public class PersonnelController {
     @GetMapping
     public CollectionModel<PersonnelModel> getAllPersonnel(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all personnel for school {}", schoolId);
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(school -> school.getRoles().stream()
                         .filter(role -> !role.getType().equals(TEACHER))
                         .filter(role -> !role.getType().equals(PROGRAM_ADMIN))

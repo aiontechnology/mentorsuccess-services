@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.mapping.ImmutableMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.Mapper;
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.hateoas.RepresentationModel;
@@ -32,12 +32,12 @@ public abstract class BaseRoleModelAssembler<T extends RepresentationModel<T>>
 
     private final LinkHelper<T> linkHelper;
 
-    private final ImmutableMapper<Role, T> mapper;
+    private final Mapper<Role, T> mapper;
 
     /**
      * Construct an instance.
      */
-    public BaseRoleModelAssembler(Class<?> controllerClass, Class<T> resourceType, ImmutableMapper<Role, T> mapper,
+    public BaseRoleModelAssembler(Class<?> controllerClass, Class<T> resourceType, Mapper<Role, T> mapper,
                                   LinkHelper<T> linkHelper) {
         super(controllerClass, resourceType);
         this.mapper = mapper;
@@ -53,7 +53,7 @@ public abstract class BaseRoleModelAssembler<T extends RepresentationModel<T>>
     @Override
     public T toModel(Role role) {
         return Optional.ofNullable(role)
-                .map(mapper::map)
+                .map(mapper::mapEntityToModel)
                 .orElse(null);
     }
 

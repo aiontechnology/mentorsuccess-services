@@ -23,22 +23,33 @@ import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType;
-
 /**
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Component
-public class FromFromPersonnelMapper extends BaseFromPersonnelModelMapper<PersonnelModel> {
+public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> {
 
     @Inject
-    public FromFromPersonnelMapper(PhoneService phoneService) {
+    public PersonnelMapper(PhoneService phoneService) {
         super(phoneService);
     }
 
     @Override
-    protected Role doMapRole(PersonnelModel from, Role role) {
-        role.setType(RoleType.valueOf(from.getType()));
+    public PersonnelModel mapEntityToModel(Role role) {
+        return PersonnelModel.builder()
+                .withFirstName(role.getPerson().getFirstName())
+                .withLastName(role.getPerson().getLastName())
+                .withEmail(role.getPerson().getEmail())
+                .withWorkPhone(role.getPerson().getWorkPhone())
+                .withCellPhone(role.getPerson().getCellPhone())
+                .withType(role.getType().name())
+                .build();
+    }
+
+    @Override
+    protected Role doMapRole(PersonnelModel personnelModel, Role role) {
+        role.setType(Role.RoleType.valueOf(personnelModel.getType()));
         return role;
     }
 

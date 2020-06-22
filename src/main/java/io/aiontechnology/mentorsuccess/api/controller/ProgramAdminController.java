@@ -19,7 +19,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.ProgramAdminModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.FromProgramAdminModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.ProgramAdminMapper;
 import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.service.RoleService;
@@ -58,7 +58,7 @@ public class ProgramAdminController {
 
     private final EntityManager entityManager;
 
-    private final FromProgramAdminModelMapper fromProgramAdminModelMapper;
+    private final ProgramAdminMapper programAdminMapper;
 
     private final ProgramAdminModelAssembler programAdminModelAssembler;
 
@@ -70,9 +70,9 @@ public class ProgramAdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProgramAdminModel createProgramAdmin(@PathVariable("schoolId") UUID schoolId, @RequestBody ProgramAdminModel programAdminModel) {
         log.debug("Creating program administrator: {}", programAdminModel);
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(school -> Optional.ofNullable(programAdminModel)
-                        .map(fromProgramAdminModelMapper::map)
+                        .map(programAdminMapper::mapModelToEntity)
                         .map(school::addRole)
                         .map(roleService::createRole)
                         .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
@@ -87,7 +87,7 @@ public class ProgramAdminController {
         log.debug("Getting all program admins for school {}", schoolId);
         Session session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", PROGRAM_ADMIN.toString());
-        return schoolService.findSchool(schoolId)
+        return schoolService.getSchool(schoolId)
                 .map(school -> school.getRoles().stream()
                         .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
