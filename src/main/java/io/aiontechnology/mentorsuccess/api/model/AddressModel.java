@@ -27,19 +27,19 @@ import javax.validation.constraints.Size;
 @ToString
 public class AddressModel {
 
-    @Size(max = 50)
+    @Size(max = 50, message = "{address.street1.size}")
     private final String street1;
 
-    @Size(max = 50)
+    @Size(max = 50, message = "{address.street2.size}")
     private final String street2;
 
-    @Size(max = 50)
+    @Size(max = 50,  message = "{address.city.size}")
     private final String city;
 
-    @Size(min = 2, max = 2)
+    @Size(min = 2, max = 2, message = "{address.state.size}")
     private final String state;
 
-    @Size(min = 5, max = 9)
+    @Size(min = 5, max = 9, message = "{address.zip.size}")
     private final String zip;
 
 }

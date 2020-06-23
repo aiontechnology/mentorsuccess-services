@@ -25,10 +25,14 @@ import org.springframework.stereotype.Component;
 public class PhoneService {
 
     public String normalize(String phoneNumber) {
-        return phoneNumber.replace("(", "")
-                .replace(")", "")
-                .replace("-", "")
-                .replace(" ", "");
+        if (phoneNumber != null) {
+            return phoneNumber.replace("(", "")
+                    .replace(")", "")
+                    .replace("-", "")
+                    .replace(" ", "");
+        } else {
+            return phoneNumber;
+        }
     }
 
 }

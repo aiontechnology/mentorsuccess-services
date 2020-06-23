@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.TeacherMapper;
 import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,9 +50,10 @@ import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
- * Controller for managing teachers in a school.
+ * Controller that vends a REST interface for dealing with teachers.
  *
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/teachers")
@@ -58,6 +61,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class TeacherController {
 
+    /** The JPA entity manager */
     private final EntityManager entityManager;
 
     /** Mapper for converting {@link TeacherModel} instances to {@link Role Roles}. */
@@ -81,7 +85,7 @@ public class TeacherController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody TeacherModel teacherModel) {
+    public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid TeacherModel teacherModel) {
         log.debug("Creating teacher: {}", teacherModel);
         return schoolService.getSchool(schoolId)
                 .map(school -> Optional.ofNullable(teacherModel)
@@ -93,6 +97,11 @@ public class TeacherController {
                 .orElseThrow(() -> new IllegalArgumentException("School not found"));
     }
 
+    /**
+     * A REST endpoint for retrieving all teachers.
+     *
+     * @return A collection of {@link TeacherModel} instances for the requested school.
+     */
     @GetMapping
     public CollectionModel<TeacherModel> getTeachers(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all teachers for school {}", schoolId);
@@ -106,6 +115,26 @@ public class TeacherController {
                 .orElseThrow(() -> new IllegalArgumentException("Requested school not found"));
     }
 
+    /**
+     * A REST endpoint for getting a specific teacher for a particular school.
+     *
+     * @param schoolId The id of the school.
+     * @param teacherId The id of the teacher.
+     * @return The personnel if it could be found.
+     */
+    @GetMapping("/{teacherId}")
+    public TeacherModel getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("teacherId") UUID teacherId) {
+        return roleService.findRole(teacherId)
+                .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
+     * A REST endpoint for deactivating a teacher.
+     *
+     * @param studentId The school from which the teacher should be deactivated.
+     * @param teacherId The id of the teacher to remove.
+     */
     @DeleteMapping("/{teacherId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {

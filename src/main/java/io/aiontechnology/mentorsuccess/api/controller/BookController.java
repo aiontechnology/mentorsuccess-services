@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -54,10 +55,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class BookController {
 
+    /** Service for interacting with {@link Book Books}. */
     private final BookService bookService;
 
+    /** A mapper between {@link Book Books} and {@link BookModel BookModels}. */
     private final BookMapper bookMapper;
 
+    /** A HATEOAS assembler for {@link BookModel BookModels}. */
     private final BookModelAssembler bookModelAssembler;
 
     /**
@@ -68,7 +72,7 @@ public class BookController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public BookModel createBook(@RequestBody BookModel bookModel) {
+    public BookModel createBook(@RequestBody @Valid BookModel bookModel) {
         log.debug("Book: {}", bookModel);
         return Optional.ofNullable(bookModel)
                 .map(bookMapper::mapModelToEntity)
@@ -77,29 +81,47 @@ public class BookController {
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
     }
 
+    /**
+     * A REST endpoint for getting a book by it's id.
+     *
+     * @param bookId The id of the desired book.
+     * @return A model that represents the book if it could be found.
+     */
     @GetMapping("/{bookId}")
     public BookModel getBook(@PathVariable("bookId") UUID bookId) {
         return bookService.getBook(bookId)
-                .map(b -> bookModelAssembler.toModel(b, linkProvider))
+                .map(book -> bookModelAssembler.toModel(book, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Book was not found"));
     }
 
+    /**
+     * A REST endpoint for updating a specific book.
+     *
+     * @param bookId The id of the book to update.
+     * @param bookModel A model representing the new desired state for the book.
+     * @return A model representing the updated book.
+     */
+    @PutMapping("/{bookId}")
+    public BookModel updateBook(@PathVariable("bookId") UUID bookId, @RequestBody @Valid BookModel bookModel) {
+        log.debug("Updating book {} with {}", bookId, bookModel);
+        return bookService.getBook(bookId)
+                .map(book -> bookMapper.mapModelToEntity(bookModel, book))
+                .map(bookService::updateBook)
+                .map(book -> bookModelAssembler.toModel(book, linkProvider))
+                .orElseThrow(() -> new IllegalArgumentException("Unable to update book"));
+    }
+
+    /**
+     * A REST endpoint for deactivating a specific book.
+     *
+     * @param bookId The id of the book to deactivate.
+     */
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateSchool(@PathVariable("bookId") UUID bookId) {
         log.debug("Deactivating book: {}", bookId);
         bookService.getBook(bookId)
                 .ifPresent(bookService::deactivateBook);
-    }
-
-    @PutMapping("/{bookId}")
-    public BookModel updateBook(@PathVariable("bookId") UUID bookId, @RequestBody BookModel bookModel) {
-        log.debug("Updating book {} with {}", bookId, bookModel);
-        return bookService.getBook(bookId)
-                .map(book -> bookMapper.mapModelToEntity(bookModel, book))
-                .map(bookService::updateBook)
-                .map(b -> bookModelAssembler.toModel(b, linkProvider))
-                .orElseThrow(() -> new IllegalArgumentException("Unable to update book"));
     }
 
     private LinkProvider<BookModel, Book> linkProvider = (bookModel, book) ->

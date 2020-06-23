@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LeadershipTraitModelAssembler;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
+ * Controller that vends a REST interface for dealing with leadership traits.
+ *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
@@ -41,10 +44,17 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class LeadershipTraitController {
 
+    /** Assembler for creating {@link LeadershipTrait} instances */
     private final LeadershipTraitModelAssembler leadershipTraitModelAssembler;
 
+    /** Service with business logic for leadership traits */
     private final LeadershipTraitService leadershipTraitService;
 
+    /**
+     * A REST endpoint for retrieving all leadership traits.
+     *
+     * @return A collection of {@link LeadershipTraitModel} instances.
+     */
     @GetMapping
     public CollectionModel<LeadershipTraitModel> getLeadershipTraits() {
         List<LeadershipTraitModel> leadershipTraitModels =

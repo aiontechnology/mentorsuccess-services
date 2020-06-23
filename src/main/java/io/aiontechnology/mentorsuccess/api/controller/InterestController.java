@@ -17,7 +17,10 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.InterestModelAssembler;
+import io.aiontechnology.mentorsuccess.api.model.BookModel;
 import io.aiontechnology.mentorsuccess.api.model.InterestModel;
+import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +35,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * @author Whitney Hunter
+ * Controller that vends a REST interface for dealing with interests.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("/api/v1/interests")
@@ -40,10 +46,17 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class InterestController {
 
+    /** A HATEOAS assembler for {@link InterestModel InterestModels}. */
     private final InterestModelAssembler interestModelAssembler;
 
+    /** Service for interacting with {@link Interest Interests}. */
     private final InterestService interestService;
 
+    /**
+     * A REST endpoint for getting all interests.
+     *
+     * @return A collection of models that represents the interests in the system.
+     */
     @GetMapping
     public CollectionModel<InterestModel> getInterests() {
         List<InterestModel> interestModels = StreamSupport.stream(interestService.getAllInterests().spliterator(), false)

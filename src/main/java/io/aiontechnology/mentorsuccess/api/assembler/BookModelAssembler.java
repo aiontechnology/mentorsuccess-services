@@ -27,16 +27,26 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
+ * A HATEOAS assembler for {@link BookModel}.
+ *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
 @Component
 public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book, BookModel> {
 
+    /** The mapper for mapping between {@link Book} and {@link BookModel}. */
     private final BookMapper bookMapper;
 
+    /** A utility class for adding links to a model object. */
     private final LinkHelper<BookModel> linkHelper;
 
+    /**
+     * Constructor
+     *
+     * @param bookMapper The mapper for mapping between {@link Book} and {@link BookModel}.
+     * @param linkHelper A utility class for adding links to a model object.
+     */
     @Inject
     public BookModelAssembler(BookMapper bookMapper, LinkHelper<BookModel> linkHelper) {
         super(BookController.class, BookModel.class);
@@ -44,6 +54,12 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
         this.linkHelper = linkHelper;
     }
 
+    /**
+     * Map a {@link Book} to a {@link BookModel} without adding links.
+     *
+     * @param book The {@link Book} to map.
+     * @return The resulting {@link BookModel}.
+     */
     @Override
     public BookModel toModel(Book book) {
         return Optional.ofNullable(book)
@@ -51,6 +67,13 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
                 .orElse(null);
     }
 
+    /**
+     * Map a {@link Book} to a {@link BookModel} and add links.
+     *
+     * @param book The {@link Book} to map.
+     * @param linkProvider An object that provides links.
+     * @return The resulting {@link BookModel}
+     */
     public BookModel toModel(Book book, LinkProvider<BookModel, Book> linkProvider) {
         return Optional.ofNullable(book)
                 .map(this::toModel)

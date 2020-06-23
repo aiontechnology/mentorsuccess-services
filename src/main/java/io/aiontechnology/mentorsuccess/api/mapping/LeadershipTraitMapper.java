@@ -16,17 +16,23 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.error.NotImplementedException;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
 import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
+import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
 @Component
+@RequiredArgsConstructor
 public class LeadershipTraitMapper implements Mapper<LeadershipTrait, LeadershipTraitModel> {
+
+    private final LeadershipTraitService leadershipTraitService;
 
     @Override
     public LeadershipTraitModel mapEntityToModel(LeadershipTrait leadershipTrait) {
@@ -37,12 +43,21 @@ public class LeadershipTraitMapper implements Mapper<LeadershipTrait, Leadership
 
     @Override
     public LeadershipTrait mapModelToEntity(LeadershipTraitModel leadershipTraitModel) {
-        throw new NotImplementedException();
+        LeadershipTrait leadershipTrait = new LeadershipTrait();
+        return mapModelToEntity(leadershipTraitModel, leadershipTrait);
     }
 
     @Override
     public LeadershipTrait mapModelToEntity(LeadershipTraitModel leadershipTraitModel, LeadershipTrait leadershipTrait) {
-        throw new NotImplementedException();
+        LeadershipTrait leadershipTrait1 = Optional.ofNullable(leadershipTraitModel)
+                .map(LeadershipTraitModel::getName)
+                .map(leadershipTraitService::findCharacterTraitByName)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(null);
+        leadershipTrait.setId(leadershipTrait1.getId());
+        leadershipTrait.setName(leadershipTrait1.getName());
+        return leadershipTrait;
     }
 
 }

@@ -48,9 +48,10 @@ import java.util.stream.StreamSupport;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
- * Controller for managing schools.
+ * Controller that vends a REST interface for dealing with schools.
  *
- * @author Whitney Hunter
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("/api/v1/schools")
@@ -75,27 +76,13 @@ public class SchoolController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public SchoolModel createSchool(@Valid @RequestBody SchoolModel schoolModel) {
+    public SchoolModel createSchool(@RequestBody @Valid SchoolModel schoolModel) {
         log.debug("Creating school: {}", schoolModel);
         return Optional.ofNullable(schoolModel)
                 .map(schoolMapper::mapModelToEntity)
                 .map(schoolService::createSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
-    }
-
-    /**
-     * A REST endpoint for retrieving a particular school.
-     *
-     * @param schoolId The id of the desired school
-     * @return The school if it is found.
-     */
-    @GetMapping("/{schoolId}")
-    public SchoolModel getSchool(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Getting school with id {}", schoolId);
-        return schoolService.getSchool(schoolId)
-                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
-                .orElseThrow(() -> new NotFoundException("School was not found"));
     }
 
     /**
@@ -113,16 +100,17 @@ public class SchoolController {
     }
 
     /**
-     * A REST endpoint for deleting a school.
+     * A REST endpoint for retrieving a particular school.
      *
-     * @param schoolId The schoolId of the school to remove.
+     * @param schoolId The id of the desired school
+     * @return The school if it is found.
      */
-    @DeleteMapping("/{schoolId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Deactivating school: {}", schoolId);
-        schoolService.getSchool(schoolId)
-                .ifPresent(schoolService::deactivateSchool);
+    @GetMapping("/{schoolId}")
+    public SchoolModel getSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Getting school with id {}", schoolId);
+        return schoolService.getSchool(schoolId)
+                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
+                .orElseThrow(() -> new NotFoundException("School was not found"));
     }
 
     /**
@@ -133,13 +121,26 @@ public class SchoolController {
      * @return A model that represents the school that has been updated.
      */
     @PutMapping("/{schoolId}")
-    public SchoolModel updateSchool(@PathVariable("schoolId") UUID schoolId, @RequestBody SchoolModel schoolModel) {
+    public SchoolModel updateSchool(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid SchoolModel schoolModel) {
         log.debug("Updating school {} with {}", schoolId, schoolModel);
         return schoolService.getSchool(schoolId)
                 .map(school -> schoolMapper.mapModelToEntity(schoolModel, school))
                 .map(schoolService::updateSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));
+    }
+
+    /**
+     * A REST endpoint for deleting a school.
+     *
+     * @param schoolId The id of the school to remove.
+     */
+    @DeleteMapping("/{schoolId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Deactivating school: {}", schoolId);
+        schoolService.getSchool(schoolId)
+                .ifPresent(schoolService::deactivateSchool);
     }
 
     private LinkProvider<SchoolModel, School> linkProvider = (schoolModel, school) ->

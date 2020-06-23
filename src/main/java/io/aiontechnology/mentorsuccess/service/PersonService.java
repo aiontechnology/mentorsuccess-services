@@ -40,7 +40,7 @@ public class PersonService {
         return personRepository.save(person);
     }
 
-    public Optional<Person> findPerson(UUID id) {
+    public Optional<Person> getPerson(UUID id) {
         return personRepository.findById(id);
     }
 

@@ -16,11 +16,19 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
+import static io.aiontechnology.mentorsuccess.entity.Role.*;
 
 /**
  * @author Whitney Hunter
@@ -32,21 +40,30 @@ import org.springframework.hateoas.RepresentationModel;
 public class PersonnelModel extends RepresentationModel<PersonnelModel> implements Personnel {
 
     /** The personnel type */
-    private final String type;
+    @NotNull(message = "{personnel.type.notNull}")
+    @EnumNamePattern(regexp = "SOCIAL_WORKER|PRINCIPAL|COUNSELOR|STAFF", message = "{personnel.type.invalid}")
+    private final RoleType type;
 
     /** The first name. */
+    @NotNull(message = "{personnel.firstName.notNull}")
+    @Size(max = 50, message = "{personnel.firstName.size}")
     private final String firstName;
 
     /** The last name. */
+    @NotNull(message = "{personnel.lastName.notNull}")
+    @Size(max = 50, message = "{personnel.lastName.size}")
     private final String lastName;
 
     /** The email address. */
+    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{personnel.email.invalid}")
     private final String email;
 
     /** The work phone number. */
+    @Pattern(regexp = "\\d{10}", message = "{personnel.workPhone.invalid}")
     private final String workPhone;
 
     /** The cell phone number. */
+    @Pattern(regexp = "\\d{10}", message = "{personnel.cellPhone.invalid}")
     private final String cellPhone;
 
 }

@@ -17,21 +17,17 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.BookModel;
-import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
 import io.aiontechnology.mentorsuccess.api.model.InterestModel;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
 import io.aiontechnology.mentorsuccess.entity.Book;
-import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
-import io.aiontechnology.mentorsuccess.service.InterestService;
-import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
+import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -47,16 +43,16 @@ public class BookMapper implements Mapper<Book, BookModel> {
 
     private final LeadershipTraitMapper leadershipTraitMapper;
 
-    private final LeadershipTraitService leadershipTraitService;
-
     private final InterestMapper interestMapper;
-
-    private final InterestService interestService;
 
     private final LeadershipSkillMapper leadershipSkillMapper;
 
-    private final LeadershipSkillService leadershipSkillService;
-
+    /**
+     * Map a {@link Book} to a new {@link BookModel}.
+     *
+     * @param book The {@link Book} to map.
+     * @return The resulting {@link BookModel}.
+     */
     @Override
     public BookModel mapEntityToModel(Book book) {
         return BookModel.builder()
@@ -69,12 +65,25 @@ public class BookMapper implements Mapper<Book, BookModel> {
                 .build();
     }
 
+    /**
+     * Map a {@link BookModel} to a new {@link Book}.
+     *
+     * @param bookModel The {@link BookModel} to map.
+     * @return The resulting {@link Book}.
+     */
     @Override
     public Book mapModelToEntity(BookModel bookModel) {
         Book book = new Book();
         return mapModelToEntity(bookModel, book);
     }
 
+    /**
+     * Map a {@link BookModel} to the given {@link Book}.
+     *
+     * @param bookModel The {@link BookModel} to map.
+     * @param book The {@link Book} to map to.
+     * @return The resulting {@link Book}.
+     */
     @Override
     public Book mapModelToEntity(BookModel bookModel, Book book) {
         book.setTitle(bookModel.getTitle());
@@ -96,10 +105,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
     private Set<Interest> mapInterests(BookModel bookModel) {
         if (bookModel.getInterests() != null) {
             return bookModel.getInterests().stream()
-                    .map(InterestModel::getName)
-                    .map(interestService::findInterestByName)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
+                    .map(interestMapper::mapModelToEntity)
                     .collect(Collectors.toSet());
         }
         return Collections.emptySet();
@@ -114,10 +120,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
     private Set<LeadershipTrait> mapCharacterTraits(BookModel bookModel) {
         if (bookModel.getLeadershipTraits() != null) {
             return bookModel.getLeadershipTraits().stream()
-                    .map(LeadershipTraitModel::getName)
-                    .map(leadershipTraitService::findCharacterTraitByName)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
+                    .map(leadershipTraitMapper::mapModelToEntity)
                     .collect(Collectors.toSet());
         }
         return Collections.emptySet();
@@ -132,10 +135,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
     private Set<LeadershipSkill> mapLeadershipSkills(BookModel bookModel) {
         if (bookModel.getLeadershipSkills() != null) {
             return bookModel.getLeadershipSkills().stream()
-                    .map(LeadershipSkillModel::getName)
-                    .map(leadershipSkillService::findLeadershipSkillByName)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
+                    .map(leadershipSkillMapper::mapModelToEntity)
                     .collect(Collectors.toSet());
         }
         return Collections.emptySet();

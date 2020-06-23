@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
+ * Controller that vends a REST interface for dealing with leadership skills.
+ *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
@@ -41,10 +43,17 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class LeadershipSkillController {
 
+    /** Assembler for creating {@link LeadershipSkillModel} instances */
     private final LeadershipSkillModelAssembler leadershipSkillModelAssembler;
 
+    /** Service with business logic for leadership skills */
     private final LeadershipSkillService leadershipSkillService;
 
+    /**
+     * A REST endpoint for retrieving all leadership skills.
+     *
+     * @return A collection of {@link LeadershipSkillModel} instances.
+     */
     @GetMapping
     public CollectionModel<LeadershipSkillModel> getLeaderhipSkills() {
         List<LeadershipSkillModel> interestModels = StreamSupport.stream(leadershipSkillService.getAllLeadershipSkills().spliterator(), false)

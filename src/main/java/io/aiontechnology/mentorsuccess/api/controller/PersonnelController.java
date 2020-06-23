@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
@@ -48,7 +49,10 @@ import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
- * @author Whitney Hunter
+ * Controller that vends a REST interface for dealing with personnel.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/personnel")
@@ -69,15 +73,15 @@ public class PersonnelController {
     private final RoleService roleService;
 
     /**
-     * A REST endpoint for creating a teacher for a particular school.
+     * A REST endpoint for creating a personnel for a particular school.
      *
-     * @param schoolId The ID of the school.
-     * @param personnelModel The model that represents the desired new teacher.
-     * @return A model that represents the created teacher.
+     * @param schoolId The id of the school.
+     * @param personnelModel The model that represents the desired new personnel.
+     * @return A model that represents the created personnel.
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonnelModel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody PersonnelModel personnelModel) {
+    public PersonnelModel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid PersonnelModel personnelModel) {
         log.debug("Creating personnel: {}", personnelModel);
         return schoolService.getSchool(schoolId)
                 .map(school -> Optional.ofNullable(personnelModel)
@@ -89,6 +93,12 @@ public class PersonnelController {
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
+    /**
+     * A REST endpoint for getting all personnel for a particular school.
+     *
+     * @param schoolId The id of the school.
+     * @return A collection of all personnel for the school.
+     */
     @GetMapping
     public CollectionModel<PersonnelModel> getAllPersonnel(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all personnel for school {}", schoolId);
@@ -102,9 +112,29 @@ public class PersonnelController {
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
+    /**
+     * A REST endpoint for getting a specific personnel for a particular school.
+     *
+     * @param schoolId The id of the school.
+     * @param personnelId The id of the personnel.
+     * @return The personnel if it could be found.
+     */
+    @GetMapping("/{personnelId}")
+    public PersonnelModel getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("personnelId") UUID personnelId) {
+        return roleService.findRole(personnelId)
+                .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
+     * A REST endpoint to deactivate a specific personnel for particular school.
+     *
+     * @param schoolId The id of the school.
+     * @param personnelId The id of the personnel.
+     */
     @DeleteMapping("/{personnelId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivatePersonnel(@PathVariable("schoolId") UUID studentId, @PathVariable("personnelId") UUID personnelId) {
+    public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("personnelId") UUID personnelId) {
         log.debug("Deactivating personnel");
         roleService.findRole(personnelId)
                 .ifPresent(roleService::deactivateRole);
@@ -112,7 +142,7 @@ public class PersonnelController {
 
     private LinkProvider<PersonnelModel, Role> linkProvider = (personnelModel, role) ->
             Arrays.asList(
-                    linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
+                    linkTo(PersonnelController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
                     linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")
             );
 

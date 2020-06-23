@@ -20,8 +20,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -36,7 +37,7 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class BookModel extends RepresentationModel<BookModel> {
+public class BookModel extends ResourceModel<BookModel> {
 
     @NotNull(message = "{book.title.notNull}")
     @Size(max = 40, message = "{book.title.size}")
@@ -45,12 +46,15 @@ public class BookModel extends RepresentationModel<BookModel> {
     @Size(max = 30, message = "{book.author.size}")
     private final String author;
 
+    @NotNull(message = "{book.gradeLevel.notNull}")
+    @Min(value = 1, message = "{book.gradeLevel.invalid}")
+    @Max(value = 6, message = "{book.gradeLevel.invalid}")
     private final Integer gradeLevel;
 
-    private Collection<InterestModel> interests;
+    private final Collection<InterestModel> interests;
 
-    private Collection<LeadershipTraitModel> leadershipTraits;
+    private final Collection<LeadershipTraitModel> leadershipTraits;
 
-    private Collection<LeadershipSkillModel> leadershipSkills;
+    private final Collection<LeadershipSkillModel> leadershipSkills;
 
 }

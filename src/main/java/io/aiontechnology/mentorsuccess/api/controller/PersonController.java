@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.PersonModelAssembler;
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.PersonMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
@@ -25,6 +26,8 @@ import io.aiontechnology.mentorsuccess.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,13 +35,15 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
- * Controller for managing people.
+ * Controller that vends a REST interface for dealing with people.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
@@ -66,13 +71,27 @@ public class PersonController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public PersonModel createPerson(@RequestBody PersonModel personModel) {
+    public PersonModel createPerson(@RequestBody @Valid PersonModel personModel) {
         log.debug("Creating person: {}", personModel);
         return Optional.ofNullable(personModel)
                 .map(personMapper::mapModelToEntity)
                 .map(personService::createPerson)
                 .map(p -> personModelAssembler.toModel(p, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create person"));
+    }
+
+    /**
+     * A REST endpoint for getting a specific person
+     *
+     * @param personId The id of the desired person
+     * @return The {@link PersonModel} for the desired person if it could be found.
+     */
+    @GetMapping("/{personId}")
+    public PersonModel getPerson(@PathVariable("personId") UUID personId) {
+        log.debug("Getting person with id: {}", personId);
+        return personService.getPerson(personId)
+                .map(s -> personModelAssembler.toModel(s, linkProvider))
+                .orElseThrow(() -> new NotFoundException("Person was not found"));
     }
 
     private LinkProvider<PersonModel, Person> linkProvider = (personModel, person) ->

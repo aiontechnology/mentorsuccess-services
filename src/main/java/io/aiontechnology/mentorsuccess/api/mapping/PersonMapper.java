@@ -18,6 +18,8 @@ package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.PersonModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,7 +29,10 @@ import org.springframework.stereotype.Component;
  * @since 1.0.0
  */
 @Component
+@RequiredArgsConstructor
 public class PersonMapper implements Mapper<Person, PersonModel> {
+
+    private final PhoneService phoneService;
 
     @Override
     public PersonModel mapEntityToModel(Person person) {
@@ -35,8 +40,8 @@ public class PersonMapper implements Mapper<Person, PersonModel> {
                 .withId(person.getId())
                 .withFirstName(person.getFirstName())
                 .withLastName(person.getLastName())
-                .withWorkPhone(person.getWorkPhone())
-                .withCellPhone(person.getCellPhone())
+                .withWorkPhone(phoneService.normalize(person.getWorkPhone()))
+                .withCellPhone(phoneService.normalize(person.getCellPhone()))
                 .withEmail(person.getEmail())
                 .build();
     }

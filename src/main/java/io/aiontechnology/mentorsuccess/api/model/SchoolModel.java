@@ -22,6 +22,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.UUID;
@@ -47,14 +48,14 @@ public class SchoolModel extends RepresentationModel<SchoolModel> {
     private final String name;
 
     /** The school's address */
-    private final AddressModel address;
+    private final @Valid AddressModel address;
 
     /** The school's phone number */
-    @Size(max = 10, message = "{school.phone.size}")
+    @Size(min=10, max = 10, message = "{school.phone.size}")
     private final String phone;
 
     /** The school district that the school is in */
-    @Size(max = 50)
+    @Size(max = 50, message = "{school.district.size}")
     private final String district;
 
     /** Indicates whether the school is private or public */
