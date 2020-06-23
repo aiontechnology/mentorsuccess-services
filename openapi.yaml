@@ -1318,7 +1318,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LeadershipSkillModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_traits"
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_skills"
         responses:
           default:
             statusCode: "200"
