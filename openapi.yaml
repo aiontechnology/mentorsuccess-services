@@ -1257,6 +1257,8 @@ paths:
         responses:
           default:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
@@ -1320,6 +1322,8 @@ paths:
         responses:
           default:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
@@ -1383,6 +1387,8 @@ paths:
         responses:
           default:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
