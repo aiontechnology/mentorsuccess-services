@@ -23,21 +23,35 @@ import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
 
 /**
+ * Helper class for mapping to roles.
+ *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
 @RequiredArgsConstructor
-public abstract class AbstractRoleMapper<Model extends Personnel> implements Mapper<Role, Model> {
+public abstract class AbstractRoleMapper<Model extends Personnel> {
 
+    /** Utility object for processing phone numbers. */
     private final PhoneService phoneService;
 
-    @Override
+    /**
+     * Map a personnel sub-type to a role. A new role is created.
+     *
+     * @param model The personnel sub-type to map.
+     * @return The mapped {@link Role}.
+     */
     public Role mapModelToEntity(Model model) {
         Role role = new Role();
         return mapModelToEntity(model, role);
     }
 
-    @Override
+    /**
+     * Map a personnel sub-type to a role. The role to map to is passed in.
+     *
+     * @param model The personnel sub-type to map.
+     * @param role The {@link Role} to map into.
+     * @return The mapped {@link Role}.
+     */
     public Role mapModelToEntity(Model model, Role role) {
         Person person = new Person();
         person.setFirstName(model.getFirstName());
@@ -51,6 +65,13 @@ public abstract class AbstractRoleMapper<Model extends Personnel> implements Map
         return doMapRole(model, role);
     }
 
+    /**
+     * Implemented by the sub-type to perform type specific mapping
+     *
+     * @param model The personnel sub-type to map.
+     * @param role The {@link Role} to map into.
+     * @return The mapped {@link Role}.
+     */
     protected abstract Role doMapRole(Model model, Role role);
 
 }

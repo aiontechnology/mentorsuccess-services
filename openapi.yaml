@@ -22,27 +22,471 @@ info:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: "1.0.0"
+
 servers:
   - url: "https://ve17iw2h0g.execute-api.us-west-2.amazonaws.com/{basePath}"
     variables:
       basePath:
         default: "/test"
+
 tags:
   - name: person
     description: Person Management
   - name: personnel
     description: School Personnel Management
-  - name: programAdmin
+  - name: program-admin
     description: School Program Admin Management
+  - name: resource
+    description: Resource Management
   - name: school
     description: School Management
   - name: teacher
     description: Teacher Management
-  - name: resource
-    description: Resource Management
+
+# ==================================================================================
+# Path definitions
+# ==================================================================================
+
 paths:
-  # People
+
+  # /api/v1/books ------------------------------------------------------------------
+  /api/v1/books:
+
+    # OPTIONS for /api/v1/books
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # POST for /api/v1/books
+    post:
+      summary: Add a book
+      description: Add a book to the system
+      tags:
+        - resource
+      operationId: createBook
+      requestBody:
+        description: Book to add
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookModel'
+      responses:
+        201:
+          description: The book was created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResultModel'
+          links:
+            self:
+              operationId: getBook
+              parameters:
+                personId: '$response.body#/id'
+              description: >
+                The `id` value returned in the response can be used as the
+                `bookId` parameter in `GET /books/{bookId}`.
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
+        responses:
+          default:
+            statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "POST"
+        type: "http"
+
+  # /api/v1/books/{bookId} ---------------------------------------------------------
+  /api/v1/books/{bookId}:
+    parameters:
+      - in: path
+        name: bookId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired book
+
+    # OPTIONS for /api/v1/books/{bookId}
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/books/{bookId}
+    get:
+      summary: get a book
+      description: Get a book by id
+      tags:
+        - resource
+      operationId: getBook
+      responses:
+        "200":
+          description: Found the requested book
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
+        responses:
+          default:
+            statusCode: "200"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.bookId: "method.request.path.bookId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+    # PUT for /api/v1/books/{bookId}
+    put:
+      summary: Update a book
+      description: Update the book with the given id
+      tags:
+        - resource
+      operationId: updateBook
+      requestBody:
+        description: The updated book
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookModel'
+      responses:
+        "200":
+          description: The book was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResultModel'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.bookId: "method.request.path.bookId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "PUT"
+        type: "http"
+
+    # DELETE for /api/v1/books/{bookId}
+    delete:
+      summary: Disable book
+      description: Disable a book record
+      tags:
+        - resource
+      operationId: deactivateSchool
+      responses:
+        "204":
+          description: The book record was deactivated
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
+        responses:
+          default:
+            statusCode: "204"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.bookId: "method.request.path.bookId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "DELETE"
+        type: "http"
+
+  # /api/v1/interests --------------------------------------------------------------
+  /api/v1/interests:
+
+    # OPTIONS for /api/v1/interests
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/interests
+    get:
+      summary: Get interests
+      description: Get all interests
+      tags:
+        - resource
+      operationId: getInterests
+      responses:
+        "200":
+          description: Returned all interests
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterestModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/interests"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/leadership_skills ------------------------------------------------------
+  /api/v1/leadership_skills:
+
+    # OPTIONS for /api/v1/leadership_skills
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/leadership_skills
+    get:
+      summary: Get leadership skills
+      description: Get all leadership skills
+      tags:
+        - resource
+      operationId: getLeaderhipSkills
+      responses:
+        "200":
+          description: Returned all leadership skills
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadershipSkillModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_skills"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/leadership_traits ------------------------------------------------------
+  /api/v1/leadership_traits:
+
+    # OPTIONS for /api/v1/leadership_traits
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/leadership_traits
+    get:
+      summary: Get leadership traits
+      description: Get all leadership traits
+      tags:
+        - resource
+      operationId: getLeadershipTraits
+      responses:
+        "200":
+          description: Returned all leadership traits
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadershipTraitModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_traits"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/people -----------------------------------------------------------------
   /api/v1/people:
+
+    # OPTIONS for /api/v1/people
     options:
       tags:
         - person
@@ -75,6 +519,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # POST for /api/v1/people
     post:
       summary: Add a person
       description: Add a person to the system
@@ -106,6 +552,12 @@ paths:
               description: >
                 The `id` value returned in the response can be used as the
                 `personId` parameter in `GET /people/{personId}`.
+        400:
+          description: There was an error while creating the person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestModel'
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/people"
         responses:
@@ -121,6 +573,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "POST"
         type: "http"
+
+  #  /api/v1/people/{personId} -----------------------------------------------------
   /api/v1/people/{personId}:
     parameters:
       - in: path
@@ -130,6 +584,8 @@ paths:
           format: uuid
         required: true
         description: The id of the desired person
+
+    # OPTIONS for /api/v1/people/{personId}
     options:
       tags:
         - person
@@ -162,6 +618,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # GET for /api/v1/people/{personId}
     get:
       summary: Get a person
       description: Get a person by id
@@ -169,8 +627,14 @@ paths:
         - person
       operationId: getPerson
       responses:
-        "200":
+        200:
           description: Found the requested person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonResultModel'
+        404:
+          description: Unable to find the requested person
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/people"
         responses:
@@ -185,7 +649,78 @@ paths:
         httpMethod: "GET"
         type: "http"
 
-  # School - Personnel
+  # /api/v1/resources --------------------------------------------------------------
+  /api/v1/resources:
+
+    # OPTIONS for /api/v1/resources
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/resources
+    get:
+      summary: Get all resources
+      description: Get a collection of all resources
+      tags:
+        - resource
+      operationId: getAllResources
+      responses:
+        "200":
+          description: A collection of all resources
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResultModel'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/resources"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/schools/{schoolId}/personnel -------------------------------------------
   /api/v1/schools/{schoolId}/personnel:
     parameters:
       - in: path
@@ -195,6 +730,8 @@ paths:
           format: uuid
         required: true
         description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/personnel
     options:
       tags:
         - personnel
@@ -228,6 +765,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # POST for /api/v1/schools/{schoolId}/personnel
     post:
       summary: Add personnel
       description: Add personnel to a school
@@ -242,7 +781,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PersonnelModel'
       responses:
-        "201":
+        201:
           description: The personnel was created
           headers:
             Access-Control-Allow-Origin:
@@ -262,7 +801,13 @@ paths:
                 `personnelId` parameter in `GET /personnel/{personnelId}
             school:
               operationId: getSchool
-        "400":
+        400:
+          description: There was an error while creating the personnel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestModel'
+        404:
           description: The Requested school was not found
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel"
@@ -280,6 +825,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "POST"
         type: "http"
+
+    # GET for /api/v1/schools/{schoolId}/personnel
     get:
       summary: Get all personnel
       description: Get all personnel for a school (not including teachers)
@@ -297,7 +844,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PersonnelCollection'
+                $ref: '#/components/schemas/PersonnelResultModelCollection'
         "400":
           description: The Requested school was not found
       x-amazon-apigateway-integration:
@@ -316,6 +863,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "GET"
         type: "http"
+
+  # /api/v1/schools/{schoolId}/personnel/{personnelId} -----------------------------
   /api/v1/schools/{schoolId}/personnel/{personnelId}:
     parameters:
       - in: path
@@ -332,6 +881,8 @@ paths:
           format: uuid
         required: true
         description: The id of the desired personnel
+
+    # OPTIONS for /api/v1/schools/{schoolId}/personnel/{personnelId}
     options:
       tags:
         - personnel
@@ -365,6 +916,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/personnel/{personnelId}
     get:
       summary: Get a personnel
       description: Get a particular personnel by id
@@ -411,6 +964,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "GET"
         type: "http"
+
+    # DELETE for /api/v1/schools/{schoolId}/personnel/{personnelId}
     delete:
       summary: Disable personnel
       description: Disable a personnel record
@@ -437,7 +992,7 @@ paths:
         httpMethod: "DELETE"
         type: "http"
 
-  # School - ProgramAdmin
+  # /api/v1/schools/{schoolId}/programAdmins ---------------------------------------
   /api/v1/schools/{schoolId}/programAdmins:
     parameters:
       - in: path
@@ -447,9 +1002,11 @@ paths:
           format: uuid
         required: true
         description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/programAdmins
     options:
       tags:
-        - programAdmin
+        - program-admin
         - school
       responses:
         200:
@@ -480,11 +1037,13 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # POST for /api/v1/schools/{schoolId}/programAdmins
     post:
       summary: Add a program administrator
       description: Add a new program administrator
       tags:
-        - programAdmin
+        - program-admin
         - school
       operationId: createProgramAdmin
       responses:
@@ -497,7 +1056,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProgramAdminModel'
+                $ref: '#/components/schemas/ProgramAdminResultModel'
         "400":
           description: The Requested school was not found
       x-amazon-apigateway-integration:
@@ -516,11 +1075,13 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "POST"
         type: "http"
+
+    # GET for /api/v1/schools/{schoolId}/programAdmins
     get:
       summary: Get all program admins
       description: Get an array of all program admins for a school
       tags:
-        - programAdmin
+        - program-admin
         - school
       operationId: getProgramAdmins
       responses:
@@ -533,7 +1094,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProgramAdminModelCollection'
+                $ref: '#/components/schemas/ProgramAdminResultModelCollection'
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins"
         responses:
@@ -551,8 +1112,10 @@ paths:
         httpMethod: "GET"
         type: "http"
 
-  # Schools
+  # /api/v1/schools ----------------------------------------------------------------
   /api/v1/schools:
+
+    # OPTIONS for /api/v1/schools
     options:
       tags:
         - school
@@ -585,6 +1148,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # POST for /api/v1/schools
     post:
       summary: Create a new school
       description: Create a new school within the system
@@ -601,7 +1166,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SchoolModel'
+                $ref: '#/components/schemas/SchoolResultModel'
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools"
         responses:
@@ -617,6 +1182,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "POST"
         type: "http"
+
+    # GET for /api/v1/schools
     get:
       summary: Get all schools
       description: Get a collection of all schools
@@ -633,7 +1200,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SchoolModelCollection'
+                $ref: '#/components/schemas/SchoolResultModelCollection'
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools"
         responses:
@@ -649,6 +1216,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "GET"
         type: "http"
+
+  # /api/v1/schools/{schoolId} -----------------------------------------------------
   /api/v1/schools/{schoolId}:
     parameters:
       - in: path
@@ -658,6 +1227,8 @@ paths:
           format: uuid
         required: true
         description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}
     options:
       tags:
         - school
@@ -690,6 +1261,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}
     get:
       summary: Get a school
       description: Get a particular school by its id
@@ -721,6 +1294,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "GET"
         type: "http"
+
+    # DELETE for /api/v1/schools/{schoolId}
     delete:
       summary: Delete a school
       description: Delete the school with the given id
@@ -750,6 +1325,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "DELETE"
         type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}
     put:
       summary: Update a school
       description: Update the school with the given id
@@ -798,7 +1375,7 @@ paths:
         httpMethod: "PUT"
         type: "http"
 
-  # School - Teachers
+  # /api/v1/schools/{schoolId}/teachers --------------------------------------------
   /api/v1/schools/{schoolId}/teachers:
     parameters:
       - in: path
@@ -808,6 +1385,8 @@ paths:
           format: uuid
         required: true
         description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/teachers
     options:
       tags:
         - school
@@ -841,6 +1420,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # POST for /api/v1/schools/{schoolId}/teachers
     post:
       summary: Create a teacher
       description: Create a new teacher for a school
@@ -853,7 +1434,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TeacherModel'
+              $ref: '#/components/schemas/TeacherResultModel'
       responses:
         "201":
           description: The teacher is created
@@ -881,6 +1462,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "POST"
         type: "http"
+
+    # GET for /api/v1/schools/{schoolId}/teachers
     get:
       summary: Get a school
       description: Get a particular school by its id
@@ -915,6 +1498,8 @@ paths:
         connectionId: "pmo7ds"
         httpMethod: "GET"
         type: "http"
+
+  # /api/v1/schools/{schoolId}/teachers/{teacherId} --------------------------------
   /api/v1/schools/{schoolId}/teachers/{teacherId}:
     parameters:
       - in: path
@@ -931,6 +1516,8 @@ paths:
           format: uuid
         required: true
         description: The id of the desired teacher
+
+    # OPTIONS for /api/v1/schools/{schoolId}/teachers/{teacherId}
     options:
       tags:
         - school
@@ -964,6 +1551,8 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # DELETE for /api/v1/schools/{schoolId}/teachers/{teacherId}
     delete:
       summary: Deactivate a teacher
       description: Deactivate a particular teacher for a particular school
@@ -996,407 +1585,9 @@ paths:
         httpMethod: "DELETE"
         type: "http"
 
-  # Resources - Meta Data
-  /api/v1/books:
-    options:
-      tags:
-        - resource
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-    post:
-      summary: Add a book
-      description: Add a book to the system
-      tags:
-        - resource
-      operationId: createBook
-      requestBody:
-        description: Book to add
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookModel'
-      responses:
-        201:
-          description: The book was created
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BookResultModel'
-          links:
-            self:
-              operationId: getBook
-              parameters:
-                personId: '$response.body#/id'
-              description: >
-                The `id` value returned in the response can be used as the
-                `bookId` parameter in `GET /books/{bookId}`.
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
-        responses:
-          default:
-            statusCode: "201"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "POST"
-        type: "http"
-  /api/v1/books/{bookId}:
-    parameters:
-      - in: path
-        name: bookId
-        schema:
-          type: string
-          format: uuid
-        required: true
-        description: The id of the desired book
-    options:
-      tags:
-        - resource
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-    get:
-      summary: get a book
-      description: Get a book by id
-      tags:
-        - resource
-      operationId: getBook
-      responses:
-        "200":
-          description: Found the requested book
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
-        responses:
-          default:
-            statusCode: "200"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.path.bookId: "method.request.path.bookId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "GET"
-        type: "http"
-    put:
-      summary: Update a book
-      description: Update the book with the given id
-      tags:
-        - resource
-      operationId: updateBook
-      requestBody:
-        description: The updated book
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/BookModel'
-      responses:
-        "200":
-          description: The book was updated
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BookResultModel'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.path.bookId: "method.request.path.bookId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "PUT"
-        type: "http"
-    delete:
-      summary: Disable book
-      description: Disable a book record
-      tags:
-        - resource
-      operationId: deactivateSchool
-      responses:
-        "204":
-          description: The book record was deactivated
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
-        responses:
-          default:
-            statusCode: "204"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.path.bookId: "method.request.path.bookId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "DELETE"
-        type: "http"
-  /api/v1/interests:
-    options:
-      tags:
-        - resource
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-    get:
-      summary: Get interests
-      description: Get all interests
-      tags:
-        - resource
-      operationId: getInterests
-      responses:
-        "200":
-          description: Returned all interests
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InterestModelCollection'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/interests"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "GET"
-        type: "http"
-  /api/v1/leadership_skills:
-    options:
-      tags:
-        - resource
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-    get:
-      summary: Get leadership skills
-      description: Get all leadership skills
-      tags:
-        - resource
-      operationId: getLeaderhipSkills
-      responses:
-        "200":
-          description: Returned all leadership skills
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LeadershipSkillModelCollection'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_skills"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "GET"
-        type: "http"
-  /api/v1/leadership_traits:
-    options:
-      tags:
-        - resource
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-    get:
-      summary: Get leadership traits
-      description: Get all leadership traits
-      tags:
-        - resource
-      operationId: getLeadershipTraits
-      responses:
-        "200":
-          description: Returned all leadership traits
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/LeadershipTraitModelCollection'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_traits"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "GET"
-        type: "http"
+# ==================================================================================
+# Schema definitions
+# ==================================================================================
 
 components:
   links:
@@ -1408,8 +1599,8 @@ components:
         The `School` object can be retrieved by doing a `GET`
         the the school endpoint using the `schoolId` from current call.
   schemas:
-    Empty:
-      type: object
+
+    # AddressModel -----------------------------------------------------------------
     AddressModel:
       type: object
       properties:
@@ -1432,38 +1623,122 @@ components:
           type: string
           maxLength: 9
           example: 98662
-    UrlArray:
-      type: array
-      items:
-        type: object
-        properties:
-          href:
-            type: string
-            format: url
-    SelfLink:
+
+    # BadRequestModel --------------------------------------------------------------
+    BadRequestModel:
       type: object
       properties:
-        self:
-          allOf:
-            - $ref: '#/components/schemas/UrlArray'
-    SchoolLink:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: string
+        error:
+          type: object
+        message:
+          type: string
+        path:
+          type: string
+
+    # BookModel --------------------------------------------------------------------
+    BookModel:
+      required:
+        - author
+        - title
+        - gradeLevel
       type: object
       properties:
-        school:
+        author:
+          type: string
+          maxLength: 40
+          example: J. R. R. Tolkien
+        title:
+          type: string
+          maxLength: 30
+          example: The Fellowship of the Ring
+        gradeLevel:
+          type: integer
+          example: 3
+        interests:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/NameModel'
+        leadershipSkills:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/NameModel'
+        leaderTraits:
+          type: array
+          items:
+            allOf:
+              - $ref: '#/components/schemas/NameModel'
+
+    # BookResultModel --------------------------------------------------------------
+    BookResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/BookModel'
+      properties:
+        _links:
+          type: object
           allOf:
-            - $ref: '#/components/schemas/UrlArray'
-    TeachersLink:
+            - $ref: '#/components/schemas/SelfLink'
+
+    # Empty ------------------------------------------------------------------------
+    Empty:
+      type: object
+
+    # InterestModelCollection ------------------------------------------------------
+    InterestModelCollection:
       type: object
       properties:
-        teachers:
-          allOf:
-            - $ref: '#/components/schemas/UrlArray'
-    ProgramAdminsLink:
+        _embedded:
+          type: object
+          properties:
+            interestTraitModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/NameModel'
+
+    # LeadershipSkillModelCollection -----------------------------------------------
+    LeadershipSkillModelCollection:
       type: object
       properties:
-        programAdmins:
-          allOf:
-            - $ref: '#/components/schemas/UrlArray'
+        _embedded:
+          type: object
+          properties:
+            leadershipSkillModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/NameModel'
+
+    # LeadershipTraitModelCollection -----------------------------------------------
+    LeadershipTraitModelCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            leadershipTraitModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/NameModel'
+
+    # NameModel --------------------------------------------------------------------
+    NameModel:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+
+    # PersonModel ------------------------------------------------------------------
     PersonModel:
       required:
         - firstName
@@ -1493,6 +1768,46 @@ components:
           format: phone
           maxLength: 10
           example: 3605551212
+
+    # PersonnelModel ---------------------------------------------------------------
+    PersonnelModel:
+      required:
+        - type
+        - firstName
+        - lastName
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PersonModel'
+      properties:
+        type:
+          type: string
+          enum: [SOCIAL_WORKER, PRINCIPAL, COUNSELOR, STAFF]
+
+    # PersonnelResultModel ---------------------------------------------------------
+    PersonnelResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PersonnelModel'
+      properties:
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
+            - $ref: '#/components/schemas/SchoolLink'
+
+    # PersonnelResultModelCollection -----------------------------------------------
+    PersonnelResultModelCollection:
+      properties:
+        embedded:
+          type: object
+          properties:
+            personnelModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/PersonResultModel'
+
+    # PersonResultModel ------------------------------------------------------------
     PersonResultModel:
       type: object
       allOf:
@@ -1506,38 +1821,8 @@ components:
           type: object
           allOf:
             - $ref: '#/components/schemas/SelfLink'
-    PersonnelModel:
-      required:
-        - type
-        - firstName
-        - lastName
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/PersonModel'
-      properties:
-        type:
-          type: string
-          enum: [SOCIAL_WORKER, PRINCIPAL, COUNSELOR, STAFF]
-    PersonnelResultModel:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/PersonnelModel'
-      properties:
-        _links:
-          type: object
-          allOf:
-            - $ref: '#/components/schemas/SelfLink'
-            - $ref: '#/components/schemas/SchoolLink'
-    PersonnelCollection:
-      properties:
-        embedded:
-          type: object
-          properties:
-            personnelModelList:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/PersonResultModel'
+
+    # ProgramAdminModel ------------------------------------------------------------
     ProgramAdminModel:
       required:
         - firstName
@@ -1545,7 +1830,21 @@ components:
       type: object
       allOf:
         - $ref: '#/components/schemas/PersonModel'
-    ProgramAdminModelCollection:
+
+    # ProgramAdminResultModel ------------------------------------------------------
+    ProgramAdminResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ProgramAdminModel'
+      properties:
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
+            - $ref: '#/components/schemas/SchoolLink'
+
+    # ProgramAdminResultModelCollection --------------------------------------------------
+    ProgramAdminResultModelCollection:
       properties:
         embedded:
           type: object
@@ -1555,13 +1854,25 @@ components:
               items:
                 type: object
                 allOf:
-                  - $ref: '#/components/schemas/ProgramAdminModel'
-                properties:
-                  _links:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/SelfLink'
-                      - $ref: '#/components/schemas/SchoolLink'
+                  - $ref: '#/components/schemas/ProgramAdminResultModel'
+
+    # ProgramAdminsLink ------------------------------------------------------------
+    ProgramAdminsLink:
+      type: object
+      properties:
+        programAdmins:
+          allOf:
+            - $ref: '#/components/schemas/UrlArray'
+
+    # SchoolLink -------------------------------------------------------------------
+    SchoolLink:
+      type: object
+      properties:
+        school:
+          allOf:
+            - $ref: '#/components/schemas/UrlArray'
+
+    # SchoolModel ------------------------------------------------------------------
     SchoolModel:
       required:
         - name
@@ -1589,7 +1900,22 @@ components:
         isPrivate:
           type: boolean
           example: true
-    SchoolModelCollection:
+
+    # SchoolResultModel ------------------------------------------------------------
+    SchoolResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SchoolModel'
+      properties:
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
+            - $ref: '#/components/schemas/TeachersLink'
+            - $ref: '#/components/schemas/ProgramAdminsLink'
+
+    # SchoolResultModelCollection --------------------------------------------------------
+    SchoolResultModelCollection:
       properties:
         embedded:
           type: object
@@ -1599,14 +1925,17 @@ components:
               items:
                 type: object
                 allOf:
-                  - $ref: '#/components/schemas/SchoolModel'
-                properties:
-                  _links:
-                    type: object
-                    allOf:
-                      - $ref: '#/components/schemas/SelfLink'
-                      - $ref: '#/components/schemas/TeachersLink'
-                      - $ref: '#/components/schemas/ProgramAdminsLink'
+                  - $ref: '#/components/schemas/SchoolResultModel'
+
+    # SelfLink ---------------------------------------------------------------------
+    SelfLink:
+      type: object
+      properties:
+        self:
+          allOf:
+            - $ref: '#/components/schemas/UrlArray'
+
+    # TeacherModel -----------------------------------------------------------------
     TeacherModel:
       required:
         - firstName
@@ -1619,6 +1948,8 @@ components:
           type: integer
         grade2:
           type: integer
+
+    # TeacherResultModel -----------------------------------------------------------
     TeacherResultModel:
       type: object
       allOf:
@@ -1629,6 +1960,8 @@ components:
           allOf:
             - $ref: '#/components/schemas/SelfLink'
             - $ref: '#/components/schemas/SchoolLink'
+
+    # TeacherResultModelCollection -------------------------------------------------
     TeacherResultModelCollection:
       type: object
       properties:
@@ -1640,94 +1973,21 @@ components:
               items:
                 allOf:
                   - $ref: '#/components/schemas/TeacherResultModel'
-    BookModel:
-      required:
-        - title
+
+    # TeachersLink -----------------------------------------------------------------
+    TeachersLink:
       type: object
       properties:
-        author:
-          type: string
-          maxLength: 40
-        title:
-          type: string
-          maxLength: 30
-        gradeLevel:
-          type: integer
-        interests:
-          type: array
-          items:
-            allOf:
-              - $ref: '#/components/schemas/InterestModel'
-        leadershipSkills:
-          type: array
-          items:
-            allOf:
-              - $ref: '#/components/schemas/LeadershipSkillModel'
-        leaderTraits:
-          type: array
-          items:
-            allOf:
-              - $ref: '#/components/schemas/LeadershipTraitModel'
-    BookResultModel:
-      type: object
-      allOf:
-        - $ref: '#/components/schemas/BookModel'
-      properties:
-        _links:
-          type: object
+        teachers:
           allOf:
-            - $ref: '#/components/schemas/SelfLink'
-    LeadershipSkillModel:
-      required:
-        - name
-      type: object
-      properties:
-        name:
-          type: string
-    LeadershipSkillModelCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            leadershipSkillModelList:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/LeadershipSkillModel'
-    LeadershipTraitModel:
-      required:
-        - name
-      type: object
-      properties:
-        name:
-          type: string
-    LeadershipTraitModelCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            leadershipTraitModelList:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/LeadershipTraitModel'
-    InterestModel:
-      required:
-        - name
-      type: object
-      properties:
-        name:
-          type: string
-    InterestModelCollection:
-      type: object
-      properties:
-        _embedded:
-          type: object
-          properties:
-            leadershipTraitModelList:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/InterestModel'
+            - $ref: '#/components/schemas/UrlArray'
+
+    # UrlArray ---------------------------------------------------------------------
+    UrlArray:
+      type: array
+      items:
+        type: object
+        properties:
+          href:
+            type: string
+            format: url

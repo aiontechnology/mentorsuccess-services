@@ -22,6 +22,9 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Data
@@ -32,14 +35,21 @@ public class PersonModel extends RepresentationModel<PersonModel> {
 
     private final UUID id;
 
+    @NotNull(message = "{person.firstName.notNull}")
+    @Size(max = 50, message = "{person.firstName.size}")
     private final String firstName;
 
+    @NotNull(message = "{person.lastName.notNull}")
+    @Size(max = 50, message = "{person.lastName.size}")
     private final String lastName;
 
+    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{person.email.invalid}")
     private final String email;
 
+    @Pattern(regexp = "\\d{10}", message = "{person.workPhone.invalid}")
     private final String workPhone;
 
+    @Pattern(regexp = "\\d{10}", message = "{person.cellPhone.invalid}")
     private final String cellPhone;
 
 }

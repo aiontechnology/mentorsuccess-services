@@ -28,7 +28,7 @@ import javax.inject.Inject;
  * @since 1.0.0
  */
 @Component
-public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> {
+public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> implements Mapper<Role, PersonnelModel> {
 
     @Inject
     public PersonnelMapper(PhoneService phoneService) {
@@ -43,13 +43,13 @@ public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> {
                 .withEmail(role.getPerson().getEmail())
                 .withWorkPhone(role.getPerson().getWorkPhone())
                 .withCellPhone(role.getPerson().getCellPhone())
-                .withType(role.getType().name())
+                .withType(role.getType())
                 .build();
     }
 
     @Override
     protected Role doMapRole(PersonnelModel personnelModel, Role role) {
-        role.setType(Role.RoleType.valueOf(personnelModel.getType()));
+        role.setType(personnelModel.getType());
         return role;
     }
 

@@ -16,10 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.error.NotImplementedException;
 import io.aiontechnology.mentorsuccess.api.model.InterestModel;
 import io.aiontechnology.mentorsuccess.entity.Interest;
+import io.aiontechnology.mentorsuccess.service.InterestService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 /**
  * Mapper between {@link Interest} and {@link InterestModel}.
@@ -28,7 +31,10 @@ import org.springframework.stereotype.Component;
  * @since 1.0.0
  */
 @Component
+@RequiredArgsConstructor
 public class InterestMapper implements Mapper<Interest, InterestModel> {
+
+    private final InterestService interestService;
 
     @Override
     public InterestModel mapEntityToModel(Interest interest) {
@@ -39,12 +45,21 @@ public class InterestMapper implements Mapper<Interest, InterestModel> {
 
     @Override
     public Interest mapModelToEntity(InterestModel interestModel) {
-        throw new NotImplementedException();
+        Interest interest = new Interest();
+        return mapModelToEntity(interestModel, interest);
     }
 
     @Override
     public Interest mapModelToEntity(InterestModel interestModel, Interest interest) {
-        throw new NotImplementedException();
+        Interest interest1 = Optional.ofNullable(interestModel)
+                .map(InterestModel::getName)
+                .map(interestService::findInterestByName)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .orElse(null);
+        interest.setId(interest1.getId());
+        interest.setName(interest1.getName());
+        return interest;
     }
 
 }

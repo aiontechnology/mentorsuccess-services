@@ -27,6 +27,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
+ * A service the provides business logic for {@link Book Books}.
+ *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
@@ -35,8 +37,15 @@ import java.util.UUID;
 @Slf4j
 public class BookService {
 
+    /** The repository for {@link Book Books} in the database */
     private final BookRepository bookRepository;
 
+    /**
+     * Create a book in the database by saving the provided {@link Book}.
+     *
+     * @param book The {@link Book} to save.
+     * @return The resulting {@link Book}. Will have a db generated id populated.
+     */
     @Transactional
     public Book createBook(Book book) {
         log.debug("Creating book: {}", book);
@@ -49,13 +58,26 @@ public class BookService {
      * @param book The {@link Book} to deactivate.
      */
     @Transactional
-    public Book deactivateBook(Book book) {
+    public void deactivateBook(Book book) {
         book.setIsActive(false);
         bookRepository.save(book);
-        return book;
     }
 
+    /**
+     * Get all {@link Book Books} in the system.
+     *
+     * @return All {@link Book Books}.
+     */
+    public Iterable<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
 
+    /**
+     * Get a {@link Book} for the given id.
+     *
+     * @param id The id of the desired {@link Book}.
+     * @return The {@link Book} if it could be found.
+     */
     public Optional<Book> getBook(UUID id) {
         return bookRepository.findById(id);
     }

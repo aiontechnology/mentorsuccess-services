@@ -31,7 +31,7 @@ import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
  * @since 1.0.0
  */
 @Component
-public class TeacherMapper extends AbstractRoleMapper<TeacherModel> {
+public class TeacherMapper extends AbstractRoleMapper<TeacherModel> implements Mapper<Role, TeacherModel> {
 
     @Inject
     public TeacherMapper(PhoneService phoneService) {

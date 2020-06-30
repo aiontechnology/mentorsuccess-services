@@ -17,13 +17,14 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
+import io.aiontechnology.mentorsuccess.api.mapping.AddressMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
 import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.IanaLinkRelations;
 
-import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -31,11 +32,13 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+/**
+ * Tests for {@link SchoolModelAssembler}.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
+ */
 public class SchoolModelAssemblerTest {
-
-    @Inject
-    private SchoolModelAssembler assembler;
 
     @Test
     void shouldMapToModel() {
@@ -52,6 +55,8 @@ public class SchoolModelAssemblerTest {
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
         School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.emptyList());
+
+        SchoolModelAssembler assembler = new SchoolModelAssembler(new SchoolMapper(new AddressMapper(), new PhoneService()), new LinkHelper<>());
 
         // execute the SUT
         SchoolModel schoolModel = assembler.toModel(school);
@@ -90,6 +95,8 @@ public class SchoolModelAssemblerTest {
                         linkTo(SchoolController.class).slash(school.getId()).withSelfRel(),
                         linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers")
                 );
+
+        SchoolModelAssembler assembler = new SchoolModelAssembler(new SchoolMapper(new AddressMapper(), new PhoneService()), new LinkHelper<>());
 
         // execute the SUT
         SchoolModel schoolModel = assembler.toModel(school, linkProvider);

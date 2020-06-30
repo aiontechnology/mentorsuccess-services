@@ -30,7 +30,7 @@ import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN
  * @since 1.0.0
  */
 @Component
-public class ProgramAdminMapper extends AbstractRoleMapper<ProgramAdminModel> {
+public class ProgramAdminMapper extends AbstractRoleMapper<ProgramAdminModel> implements Mapper<Role, ProgramAdminModel> {
 
     @Inject
     public ProgramAdminMapper(PhoneService phoneService) {

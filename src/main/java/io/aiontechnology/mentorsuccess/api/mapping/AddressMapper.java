@@ -43,7 +43,8 @@ public class AddressMapper implements Mapper<School, AddressModel> {
 
     @Override
     public School mapModelToEntity(AddressModel addressModel) {
-        throw new NotImplementedException();
+        School school = new School();
+        return mapModelToEntity(addressModel, school);
     }
 
     @Override

@@ -22,6 +22,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 /**
  * @author Whitney Hunter
  */
@@ -32,18 +36,25 @@ import org.springframework.hateoas.RepresentationModel;
 public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> implements Personnel {
 
     /** The first name of the program admin. */
+    @NotNull(message = "{programAdmin.firstName.notNull}")
+    @Size(max = 50, message = "{programAdmin.firstName.size}")
     private final String firstName;
 
     /** The last name of the program admin. */
+    @NotNull(message = "{programAdmin.lastName.notNull}")
+    @Size(max = 50, message = "{programAdmin.lastName.size}")
     private final String lastName;
 
     /** The program admin's email address. */
+    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{programAdmin.email.invalid}")
     private final String email;
 
     /** The program admin's work phone number. */
+    @Pattern(regexp = "\\d{10}", message = "{programAdmin.workPhone.invalid}")
     private final String workPhone;
 
     /** The program admin's cell phone. */
+    @Pattern(regexp = "\\d{10}", message = "{programAdmin.cellPhone.invalid}")
     private final String cellPhone;
 
 }
