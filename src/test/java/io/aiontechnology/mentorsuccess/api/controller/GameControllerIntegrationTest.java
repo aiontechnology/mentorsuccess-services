@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aiontechnology.mentorsuccess.api.model.BookModel;
+import io.aiontechnology.mentorsuccess.api.model.GameModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,19 +46,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Tests for the {@link BookController}.
+ * Tests for {@link GameController}.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@Sql({"/io/aiontechnology/mentorsuccess/api/controller/book-controller.sql"})
+@Sql({"/io/aiontechnology/mentorsuccess/api/controller/game-controller.sql"})
 @Transactional
-public class BookControllerIntegrationTest {
+public class GameControllerIntegrationTest {
 
-    private static final String TITLE = "The Fellowship of the Rings";
-    private static final String AUTHOR = "J. R. R. Tolkien";
+    private static final String NAME = "Monopoly";
+    private static final String DESCRIPTION = "Fun with Capitalism";
     private static final Integer GRADE_LEVEL = 3;
 
     @Inject
@@ -67,125 +68,125 @@ public class BookControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testCreateBook() throws Exception {
+    void testCreateGame() throws Exception {
         // setup the fixture
-        BookModel bookModel = BookModel.builder()
-                .withTitle(TITLE)
-                .withAuthor(AUTHOR)
+        GameModel gameModel = GameModel.builder()
+                .withName(NAME)
+                .withDescription(DESCRIPTION)
                 .withGradeLevel(GRADE_LEVEL)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/books")
+        ResultActions result = mvc.perform(post("/api/v1/games")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookModel)));
+                .content(objectMapper.writeValueAsString(gameModel)));
 
         // validation
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.title", is(TITLE)))
-                .andExpect(jsonPath("$.author", is(AUTHOR)))
+                .andExpect(jsonPath("$.name", is(NAME)))
+                .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
                 .andExpect(jsonPath("$._links.length()", is(1)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
 
     @Test
-    void testCreateBook_nullAllowedFields() throws Exception {
+    void testCreateGame_nullAllowedFields() throws Exception {
         // setup the fixture
-        BookModel bookModel = BookModel.builder()
-                .withTitle(TITLE)
-                .withAuthor(null)
+        GameModel gameModel = GameModel.builder()
+                .withName(NAME)
+                .withDescription(null)
                 .withGradeLevel(GRADE_LEVEL)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/books")
+        ResultActions result = mvc.perform(post("/api/v1/games")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookModel)));
+                .content(objectMapper.writeValueAsString(gameModel)));
 
         // validation
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.title", is(TITLE)))
-                .andExpect(jsonPath("$.author", nullValue()))
+                .andExpect(jsonPath("$.name", is(NAME)))
+                .andExpect(jsonPath("$.description", nullValue()))
                 .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
                 .andExpect(jsonPath("$._links.length()", is(1)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
 
     @Test
-    void testCreateBook_nullRequiredValues() throws Exception {
+    void testCreateGame_nullRequiredValues() throws Exception {
         // setup the fixture
-        BookModel bookModel = BookModel.builder()
-                .withTitle(null)
-                .withAuthor(AUTHOR)
+        GameModel gameModel = GameModel.builder()
+                .withName(null)
+                .withDescription(DESCRIPTION)
                 .withGradeLevel(null)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/books")
+        ResultActions result = mvc.perform(post("/api/v1/games")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookModel)));
+                .content(objectMapper.writeValueAsString(gameModel)));
 
         // validation
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(2)))
-                .andExpect(jsonPath("$.error.title", is("A title is required for a book")))
-                .andExpect(jsonPath("$.error.gradeLevel", is("A grade level is required for a book")))
+                .andExpect(jsonPath("$.error.name", is("A name is required for a game")))
+                .andExpect(jsonPath("$.error.gradeLevel", is("A grade level is required for a game")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
-                .andExpect(jsonPath("$.path", is("/api/v1/books")));
+                .andExpect(jsonPath("$.path", is("/api/v1/games")));
     }
 
     @Test
-    void testCreateBook_fieldsInvalid() throws Exception {
+    void testCreateGame_fieldsInvalid() throws Exception {
         // setup the fixture
-        BookModel bookModel = BookModel.builder()
-                .withTitle("12345678901234567890123456789012345678901")
-                .withAuthor("1234567890123456789012345678901")
+        GameModel gameModel = GameModel.builder()
+                .withName("12345678901234567890123456789012345678901")
+                .withDescription("123456789012345678901234567890123456789012345678901")
                 .withGradeLevel(7)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/books")
+        ResultActions result = mvc.perform(post("/api/v1/games")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookModel)));
+                .content(objectMapper.writeValueAsString(gameModel)));
 
         // validation
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(3)))
-                .andExpect(jsonPath("$.error.title", is("The title of a book can not be longer than 40 characters")))
-                .andExpect(jsonPath("$.error.author", is("The book's author can not be longer than 30 characters")))
+                .andExpect(jsonPath("$.error.name", is("The name of a game can not be longer than 40 characters")))
+                .andExpect(jsonPath("$.error.description", is("The game's description can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.gradeLevel", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
-                .andExpect(jsonPath("$.path", is("/api/v1/books")));
+                .andExpect(jsonPath("$.path", is("/api/v1/games")));
     }
 
     @Test
-    void testCreateBook_withRelations() throws Exception {
+    void testCreateGame_withRelations() throws Exception {
         // setup the fixture
-        Map<String, Object> book = new HashMap<>();
-        book.put("title", TITLE);
-        book.put("author", AUTHOR);
-        book.put("gradeLevel", GRADE_LEVEL);
-        book.put("interests", Arrays.asList("INTEREST1"));
-        book.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT1"));
-        book.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
+        Map<String, Object> game = new HashMap<>();
+        game.put("name", NAME);
+        game.put("description", DESCRIPTION);
+        game.put("gradeLevel", GRADE_LEVEL);
+        game.put("interests", Arrays.asList("INTEREST1"));
+        game.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT1"));
+        game.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/books")
+        ResultActions result = mvc.perform(post("/api/v1/games")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(book)));
+                .content(objectMapper.writeValueAsString(game)));
 
         // validation
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.title", is(TITLE)))
-                .andExpect(jsonPath("$.author", is(AUTHOR)))
+                .andExpect(jsonPath("$.name", is(NAME)))
+                .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
                 .andExpect(jsonPath("$.interests.length()", is(1)))
                 .andExpect(jsonPath("$.interests[0].name", is("INTEREST1")))
@@ -194,23 +195,23 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
 
     @Test
-    void testGetBookById_found() throws Exception {
+    void testGetGameById_found() throws Exception {
         // setup the fixture
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(get("/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b")
+        ResultActions result = mvc.perform(get("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
                 .contentType(APPLICATION_JSON));
 
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.title", is("TITLE")))
-                .andExpect(jsonPath("$.author", is("AUTHOR")))
+                .andExpect(jsonPath("$.name", is("NAME")))
+                .andExpect(jsonPath("$.description", is("DESCRIPTION")))
                 .andExpect(jsonPath("$.gradeLevel", is(1)))
                 .andExpect(jsonPath("$.interests.length()", is(1)))
                 .andExpect(jsonPath("$.interests[0].name", is("INTEREST1")))
@@ -219,16 +220,16 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
 
     @Test
-    void testGetBookById_notFound() throws Exception {
+    void testGetGameById_notFound() throws Exception {
         // setup the fixture
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(get("/api/v1/books/d53af381-d524-40f7-8df9-3e808c9ad46b")
+        ResultActions result = mvc.perform(get("/api/v1/games/d53af381-d524-40f7-8df9-3e808c9ad46b")
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -236,26 +237,26 @@ public class BookControllerIntegrationTest {
     }
 
     @Test
-    void testUpdateBook() throws Exception {
+    void testUpdateGame() throws Exception {
         // setup the fixture
-        Map<String, Object> updatedBook = new HashMap<>();
-        updatedBook.put("title", "NEW_TITLE");
-        updatedBook.put("author", "NEW_AUTHOR");
-        updatedBook.put("gradeLevel", 2);
-        updatedBook.put("interests", Arrays.asList("INTEREST2"));
-        updatedBook.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT2"));
-        updatedBook.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL2"));
+        Map<String, Object> updatedGame = new HashMap<>();
+        updatedGame.put("name", "NEW_NAME");
+        updatedGame.put("description", "NEW_DESCRIPTION");
+        updatedGame.put("gradeLevel", 2);
+        updatedGame.put("interests", Arrays.asList("INTEREST2"));
+        updatedGame.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT2"));
+        updatedGame.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL2"));
 
         // execute the SUT
-        ResultActions result = mvc.perform(put("/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b")
+        ResultActions result = mvc.perform(put("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedBook)));
+                .content(objectMapper.writeValueAsString(updatedGame)));
 
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.title", is("NEW_TITLE")))
-                .andExpect(jsonPath("$.author", is("NEW_AUTHOR")))
+                .andExpect(jsonPath("$.name", is("NEW_NAME")))
+                .andExpect(jsonPath("$.description", is("NEW_DESCRIPTION")))
                 .andExpect(jsonPath("$.gradeLevel", is(2)))
                 .andExpect(jsonPath("$.interests.length()", is(1)))
                 .andExpect(jsonPath("$.interests[0].name", is("INTEREST2")))
@@ -264,16 +265,16 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL2")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
 
     @Test
-    void testDeactivateBook() throws Exception {
+    void testDeactivateGame() throws Exception {
         // setup the fixture
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b"));
+        ResultActions result = mvc.perform(delete("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b"));
 
         // validation
         result.andExpect(status().isNoContent());

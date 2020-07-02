@@ -17,22 +17,25 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModelHolder;
 import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@Component
 @RequiredArgsConstructor
 public class LeadershipTraitMapper implements Mapper<LeadershipTrait, LeadershipTraitModel> {
 
-    private final LeadershipTraitService leadershipTraitService;
+    private final Function<String, Optional<LeadershipTrait>> leadershipTraitGetter;
 
     @Override
     public LeadershipTraitModel mapEntityToModel(LeadershipTrait leadershipTrait) {
@@ -51,13 +54,28 @@ public class LeadershipTraitMapper implements Mapper<LeadershipTrait, Leadership
     public LeadershipTrait mapModelToEntity(LeadershipTraitModel leadershipTraitModel, LeadershipTrait leadershipTrait) {
         LeadershipTrait leadershipTrait1 = Optional.ofNullable(leadershipTraitModel)
                 .map(LeadershipTraitModel::getName)
-                .map(leadershipTraitService::findCharacterTraitByName)
+                .map(name -> leadershipTraitGetter.apply(name))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(null);
         leadershipTrait.setId(leadershipTrait1.getId());
         leadershipTrait.setName(leadershipTrait1.getName());
         return leadershipTrait;
+    }
+
+    public Set<LeadershipTraitModel> mapLeadershipTraits(Supplier<Set<LeadershipTrait>> leadershipTraitSuppler) {
+        return leadershipTraitSuppler.get().stream()
+                .map(this::mapEntityToModel)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<LeadershipTrait> mapLeadershipTraits(LeadershipTraitModelHolder holder) {
+        if (holder.getLeadershipTraits() != null) {
+            return holder.getLeadershipTraits().stream()
+                    .map(this::mapModelToEntity)
+                    .collect(Collectors.toSet());
+        }
+        return Collections.emptySet();
     }
 
 }

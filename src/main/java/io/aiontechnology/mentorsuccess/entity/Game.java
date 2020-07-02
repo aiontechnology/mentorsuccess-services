@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
@@ -33,14 +34,18 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * @author Whitney Hunter
+ * Entity that represents a game.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@EqualsAndHashCode(callSuper = false)
 @Where(clause = "is_active = true")
-public class Book {
+public class Game {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -48,10 +53,10 @@ public class Book {
     private UUID id;
 
     @Column
-    private String title;
+    private String name;
 
     @Column
-    private String author;
+    private String description;
 
     @Column
     private Integer gradeLevel;
@@ -60,20 +65,20 @@ public class Book {
     private Boolean isActive;
 
     @ManyToMany
-    @JoinTable(name = "book_interest",
-            joinColumns = @JoinColumn(name = "book_id"),
+    @JoinTable(name = "game_interest",
+            joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     private Set<Interest> interests;
 
     @ManyToMany
-    @JoinTable(name = "book_leadershipskill",
-            joinColumns = @JoinColumn(name = "book_id"),
+    @JoinTable(name = "game_leadershipskill",
+            joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
     private Set<LeadershipSkill> leadershipSkills;
 
     @ManyToMany
-    @JoinTable(name = "book_leadershiptrait",
-            joinColumns = @JoinColumn(name = "book_id"),
+    @JoinTable(name = "game_leadershiptrait",
+            joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
     private Set<LeadershipTrait> leadershipTraits;
 
