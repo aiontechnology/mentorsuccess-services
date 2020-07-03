@@ -25,6 +25,7 @@ import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -79,6 +83,20 @@ public class BookController {
                 .map(bookService::createBook)
                 .map(b -> bookModelAssembler.toModel(b, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
+    }
+
+    /**
+     * A REST endpoint for retrieving all books.
+     *
+     * @return A collection of {@link BookModel} instances for all books.
+     */
+    @GetMapping
+    public CollectionModel<BookModel> getAllBooks() {
+        log.debug("Getting all books");
+        List<BookModel> books = StreamSupport.stream(bookService.getAllBooks().spliterator(), false)
+                .map(s -> bookModelAssembler.toModel(s, linkProvider))
+                .collect(Collectors.toList());
+        return CollectionModel.of(books);
     }
 
     /**

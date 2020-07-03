@@ -134,6 +134,40 @@ paths:
         httpMethod: "POST"
         type: "http"
 
+    # GET for /api/v1/books
+    get:
+      summary: Get all books
+      description: Get a collection of all books
+      tags:
+        - resource
+      operationId: getAllBooks
+      responses:
+        "200":
+          description: A collection of all books
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResultModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
   # /api/v1/books/{bookId} ---------------------------------------------------------
   /api/v1/books/{bookId}:
     parameters:
@@ -353,6 +387,40 @@ paths:
         connectionType: "VPC_LINK"
         connectionId: "pmo7ds"
         httpMethod: "POST"
+        type: "http"
+
+    # GET for /api/v1/games
+    get:
+      summary: Get all games
+      description: Get a collection of all games
+      tags:
+        - resource
+      operationId: getAllGames
+      responses:
+        "200":
+          description: A collection of all games
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResultModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
         type: "http"
 
   # /api/v1/games/{gameId} ---------------------------------------------------------
@@ -924,7 +992,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/BookResultModel'
+                $ref: '#/components/schemas/ResourceResultModelCollection'
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/resources"
         responses:
@@ -1907,6 +1975,19 @@ components:
           allOf:
             - $ref: '#/components/schemas/SelfLink'
 
+    # BookResultModelCollection --------------------------------------------------------
+    BookResultModelCollection:
+      properties:
+        embedded:
+          type: object
+          properties:
+            bookModelList:
+              type: array
+              items:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/BookResultModel'
+
     # Empty ------------------------------------------------------------------------
     Empty:
       type: object
@@ -1955,6 +2036,19 @@ components:
           type: object
           allOf:
             - $ref: '#/components/schemas/SelfLink'
+
+    # GameResultModelCollection --------------------------------------------------------
+    GameResultModelCollection:
+      properties:
+        embedded:
+          type: object
+          properties:
+            bookModelList:
+              type: array
+              items:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/GameResultModel'
 
     # InterestModelCollection ------------------------------------------------------
     InterestModelCollection:
@@ -2129,6 +2223,23 @@ components:
         programAdmins:
           allOf:
             - $ref: '#/components/schemas/UrlArray'
+
+    # ResourceResultModelCollection -----------------------------------------------
+    ResourceResultModelCollection:
+      properties:
+        embedded:
+          type: object
+          properties:
+            bookModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/BookResultModel'
+            gameModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/GameResultModel'
 
     # SchoolLink -------------------------------------------------------------------
     SchoolLink:

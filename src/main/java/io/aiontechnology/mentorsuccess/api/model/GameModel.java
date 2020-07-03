@@ -38,7 +38,7 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class GameModel extends RepresentationModel<GameModel> implements InterestModelHolder, LeadershipSkillModelHolder,
+public class GameModel extends ResourceModel<GameModel> implements InterestModelHolder, LeadershipSkillModelHolder,
         LeadershipTraitModelHolder {
 
     @NotNull(message = "{game.name.notNull}")

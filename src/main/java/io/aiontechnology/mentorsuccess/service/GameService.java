@@ -64,6 +64,15 @@ public class GameService {
     }
 
     /**
+     * Get all {@link Game Games} in the system.
+     *
+     * @return All {@link Game Games}.
+     */
+    public Iterable<Game> getAllGames() {
+        return gameRepository.findAll();
+    }
+
+    /**
      * Get a {@link Game} for the given id.
      *
      * @param id The id of the desired {@link Game}.
