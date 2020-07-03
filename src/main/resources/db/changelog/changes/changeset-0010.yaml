@@ -1,0 +1,132 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 10
+      author: whitney
+      changes:
+        - createTable:
+            tableName: game
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: grade_level
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultNullValue: true
+        - createTable:
+            tableName: game_interest
+            columns:
+              - column:
+                  name: game_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: game_interest
+            columnNames: game_id, interest_id
+            constraintName: pk_game_interest
+        - addForeignKeyConstraint:
+            baseTableName: game_interest
+            baseColumnNames: game_id
+            referencedTableName: game
+            referencedColumnNames: id
+            constraintName: fk_gameinterest_game
+        - addForeignKeyConstraint:
+            baseTableName: game_interest
+            baseColumnNames: interest_id
+            referencedTableName: interest
+            referencedColumnNames: id
+            constraintName: fk_gameinterest_interest
+        - createTable:
+            tableName: game_leadershiptrait
+            columns:
+              - column:
+                  name: game_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: leadershiptrait_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: game_leadershiptrait
+            columnNames: game_id, leadershiptrait_id
+            constraintName: pk_game_leadershiptrait
+        - addForeignKeyConstraint:
+            baseTableName: game_leadershiptrait
+            baseColumnNames: game_id
+            referencedTableName: game
+            referencedColumnNames: id
+            constraintName: fk_gameleadershiptrait_game
+        - addForeignKeyConstraint:
+            baseTableName: game_leadershiptrait
+            baseColumnNames: leadershiptrait_id
+            referencedTableName: leadership_trait
+            referencedColumnNames: id
+            constraintName: fk_gameleadershiptrait_leadershiptrait
+        - createTable:
+            tableName: game_leadershipskill
+            columns:
+              - column:
+                  name: game_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: leadershipskill_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: game_leadershipskill
+            columnNames: game_id, leadershipskill_id
+            constraintName: pk_game_leadershipskill
+        - addForeignKeyConstraint:
+            baseTableName: game_leadershipskill
+            baseColumnNames: game_id
+            referencedTableName: game
+            referencedColumnNames: id
+            constraintName: fk_gameleadershipskill_game
+        - addForeignKeyConstraint:
+            baseTableName: game_leadershipskill
+            baseColumnNames: leadershipskill_id
+            referencedTableName: leadership_skill
+            referencedColumnNames: id
+            constraintName: fk_gameleadershipskill_leadershipskill

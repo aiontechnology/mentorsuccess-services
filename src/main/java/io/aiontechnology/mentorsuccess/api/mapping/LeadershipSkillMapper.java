@@ -17,22 +17,25 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModelHolder;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@Component
 @RequiredArgsConstructor
 public class LeadershipSkillMapper implements Mapper<LeadershipSkill, LeadershipSkillModel> {
 
-    private final LeadershipSkillService leadershipSkillService;
+    private final Function<String, Optional<LeadershipSkill>> leadershipSkillGetter;
 
     @Override
     public LeadershipSkillModel mapEntityToModel(LeadershipSkill interest) {
@@ -51,13 +54,28 @@ public class LeadershipSkillMapper implements Mapper<LeadershipSkill, Leadership
     public LeadershipSkill mapModelToEntity(LeadershipSkillModel leadershipSkillModel, LeadershipSkill leadershipSkill) {
         LeadershipSkill leadershipSkill1 = Optional.ofNullable(leadershipSkillModel)
                 .map(LeadershipSkillModel::getName)
-                .map(leadershipSkillService::findLeadershipSkillByName)
+                .map(name -> leadershipSkillGetter.apply(name))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(null);
         leadershipSkill.setId(leadershipSkill1.getId());
         leadershipSkill.setName(leadershipSkill1.getName());
         return leadershipSkill;
+    }
+
+    public Set<LeadershipSkillModel> mapLeadershipSkills(Supplier<Set<LeadershipSkill>> leadershipSkillsSupplier) {
+        return leadershipSkillsSupplier.get().stream()
+                .map(this::mapEntityToModel)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<LeadershipSkill> mapLeadershipSkills(LeadershipSkillModelHolder holder) {
+        if (holder.getLeadershipSkills() != null) {
+            return holder.getLeadershipSkills().stream()
+                    .map(this::mapModelToEntity)
+                    .collect(Collectors.toSet());
+        }
+        return Collections.emptySet();
     }
 
 }

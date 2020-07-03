@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -28,7 +29,7 @@ import javax.validation.constraints.Size;
 import java.util.Collection;
 
 /**
- * Model that represents a book in the API.
+ * Model that represents a game in the API
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
@@ -37,19 +38,19 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class BookModel extends ResourceModel<BookModel> implements InterestModelHolder, LeadershipSkillModelHolder,
+public class GameModel extends RepresentationModel<GameModel> implements InterestModelHolder, LeadershipSkillModelHolder,
         LeadershipTraitModelHolder {
 
-    @NotNull(message = "{book.title.notNull}")
-    @Size(max = 40, message = "{book.title.size}")
-    private final String title;
+    @NotNull(message = "{game.name.notNull}")
+    @Size(max = 40, message = "{game.name.size}")
+    private final String name;
 
-    @Size(max = 30, message = "{book.author.size}")
-    private final String author;
+    @Size(max = 50, message = "{game.description.size}")
+    private final String description;
 
-    @NotNull(message = "{book.gradeLevel.notNull}")
-    @Min(value = 1, message = "{book.gradeLevel.invalid}")
-    @Max(value = 6, message = "{book.gradeLevel.invalid}")
+    @NotNull(message = "{game.gradeLevel.notNull}")
+    @Min(value = 1, message = "{game.gradeLevel.invalid}")
+    @Max(value = 6, message = "{game.gradeLevel.invalid}")
     private final Integer gradeLevel;
 
     private final Collection<InterestModel> interests;

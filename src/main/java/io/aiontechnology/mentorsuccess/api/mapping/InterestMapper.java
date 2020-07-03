@@ -17,12 +17,16 @@
 package io.aiontechnology.mentorsuccess.api.mapping;
 
 import io.aiontechnology.mentorsuccess.api.model.InterestModel;
+import io.aiontechnology.mentorsuccess.api.model.InterestModelHolder;
 import io.aiontechnology.mentorsuccess.entity.Interest;
-import io.aiontechnology.mentorsuccess.service.InterestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Mapper between {@link Interest} and {@link InterestModel}.
@@ -30,11 +34,10 @@ import java.util.Optional;
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
-@Component
 @RequiredArgsConstructor
 public class InterestMapper implements Mapper<Interest, InterestModel> {
 
-    private final InterestService interestService;
+    private final Function<String, Optional<Interest>> interestGetter;
 
     @Override
     public InterestModel mapEntityToModel(Interest interest) {
@@ -53,13 +56,28 @@ public class InterestMapper implements Mapper<Interest, InterestModel> {
     public Interest mapModelToEntity(InterestModel interestModel, Interest interest) {
         Interest interest1 = Optional.ofNullable(interestModel)
                 .map(InterestModel::getName)
-                .map(interestService::findInterestByName)
+                .map(name -> this.interestGetter.apply(name))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .orElse(null);
         interest.setId(interest1.getId());
         interest.setName(interest1.getName());
         return interest;
+    }
+
+    public Set<InterestModel> mapInterests(Supplier<Set<Interest>> interestSupplier) {
+        return interestSupplier.get().stream()
+                .map(this::mapEntityToModel)
+                .collect(Collectors.toSet());
+    }
+
+    public Set<Interest> mapInterests(InterestModelHolder holder) {
+        if (holder.getInterests() != null) {
+            return holder.getInterests().stream()
+                    .map(this::mapModelToEntity)
+                    .collect(Collectors.toSet());
+        }
+        return Collections.emptySet();
     }
 
 }

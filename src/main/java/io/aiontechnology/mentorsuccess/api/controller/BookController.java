@@ -118,7 +118,7 @@ public class BookController {
      */
     @DeleteMapping("/{bookId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivateSchool(@PathVariable("bookId") UUID bookId) {
+    public void deactivateBook(@PathVariable("bookId") UUID bookId) {
         log.debug("Deactivating book: {}", bookId);
         bookService.getBook(bookId)
                 .ifPresent(bookService::deactivateBook);
