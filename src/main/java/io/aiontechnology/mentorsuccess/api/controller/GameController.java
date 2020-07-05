@@ -25,6 +25,7 @@ import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,8 +39,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
@@ -79,6 +83,20 @@ public class GameController {
                 .map(gameService::createGame)
                 .map(b -> gameModelAssembler.toModel(b, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
+    }
+
+    /**
+     * A REST endpoint for retrieving all books.
+     *
+     * @return A collection of {@link GameModel} instances for all games.
+     */
+    @GetMapping
+    public CollectionModel<GameModel> getAllGames() {
+        log.debug("Getting all games");
+        List<GameModel> games = StreamSupport.stream(gameService.getAllGames().spliterator(), false)
+                .map(s -> gameModelAssembler.toModel(s, linkProvider))
+                .collect(Collectors.toList());
+        return CollectionModel.of(games);
     }
 
     /**

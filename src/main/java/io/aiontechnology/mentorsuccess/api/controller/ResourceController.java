@@ -17,11 +17,15 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.model.BookModel;
+import io.aiontechnology.mentorsuccess.api.model.GameModel;
 import io.aiontechnology.mentorsuccess.api.model.ResourceModel;
 import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.service.BookService;
+import io.aiontechnology.mentorsuccess.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
@@ -29,6 +33,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,6 +59,10 @@ public class ResourceController {
     /** Service for interacting with {@link Book Books}. */
     private final BookService bookService;
 
+    private final GameModelAssembler gameModelAssembler;
+
+    private final GameService gameService;
+
     /**
      * A REST endpoint for retrieving all resources.
      *
@@ -62,14 +71,25 @@ public class ResourceController {
     @GetMapping
     public CollectionModel<ResourceModel<?>> getAllResources() {
         List<ResourceModel<?>> books = StreamSupport.stream(bookService.getAllBooks().spliterator(), false)
-                .map(b -> bookModelAssembler.toModel(b, linkProvider))
+                .map(b -> bookModelAssembler.toModel(b, bookLinkProvider))
                 .collect(Collectors.toList());
-        return CollectionModel.of(books);
+        List<ResourceModel<?>> games = StreamSupport.stream(gameService.getAllGames().spliterator(), false)
+                .map(g -> gameModelAssembler.toModel(g, gameLinkProvider))
+                .collect(Collectors.toList());
+        List<ResourceModel<?>> combined = new ArrayList<>();
+        combined.addAll(books);
+        combined.addAll(games);
+        return CollectionModel.of(combined);
     }
 
-    private LinkProvider<BookModel, Book> linkProvider = (bookModel, book) ->
+    private LinkProvider<BookModel, Book> bookLinkProvider = (bookModel, book) ->
             Arrays.asList(
                     linkTo(BookController.class).slash(book.getId()).withSelfRel()
+            );
+
+    private LinkProvider<GameModel, Game> gameLinkProvider = (gameModel, game) ->
+            Arrays.asList(
+                    linkTo(GameController.class).slash(game.getId()).withSelfRel()
             );
 
 }

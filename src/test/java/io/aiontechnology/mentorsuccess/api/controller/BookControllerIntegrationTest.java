@@ -198,6 +198,21 @@ public class BookControllerIntegrationTest {
     }
 
     @Test
+    void testGetAllBooks() throws Exception {
+        // setup the fixture
+        // See SQL file
+
+        // execute the SUT
+        ResultActions result = mvc.perform(get("/api/v1/books")
+                .contentType(APPLICATION_JSON));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(1)))
+                .andExpect(jsonPath("$._embedded.bookModelList[0].title", is("TITLE")));
+    }
+
+    @Test
     void testGetBookById_found() throws Exception {
         // setup the fixture
         // See SQL file

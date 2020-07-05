@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -196,6 +195,21 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
+    }
+
+    @Test
+    void testGetAllGames() throws Exception {
+        // setup the fixture
+        // See SQL file
+
+        // execute the SUT
+        ResultActions result = mvc.perform(get("/api/v1/games")
+                .contentType(APPLICATION_JSON));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(1)))
+                .andExpect(jsonPath("$._embedded.gameModelList[0].name", is("NAME")));
     }
 
     @Test
