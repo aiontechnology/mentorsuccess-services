@@ -26,6 +26,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Model that represents a book in the API.
@@ -39,6 +40,8 @@ import java.util.Collection;
 @ToString
 public class BookModel extends ResourceModel<BookModel> implements InterestModelHolder, LeadershipSkillModelHolder,
         LeadershipTraitModelHolder {
+
+    private final UUID id;
 
     @NotNull(message = "{book.title.notNull}")
     @Size(max = 40, message = "{book.title.size}")

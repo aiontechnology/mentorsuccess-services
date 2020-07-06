@@ -209,7 +209,7 @@ public class GameControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.gameModelList.length()", is(1)))
-                .andExpect(jsonPath("$._embedded.gameModelList[0].name", is("NAME")));
+                .andExpect(jsonPath("$._embedded.gameModelList[0].id", is("f53af381-d524-40f7-8df9-3e808c9ad46b")));
     }
 
     @Test
@@ -224,6 +224,7 @@ public class GameControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.id", is("f53af381-d524-40f7-8df9-3e808c9ad46b")))
                 .andExpect(jsonPath("$.name", is("NAME")))
                 .andExpect(jsonPath("$.description", is("DESCRIPTION")))
                 .andExpect(jsonPath("$.gradeLevel", is(1)))
