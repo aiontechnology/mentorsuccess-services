@@ -40,6 +40,7 @@ public class GameMapper implements Mapper<Game, GameModel> {
     @Override
     public GameModel mapEntityToModel(Game game) {
         return GameModel.builder()
+                .withId(game.getId())
                 .withName(game.getName())
                 .withDescription(game.getDescription())
                 .withGradeLevel(game.getGradeLevel())

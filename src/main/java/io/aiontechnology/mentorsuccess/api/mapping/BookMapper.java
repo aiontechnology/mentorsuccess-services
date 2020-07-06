@@ -46,6 +46,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
     @Override
     public BookModel mapEntityToModel(Book book) {
         return BookModel.builder()
+                .withId(book.getId())
                 .withTitle(book.getTitle())
                 .withAuthor(book.getAuthor())
                 .withGradeLevel(book.getGradeLevel())
