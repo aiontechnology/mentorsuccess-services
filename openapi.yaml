@@ -289,11 +289,17 @@ paths:
       responses:
         "204":
           description: The book record was deactivated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
         responses:
           default:
             statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
@@ -544,11 +550,17 @@ paths:
       responses:
         "204":
           description: The book record was deactivated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
       x-amazon-apigateway-integration:
         uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games/{gameId}"
         responses:
           default:
             statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
