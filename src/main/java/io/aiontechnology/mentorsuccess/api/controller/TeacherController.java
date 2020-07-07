@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -127,6 +128,24 @@ public class TeacherController {
         return roleService.findRole(teacherId)
                 .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
+     * A REST endpoint for updating a teacher.
+     *
+     * @param schoolId The id of the school.
+     * @param teacherId The model that represents the updated teacher.
+     * @return A model that represents the teacher that has been updated.
+     */
+    @PutMapping("/{teacherId}")
+    public TeacherModel updateTeacher(@PathVariable("schoolId") UUID schoolId,
+                                      @PathVariable("teacherId") UUID teacherId,
+                                      @RequestBody @Valid TeacherModel teacherModel) {
+        return roleService.findRole(teacherId)
+                .map(role -> teacherMapper.mapModelToEntity(teacherModel, role))
+                .map(roleService::updateRole)
+                .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
     }
 
     /**

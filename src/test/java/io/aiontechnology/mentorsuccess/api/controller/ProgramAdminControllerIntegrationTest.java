@@ -28,6 +28,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -36,6 +39,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,8 +59,8 @@ public class ProgramAdminControllerIntegrationTest {
     private static String FIRST_NAME = "Fred";
     private static String LAST_NAME = "Rogers";
     private static String EMAIL = "fred@rogers.com";
-    private static String WORK_PHONE = "3601112222";
-    private static String CELL_PHONE = "3603334444";
+    private static String WORK_PHONE = "(360) 111-2222";
+    private static String CELL_PHONE = "(360) 333-4444";
 
     @Inject
     private MockMvc mvc;
@@ -173,8 +177,8 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.firstName", is("A program admin's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A program admin's last name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.email", is("The provided program admin's email is invalid or longer that 50 characters")))
-                .andExpect(jsonPath("$.error.cellPhone", is("The provided program admin's cell phone must be exactly 10 digits")))
-                .andExpect(jsonPath("$.error.workPhone", is("The provided program admin's work phone must be exactly 10 digits")))
+                .andExpect(jsonPath("$.error.cellPhone", is("The provided program admin's cell phone must be exactly 14 digits")))
+                .andExpect(jsonPath("$.error.workPhone", is("The provided program admin's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")));
     }
@@ -231,8 +235,8 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.firstName", is("Fred")))
                 .andExpect(jsonPath("$.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.email", is("fred@rogers.com")))
-                .andExpect(jsonPath("$.workPhone", is("3601112222")))
-                .andExpect(jsonPath("$.cellPhone", is("3603334444")))
+                .andExpect(jsonPath("$.workPhone", is("(360) 111-2222")))
+                .andExpect(jsonPath("$.cellPhone", is("(360) 333-4444")))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ba238442-ce51-450d-a474-2e36872abe05")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
@@ -250,6 +254,34 @@ public class ProgramAdminControllerIntegrationTest {
 
         // validation
         result.andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testUpdateProgramAdmin() throws Exception {
+        // setup the fixture
+        Map<String, Object> programAdminModel = new HashMap<>();
+        programAdminModel.put("firstName", "NEW FIRST NAME");
+        programAdminModel.put("lastName", "NEW LAST NAME");
+        programAdminModel.put("email", "new@email.com");
+        programAdminModel.put("workPhone", "(360) 765-4321");
+        programAdminModel.put("cellPhone", "(360) 765-4322");
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ba238442-ce51-450d-a474-2e36872abe05")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(programAdminModel)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is("NEW FIRST NAME")))
+                .andExpect(jsonPath("$.lastName", is("NEW LAST NAME")))
+                .andExpect(jsonPath("$.email", is("new@email.com")))
+                .andExpect(jsonPath("$.workPhone", is("(360) 765-4321")))
+                .andExpect(jsonPath("$.cellPhone", is("(360) 765-4322")))
+                .andExpect(jsonPath("$._links.length()", is(2)))
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/")))
+                .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
     }
 
     @Test

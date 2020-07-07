@@ -21,6 +21,7 @@ import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.PersonnelMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
+import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -124,6 +126,24 @@ public class PersonnelController {
         return roleService.findRole(personnelId)
                 .map(role -> personnelModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
+     * A REST endpoint for updating a personnel.
+     *
+     * @param schoolId The id of the school.
+     * @param personnelModel The model that represents the updated personnel.
+     * @return A model that represents the personnel that has been updated.
+     */
+    @PutMapping("/{personnelId}")
+    public PersonnelModel updateSchool(@PathVariable("schoolId") UUID schoolId,
+                                       @PathVariable("personnelId") UUID personnelId,
+                                       @RequestBody @Valid PersonnelModel personnelModel) {
+        return roleService.findRole(personnelId)
+                .map(role -> personnelMapper.mapModelToEntity(personnelModel, role))
+                .map(roleService::updateRole)
+                .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
     }
 
     /**

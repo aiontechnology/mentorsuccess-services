@@ -51,7 +51,7 @@ public class SchoolModel extends RepresentationModel<SchoolModel> {
     private final @Valid AddressModel address;
 
     /** The school's phone number */
-    @Size(min=10, max = 10, message = "{school.phone.size}")
+    @Size(min=14, max = 14, message = "{school.phone.size}")
     private final String phone;
 
     /** The school district that the school is in */

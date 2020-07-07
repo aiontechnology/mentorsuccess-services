@@ -16,4 +16,4 @@ INSERT INTO school (id, name, is_active) VALUES ('fd03c21f-cd39-4c05-b3f1-6d4961
 
 INSERT INTO person (id, last_name, first_name, work_phone, cell_phone, email) VALUES ('2f10e8ac-9ad6-4771-a034-ca1d6c387b9b', 'Rogers', 'Fred', '3601112222', '3603334444', 'fred@rogers.com');
 
-INSERT INTO role (id, school_id, person_id, type, is_active) VALUES ('ba238442-ce51-450d-a474-2e36872abe05', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', '2f10e8ac-9ad6-4771-a034-ca1d6c387b9b', 'TEACHER', true);
+INSERT INTO role (id, school_id, person_id, type, grade1, grade2, is_active) VALUES ('ba238442-ce51-450d-a474-2e36872abe05', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', '2f10e8ac-9ad6-4771-a034-ca1d6c387b9b', 'TEACHER', 1, 2, true);

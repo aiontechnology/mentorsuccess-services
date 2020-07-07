@@ -55,8 +55,8 @@ public class PersonControllerIntegrationTest {
     private static final String FIRST_NAME = "Fred";
     private static final String LAST_NAME = "Rogers";
     private static final String EMAIL = "fred@rogers.com";
-    private static final String WORK_PHONE = "3601112222";
-    private static final String CELL_PHONE = "3603334444";
+    private static final String WORK_PHONE = "(360) 111-2222";
+    private static final String CELL_PHONE = "(360) 333-4444";
 
     @Inject
     private MockMvc mvc;
@@ -177,8 +177,8 @@ public class PersonControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.firstName", is("A person's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A person's last name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.email", is("The provided person's email is invalid or longer that 50 characters")))
-                .andExpect(jsonPath("$.error.cellPhone", is("The provided person's cell phone must be exactly 10 digits")))
-                .andExpect(jsonPath("$.error.workPhone", is("The provided person's work phone must be exactly 10 digits")))
+                .andExpect(jsonPath("$.error.cellPhone", is("The provided person's cell phone must be exactly 14 digits")))
+                .andExpect(jsonPath("$.error.workPhone", is("The provided person's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/people")));
     }
@@ -226,8 +226,8 @@ public class PersonControllerIntegrationTest {
                 .andExpect(jsonPath("$.firstName", is("Fred")))
                 .andExpect(jsonPath("$.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.email", is("fred@rogers.com")))
-                .andExpect(jsonPath("$.workPhone", is("3601112222")))
-                .andExpect(jsonPath("$.cellPhone", is("3603334444")))
+                .andExpect(jsonPath("$.workPhone", is("(360) 111-2222")))
+                .andExpect(jsonPath("$.cellPhone", is("(360) 333-4444")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", is("http://localhost/api/v1/people/2f10e8ac-9ad6-4771-a034-ca1d6c387b9b")));
     }

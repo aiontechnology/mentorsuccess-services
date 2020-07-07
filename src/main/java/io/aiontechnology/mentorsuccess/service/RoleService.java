@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -51,6 +52,11 @@ public class RoleService {
 
     public Optional<Role> findRole(UUID id) {
         return roleRepository.findById(id);
+    }
+
+    @Transactional
+    public Role updateRole(Role role) {
+        return roleRepository.save(role);
     }
 
 }

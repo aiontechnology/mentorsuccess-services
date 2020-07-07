@@ -40,8 +40,8 @@ public class PersonMapper implements Mapper<Person, PersonModel> {
                 .withId(person.getId())
                 .withFirstName(person.getFirstName())
                 .withLastName(person.getLastName())
-                .withWorkPhone(phoneService.normalize(person.getWorkPhone()))
-                .withCellPhone(phoneService.normalize(person.getCellPhone()))
+                .withWorkPhone(phoneService.format(person.getWorkPhone()))
+                .withCellPhone(phoneService.format(person.getCellPhone()))
                 .withEmail(person.getEmail())
                 .build();
     }
@@ -56,8 +56,8 @@ public class PersonMapper implements Mapper<Person, PersonModel> {
     public Person mapModelToEntity(PersonModel personModel, Person person) {
         person.setFirstName(personModel.getFirstName());
         person.setLastName(personModel.getLastName());
-        person.setWorkPhone(personModel.getWorkPhone());
-        person.setCellPhone(personModel.getCellPhone());
+        person.setWorkPhone(phoneService.normalize(personModel.getWorkPhone()));
+        person.setCellPhone(phoneService.normalize(personModel.getCellPhone()));
         person.setEmail(personModel.getEmail());
         return person;
     }

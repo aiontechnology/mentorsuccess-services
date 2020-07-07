@@ -32,7 +32,7 @@ import lombok.RequiredArgsConstructor;
 public abstract class AbstractRoleMapper<Model extends Personnel> {
 
     /** Utility object for processing phone numbers. */
-    private final PhoneService phoneService;
+    protected final PhoneService phoneService;
 
     /**
      * Map a personnel sub-type to a role. A new role is created.
@@ -53,7 +53,7 @@ public abstract class AbstractRoleMapper<Model extends Personnel> {
      * @return The mapped {@link Role}.
      */
     public Role mapModelToEntity(Model model, Role role) {
-        Person person = new Person();
+        Person person = role.getPerson() != null ? role.getPerson() : new Person();
         person.setFirstName(model.getFirstName());
         person.setLastName(model.getLastName());
         person.setEmail(model.getEmail());

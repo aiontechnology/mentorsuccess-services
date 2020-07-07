@@ -1195,6 +1195,49 @@ paths:
         httpMethod: "GET"
         type: "http"
 
+    # PUT for /api/v1/schools/{schoolId}/personnel/{personnelId}
+    put:
+      summary: Update a personnel
+      description: Update the personnel with the given id
+      tags:
+        - personnel
+        - school
+      operationId: updatePersonnel
+      requestBody:
+        description: The updated personnel
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PersonnelModel'
+      responses:
+        "200":
+          description: The personnel was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonnelModel'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel/{personnelId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.personnelId: "method.request.path.personnelId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "PUT"
+        type: "http"
+
     # DELETE for /api/v1/schools/{schoolId}/personnel/{personnelId}
     delete:
       summary: Disable personnel
@@ -1340,6 +1383,177 @@ paths:
         connectionType: "VPC_LINK"
         connectionId: "pmo7ds"
         httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/schools/{schoolId}/programAdmins/{programAdminId} ----------------------
+  /api/v1/schools/{schoolId}/programAdmins/{programAdminId}:
+    parameters:
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+      - in: path
+        name: programAdminId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired program admim
+
+    # OPTIONS for /api/v1/schools/{schoolId}/programAdmins/{programAdminId}
+    options:
+      tags:
+        - program-admin
+        - school
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/programAdmins/{programAdminId}
+    get:
+      summary: Get a program admin
+      description: Get a particular program admin by id
+      tags:
+        - program-admin
+        - school
+      operationId: getProgramAdmin
+      responses:
+        "200":
+          description: The program admin was returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramAdminResultModel'
+          links:
+            self:
+              operationId: getProgramAdmin
+              parameters:
+                schoolId: '$request.path.schoolId'
+                personnelId: '$request.path.programAdminId'
+              description: >
+                The `ProgramAdmin` object can be retrieved by doing a `GET`
+                to the current URL
+            school:
+              $ref: '#/components/links/school'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.programAdminId: "method.request.path.programAdminId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}/programAdmins/{programAdminId}
+    put:
+      summary: Update a program admin
+      description: Update the program admin with the given id
+      tags:
+        - program-admin
+        - school
+      operationId: updateProgramAdmin
+      requestBody:
+        description: The updated program admin
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProgramAdminModel'
+      responses:
+        "200":
+          description: The program admin was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProgramAdminModel'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.programAdminId: "method.request.path.programAdminId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "PUT"
+        type: "http"
+
+    # DELETE for /api/v1/schools/{schoolId}/programAdmins/{programAdminId}
+    delete:
+      summary: Disable program admin
+      description: Disable a program admin record
+      tags:
+        - program-admin
+        - school
+      operationId: deactivateProgramAdmin
+      responses:
+        "204":
+          description: The program admin record was deleted
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
+        responses:
+          default:
+            statusCode: "204"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.programAdminId: "method.request.path.programAdminId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "DELETE"
         type: "http"
 
   # /api/v1/schools ----------------------------------------------------------------
@@ -1782,6 +1996,97 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "mock"
 
+    # GET for /api/v1/schools/{schoolId}/teachers/{teacherId}
+    get:
+      summary: Get a teacher
+      description: Get a particular teacher by id
+      tags:
+        - teacher
+        - school
+      operationId: getTeacher
+      responses:
+        "200":
+          description: The teacher was returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherResultModel'
+          links:
+            self:
+              operationId: getTeacher
+              parameters:
+                schoolId: '$request.path.schoolId'
+                teacherId: '$request.path.teacherId'
+              description: >
+                The `Teacher` object can be retrieved by doing a `GET`
+                to the current URL
+            school:
+              $ref: '#/components/links/school'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers/{teacherId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.teacherId: "method.request.path.teacherId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}/teachers/{teacherId}
+    put:
+      summary: Update a teacher
+      description: Update the teacher with the given id
+      tags:
+        - teacher
+        - school
+      operationId: updateTeacher
+      requestBody:
+        description: The updated teacher
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherModel'
+      responses:
+        "200":
+          description: The teacher was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherModel'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers/{teacherId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.teacherId: "method.request.path.teacherId"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "PUT"
+        type: "http"
+
     # DELETE for /api/v1/schools/{schoolId}/teachers/{teacherId}
     delete:
       summary: Deactivate a teacher
@@ -2164,23 +2469,6 @@ components:
         programAdmins:
           allOf:
             - $ref: '#/components/schemas/UrlArray'
-
-    # ResourceResultModelCollection -----------------------------------------------
-    ResourceResultModelCollection:
-      properties:
-        embedded:
-          type: object
-          properties:
-            bookModelList:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/BookResultModel'
-            gameModelList:
-              type: array
-              items:
-                allOf:
-                  - $ref: '#/components/schemas/GameResultModel'
 
     # SchoolLink -------------------------------------------------------------------
     SchoolLink:
