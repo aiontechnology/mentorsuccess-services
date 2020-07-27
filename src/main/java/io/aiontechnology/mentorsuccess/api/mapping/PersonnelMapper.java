@@ -41,8 +41,8 @@ public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> implemen
                 .withFirstName(role.getPerson().getFirstName())
                 .withLastName(role.getPerson().getLastName())
                 .withEmail(role.getPerson().getEmail())
-                .withWorkPhone(role.getPerson().getWorkPhone())
-                .withCellPhone(role.getPerson().getCellPhone())
+                .withWorkPhone(phoneService.format(role.getPerson().getWorkPhone()))
+                .withCellPhone(phoneService.format(role.getPerson().getCellPhone()))
                 .withType(role.getType())
                 .build();
     }

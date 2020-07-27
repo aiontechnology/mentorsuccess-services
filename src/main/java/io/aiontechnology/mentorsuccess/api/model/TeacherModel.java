@@ -54,11 +54,11 @@ public class TeacherModel extends RepresentationModel<TeacherModel> implements P
     private final String email;
 
     /** The teacher's work phone number. */
-    @Pattern(regexp = "\\d{10}", message = "{teacher.workPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{teacher.workPhone.invalid}")
     private final String workPhone;
 
     /** The teacher's cell phone */
-    @Pattern(regexp = "\\d{10}", message = "{teacher.cellPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{teacher.cellPhone.invalid}")
     private final String cellPhone;
 
     /** First grade taught by teacher. */

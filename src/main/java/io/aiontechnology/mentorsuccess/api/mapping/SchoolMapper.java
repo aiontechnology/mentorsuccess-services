@@ -45,7 +45,7 @@ public class SchoolMapper implements Mapper<School, SchoolModel> {
                 .withId(school.getId())
                 .withName(school.getName())
                 .withAddress(addressMapper.mapEntityToModel(school))
-                .withPhone(school.getPhone())
+                .withPhone(phoneService.format(school.getPhone()))
                 .withDistrict(school.getDistrict())
                 .withIsPrivate(school.getIsPrivate())
                 .build();

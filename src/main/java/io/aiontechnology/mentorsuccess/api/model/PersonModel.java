@@ -46,10 +46,10 @@ public class PersonModel extends RepresentationModel<PersonModel> {
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{person.email.invalid}")
     private final String email;
 
-    @Pattern(regexp = "\\d{10}", message = "{person.workPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{person.workPhone.invalid}")
     private final String workPhone;
 
-    @Pattern(regexp = "\\d{10}", message = "{person.cellPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{person.cellPhone.invalid}")
     private final String cellPhone;
 
 }

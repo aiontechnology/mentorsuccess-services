@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -131,6 +132,24 @@ public class ProgramAdminController {
         return roleService.findRole(programAdminId)
                 .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
+     * A REST endpoint for updating a program admin.
+     *
+     * @param schoolId The id of the school.
+     * @param programAdminId The model that represents the updated program admin.
+     * @return A model that represents the program admin that has been updated.
+     */
+    @PutMapping("/{programAdminId}")
+    public ProgramAdminModel updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
+                                                @PathVariable("programAdminId") UUID programAdminId,
+                                                @RequestBody @Valid ProgramAdminModel programAdminModel) {
+        return roleService.findRole(programAdminId)
+                .map(role -> programAdminMapper.mapModelToEntity(programAdminModel, role))
+                .map(roleService::updateRole)
+                .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
+                .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
     }
 
     /**

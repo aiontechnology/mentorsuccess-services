@@ -18,6 +18,8 @@ package io.aiontechnology.mentorsuccess.util;
 
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 /**
  * @author Whitney Hunter
  */
@@ -25,14 +27,18 @@ import org.springframework.stereotype.Component;
 public class PhoneService {
 
     public String normalize(String phoneNumber) {
-        if (phoneNumber != null) {
-            return phoneNumber.replace("(", "")
-                    .replace(")", "")
-                    .replace("-", "")
-                    .replace(" ", "");
-        } else {
-            return phoneNumber;
-        }
+        return Optional.ofNullable(phoneNumber)
+                .map(pn -> pn.replace("(", "")
+                        .replace(")", "")
+                        .replace("-", "")
+                        .replace(" ", ""))
+                .orElse(null);
+    }
+
+    public String format(String phoneNumber) {
+        return Optional.ofNullable(phoneNumber)
+                .map(pn -> pn.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3"))
+                .orElse(null);
     }
 
 }

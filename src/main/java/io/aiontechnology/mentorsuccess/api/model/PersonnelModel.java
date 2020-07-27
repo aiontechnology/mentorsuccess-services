@@ -59,11 +59,11 @@ public class PersonnelModel extends RepresentationModel<PersonnelModel> implemen
     private final String email;
 
     /** The work phone number. */
-    @Pattern(regexp = "\\d{10}", message = "{personnel.workPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{personnel.workPhone.invalid}")
     private final String workPhone;
 
     /** The cell phone number. */
-    @Pattern(regexp = "\\d{10}", message = "{personnel.cellPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{personnel.cellPhone.invalid}")
     private final String cellPhone;
 
 }

@@ -63,7 +63,7 @@ public class SchoolControllerIntegrationTest {
     private static final String CITY = "CITY";
     private static final String STATE = "ST";
     private static final String ZIP = "12345";
-    private static final String PHONE = "1234567890";
+    private static final String PHONE = "(123) 456-7890";
     private static final String DISTRICT = "DISTRICT";
     private static final Boolean IS_PRIVITE = Boolean.TRUE;
 
@@ -263,7 +263,7 @@ public class SchoolControllerIntegrationTest {
                 .andExpect(jsonPath("$.error['address.city']", is("An address's city can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.state']", is("An address's state must be 2 characters long")))
                 .andExpect(jsonPath("$.error['address.zip']", is("An address's zip must be between 5 and 9 charachters long")))
-                .andExpect(jsonPath("$.error.phone", is("The school's phone number must be exactly 10 digits")))
+                .andExpect(jsonPath("$.error.phone", is("The school's phone number must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.district", is("The school's district can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools")));
@@ -302,7 +302,7 @@ public class SchoolControllerIntegrationTest {
                 .andExpect(jsonPath("$.address.city", is("CITY")))
                 .andExpect(jsonPath("$.address.state", is("ST")))
                 .andExpect(jsonPath("$.address.zip", is("123456789")))
-                .andExpect(jsonPath("$.phone", is("3601234567")))
+                .andExpect(jsonPath("$.phone", is("(360) 123-4567")))
                 .andExpect(jsonPath("$.district", is("DISTRICT")))
                 .andExpect(jsonPath("$.isPrivate", is(true)))
                 .andExpect(jsonPath("$._links.length()", is(3)))
@@ -338,7 +338,7 @@ public class SchoolControllerIntegrationTest {
         Map<String, Object> schoolModel = new HashMap<>();
         schoolModel.put("name", "NEW NAME");
         schoolModel.put("address", addressModel);
-        schoolModel.put("phone", "3607654321");
+        schoolModel.put("phone", "(360) 765-4321");
         schoolModel.put("district", "NEW DISTRICT");
         schoolModel.put("isPrivate", false);
 
@@ -356,7 +356,7 @@ public class SchoolControllerIntegrationTest {
                 .andExpect(jsonPath("$.address.city", is("NEW CITY")))
                 .andExpect(jsonPath("$.address.state", is("NW")))
                 .andExpect(jsonPath("$.address.zip", is("987654321")))
-                .andExpect(jsonPath("$.phone", is("3607654321")))
+                .andExpect(jsonPath("$.phone", is("(360) 765-4321")))
                 .andExpect(jsonPath("$.district", is("NEW DISTRICT")))
                 .andExpect(jsonPath("$.isPrivate", is(false)))
                 .andExpect(jsonPath("$._links.length()", is(3)))

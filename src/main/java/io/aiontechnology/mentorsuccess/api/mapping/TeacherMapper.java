@@ -52,8 +52,8 @@ public class TeacherMapper extends AbstractRoleMapper<TeacherModel> implements M
                 .withFirstName(role.getPerson().getFirstName())
                 .withLastName(role.getPerson().getLastName())
                 .withEmail(role.getPerson().getEmail())
-                .withWorkPhone(role.getPerson().getWorkPhone())
-                .withCellPhone(role.getPerson().getCellPhone())
+                .withWorkPhone(phoneService.format(role.getPerson().getWorkPhone()))
+                .withCellPhone(phoneService.format(role.getPerson().getCellPhone()))
                 .withGrade1(role.getGrade1())
                 .withGrade2(role.getGrade2())
                 .build();

@@ -50,11 +50,11 @@ public class ProgramAdminModel extends RepresentationModel<ProgramAdminModel> im
     private final String email;
 
     /** The program admin's work phone number. */
-    @Pattern(regexp = "\\d{10}", message = "{programAdmin.workPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{programAdmin.workPhone.invalid}")
     private final String workPhone;
 
     /** The program admin's cell phone. */
-    @Pattern(regexp = "\\d{10}", message = "{programAdmin.cellPhone.invalid}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{programAdmin.cellPhone.invalid}")
     private final String cellPhone;
 
 }

@@ -69,7 +69,7 @@ public class SchoolModelAssemblerTest {
         assertThat(schoolModel.getAddress().getCity()).isEqualTo(city);
         assertThat(schoolModel.getAddress().getState()).isEqualTo(state);
         assertThat(schoolModel.getAddress().getZip()).isEqualTo(zip);
-        assertThat(schoolModel.getPhone()).isEqualTo(phone);
+        assertThat(schoolModel.getPhone()).isEqualTo("(123) 456-7890");
         assertThat(schoolModel.getDistrict()).isEqualTo(district);
         assertThat(schoolModel.getIsPrivate()).isTrue();
     }
