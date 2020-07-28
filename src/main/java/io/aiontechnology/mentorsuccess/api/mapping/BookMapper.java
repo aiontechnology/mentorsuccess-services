@@ -37,6 +37,8 @@ public class BookMapper implements Mapper<Book, BookModel> {
 
     private final LeadershipTraitMapper leadershipTraitMapper;
 
+    private final PhonogramMapper phonogramMapper;
+
     /**
      * Map a {@link Book} to a new {@link BookModel}.
      *
@@ -53,6 +55,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
                 .withInterests(interestMapper.mapInterests(() -> book.getInterests()))
                 .withLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(() -> book.getLeadershipSkills()))
                 .withLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(() -> book.getLeadershipTraits()))
+                .withPhonograms(phonogramMapper.mapPhonograms(() -> book.getPhonograms()))
                 .build();
     }
 
@@ -83,6 +86,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
         book.setInterests(interestMapper.mapInterests(bookModel));
         book.setLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(bookModel));
         book.setLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(bookModel));
+        book.setPhonograms(phonogramMapper.mapPhonograms(bookModel));
         book.setIsActive(true);
         return book;
     }

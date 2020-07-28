@@ -39,7 +39,7 @@ import java.util.UUID;
 @Builder(setterPrefix = "with")
 @ToString
 public class BookModel extends ResourceModel<BookModel> implements InterestModelHolder, LeadershipSkillModelHolder,
-        LeadershipTraitModelHolder {
+        LeadershipTraitModelHolder, PhonogramModelHolder {
 
     private final UUID id;
 
@@ -60,5 +60,7 @@ public class BookModel extends ResourceModel<BookModel> implements InterestModel
     private final Collection<LeadershipTraitModel> leadershipTraits;
 
     private final Collection<LeadershipSkillModel> leadershipSkills;
+
+    private final Collection<PhonogramModel> phonograms;
 
 }
