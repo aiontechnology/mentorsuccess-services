@@ -19,9 +19,11 @@ package io.aiontechnology.mentorsuccess.configuration;
 import io.aiontechnology.mentorsuccess.api.mapping.InterestMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.LeadershipSkillMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.LeadershipTraitMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.PhonogramMapper;
 import io.aiontechnology.mentorsuccess.service.InterestService;
 import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
 import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
+import io.aiontechnology.mentorsuccess.service.PhonogramService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -47,6 +49,11 @@ public class MapperConfiguration {
     @Bean
     public LeadershipTraitMapper leadershipTraitMapper(LeadershipTraitService leadershipTraitService) {
         return new LeadershipTraitMapper(leadershipTraitService::findCharacterTraitByName);
+    }
+
+    @Bean
+    public PhonogramMapper phonogramMapper(PhonogramService phonogramService) {
+        return new PhonogramMapper(phonogramService::findPhonogramByName);
     }
 
 }
