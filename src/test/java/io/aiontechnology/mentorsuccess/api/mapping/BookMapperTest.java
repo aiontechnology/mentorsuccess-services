@@ -20,6 +20,7 @@ import io.aiontechnology.mentorsuccess.api.model.BookModel;
 import io.aiontechnology.mentorsuccess.api.model.InterestModel;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.entity.Behavior;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
@@ -52,6 +53,7 @@ public class BookMapperTest {
     private static final String LEADERSHIPSKILL_NAME = "LEADERSHIPSKILL";
     private static final String LEADERSHIPTRAIT_NAME = "LEADERSHIPTRAIT";
     private static final String PHONOGRAM_NAME = "PH1";
+    private static final String BEHAVIOR_NAME = "BEHAVIOR1";
 
     @Test
     void testMapEntityToModel() throws Exception {
@@ -78,6 +80,11 @@ public class BookMapperTest {
         phonogram.setId(PHONOGRAM_ID);
         phonogram.setName(PHONOGRAM_NAME);
 
+        UUID BEHAVIOR_ID = UUID.randomUUID();
+        Behavior behavior = new Behavior();
+        behavior.setId(BEHAVIOR_ID);
+        behavior.setName(BEHAVIOR_NAME);
+
         Book book = new Book();
         book.setId(ID);
         book.setTitle(TITLE);
@@ -88,12 +95,14 @@ public class BookMapperTest {
         book.setLeadershipSkills(Collections.singleton(leadershipSkill));
         book.setLeadershipTraits(Collections.singleton(leadershipTrait));
         book.setPhonograms(Collections.singleton(phonogram));
+        book.setBehaviors(Collections.singleton(behavior));
 
         InterestMapper interestMapper = new InterestMapper(null);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(null);
         LeadershipTraitMapper leadershipTraitMapper = new LeadershipTraitMapper(null);
         PhonogramMapper phonogramMapper = new PhonogramMapper(null);
-        BookMapper bookMapper = new BookMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper, phonogramMapper);
+        BehaviorMapper behaviorMapper = new BehaviorMapper(null);
+        BookMapper bookMapper = new BookMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper, phonogramMapper, behaviorMapper);
 
         // execute the SUT
         BookModel result = bookMapper.mapEntityToModel(book);
@@ -135,8 +144,11 @@ public class BookMapperTest {
         Phonogram phonogram = new Phonogram();
         phonogram.setName(PHONOGRAM_NAME);
         PhonogramMapper phonogramMapper = new PhonogramMapper(name -> Optional.of(phonogram));
+        Behavior behavior = new Behavior();
+        behavior.setName(BEHAVIOR_NAME);
+        BehaviorMapper behaviorMapper = new BehaviorMapper(name -> Optional.of(behavior));
 
-        BookMapper bookMapper = new BookMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper, phonogramMapper);
+        BookMapper bookMapper = new BookMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper, phonogramMapper, behaviorMapper);
 
         // execute the SUT
         Book result = bookMapper.mapModelToEntity(bookModel);
@@ -178,8 +190,11 @@ public class BookMapperTest {
         Phonogram phonogram = new Phonogram();
         phonogram.setName(PHONOGRAM_NAME);
         PhonogramMapper phonogramMapper = new PhonogramMapper(name -> Optional.of(phonogram));
+        Behavior behavior = new Behavior();
+        behavior.setName(BEHAVIOR_NAME);
+        BehaviorMapper behaviorMapper = new BehaviorMapper(name -> Optional.of(behavior));
 
-        BookMapper bookMapper = new BookMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper, phonogramMapper);
+        BookMapper bookMapper = new BookMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper, phonogramMapper, behaviorMapper);
 
         // execute the SUT
         Book providedBook = new Book();

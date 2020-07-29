@@ -52,15 +52,17 @@ public class LeadershipTraitMapper implements Mapper<LeadershipTrait, Leadership
 
     @Override
     public LeadershipTrait mapModelToEntity(LeadershipTraitModel leadershipTraitModel, LeadershipTrait leadershipTrait) {
-        LeadershipTrait leadershipTrait1 = Optional.ofNullable(leadershipTraitModel)
+        return Optional.ofNullable(leadershipTraitModel)
                 .map(LeadershipTraitModel::getName)
                 .map(name -> leadershipTraitGetter.apply(name))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .orElse(null);
-        leadershipTrait.setId(leadershipTrait1.getId());
-        leadershipTrait.setName(leadershipTrait1.getName());
-        return leadershipTrait;
+                .map(lt -> {
+                    leadershipTrait.setId(lt.getId());
+                    leadershipTrait.setName(lt.getName());
+                    return leadershipTrait;
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Illegal leadership trait specified"));
     }
 
     public Set<LeadershipTraitModel> mapLeadershipTraits(Supplier<Set<LeadershipTrait>> leadershipTraitSuppler) {

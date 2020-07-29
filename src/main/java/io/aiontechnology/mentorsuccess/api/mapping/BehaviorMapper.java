@@ -16,9 +16,9 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.model.InterestModel;
-import io.aiontechnology.mentorsuccess.api.model.InterestModelHolder;
-import io.aiontechnology.mentorsuccess.entity.Interest;
+import io.aiontechnology.mentorsuccess.api.model.BehaviorModel;
+import io.aiontechnology.mentorsuccess.api.model.BehaviorModelHolder;
+import io.aiontechnology.mentorsuccess.entity.Behavior;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Collections;
@@ -29,53 +29,53 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * Mapper between {@link Interest} and {@link InterestModel}.
+ * Mapper between {@link Behavior} and {@link BehaviorModel}.
  *
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0
  */
 @RequiredArgsConstructor
-public class InterestMapper implements Mapper<Interest, InterestModel> {
+public class BehaviorMapper implements Mapper<Behavior, BehaviorModel> {
 
-    private final Function<String, Optional<Interest>> interestGetter;
+    private final Function<String, Optional<Behavior>> behaviorGetter;
 
     @Override
-    public InterestModel mapEntityToModel(Interest interest) {
-        return InterestModel.builder()
-                .withName(interest.getName())
+    public BehaviorModel mapEntityToModel(Behavior behavior) {
+        return BehaviorModel.builder()
+                .withName(behavior.getName())
                 .build();
     }
 
     @Override
-    public Interest mapModelToEntity(InterestModel interestModel) {
-        Interest interest = new Interest();
-        return mapModelToEntity(interestModel, interest);
+    public Behavior mapModelToEntity(BehaviorModel behaviorModel) {
+        Behavior behavior = new Behavior();
+        return mapModelToEntity(behaviorModel, behavior);
     }
 
     @Override
-    public Interest mapModelToEntity(InterestModel interestModel, Interest interest) {
-        return Optional.ofNullable(interestModel)
-                .map(InterestModel::getName)
-                .map(name -> this.interestGetter.apply(name))
+    public Behavior mapModelToEntity(BehaviorModel behaviorModel, Behavior behavior) {
+        return Optional.ofNullable(behaviorModel)
+                .map(BehaviorModel::getName)
+                .map(name -> this.behaviorGetter.apply(name))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(i -> {
-                    interest.setId(i.getId());
-                    interest.setName(i.getName());
-                    return interest;
+                .map(b -> {
+                    behavior.setId(b.getId());
+                    behavior.setName(b.getName());
+                    return behavior;
                 })
                 .orElseThrow(() -> new IllegalArgumentException("Illegal interest specified"));
     }
 
-    public Set<InterestModel> mapInterests(Supplier<Set<Interest>> interestSupplier) {
-        return interestSupplier.get().stream()
+    public Set<BehaviorModel> mapBehaviors(Supplier<Set<Behavior>> behaviorSupplier) {
+        return behaviorSupplier.get().stream()
                 .map(this::mapEntityToModel)
                 .collect(Collectors.toSet());
     }
 
-    public Set<Interest> mapInterests(InterestModelHolder holder) {
-        if (holder.getInterests() != null) {
-            return holder.getInterests().stream()
+    public Set<Behavior> mapBehaviors(BehaviorModelHolder holder) {
+        if (holder.getBehaviors() != null) {
+            return holder.getBehaviors().stream()
                     .map(this::mapModelToEntity)
                     .collect(Collectors.toSet());
         }
