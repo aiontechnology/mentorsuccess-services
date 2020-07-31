@@ -49,6 +49,77 @@ tags:
 
 paths:
 
+  # /api/v1/behaviors --------------------------------------------------------------
+  /api/v1/behaviors:
+
+    # OPTIONS for /api/v1/behaviors
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/behaviors
+    get:
+      summary: Get behaviors
+      description: Get all behaviors
+      tags:
+        - resource
+      operationId: getBehaviors
+      responses:
+        "200":
+          description: Returned all behaviors
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BehaviorModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/behaviors"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "pmo7ds"
+        httpMethod: "GET"
+        type: "http"
+
   # /api/v1/books ------------------------------------------------------------------
   /api/v1/books:
 
@@ -950,7 +1021,7 @@ paths:
         httpMethod: "GET"
         type: "http"
 
-  # /api/v1/phonograms --------------------------------------------------------------
+  # /api/v1/phonograms -------------------------------------------------------------
   /api/v1/phonograms:
 
     # OPTIONS for /api/v1/phonograms
@@ -2246,6 +2317,19 @@ components:
         path:
           type: string
 
+    # BehaviorModelCollection ------------------------------------------------------
+    BehaviorModelCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            interestTraitModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/NameModel'
+
     # BookModel --------------------------------------------------------------------
     BookModel:
       required:
@@ -2292,7 +2376,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/SelfLink'
 
-    # BookResultModelCollection --------------------------------------------------------
+    # BookResultModelCollection ----------------------------------------------------
     BookResultModelCollection:
       properties:
         embedded:
@@ -2354,7 +2438,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/SelfLink'
 
-    # GameResultModelCollection --------------------------------------------------------
+    # GameResultModelCollection ----------------------------------------------------
     GameResultModelCollection:
       properties:
         embedded:
@@ -2533,7 +2617,7 @@ components:
             - $ref: '#/components/schemas/SelfLink'
             - $ref: '#/components/schemas/SchoolLink'
 
-    # ProgramAdminResultModelCollection --------------------------------------------------
+    # ProgramAdminResultModelCollection --------------------------------------------
     ProgramAdminResultModelCollection:
       properties:
         embedded:
@@ -2604,7 +2688,7 @@ components:
             - $ref: '#/components/schemas/TeachersLink'
             - $ref: '#/components/schemas/ProgramAdminsLink'
 
-    # SchoolResultModelCollection --------------------------------------------------------
+    # SchoolResultModelCollection --------------------------------------------------
     SchoolResultModelCollection:
       properties:
         embedded:

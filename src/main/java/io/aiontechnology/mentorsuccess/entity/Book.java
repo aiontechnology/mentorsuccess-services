@@ -83,4 +83,10 @@ public class Book {
             inverseJoinColumns = @JoinColumn(name = "phonogram_id"))
     private Set<Phonogram> phonograms;
 
+    @ManyToMany
+    @JoinTable(name = "book_behavior",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "behavior_id"))
+    private Set<Behavior> behaviors;
+
 }

@@ -16,10 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.model.InterestModel;
 import io.aiontechnology.mentorsuccess.api.model.PhonogramModel;
 import io.aiontechnology.mentorsuccess.api.model.PhonogramModelHolder;
-import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.Phonogram;
 import lombok.RequiredArgsConstructor;
 
@@ -56,15 +54,17 @@ public class PhonogramMapper implements Mapper<Phonogram, PhonogramModel> {
 
     @Override
     public Phonogram mapModelToEntity(PhonogramModel phonogramModel, Phonogram phonogram) {
-        Phonogram phonogram1 = Optional.ofNullable(phonogramModel)
+        return Optional.ofNullable(phonogramModel)
                 .map(PhonogramModel::getName)
                 .map(name -> this.phonogramGetter.apply(name))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .orElse(null);
-        phonogram.setId(phonogram1.getId());
-        phonogram.setName(phonogram1.getName());
-        return phonogram;
+                .map(p -> {
+                    phonogram.setId(p.getId());
+                    phonogram.setName(p.getName());
+                    return phonogram;
+                })
+                .orElseThrow(() -> new IllegalArgumentException("Illegal phonogram specified"));
     }
 
     public Set<PhonogramModel> mapPhonograms(Supplier<Set<Phonogram>> phonogramSupplier) {
