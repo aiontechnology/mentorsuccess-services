@@ -14,8 +14,8 @@
 
 openapi: 3.0.1
 info:
-  title: Mentor Success API
-  description: API for the Mentor Success application
+#  title: Mentor Success API
+#  description: API for the Mentor Success application
   contact:
     email: whitney@aiontechnology.io
   license:
@@ -105,7 +105,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BehaviorModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/behaviors"
+        uri: "${lb_url}/api/v1/behaviors"
         responses:
           default:
             statusCode: "200"
@@ -113,10 +113,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -190,7 +190,7 @@ paths:
                 The `id` value returned in the response can be used as the
                 `bookId` parameter in `GET /books/{bookId}`.
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
+        uri: "${lb_url}/api/v1/books"
         responses:
           default:
             statusCode: "201"
@@ -198,10 +198,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
         type: "http"
 
@@ -224,7 +224,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookResultModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
+        uri: "${lb_url}/api/v1/books"
         responses:
           default:
             statusCode: "200"
@@ -232,10 +232,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -295,17 +295,17 @@ paths:
         "200":
           description: Found the requested book
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books"
+        uri: "${lb_url}/api/v1/books"
         responses:
           default:
             statusCode: "200"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -334,7 +334,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BookResultModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
+        uri: "${lb_url}/api/v1/books/{bookId}"
         responses:
           default:
             statusCode: "200"
@@ -343,10 +343,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "PUT"
         type: "http"
 
@@ -365,7 +365,7 @@ paths:
               schema:
                 type: string
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/books/{bookId}"
+        uri: "${lb_url}/api/v1/books/{bookId}"
         responses:
           default:
             statusCode: "204"
@@ -374,10 +374,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "DELETE"
         type: "http"
 
@@ -451,7 +451,7 @@ paths:
                 The `id` value returned in the response can be used as the
                 `gameId` parameter in `GET /games/{gameId}`.
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games"
+        uri: "${lb_url}/api/v1/games"
         responses:
           default:
             statusCode: "201"
@@ -459,10 +459,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
         type: "http"
 
@@ -485,7 +485,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GameResultModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games"
+        uri: "${lb_url}/api/v1/games"
         responses:
           default:
             statusCode: "200"
@@ -493,10 +493,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -556,17 +556,17 @@ paths:
         "200":
           description: Found the requested game
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games"
+        uri: "${lb_url}/api/v1/games"
         responses:
           default:
             statusCode: "200"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -595,7 +595,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GameResultModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games/{gameId}"
+        uri: "${lb_url}/api/v1/games/{gameId}"
         responses:
           default:
             statusCode: "200"
@@ -604,10 +604,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "PUT"
         type: "http"
 
@@ -626,7 +626,7 @@ paths:
               schema:
                 type: string
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/games/{gameId}"
+        uri: "${lb_url}/api/v1/games/{gameId}"
         responses:
           default:
             statusCode: "204"
@@ -635,10 +635,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "DELETE"
         type: "http"
 
@@ -698,7 +698,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/InterestModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/interests"
+        uri: "${lb_url}/api/v1/interests"
         responses:
           default:
             statusCode: "200"
@@ -706,10 +706,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -769,7 +769,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LeadershipSkillModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_skills"
+        uri: "${lb_url}/api/v1/leadership_skills"
         responses:
           default:
             statusCode: "200"
@@ -777,10 +777,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -840,7 +840,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/LeadershipTraitModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/leadership_traits"
+        uri: "${lb_url}/api/v1/leadership_traits"
         responses:
           default:
             statusCode: "200"
@@ -848,10 +848,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -931,7 +931,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/BadRequestModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/people"
+        uri: "${lb_url}/api/v1/people"
         responses:
           default:
             statusCode: "201"
@@ -939,10 +939,10 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
         type: "http"
 
@@ -1008,16 +1008,16 @@ paths:
         404:
           description: Unable to find the requested person
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/people"
+        uri: "${lb_url}/api/v1/people"
         responses:
           default:
             statusCode: "200"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -1077,7 +1077,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PhonogramModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/phonograms"
+        uri: "${lb_url}/api/v1/phonograms"
         responses:
           default:
             statusCode: "200"
@@ -1085,11 +1085,274 @@ paths:
               method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/schools ----------------------------------------------------------------
+  /api/v1/schools:
+
+    # OPTIONS for /api/v1/schools
+    options:
+      tags:
+        - school
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # POST for /api/v1/schools
+    post:
+      summary: Create a new school
+      description: Create a new school within the system
+      tags:
+        - school
+      operationId: createSchool
+      responses:
+        "201":
+          description: A new school was created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolResultModel'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools"
+        responses:
+          default:
+            statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "POST"
+        type: "http"
+
+    # GET for /api/v1/schools
+    get:
+      summary: Get all schools
+      description: Get a collection of all schools
+      tags:
+        - school
+      operationId: getAllSchools
+      responses:
+        "200":
+          description: A collection of all schools
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolResultModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+  # /api/v1/schools/{schoolId} -----------------------------------------------------
+  /api/v1/schools/{schoolId}:
+    parameters:
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}
+    options:
+      tags:
+        - school
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}
+    get:
+      summary: Get a school
+      description: Get a particular school by its id
+      tags:
+        - school
+      operationId: getSchool
+      responses:
+        "200":
+          description: The school was found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        "400":
+          description: The school could not be found
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+    # DELETE for /api/v1/schools/{schoolId}
+    delete:
+      summary: Delete a school
+      description: Delete the school with the given id
+      tags:
+        - school
+      operationId: removeSchool
+      responses:
+        "204":
+          description: The school was deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}"
+        responses:
+          default:
+            statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "DELETE"
+        type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}
+    put:
+      summary: Update a school
+      description: Update the school with the given id
+      tags:
+        - school
+      operationId: updateSchool
+      parameters:
+        - in: path
+          name: schoolId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: The id of the desired school
+      requestBody:
+        description: The updated school
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SchoolModel'
+      responses:
+        "200":
+          description: The school was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolModel'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "PUT"
         type: "http"
 
   # /api/v1/schools/{schoolId}/personnel -------------------------------------------
@@ -1182,7 +1445,7 @@ paths:
         404:
           description: The Requested school was not found
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel"
+        uri: "http://api.mentorsuccess.com/api/v1/schools/{schoolId}/personnel"
         responses:
           default:
             statusCode: "201"
@@ -1191,10 +1454,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
         type: "http"
 
@@ -1220,7 +1483,7 @@ paths:
         "400":
           description: The Requested school was not found
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/personnel"
         responses:
           default:
             statusCode: "200"
@@ -1229,10 +1492,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -1320,7 +1583,7 @@ paths:
             school:
               $ref: '#/components/links/school'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel/{personnelId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/personnel/{personnelId}"
         responses:
           default:
             statusCode: "200"
@@ -1330,10 +1593,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.personnelId: "method.request.path.personnelId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -1363,7 +1626,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/PersonnelModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel/{personnelId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/personnel/{personnelId}"
         responses:
           default:
             statusCode: "200"
@@ -1373,10 +1636,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.personnelId: "method.request.path.personnelId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "PUT"
         type: "http"
 
@@ -1392,7 +1655,7 @@ paths:
         "204":
           description: The personnel record was deleted
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/personnel/{personnelId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/personnel/{personnelId}"
         responses:
           default:
             statusCode: "204"
@@ -1400,10 +1663,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.personnelId: "method.request.path.personnelId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "DELETE"
         type: "http"
 
@@ -1475,7 +1738,7 @@ paths:
         "400":
           description: The Requested school was not found
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins"
         responses:
           default:
             statusCode: "201"
@@ -1484,10 +1747,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
         type: "http"
 
@@ -1511,7 +1774,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProgramAdminResultModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins"
         responses:
           default:
             statusCode: "200"
@@ -1520,10 +1783,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -1611,7 +1874,7 @@ paths:
             school:
               $ref: '#/components/links/school'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
         responses:
           default:
             statusCode: "200"
@@ -1621,10 +1884,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.programAdminId: "method.request.path.programAdminId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -1654,7 +1917,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ProgramAdminModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
         responses:
           default:
             statusCode: "200"
@@ -1664,10 +1927,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.programAdminId: "method.request.path.programAdminId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "PUT"
         type: "http"
 
@@ -1683,7 +1946,7 @@ paths:
         "204":
           description: The program admin record was deleted
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
         responses:
           default:
             statusCode: "204"
@@ -1691,274 +1954,11 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.programAdminId: "method.request.path.programAdminId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "DELETE"
-        type: "http"
-
-  # /api/v1/schools ----------------------------------------------------------------
-  /api/v1/schools:
-
-    # OPTIONS for /api/v1/schools
-    options:
-      tags:
-        - school
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-
-    # POST for /api/v1/schools
-    post:
-      summary: Create a new school
-      description: Create a new school within the system
-      tags:
-        - school
-      operationId: createSchool
-      responses:
-        "201":
-          description: A new school was created
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SchoolResultModel'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools"
-        responses:
-          default:
-            statusCode: "201"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "POST"
-        type: "http"
-
-    # GET for /api/v1/schools
-    get:
-      summary: Get all schools
-      description: Get a collection of all schools
-      tags:
-        - school
-      operationId: getAllSchools
-      responses:
-        "200":
-          description: A collection of all schools
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SchoolResultModelCollection'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "GET"
-        type: "http"
-
-  # /api/v1/schools/{schoolId} -----------------------------------------------------
-  /api/v1/schools/{schoolId}:
-    parameters:
-      - in: path
-        name: schoolId
-        schema:
-          type: string
-          format: uuid
-        required: true
-        description: The id of the desired school
-
-    # OPTIONS for /api/v1/schools/{schoolId}
-    options:
-      tags:
-        - school
-      responses:
-        200:
-          description: Success
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: "string"
-            Access-Control-Allow-Methods:
-              schema:
-                type: "string"
-            Access-Control-Allow-Headers:
-              schema:
-                type: "string"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Empty'
-      x-amazon-apigateway-integration:
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
-              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestTemplates:
-          application/json: "{\"statusCode\": 200}"
-        passthroughBehavior: "when_no_match"
-        type: "mock"
-
-    # GET for /api/v1/schools/{schoolId}
-    get:
-      summary: Get a school
-      description: Get a particular school by its id
-      tags:
-        - school
-      operationId: getSchool
-      responses:
-        "200":
-          description: The school was found
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-        "400":
-          description: The school could not be found
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "GET"
-        type: "http"
-
-    # DELETE for /api/v1/schools/{schoolId}
-    delete:
-      summary: Delete a school
-      description: Delete the school with the given id
-      tags:
-        - school
-      operationId: removeSchool
-      responses:
-        "204":
-          description: The school was deleted
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}"
-        responses:
-          default:
-            statusCode: "204"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "DELETE"
-        type: "http"
-
-    # PUT for /api/v1/schools/{schoolId}
-    put:
-      summary: Update a school
-      description: Update the school with the given id
-      tags:
-        - school
-      operationId: updateSchool
-      parameters:
-        - in: path
-          name: schoolId
-          schema:
-            type: string
-            format: uuid
-          required: true
-          description: The id of the desired school
-      requestBody:
-        description: The updated school
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SchoolModel'
-      responses:
-        "200":
-          description: The school was updated
-          headers:
-            Access-Control-Allow-Origin:
-              schema:
-                type: string
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SchoolModel'
-      x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}"
-        responses:
-          default:
-            statusCode: "200"
-            responseParameters:
-              method.response.header.Access-Control-Allow-Origin: "'*'"
-        requestParameters:
-          integration.request.header.X-Forwarded-Proto: "'https'"
-          integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
-        passthroughBehavior: "when_no_match"
-        connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
-        httpMethod: "PUT"
         type: "http"
 
   # /api/v1/schools/{schoolId}/teachers --------------------------------------------
@@ -2033,7 +2033,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeacherResultModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/teachers"
         responses:
           default:
             statusCode: "201"
@@ -2042,10 +2042,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
         type: "http"
 
@@ -2069,7 +2069,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeacherResultModelCollection'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/teachers"
         responses:
           default:
             statusCode: "200"
@@ -2078,10 +2078,10 @@ paths:
         requestParameters:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -2169,7 +2169,7 @@ paths:
             school:
               $ref: '#/components/links/school'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers/{teacherId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/teachers/{teacherId}"
         responses:
           default:
             statusCode: "200"
@@ -2179,10 +2179,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.teacherId: "method.request.path.teacherId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "GET"
         type: "http"
 
@@ -2212,7 +2212,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/TeacherModel'
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers/{teacherId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/teachers/{teacherId}"
         responses:
           default:
             statusCode: "200"
@@ -2222,10 +2222,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.teacherId: "method.request.path.teacherId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "PUT"
         type: "http"
 
@@ -2245,7 +2245,7 @@ paths:
               schema:
                 type: string
       x-amazon-apigateway-integration:
-        uri: "http://mentorsuccess-lb-9e89d6a5dc0a9dd9.elb.us-west-2.amazonaws.com/api/v1/schools/{schoolId}/teachers/{teacherId}"
+        uri: "${lb_url}/api/v1/schools/{schoolId}/teachers/{teacherId}"
         responses:
           default:
             statusCode: "204"
@@ -2255,10 +2255,10 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.teacherId: "method.request.path.teacherId"
-          integration.request.header.X-Forwarded-Host: "'ve17iw2h0g.execute-api.us-west-2.amazonaws.com/test'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
-        connectionId: "pmo7ds"
+        connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "DELETE"
         type: "http"
 

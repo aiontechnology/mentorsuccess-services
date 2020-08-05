@@ -57,7 +57,7 @@ public class PhonogramController {
      */
     @GetMapping
     public CollectionModel<PhonogramModel> getPhonograms() {
-        List<PhonogramModel> phonogramModels = StreamSupport.stream(phonogramService.getAllPhonograms().spliterator(), false)
+        var phonogramModels = StreamSupport.stream(phonogramService.getAllPhonograms().spliterator(), false)
                 .map(phonogramModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(phonogramModels);

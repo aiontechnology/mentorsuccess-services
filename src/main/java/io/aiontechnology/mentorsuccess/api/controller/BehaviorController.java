@@ -57,7 +57,7 @@ public class BehaviorController {
      */
     @GetMapping
     public CollectionModel<BehaviorModel> getBehaviors() {
-        List<BehaviorModel> behaviorModels = StreamSupport.stream(behaviorService.getAllBehaviors().spliterator(), false)
+        var behaviorModels = StreamSupport.stream(behaviorService.getAllBehaviors().spliterator(), false)
                 .map(behaviorModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(behaviorModels);
