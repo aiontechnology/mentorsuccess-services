@@ -56,7 +56,7 @@ public class LeadershipSkillController {
      */
     @GetMapping
     public CollectionModel<LeadershipSkillModel> getLeaderhipSkills() {
-        List<LeadershipSkillModel> interestModels = StreamSupport.stream(leadershipSkillService.getAllLeadershipSkills().spliterator(), false)
+        var interestModels = StreamSupport.stream(leadershipSkillService.getAllLeadershipSkills().spliterator(), false)
                 .map(leadershipSkillModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(interestModels);

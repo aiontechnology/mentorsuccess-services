@@ -25,7 +25,10 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 import java.util.Optional;
 
 /**
- * @author Whitney Hunter
+ * An abstract class that provides common functionality for role based assemblers.
+ *
+ * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @since 1.0.0
  */
 public abstract class BaseRoleModelAssembler<T extends RepresentationModel<T>>
         extends RepresentationModelAssemblerSupport<Role, T> {

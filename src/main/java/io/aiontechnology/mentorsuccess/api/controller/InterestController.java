@@ -59,7 +59,7 @@ public class InterestController {
      */
     @GetMapping
     public CollectionModel<InterestModel> getInterests() {
-        List<InterestModel> interestModels = StreamSupport.stream(interestService.getAllInterests().spliterator(), false)
+        var interestModels = StreamSupport.stream(interestService.getAllInterests().spliterator(), false)
                 .map(interestModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(interestModels);
