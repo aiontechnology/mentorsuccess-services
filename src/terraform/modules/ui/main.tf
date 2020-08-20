@@ -43,7 +43,7 @@ resource "aws_ecs_task_definition" "ui" {
 [
   {
     "image": "661143960593.dkr.ecr.us-west-2.amazonaws.com/mentorsuccess-ui:latest",
-    "name": "mentorsuccess-server",
+    "name": "mentorsuccess-ui",
     "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
@@ -84,6 +84,20 @@ DEFINITION
 }
 
 ####################################################################################################
+# Create certificate
+####################################################################################################
+resource "aws_acm_certificate" "lb-certificate" {
+  domain_name = "*.mentorsuccess.aiontechnology.io"
+  validation_method = "DNS"
+  lifecycle {
+    create_before_destroy = true
+  }
+  tags = {
+    Name = "${local.resource_tag}-cert"
+  }
+}
+
+####################################################################################################
 # Create load balancer
 ####################################################################################################
 resource "aws_lb_target_group" "ui-tg" {
@@ -96,18 +110,46 @@ resource "aws_lb_target_group" "ui-tg" {
 
 resource "aws_lb" "ui-lb" {
   name = "${local.resource_tag}-ui-lb"
-  internal = true
+  internal = false
   load_balancer_type = "network"
   subnets = var.subnet_ids
 }
 
 resource "aws_lb_listener" "ui-lb-listener" {
   load_balancer_arn = aws_lb.ui-lb.arn
-  port = 80
-  protocol = "TCP"
+  port = "443"
+  protocol = "TLS"
+  ssl_policy = "ELBSecurityPolicy-2016-08"
+  certificate_arn = aws_acm_certificate.lb-certificate.arn
   default_action {
     type = "forward"
     target_group_arn = aws_lb_target_group.ui-tg.arn
   }
 }
 
+####################################################################################################
+# Create ui
+####################################################################################################
+data "aws_ecs_container_definition" "ui-definition" {
+  container_name = "mentorsuccess-ui"
+  task_definition = aws_ecs_task_definition.ui.id
+}
+
+resource "aws_ecs_service" "mentorsuccess-ui" {
+  name = "${local.resource_tag}-ui"
+  cluster = var.cluster_id
+  task_definition = aws_ecs_task_definition.ui.arn
+  desired_count = 1
+  launch_type = "FARGATE"
+  network_configuration {
+    subnets = var.subnet_ids
+    security_groups = [var.sg.ui]
+    assign_public_ip = true
+  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.ui-tg.arn
+    container_name = data.aws_ecs_container_definition.ui-definition.container_name
+    container_port = 80
+  }
+  depends_on = [aws_lb.ui-lb]
+}

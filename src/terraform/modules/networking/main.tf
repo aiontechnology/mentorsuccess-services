@@ -100,6 +100,7 @@ resource "aws_subnet" "public1" {
   cidr_block = "10.0.0.0/24"
   vpc_id = aws_vpc.vpc.id
   availability_zone = data.aws_availability_zones.available.names[0]
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "${local.resource_tag}-public1"
@@ -115,6 +116,7 @@ resource "aws_subnet" "public2" {
   cidr_block = "10.0.1.0/24"
   vpc_id = aws_vpc.vpc.id
   availability_zone = data.aws_availability_zones.available.names[1]
+  map_public_ip_on_launch = true
 
   tags = {
     Name = "${local.resource_tag}-public2"
@@ -185,6 +187,33 @@ resource "aws_route_table_association" "ecs2_route_association" {
 ####################################################################################################
 # Define the security groups
 ####################################################################################################
+resource "aws_security_group" "ui_sg" {
+  name = "ms_${var.environment}_sg_ui"
+  description = "Allow web access"
+  vpc_id = aws_vpc.vpc.id
+
+  ingress {
+    description = "Allow connection to http"
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound connections"
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${local.resource_tag}-ui-sg"
+    Terraform = "networking"
+  }
+}
+
 resource "aws_security_group" "server_sg" {
   name = "ms_${var.environment}_sg_ecs"
   description = "Allow ecs access"

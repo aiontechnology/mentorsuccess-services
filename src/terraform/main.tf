@@ -57,6 +57,7 @@ module "ui" {
   name = var.name
   environment = var.environment
   vpc = module.networking.vpc
+  sg = module.networking.sg
   subnet_ids = module.networking.subnets.public_subnets
   execution_role_arn = module.ecs.execution-role.arn
   cluster_id = module.ecs.cluster_id

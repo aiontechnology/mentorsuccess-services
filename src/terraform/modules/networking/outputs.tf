@@ -28,5 +28,6 @@ output "sg" {
   value = {
     db = aws_security_group.db_sg.id
     server = aws_security_group.server_sg.id
+    ui = aws_security_group.ui_sg.id
   }
 }

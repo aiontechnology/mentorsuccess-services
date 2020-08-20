@@ -24,6 +24,10 @@ variable "vpc" {
   type = any
 }
 
+variable "sg" {
+  type = any
+}
+
 variable "subnet_ids" {
   type = list(string)
 }

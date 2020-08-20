@@ -12,6 +12,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-environment = "dev"
-token_redirect = "https://dev.mentorsuccess.aiontechnology.io/receiveToken"
-logout_redirect = "https://dev.mentorsuccess.aiontechnology.io/handleLogout"
+token_redirect = "https://mentorsuccess.aiontechnology.io/receiveToken"
+logout_redirect = "https://mentorsuccess.aiontechnology.io/handleLogout"

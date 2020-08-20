@@ -16,6 +16,10 @@ output "cognito_endpoint" {
   value = module.security.cognito_endpoint
 }
 
+output "cognito_client_id" {
+  value = module.security.cognito_client_id
+}
+
 output "db_password" {
   value = module.database.db_config.password
 }

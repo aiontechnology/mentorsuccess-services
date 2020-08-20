@@ -28,6 +28,7 @@ resource "aws_cognito_user_pool" "user_pool" {
     case_sensitive = false
   }
   username_attributes = ["email", "phone_number"]
+  auto_verified_attributes = []
   schema {
     name = "family_name"
     attribute_data_type = "String"
@@ -48,6 +49,8 @@ Hello. Your MentorSuccess account has been created. Your username is {username}.
       sms_message = "Your MentorSuccess username is {username} and temporary password is {####}. "
     }
   }
+  tags = {
+  }
 }
 
 resource "aws_cognito_user_pool_client" "user_pool_client" {
@@ -55,7 +58,13 @@ resource "aws_cognito_user_pool_client" "user_pool_client" {
   user_pool_id = aws_cognito_user_pool.user_pool.id
   supported_identity_providers = ["COGNITO"]
   allowed_oauth_flows = ["implicit"]
+  allowed_oauth_flows_user_pool_client = true
   allowed_oauth_scopes = ["openid", "profile"]
   callback_urls = [var.token_redirect]
   logout_urls = [var.logout_redirect]
+}
+
+resource "aws_cognito_user_pool_domain" "user_pool_domain" {
+  domain = "mentorsuccess-${local.resource_tag}"
+  user_pool_id = aws_cognito_user_pool.user_pool.id
 }
