@@ -12,10 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "region" {
-  description = "AWS region"
+variable "docker_tag" {
+  description = "The tag that will be used for docker images"
+}
+
+variable "environment" {
+  description = "The name of the environment (e.g. dev, test, prod)"
   type = string
-  default = "us-west-2"
+}
+
+variable "logout_redirect" {
+  description = "The URL to which the app will be redirected upon logout"
+  type = string
 }
 
 variable "name" {
@@ -24,17 +32,17 @@ variable "name" {
   default = "mentorsuccess"
 }
 
-variable "environment" {
-  description = "The name of the environment (e.g. dev, test, prod)"
+variable "public_key" {
+  description = "The public key for the keypair used to connect to the bastion host"
+}
+
+variable "region" {
+  description = "AWS region"
   type = string
+  default = "us-west-2"
 }
 
 variable "token_redirect" {
   description = "The URL to which Cognito tokens should be redirected"
-  type = string
-}
-
-variable "logout_redirect" {
-  description = "The URL to which the app will be redirected upon logout"
   type = string
 }

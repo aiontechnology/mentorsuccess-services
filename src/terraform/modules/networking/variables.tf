@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "name" {
+variable "environment" {
   type = string
 }
 
-variable "environment" {
+variable "name" {
   type = string
 }

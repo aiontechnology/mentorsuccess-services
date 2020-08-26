@@ -12,8 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "vpc" {
-  value = aws_vpc.vpc
+output "sg" {
+  value = {
+    db = aws_security_group.db_sg.id
+    server = aws_security_group.server_sg.id
+    ui = aws_security_group.ui_sg.id
+    bastion = aws_security_group.bastion_sg.id
+  }
 }
 
 output "subnets" {
@@ -24,10 +29,6 @@ output "subnets" {
   }
 }
 
-output "sg" {
-  value = {
-    db = aws_security_group.db_sg.id
-    server = aws_security_group.server_sg.id
-    ui = aws_security_group.ui_sg.id
-  }
+output "vpc" {
+  value = aws_vpc.vpc
 }

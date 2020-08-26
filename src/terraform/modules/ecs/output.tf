@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-output "execution-role" {
-  value = aws_iam_role.ecs_task_execution_role
-}
-
 output "cluster_id" {
   value = aws_ecs_cluster.cluster.id
+}
+
+output "execution-role" {
+  value = aws_iam_role.ecs_task_execution_role
 }

@@ -32,15 +32,18 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 }
 
 resource "aws_db_instance" "database" {
-  allocated_storage      = 10
-  engine                 = "postgres"
-  engine_version         = "11.6"
-  instance_class         = "db.t2.micro"
-  identifier             = "${local.resource_tag}-db-instance"
-  name                   = "mentorsuccess"
-  username               = "postgres"
-  password               = local.db_password
-  db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
+  allocated_storage = 10
+  engine = "postgres"
+  engine_version = "11.6"
+  instance_class = "db.t2.micro"
+  identifier = "${local.resource_tag}-db-instance"
+  name = "mentorsuccess"
+  username = "postgres"
+  password = local.db_password
+  db_subnet_group_name = aws_db_subnet_group.db_subnet_group.name
   vpc_security_group_ids = [var.sg.db]
-  skip_final_snapshot    = true
+  skip_final_snapshot = true
+  apply_immediately = true
+  backup_window = "11:27-11:57"
+  backup_retention_period = 7
 }

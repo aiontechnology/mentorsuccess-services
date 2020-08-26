@@ -187,6 +187,33 @@ resource "aws_route_table_association" "ecs2_route_association" {
 ####################################################################################################
 # Define the security groups
 ####################################################################################################
+resource "aws_security_group" "bastion_sg" {
+  name = "ms_${var.environment}_sg_bastion"
+  description = "Allow ssh access to bastion host"
+  vpc_id = aws_vpc.vpc.id
+
+  ingress {
+    description = "Allow connection to ssh"
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    description = "Allow all outbound connections"
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "${local.resource_tag}-bastion-sg"
+    Terraform = "networking"
+  }
+}
+
 resource "aws_security_group" "ui_sg" {
   name = "ms_${var.environment}_sg_ui"
   description = "Allow web access"
@@ -251,7 +278,7 @@ resource "aws_security_group" "db_sg" {
     from_port = 5432
     to_port = 5432
     protocol = "tcp"
-    security_groups = [aws_security_group.server_sg.id]
+    security_groups = [aws_security_group.server_sg.id, aws_security_group.bastion_sg.id]
   }
 
   egress {

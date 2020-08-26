@@ -12,18 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "name" {
-  type = string
-}
-
 variable "environment" {
   type = string
 }
 
-variable "token_redirect" {
+variable "logout_redirect" {
   type = string
 }
 
-variable "logout_redirect" {
+variable "name" {
+  type = string
+}
+
+variable "public_key" {
+  type = string
+}
+
+variable "sg" {
+  type = any
+}
+
+variable "subnet_ids" {
+  type = list(string)
+}
+
+variable "token_redirect" {
   type = string
 }

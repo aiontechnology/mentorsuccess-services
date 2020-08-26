@@ -34,14 +34,16 @@ module "database" {
 
 module "services" {
   source = "./modules/services"
-  name = var.name
+
+  cluster_id = module.ecs.cluster_id
+  db_config = module.database.db_config
+  docker_tag = var.docker_tag
   environment = var.environment
-  vpc = module.networking.vpc
+  execution_role_arn = module.ecs.execution-role.arn
+  name = var.name
   sg = module.networking.sg
   subnet_ids = module.networking.subnets.ecs_subnets
-  db_config = module.database.db_config
-  execution_role_arn = module.ecs.execution-role.arn
-  cluster_id = module.ecs.cluster_id
+  vpc = module.networking.vpc
 }
 
 module "security" {
@@ -50,20 +52,25 @@ module "security" {
   environment = var.environment
   token_redirect = var.token_redirect
   logout_redirect = var.logout_redirect
+  public_key = var.public_key
+  sg = module.networking.sg
+  subnet_ids = module.networking.subnets.public_subnets
 }
 
 module "ui" {
   source = "./modules/ui"
-  name = var.name
-  environment = var.environment
-  vpc = module.networking.vpc
-  sg = module.networking.sg
-  subnet_ids = module.networking.subnets.public_subnets
-  execution_role_arn = module.ecs.execution-role.arn
-  cluster_id = module.ecs.cluster_id
-  token_redirect = var.token_redirect
-  logout_redirect = var.logout_redirect
+
   api_url = module.services.api_url
+  cluster_id = module.ecs.cluster_id
   cognito_base_url = module.security.cognito_endpoint
   cognito_client_id = module.security.cognito_client_id
+  docker_tag = var.docker_tag
+  environment = var.environment
+  execution_role_arn = module.ecs.execution-role.arn
+  logout_redirect = var.logout_redirect
+  name = var.name
+  sg = module.networking.sg
+  subnet_ids = module.networking.subnets.public_subnets
+  token_redirect = var.token_redirect
+  vpc = module.networking.vpc
 }

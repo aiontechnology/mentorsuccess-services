@@ -12,7 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "name" {
+variable "cluster_id" {
+  type = string
+}
+
+variable "db_config" {
+  type = any
+}
+
+variable "docker_tag" {
   type = string
 }
 
@@ -20,8 +28,12 @@ variable "environment" {
   type = string
 }
 
-variable "vpc" {
-  type = any
+variable "execution_role_arn" {
+  type = string
+}
+
+variable "name" {
+  type = string
 }
 
 variable "sg" {
@@ -32,14 +44,7 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-variable "db_config" {
+variable "vpc" {
   type = any
 }
 
-variable "execution_role_arn" {
-  type = string
-}
-
-variable "cluster_id" {
-  type = string
-}

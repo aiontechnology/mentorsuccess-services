@@ -12,7 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-variable "name" {
+variable "api_url" {
+  type = string
+}
+
+variable "cluster_id" {
+  type = string
+}
+
+variable "cognito_base_url" {
+  type = string
+}
+
+variable "cognito_client_id" {
+  type = string
+}
+
+variable "docker_tag" {
   type = string
 }
 
@@ -20,8 +36,16 @@ variable "environment" {
   type = string
 }
 
-variable "vpc" {
-  type = any
+variable "execution_role_arn" {
+  type = string
+}
+
+variable "logout_redirect" {
+  type = string
+}
+
+variable "name" {
+  type = string
 }
 
 variable "sg" {
@@ -32,30 +56,10 @@ variable "subnet_ids" {
   type = list(string)
 }
 
-variable "execution_role_arn" {
-  type = string
-}
-
-variable "cluster_id" {
-  type = string
-}
-
 variable "token_redirect" {
   type = string
 }
 
-variable "logout_redirect" {
-  type = string
-}
-
-variable "api_url" {
-  type = string
-}
-
-variable "cognito_base_url" {
-  type = string
-}
-
-variable "cognito_client_id" {
-  type = string
+variable "vpc" {
+  type = any
 }
