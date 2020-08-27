@@ -57,7 +57,7 @@ public class LeadershipTraitController {
      */
     @GetMapping
     public CollectionModel<LeadershipTraitModel> getLeadershipTraits() {
-        List<LeadershipTraitModel> leadershipTraitModels =
+        var leadershipTraitModels =
                 StreamSupport.stream(leadershipTraitService.findAll().spliterator(), false)
                         .map(leadershipTraitModelAssembler::toModel)
                         .collect(Collectors.toList());

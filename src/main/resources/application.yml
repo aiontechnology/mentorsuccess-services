@@ -1,0 +1,3 @@
+flowable:
+  idm:
+    password-encoder: spring_delegating

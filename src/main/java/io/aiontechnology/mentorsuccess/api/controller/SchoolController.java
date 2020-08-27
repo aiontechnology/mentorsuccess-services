@@ -93,7 +93,7 @@ public class SchoolController {
     @GetMapping
     public CollectionModel<SchoolModel> getAllSchools() {
         log.debug("Getting all schools");
-        List<SchoolModel> schools = StreamSupport.stream(schoolService.getAllSchools().spliterator(), false)
+        var schools = StreamSupport.stream(schoolService.getAllSchools().spliterator(), false)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .collect(Collectors.toList());
         return CollectionModel.of(schools);

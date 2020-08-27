@@ -106,7 +106,7 @@ public class TeacherController {
     @GetMapping
     public CollectionModel<TeacherModel> getTeachers(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all teachers for school {}", schoolId);
-        Session session = entityManager.unwrap(Session.class);
+        var session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", TEACHER.toString());
         return schoolService.getSchool(schoolId)
                 .map(school -> school.getRoles().stream()

@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -93,7 +92,7 @@ public class BookController {
     @GetMapping
     public CollectionModel<BookModel> getAllBooks() {
         log.debug("Getting all books");
-        List<BookModel> books = StreamSupport.stream(bookService.getAllBooks().spliterator(), false)
+        var books = StreamSupport.stream(bookService.getAllBooks().spliterator(), false)
                 .map(s -> bookModelAssembler.toModel(s, linkProvider))
                 .collect(Collectors.toList());
         return CollectionModel.of(books);

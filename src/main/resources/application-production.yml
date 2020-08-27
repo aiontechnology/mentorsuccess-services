@@ -1,6 +1,4 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://hisheartfoundation.cnf7y6n7e3yu.us-west-2.rds.amazonaws.com:5432/mentorsuccess
     username: postgres
-    password: u^C9efuOg4N2N7ZZn*54

@@ -93,7 +93,7 @@ public class GameController {
     @GetMapping
     public CollectionModel<GameModel> getAllGames() {
         log.debug("Getting all games");
-        List<GameModel> games = StreamSupport.stream(gameService.getAllGames().spliterator(), false)
+        var games = StreamSupport.stream(gameService.getAllGames().spliterator(), false)
                 .map(s -> gameModelAssembler.toModel(s, linkProvider))
                 .collect(Collectors.toList());
         return CollectionModel.of(games);
