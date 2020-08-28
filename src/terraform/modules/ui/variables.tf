@@ -16,6 +16,10 @@ variable "api_url" {
   type = string
 }
 
+variable "certificate_domain_name" {
+  type = string
+}
+
 variable "cluster_id" {
   type = string
 }

@@ -61,6 +61,7 @@ module "ui" {
   source = "./modules/ui"
 
   api_url = module.services.api_url
+  certificate_domain_name = var.certificate_domain_name
   cluster_id = module.ecs.cluster_id
   cognito_base_url = module.security.cognito_endpoint
   cognito_client_id = module.security.cognito_client_id

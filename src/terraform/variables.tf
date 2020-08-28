@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+variable "certificate_domain_name" {
+  description = "The domain name to use when creating the SSL certificate"
+}
+
 variable "docker_tag" {
   description = "The tag that will be used for docker images"
 }
