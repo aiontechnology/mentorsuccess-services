@@ -1,0 +1,707 @@
+# Copyright 2020 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 9
+      author: whitney
+      changes:
+        - createTable:
+            tableName: book
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author
+                  type: varchar(30)
+              - column:
+                  name: grade_level
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  constraints:
+                    nullable: false
+                    defaultNullValue: true
+        - createTable:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: book_interest
+            columns:
+              - column:
+                  name: book_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: book_interest
+            columnNames: book_id, interest_id
+            constraintName: pk_book_interest
+        - addForeignKeyConstraint:
+            baseTableName: book_interest
+            baseColumnNames: book_id
+            referencedTableName: book
+            referencedColumnNames: id
+            constraintName: fk_bookinterest_book
+        - addForeignKeyConstraint:
+            baseTableName: book_interest
+            baseColumnNames: interest_id
+            referencedTableName: interest
+            referencedColumnNames: id
+            constraintName: fk_bookinterest_interest
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 55814e0a-3e0c-4f89-a51e-81477488362b
+              - column:
+                  name: name
+                  value: Art/Music
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: fcf4ea4e-ae97-4f1a-bf06-c6bef7bd581e
+              - column:
+                  name: name
+                  value: Animals
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 28016417-8332-43b2-a501-f026b173c8f4
+              - column:
+                  name: name
+                  value: Sports
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 3abbc6e6-c05f-4bf4-b010-ab8e5a6ea009
+              - column:
+                  name: name
+                  value: History
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: d5e9f8f3-8f96-44cd-9636-a7e81fdf7342
+              - column:
+                  name: name
+                  value: Cooking
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 7cd5a00d-7d57-4165-a597-5a0e5e96da40
+              - column:
+                  name: name
+                  value: Nature/Weather
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: b5ec7e37-cf8f-406a-a133-415f2fc7ef9b
+              - column:
+                  name: name
+                  value: Science
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 1558995b-cf34-4cd4-bbf1-2c4727cfdb2d
+              - column:
+                  name: name
+                  value: Transportation/Machinery
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 1885f477-3d76-43a1-909a-0f06da52bf97
+              - column:
+                  name: name
+                  value: Travel/Geography
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 372fc3ac-c688-4241-9052-86051e9844b0
+              - column:
+                  name: name
+                  value: Fiction
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: af31022a-e64a-4cbd-92bc-797c806a31e7
+              - column:
+                  name: name
+                  value: Non-fiction/Biography
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: fab48ad6-9fc9-4121-bc48-a1065d92c0c5
+              - column:
+                  name: name
+                  value: Humor
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 497ca334-701a-415f-a453-cf7897ddf88e
+              - column:
+                  name: name
+                  value: Ethnicity/Culture
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: f76eca2e-cebe-4db3-879a-6d084ba22b47
+              - column:
+                  name: name
+                  value: Fealings/Emotions
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: fc52be5c-5de7-4d4e-8601-fad160f2f2d4
+              - column:
+                  name: name
+                  value: School
+        - insert:
+            tableName: interest
+            columns:
+              - column:
+                  name: id
+                  value: 96f9af27-780e-4c38-b023-5d05d3907833
+              - column:
+                  name: name
+                  value: Poetry
+        - createTable:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: book_leadershiptrait
+            columns:
+              - column:
+                  name: book_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: leadershiptrait_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: book_leadershiptrait
+            columnNames: book_id, leadershiptrait_id
+            constraintName: pk_book_leadershiptrait
+        - addForeignKeyConstraint:
+            baseTableName: book_leadershiptrait
+            baseColumnNames: book_id
+            referencedTableName: book
+            referencedColumnNames: id
+            constraintName: fk_bookleadershiptrait_book
+        - addForeignKeyConstraint:
+            baseTableName: book_leadershiptrait
+            baseColumnNames: leadershiptrait_id
+            referencedTableName: leadership_trait
+            referencedColumnNames: id
+            constraintName: fk_bookleadershiptrait_leadershiptrait
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: c7779b50-30dd-4aa9-8e66-b1c7456859c2
+              - column:
+                  name: name
+                  value: Confidence
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 3c5a85a4-73fe-411c-9444-455864365cdb
+              - column:
+                  name: name
+                  value: Cooperation
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: f324fe56-3e80-4274-805c-ab59d510bf7a
+              - column:
+                  name: name
+                  value: Courage
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 1fc2d3ee-a911-437d-b3fa-e98079c48004
+              - column:
+                  name: name
+                  value: Creativity
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: a26a6104-5138-4e9e-a297-5c65dcdf76ed
+              - column:
+                  name: name
+                  value: Fairness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 2d548c1a-83c7-44f2-a87d-8c1834ed0d7c
+              - column:
+                  name: name
+                  value: Forgiveness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 79ebc7af-6318-467b-9daa-8b6886cbf7e7
+              - column:
+                  name: name
+                  value: Friendliness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: fc6dd642-fa2a-4fb0-a84c-d1c43fd9487a
+              - column:
+                  name: name
+                  value: Gentleness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 5c774c38-de0b-4e7e-bd4e-1eaea57c57aa
+              - column:
+                  name: name
+                  value: Gratitude
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: f1b5b99f-2195-4e6e-b0c7-dd2fc11b15cd
+              - column:
+                  name: name
+                  value: Honesty
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 75121204-0362-4542-8c2b-82667ec4df46
+              - column:
+                  name: name
+                  value: Humility
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 313a2351-5920-477d-a5e6-619bd0441ee1
+              - column:
+                  name: name
+                  value: Integrity
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: ae5a5d29-3141-4129-b195-2488346333dd
+              - column:
+                  name: name
+                  value: Joyfulness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 9434d9fa-9392-42c5-af32-93450d07363c
+              - column:
+                  name: name
+                  value: Kindness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 347b6aa5-23ac-4b23-bbb1-043b40b41882
+              - column:
+                  name: name
+                  value: Loving
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: ca10a914-84d2-4047-a5ff-7156a4ee3f95
+              - column:
+                  name: name
+                  value: Loyalty
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 0d552820-7bb3-44cc-bbec-429c138795fd
+              - column:
+                  name: name
+                  value: Optimism
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 793edc95-b3a1-4b61-9cea-028277f4cdb8
+              - column:
+                  name: name
+                  value: Patience
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: d885c365-c238-4efd-b5a6-20ffb221c086
+              - column:
+                  name: name
+                  value: Peacefulness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: c9ab63a2-1b98-4518-9279-f6f8c6ab232e
+              - column:
+                  name: name
+                  value: Perseverance
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 84ae6fc8-0864-4f6b-8ec0-fcb4c6ca6c42
+              - column:
+                  name: name
+                  value: Optimism
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 89d0f1ef-126e-48e7-95f7-398622bd33c5
+              - column:
+                  name: name
+                  value: Respect
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 72d65381-462f-4656-b28e-68d268345224
+              - column:
+                  name: name
+                  value: Self-Control
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 683e5e6b-1aaa-456e-8451-3a7c4eb14649
+              - column:
+                  name: name
+                  value: Thoroughness
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: d30d2727-c1d6-45f5-8fc9-5b9f55ebddd5
+              - column:
+                  name: name
+                  value: Tolerance
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 88740e3e-12f9-4511-95bb-213c09a75e2a
+              - column:
+                  name: name
+                  value: Trustworthiness
+        - createTable:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: book_leadershipskill
+            columns:
+              - column:
+                  name: book_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: leadershipskill_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: book_leadershipskill
+            columnNames: book_id, leadershipskill_id
+            constraintName: pk_book_leadershipskill
+        - addForeignKeyConstraint:
+            baseTableName: book_leadershipskill
+            baseColumnNames: book_id
+            referencedTableName: book
+            referencedColumnNames: id
+            constraintName: fk_bookleadershipskill_book
+        - addForeignKeyConstraint:
+            baseTableName: book_leadershipskill
+            baseColumnNames: leadershipskill_id
+            referencedTableName: leadership_skill
+            referencedColumnNames: id
+            constraintName: fk_bookleadershipskill_leadershipskill
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: eb6d592b-4c25-433c-a8e1-ca78260435ee
+              - column:
+                  name: name
+                  value: Active Listening
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 0dc110df-e4e1-422d-bd90-409eec49ddca
+              - column:
+                  name: name
+                  value: Conflict Resolution
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: c6dd85cb-5b3b-4c00-bad5-cc012895dad1
+              - column:
+                  name: name
+                  value: Critical Thinking
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 2ac9d319-8cc2-4b63-af35-0ed8e72b128b
+              - column:
+                  name: name
+                  value: Creative Thinking
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 7e4c195c-76e6-443d-9bb0-18ea36d85eb8
+              - column:
+                  name: name
+                  value: Decision Making
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 37a369ed-da20-44d1-8141-f6db4f254e86
+              - column:
+                  name: name
+                  value: Goal Setting
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: f2681906-be47-4be5-8131-94eaebacc47f
+              - column:
+                  name: name
+                  value: Prioritizing
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: f55c3a89-bd7b-4ba1-a83f-90f267704f31
+              - column:
+                  name: name
+                  value: Teamwork/Collaboration
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 8bf3217d-e2b8-469e-99d7-e16eaba977d4
+              - column:
+                  name: name
+                  value: Planning
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 42c57901-c443-4bfc-a6dc-f5015c47e141
+              - column:
+                  name: name
+                  value: Problem Solving
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 43e6465c-b4b4-4b7a-804a-6e8ba13f600c
+              - column:
+                  name: name
+                  value: Encouraging Others
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: e9e2306e-527d-48c9-9fa5-664e223f656d
+              - column:
+                  name: name
+                  value: Praising
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: d97ef7b8-1227-47af-ba74-0b15684da687
+              - column:
+                  name: name
+                  value: Empathy
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: b666e582-c771-4fcf-88aa-2e3bb55be91b
+              - column:
+                  name: name
+                  value: Organizing
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 4e05de42-89c0-41af-83e4-91d6c6b4d74c
+              - column:
+                  name: name
+                  value: Self-Control
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: ecdd0f32-f754-40c5-8d07-c7580ec38d77
+              - column:
+                  name: name
+                  value: Providing Feedback
+        - insert:
+            tableName: leadership_skill
+            columns:
+              - column:
+                  name: id
+                  value: 15bc5e0d-219d-4a51-8cef-9ca8e78191f1
+              - column:
+                  name: name
+                  value: Showing Respect

@@ -1,0 +1,86 @@
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 11
+      author: whitney
+      changes:
+        - delete:
+            tableName: leadership_trait
+        - modifyDataType:
+            tableName: leadership_trait
+            columnName: name
+            newDataType: varchar(75)
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: bf1941f1-7567-4682-aac7-41985f631384
+              - column:
+                  name: name
+                  value: Integrity (Honesty, Truthfulness & Accountability)
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: ced0add5-c8ab-4da9-9366-c8a7c0fe7d9b
+              - column:
+                  name: name
+                  value: Courage (Confidence)
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: a4ffb7cd-9eee-4b02-8906-f67f968768e5
+              - column:
+                  name: name
+                  value: Humility
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: badd5c82-04b5-4f71-a2c5-c90f7b3b9788
+              - column:
+                  name: name
+                  value: Perseverance (Determination, Resilience, Optimism, & Grit)
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 2a29fdfb-4f63-4600-8693-db8da9e3b094
+              - column:
+                  name: name
+                  value: Passion (Drive, Energy, & Self-Motivation)
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: d115e204-932e-4f64-b50f-462a22a1162f
+              - column:
+                  name: name
+                  value: Kindness (Gentleness & Fairness)
+        - insert:
+            tableName: leadership_trait
+            columns:
+              - column:
+                  name: id
+                  value: 484aed52-a44e-4e6e-848c-66344b2ccac8
+              - column:
+                  name: name
+                  value: Responsibility
