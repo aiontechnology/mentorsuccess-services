@@ -29,7 +29,7 @@ pipelines:
       - step:
           name: Build and test
           image: adoptopenjdk/openjdk13:centos
-          deployment: Prod
+          deployment: Production
           caches:
             - gradle
           script:
