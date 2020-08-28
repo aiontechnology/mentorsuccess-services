@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+certificate_domain_name = "*.mentorsuccess.aiontechnology.io"
 docker_tag = "latest"
 environment = "test"
 logout_redirect = "https://test.mentorsuccess.aiontechnology.io/handleLogout"
