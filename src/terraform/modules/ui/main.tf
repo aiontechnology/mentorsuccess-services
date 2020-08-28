@@ -42,7 +42,7 @@ resource "aws_ecs_task_definition" "ui" {
   container_definitions = <<DEFINITION
 [
   {
-    "image": "661143960593.dkr.ecr.us-west-2.amazonaws.com/mentorsuccess-ui:latest",
+    "image": "661143960593.dkr.ecr.us-west-2.amazonaws.com/mentorsuccess-ui:${var.docker_tag}",
     "name": "mentorsuccess-ui",
     "logConfiguration": {
                 "logDriver": "awslogs",
@@ -87,7 +87,7 @@ DEFINITION
 # Create certificate
 ####################################################################################################
 resource "aws_acm_certificate" "lb-certificate" {
-  domain_name = "*.mentorsuccess.aiontechnology.io"
+  domain_name = var.certificate_domain_name
   validation_method = "DNS"
   lifecycle {
     create_before_destroy = true
