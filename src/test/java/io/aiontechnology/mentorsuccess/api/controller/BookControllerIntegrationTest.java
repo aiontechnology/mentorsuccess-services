@@ -143,7 +143,7 @@ public class BookControllerIntegrationTest {
     void testCreateBook_fieldsInvalid() throws Exception {
         // setup the fixture
         BookModel bookModel = BookModel.builder()
-                .withTitle("12345678901234567890123456789012345678901")
+                .withTitle("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
                 .withAuthor("1234567890123456789012345678901")
                 .withGradeLevel(7)
                 .build();
@@ -158,7 +158,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(3)))
-                .andExpect(jsonPath("$.error.title", is("The title of a book can not be longer than 40 characters")))
+                .andExpect(jsonPath("$.error.title", is("The title of a book can not be longer than 100 characters")))
                 .andExpect(jsonPath("$.error.author", is("The book's author can not be longer than 30 characters")))
                 .andExpect(jsonPath("$.error.gradeLevel", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))

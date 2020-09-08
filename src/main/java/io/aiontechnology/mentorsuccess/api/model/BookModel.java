@@ -44,7 +44,7 @@ public class BookModel extends ResourceModel<BookModel> implements InterestModel
     private final UUID id;
 
     @NotNull(message = "{book.title.notNull}")
-    @Size(max = 40, message = "{book.title.size}")
+    @Size(max = 100, message = "{book.title.size}")
     private final String title;
 
     @Size(max = 30, message = "{book.author.size}")
