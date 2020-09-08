@@ -40,7 +40,7 @@ public class PhonogramService {
     }
 
     public Iterable<Phonogram> getAllPhonograms() {
-        return phonogramRepository.findAll();
+        return phonogramRepository.findAllByOrderByNameAsc();
     }
 
     public Optional<Phonogram> findPhonogramByName(String name) {
