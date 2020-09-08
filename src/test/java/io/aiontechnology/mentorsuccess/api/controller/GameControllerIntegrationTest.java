@@ -172,7 +172,6 @@ public class GameControllerIntegrationTest {
         game.put("name", NAME);
         game.put("description", DESCRIPTION);
         game.put("gradeLevel", GRADE_LEVEL);
-        game.put("interests", Arrays.asList("INTEREST1"));
         game.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT1"));
         game.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
 
@@ -187,8 +186,6 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
-                .andExpect(jsonPath("$.interests.length()", is(1)))
-                .andExpect(jsonPath("$.interests[0].name", is("INTEREST1")))
                 .andExpect(jsonPath("$.leadershipTraits.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipTraits[0].name", is("LEADERSHIP_TRAIT1")))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
@@ -228,8 +225,6 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.name", is("NAME")))
                 .andExpect(jsonPath("$.description", is("DESCRIPTION")))
                 .andExpect(jsonPath("$.gradeLevel", is(1)))
-                .andExpect(jsonPath("$.interests.length()", is(1)))
-                .andExpect(jsonPath("$.interests[0].name", is("INTEREST1")))
                 .andExpect(jsonPath("$.leadershipTraits.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipTraits[0].name", is("LEADERSHIP_TRAIT1")))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
@@ -273,8 +268,6 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.name", is("NEW_NAME")))
                 .andExpect(jsonPath("$.description", is("NEW_DESCRIPTION")))
                 .andExpect(jsonPath("$.gradeLevel", is(2)))
-                .andExpect(jsonPath("$.interests.length()", is(1)))
-                .andExpect(jsonPath("$.interests[0].name", is("INTEREST2")))
                 .andExpect(jsonPath("$.leadershipTraits.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipTraits[0].name", is("LEADERSHIP_TRAIT2")))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
