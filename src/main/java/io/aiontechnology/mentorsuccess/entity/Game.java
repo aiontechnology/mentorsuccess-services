@@ -65,12 +65,6 @@ public class Game {
     private Boolean isActive;
 
     @ManyToMany
-    @JoinTable(name = "game_interest",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "interest_id"))
-    private Set<Interest> interests;
-
-    @ManyToMany
     @JoinTable(name = "game_leadershipskill",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))

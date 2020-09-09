@@ -56,11 +56,6 @@ public class GameMapperTest {
         // setup the fixture
         UUID ID = UUID.randomUUID();
 
-        UUID INTEREST_ID = UUID.randomUUID();
-        Interest interest = new Interest();
-        interest.setId(INTEREST_ID);
-        interest.setName(INTEREST_NAME);
-
         UUID LEADERSHIPSKILL_ID = UUID.randomUUID();
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         leadershipSkill.setId(LEADERSHIPSKILL_ID);
@@ -77,7 +72,6 @@ public class GameMapperTest {
         game.setDescription(DESCRIPTION);
         game.setGradeLevel(GRADE_LEVEL);
         game.setIsActive(IS_ACTIVE);
-        game.setInterests(Collections.singleton(interest));
         game.setLeadershipSkills(Collections.singleton(leadershipSkill));
         game.setLeadershipTraits(Collections.singleton(leadershipTrait));
 
@@ -93,7 +87,6 @@ public class GameMapperTest {
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
-        assertThat(result.getInterests()).containsExactly(interestMapper.mapEntityToModel(interest));
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkillMapper.mapEntityToModel(leadershipSkill));
         assertThat(result.getLeadershipTraits()).containsExactly(leadershipTraitMapper.mapEntityToModel(leadershipTrait));
     }
@@ -109,7 +102,6 @@ public class GameMapperTest {
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
                 .withGradeLevel(GRADE_LEVEL)
-                .withInterests(Arrays.asList(interestModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
                 .withLeadershipTraits(Arrays.asList(leadershipTraitModel))
                 .build();
@@ -133,7 +125,6 @@ public class GameMapperTest {
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
-        assertThat(result.getInterests()).containsExactly(interest);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
         assertThat(result.getLeadershipTraits()).containsExactly(leadershipTrait);
     }
@@ -142,14 +133,12 @@ public class GameMapperTest {
     void testMapModelToEntity_providedEntity() throws Exception {
 
         // setup the fixture
-        InterestModel interestModel = InterestModel.builder().withName(INTEREST_NAME).build();
         LeadershipSkillModel leadershipSkillModel = LeadershipSkillModel.builder().withName(LEADERSHIPSKILL_NAME).build();
         LeadershipTraitModel leadershipTraitModel = LeadershipTraitModel.builder().withName(LEADERSHIPTRAIT_NAME).build();
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
                 .withGradeLevel(GRADE_LEVEL)
-                .withInterests(Arrays.asList(interestModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
                 .withLeadershipTraits(Arrays.asList(leadershipTraitModel))
                 .build();
@@ -175,7 +164,6 @@ public class GameMapperTest {
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
-        assertThat(result.getInterests()).containsExactly(interest);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
         assertThat(result.getLeadershipTraits()).containsExactly(leadershipTrait);
     }

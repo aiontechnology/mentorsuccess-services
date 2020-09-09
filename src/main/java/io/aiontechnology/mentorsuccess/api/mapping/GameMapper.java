@@ -44,7 +44,6 @@ public class GameMapper implements Mapper<Game, GameModel> {
                 .withName(game.getName())
                 .withDescription(game.getDescription())
                 .withGradeLevel(game.getGradeLevel())
-                .withInterests(interestMapper.mapInterests(() -> game.getInterests()))
                 .withLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(() -> game.getLeadershipSkills()))
                 .withLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(() -> game.getLeadershipTraits()))
                 .build();
@@ -61,7 +60,6 @@ public class GameMapper implements Mapper<Game, GameModel> {
         game.setName(gameModel.getName());
         game.setDescription(gameModel.getDescription());
         game.setGradeLevel(gameModel.getGradeLevel());
-        game.setInterests(interestMapper.mapInterests(gameModel));
         game.setLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(gameModel));
         game.setLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(gameModel));
         game.setIsActive(true);
