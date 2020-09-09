@@ -39,8 +39,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class GameModel extends ResourceModel<GameModel> implements LeadershipSkillModelHolder,
-        LeadershipTraitModelHolder {
+public class GameModel extends ResourceModel<GameModel> implements LeadershipSkillModelHolder {
 
     private final UUID id;
 
@@ -55,8 +54,6 @@ public class GameModel extends ResourceModel<GameModel> implements LeadershipSki
     @Min(value = 1, message = "{game.gradeLevel.invalid}")
     @Max(value = 6, message = "{game.gradeLevel.invalid}")
     private final Integer gradeLevel;
-
-    private final Collection<LeadershipTraitModel> leadershipTraits;
 
     private final Collection<LeadershipSkillModel> leadershipSkills;
 
