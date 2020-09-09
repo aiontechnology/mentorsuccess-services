@@ -70,10 +70,4 @@ public class Game {
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
     private Set<LeadershipSkill> leadershipSkills;
 
-    @ManyToMany
-    @JoinTable(name = "game_leadershiptrait",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
-    private Set<LeadershipTrait> leadershipTraits;
-
 }

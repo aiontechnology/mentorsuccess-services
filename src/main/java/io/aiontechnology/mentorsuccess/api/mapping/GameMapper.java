@@ -31,11 +31,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GameMapper implements Mapper<Game, GameModel> {
 
-    private final InterestMapper interestMapper;
-
     private final LeadershipSkillMapper leadershipSkillMapper;
-
-    private final LeadershipTraitMapper leadershipTraitMapper;
 
     @Override
     public GameModel mapEntityToModel(Game game) {
@@ -45,7 +41,6 @@ public class GameMapper implements Mapper<Game, GameModel> {
                 .withDescription(game.getDescription())
                 .withGradeLevel(game.getGradeLevel())
                 .withLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(() -> game.getLeadershipSkills()))
-                .withLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(() -> game.getLeadershipTraits()))
                 .build();
     }
 
@@ -61,7 +56,6 @@ public class GameMapper implements Mapper<Game, GameModel> {
         game.setDescription(gameModel.getDescription());
         game.setGradeLevel(gameModel.getGradeLevel());
         game.setLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(gameModel));
-        game.setLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(gameModel));
         game.setIsActive(true);
         return game;
     }
