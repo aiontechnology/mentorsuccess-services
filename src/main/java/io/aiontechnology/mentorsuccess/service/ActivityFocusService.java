@@ -16,46 +16,36 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Role;
-import io.aiontechnology.mentorsuccess.repository.RoleRepository;
+import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
+import io.aiontechnology.mentorsuccess.repository.ActivityFocusRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Service for managing teachers.
+ * Service that provides business logic for activity focuses.
  *
  * @author Whitney Hunter
+ * @since 0.2.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
-public class RoleService {
+@RequiredArgsConstructor
+public class ActivityFocusService {
 
-    private final RoleRepository roleRepository;
+    private final ActivityFocusRepository activityFocusRepository;
 
-    @Transactional
-    public Role createRole(Role role) {
-        return roleRepository.save(role);
+    public Optional<ActivityFocus> getActivityFocus(UUID id) {
+        return activityFocusRepository.findById(id);
     }
 
-    @Transactional
-    public Role deactivateRole(Role role) {
-        role.setIsActive(false);
-        roleRepository.save(role);
-        return role;
+    public Iterable<ActivityFocus> getAllActivityFocuses() {
+        return activityFocusRepository.findAll();
     }
 
-    public Optional<Role> findRole(UUID id) {
-        return roleRepository.findById(id);
-    }
-
-    @Transactional
-    public Role updateRole(Role role) {
-        return roleRepository.save(role);
+    public Optional<ActivityFocus> findActivityFocustByName(String name) {
+        return activityFocusRepository.findByName(name);
     }
 
 }

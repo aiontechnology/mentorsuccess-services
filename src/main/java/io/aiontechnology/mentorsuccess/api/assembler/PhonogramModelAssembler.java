@@ -27,15 +27,21 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
+ * Assembles a {@link PhonogramModel} from a {@link Phonogram}.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class PhonogramModelAssembler extends RepresentationModelAssemblerSupport<Phonogram, PhonogramModel> {
 
+    /** Mapper to map between {@link Phonogram} and {@link PhonogramModel}. */
     private final PhonogramMapper phonogramMapper;
 
     /**
-     * Construct an instance.
+     * Constructor
+     *
+     * @param phonogramMapper The mapper for mapping between {@link Phonogram} and {@link PhonogramModel}.
      */
     @Inject
     public PhonogramModelAssembler(PhonogramMapper phonogramMapper) {
@@ -43,6 +49,12 @@ public class PhonogramModelAssembler extends RepresentationModelAssemblerSupport
         this.phonogramMapper = phonogramMapper;
     }
 
+    /**
+     * Map a {@link Phonogram} to a {@link PhonogramModel} without adding links.
+     *
+     * @param phonogram The {@link Phonogram} to map.
+     * @return The resulting {@link PhonogramModel}.
+     */
     @Override
     public PhonogramModel toModel(Phonogram phonogram) {
         return Optional.ofNullable(phonogram)

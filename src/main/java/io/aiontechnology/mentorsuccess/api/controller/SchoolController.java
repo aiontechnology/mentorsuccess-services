@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -50,8 +49,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * Controller that vends a REST interface for dealing with schools.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/schools")
@@ -143,6 +142,7 @@ public class SchoolController {
                 .ifPresent(schoolService::deactivateSchool);
     }
 
+    /** {@link LinkProvider} implementation for schools. */
     private LinkProvider<SchoolModel, School> linkProvider = (schoolModel, school) ->
             Arrays.asList(
                     linkTo(SchoolController.class).slash(school.getId()).withSelfRel(),

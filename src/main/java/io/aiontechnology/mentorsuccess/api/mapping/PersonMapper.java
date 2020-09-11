@@ -25,15 +25,22 @@ import org.springframework.stereotype.Component;
 /**
  * Mapper between {@link Person} and {@link PersonModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 @RequiredArgsConstructor
 public class PersonMapper implements Mapper<Person, PersonModel> {
 
+    /** Service for formatting phone numbers */
     private final PhoneService phoneService;
 
+    /**
+     * Map a {@link Person} to a new {@link PersonModel}.
+     *
+     * @param person The {@link Person} to map.
+     * @return The resulting {@link PersonModel}.
+     */
     @Override
     public PersonModel mapEntityToModel(Person person) {
         return PersonModel.builder()
@@ -46,12 +53,25 @@ public class PersonMapper implements Mapper<Person, PersonModel> {
                 .build();
     }
 
+    /**
+     * Map a {@link PersonModel} to a new {@link Person}.
+     *
+     * @param personModel The {@link PersonModel} to map.
+     * @return The resulting {@link Person}.
+     */
     @Override
     public Person mapModelToEntity(PersonModel personModel) {
         Person person = new Person();
         return mapModelToEntity(personModel, person);
     }
 
+    /**
+     * Map a {@link PersonModel} to the given {@link Person}.
+     *
+     * @param personModel The {@link PersonModel} to map.
+     * @param person The {@link Person} to map to.
+     * @return The resulting {@link Person}.
+     */
     @Override
     public Person mapModelToEntity(PersonModel personModel, Person person) {
         person.setFirstName(personModel.getFirstName());

@@ -16,8 +16,10 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
+import io.aiontechnology.mentorsuccess.api.model.ActivityFocusModel;
 import io.aiontechnology.mentorsuccess.api.model.GameModel;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
 import org.junit.jupiter.api.Test;
@@ -43,13 +45,18 @@ public class GameMapperTest {
     private static final Integer GRADE_LEVEL = 1;
     private static final Boolean IS_ACTIVE = TRUE;
 
-    private static final String INTEREST_NAME = "INTEREST";
+    private static final String ACTIVITYFOCUS_NAME = "ACTIVITYFOCUS";
     private static final String LEADERSHIPSKILL_NAME = "LEADERSHIPSKILL";
 
     @Test
     void testMapEntityToModel() throws Exception {
         // setup the fixture
         UUID ID = UUID.randomUUID();
+
+        UUID ACTIVITYFOCUS_ID = UUID.randomUUID();
+        ActivityFocus activityFocus = new ActivityFocus();
+        activityFocus.setId(ACTIVITYFOCUS_ID);
+        activityFocus.setName(ACTIVITYFOCUS_NAME);
 
         UUID LEADERSHIPSKILL_ID = UUID.randomUUID();
         LeadershipSkill leadershipSkill = new LeadershipSkill();
@@ -62,11 +69,12 @@ public class GameMapperTest {
         game.setDescription(DESCRIPTION);
         game.setGradeLevel(GRADE_LEVEL);
         game.setIsActive(IS_ACTIVE);
+        game.setActivityFocuses(Collections.singleton(activityFocus));
         game.setLeadershipSkills(Collections.singleton(leadershipSkill));
 
-        InterestMapper interestMapper = new InterestMapper(null);
+        ActivityFocusMapper activityFocusMapper = new ActivityFocusMapper(null);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(null);
-        GameMapper gameMapper = new GameMapper(leadershipSkillMapper);
+        GameMapper gameMapper = new GameMapper(activityFocusMapper, leadershipSkillMapper);
 
         // execute the SUT
         GameModel result = gameMapper.mapEntityToModel(game);
@@ -75,6 +83,7 @@ public class GameMapperTest {
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
+        assertThat(result.getActivityFocuses()).containsExactly(activityFocusMapper.mapEntityToModel(activityFocus));
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkillMapper.mapEntityToModel(leadershipSkill));
     }
 
@@ -82,19 +91,25 @@ public class GameMapperTest {
     void testMapModelToEntity_newEntity() throws Exception {
 
         // setup the fixture
+        ActivityFocusModel activityFocusModel = ActivityFocusModel.builder().withName(ACTIVITYFOCUS_NAME).build();
         LeadershipSkillModel leadershipSkillModel = LeadershipSkillModel.builder().withName(LEADERSHIPSKILL_NAME).build();
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
                 .withGradeLevel(GRADE_LEVEL)
+                .withActivityFocuses(Arrays.asList(activityFocusModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
                 .build();
+
+        ActivityFocus activityFocus = new ActivityFocus();
+        activityFocus.setName(ACTIVITYFOCUS_NAME);
+        ActivityFocusMapper activityFocusMapper = new ActivityFocusMapper(name -> Optional.of(activityFocus));
 
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         leadershipSkill.setName(LEADERSHIPSKILL_NAME);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(name -> Optional.of(leadershipSkill));
 
-        GameMapper gameMapper = new GameMapper(leadershipSkillMapper);
+        GameMapper gameMapper = new GameMapper(activityFocusMapper, leadershipSkillMapper);
 
         // execute the SUT
         Game result = gameMapper.mapModelToEntity(gameModel);
@@ -103,6 +118,7 @@ public class GameMapperTest {
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
+        assertThat(result.getActivityFocuses()).containsExactly(activityFocus);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
     }
 
@@ -110,19 +126,25 @@ public class GameMapperTest {
     void testMapModelToEntity_providedEntity() throws Exception {
 
         // setup the fixture
+        ActivityFocusModel activityFocusModel = ActivityFocusModel.builder().withName(ACTIVITYFOCUS_NAME).build();
         LeadershipSkillModel leadershipSkillModel = LeadershipSkillModel.builder().withName(LEADERSHIPSKILL_NAME).build();
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
                 .withGradeLevel(GRADE_LEVEL)
+                .withActivityFocuses(Arrays.asList(activityFocusModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
                 .build();
+
+        ActivityFocus activityFocus = new ActivityFocus();
+        activityFocus.setName(ACTIVITYFOCUS_NAME);
+        ActivityFocusMapper activityFocusMapper = new ActivityFocusMapper(name -> Optional.of(activityFocus));
 
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         leadershipSkill.setName(LEADERSHIPSKILL_NAME);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(name -> Optional.of(leadershipSkill));
 
-        GameMapper gameMapper = new GameMapper(leadershipSkillMapper);
+        GameMapper gameMapper = new GameMapper(activityFocusMapper, leadershipSkillMapper);
 
         // execute the SUT
         Game providedGame = new Game();
@@ -133,6 +155,7 @@ public class GameMapperTest {
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
+        assertThat(result.getActivityFocuses()).containsExactly(activityFocus);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
     }
 

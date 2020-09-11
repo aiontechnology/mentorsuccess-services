@@ -45,8 +45,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * Controller that vends a REST interface for dealing with people.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/people")
@@ -94,6 +94,7 @@ public class PersonController {
                 .orElseThrow(() -> new NotFoundException("Person was not found"));
     }
 
+    /** {@link LinkProvider} implementation for people. */
     private LinkProvider<PersonModel, Person> linkProvider = (personModel, person) ->
             Arrays.asList(
                     linkTo(PersonController.class).slash(person.getId()).withSelfRel()

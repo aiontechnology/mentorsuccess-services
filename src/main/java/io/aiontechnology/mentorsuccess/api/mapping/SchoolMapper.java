@@ -26,8 +26,8 @@ import org.springframework.stereotype.Component;
 /**
  * Mapper between {@link School} and {@link SchoolModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 @RequiredArgsConstructor
@@ -39,6 +39,12 @@ public class SchoolMapper implements Mapper<School, SchoolModel> {
     /** Service for dealing with phone numbers. */
     private final PhoneService phoneService;
 
+    /**
+     * Map a {@link School} to a new {@link SchoolModel}.
+     *
+     * @param school The {@link School} to map.
+     * @return The resulting {@link SchoolModel}.
+     */
     @Override
     public SchoolModel mapEntityToModel(School school) {
         return SchoolModel.builder()
@@ -51,12 +57,25 @@ public class SchoolMapper implements Mapper<School, SchoolModel> {
                 .build();
     }
 
+    /**
+     * Map a {@link SchoolModel} to a new {@link School}.
+     *
+     * @param schoolModel The {@link SchoolModel} to map.
+     * @return The resulting {@link School}.
+     */
     @Override
     public School mapModelToEntity(SchoolModel schoolModel) {
         School school = new School();
         return mapModelToEntity(schoolModel, school);
     }
 
+    /**
+     * Map a {@link SchoolModel} to the given {@link School}.
+     *
+     * @param schoolModel The {@link SchoolModel} to map.
+     * @param school The {@link School} to map to.
+     * @return The resulting {@link School}.
+     */
     @Override
     public School mapModelToEntity(SchoolModel schoolModel, School school) {
         school.setName(schoolModel.getName());

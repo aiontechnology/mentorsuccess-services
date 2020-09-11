@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.repository.LeadershipSkillRepository;
 import lombok.RequiredArgsConstructor;

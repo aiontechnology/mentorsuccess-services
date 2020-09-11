@@ -16,10 +16,10 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
-import io.aiontechnology.mentorsuccess.api.assembler.BehaviorModelAssembler;
-import io.aiontechnology.mentorsuccess.api.model.BehaviorModel;
-import io.aiontechnology.mentorsuccess.entity.Behavior;
-import io.aiontechnology.mentorsuccess.service.BehaviorService;
+import io.aiontechnology.mentorsuccess.api.assembler.ActivityFocusModelAssembler;
+import io.aiontechnology.mentorsuccess.api.model.ActivityFocusModel;
+import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
+import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
@@ -31,34 +31,34 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
- * Controller that vends a REST interface for dealing with behaviors.
+ * Controller that vends a REST interface for dealing with activity focuses.
  *
  * @author Whitney Hunter
- * @since 0.1.0
+ * @since 0.2.0
  */
 @RestController
-@RequestMapping("/api/v1/behaviors")
+@RequestMapping("/api/v1/activityfocuses")
 @RequiredArgsConstructor
 @Slf4j
-public class BehaviorController {
+public class ActivityFocusController {
 
-    /** A HATEOAS assembler for {@link BehaviorModel BehaviorModels}. */
-    private final BehaviorModelAssembler behaviorModelAssembler;
+    /** A HATEOAS assembler for {@link ActivityFocusModel ActivityFocusModels}. */
+    private final ActivityFocusModelAssembler activityFocusModelAssembler;
 
-    /** Service for interacting with {@link Behavior Behaviors}. */
-    private final BehaviorService behaviorService;
+    /** Service for interacting with {@link ActivityFocus IActivityFocuss}. */
+    private final ActivityFocusService activityFocusService;
 
     /**
-     * A REST endpoint for getting all interests.
+     * A REST endpoint for getting all activity focuses.
      *
-     * @return A collection of models that represents the interests in the system.
+     * @return A collection of models that represents the activity focuses in the system.
      */
     @GetMapping
-    public CollectionModel<BehaviorModel> getBehaviors() {
-        var behaviorModels = StreamSupport.stream(behaviorService.getAllBehaviors().spliterator(), false)
-                .map(behaviorModelAssembler::toModel)
+    public CollectionModel<ActivityFocusModel> getInterests() {
+        var activityFocusModels = StreamSupport.stream(activityFocusService.getAllActivityFocuses().spliterator(), false)
+                .map(activityFocusModelAssembler::toModel)
                 .collect(Collectors.toList());
-        return CollectionModel.of(behaviorModels);
+        return CollectionModel.of(activityFocusModels);
     }
 
 }

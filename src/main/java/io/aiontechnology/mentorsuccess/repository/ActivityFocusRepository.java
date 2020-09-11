@@ -16,18 +16,24 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
+import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Repository for {@link Person} entities.
+ * A Spring repository for interacting with {@link ActivityFocus} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.2.0
  */
 @Repository
-public interface PersonRepository extends CrudRepository<Person, UUID> {
+public interface ActivityFocusRepository extends CrudRepository<ActivityFocus, UUID> {
+
+    @Cacheable("activityfocuses")
+    Optional<ActivityFocus> findByName(String name);
+
 }

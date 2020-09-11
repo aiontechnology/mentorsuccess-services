@@ -18,8 +18,6 @@ package io.aiontechnology.mentorsuccess.api.model;
 
 import org.springframework.hateoas.RepresentationModel;
 
-import java.util.Collection;
-
 /**
  * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
  * @since 1.0.0

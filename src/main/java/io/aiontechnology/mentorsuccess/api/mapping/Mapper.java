@@ -22,8 +22,8 @@ package io.aiontechnology.mentorsuccess.api.mapping;
  * @param <Entity> The entity type.
  * @param <Model> The model type.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since v1.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public interface Mapper<Entity, Model> {
 

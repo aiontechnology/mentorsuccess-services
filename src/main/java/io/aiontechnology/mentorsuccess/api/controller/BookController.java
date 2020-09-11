@@ -49,8 +49,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * Controller that vends a REST interface for dealing with books.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/books")
@@ -141,6 +141,7 @@ public class BookController {
                 .ifPresent(bookService::deactivateBook);
     }
 
+    /** {@link LinkProvider} implementation for books. */
     private LinkProvider<BookModel, Book> linkProvider = (bookModel, book) ->
             Arrays.asList(
                     linkTo(BookController.class).slash(book.getId()).withSelfRel()

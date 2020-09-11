@@ -27,11 +27,15 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
+ * Assembles a {@link BehaviorModel} from a {@link Behavior}.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class BehaviorModelAssembler extends RepresentationModelAssemblerSupport<Behavior, BehaviorModel> {
 
+    /** Mapper to map between {@link Behavior} and {@link BehaviorModel}. */
     private final BehaviorMapper behaviorMapper;
 
     /**

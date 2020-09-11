@@ -37,20 +37,35 @@ import java.util.stream.Collectors;
 import static java.util.AbstractMap.SimpleEntry;
 
 /**
+ * Advice that handles exceptions that bubble up past the controller layer.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @ControllerAdvice
 @RequiredArgsConstructor
 @Slf4j
 public class RestResponseExceptionHandler {
 
+    /** Support for message localization */
     private final MessageSource messageSource;
 
+    /**
+     * Handler {@link NotFoundException}.
+     */
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
     public void handleNotFound() {
     }
 
+    /**
+     * Handle {@link MethodArgumentNotValidException}.
+     *
+     * @param methodArgumentNotValidException The exception.
+     * @param httpServletRequest The request object.
+     * @param locale The local of the caller.
+     * @return A response containing the {@link ErrorModel}.
+     */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorModel> handleValidationExceptions(
@@ -68,6 +83,13 @@ public class RestResponseExceptionHandler {
         return new ResponseEntity<>(errorModel, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Get the errors from the provided {@link MethodArgumentNotValidException}.
+     *
+     * @param methodArgumentNotValidException The exception from which errors should be extracted.
+     * @param locale The local of the caller.
+     * @return A map or errors.
+     */
     private Map<String, String> extractErrors(MethodArgumentNotValidException methodArgumentNotValidException,
                                               Locale locale) {
         return methodArgumentNotValidException.getBindingResult().getAllErrors().stream()

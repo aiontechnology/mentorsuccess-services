@@ -16,9 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
-import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
 import org.junit.jupiter.api.Test;
 

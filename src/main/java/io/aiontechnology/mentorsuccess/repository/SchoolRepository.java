@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

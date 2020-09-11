@@ -27,8 +27,10 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * Assembles a {@link LeadershipTraitModel} from a {@link LeadershipTrait}.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class LeadershipTraitModelAssembler extends RepresentationModelAssemblerSupport<LeadershipTrait, LeadershipTraitModel> {
@@ -36,7 +38,9 @@ public class LeadershipTraitModelAssembler extends RepresentationModelAssemblerS
     private final LeadershipTraitMapper leadershipTraitMapper;
 
     /**
-     * Construct an instance.
+     * Constructor
+     *
+     * @param leadershipTraitMapper The mapper for mapping between {@link LeadershipTrait} and {@link LeadershipTraitModel}.
      */
     @Inject
     public LeadershipTraitModelAssembler(LeadershipTraitMapper leadershipTraitMapper) {
@@ -44,6 +48,12 @@ public class LeadershipTraitModelAssembler extends RepresentationModelAssemblerS
         this.leadershipTraitMapper = leadershipTraitMapper;
     }
 
+    /**
+     * Map a {@link LeadershipTrait} to a {@link LeadershipTraitModel} without adding links.
+     *
+     * @param leadershipTrait The {@link LeadershipTrait} to map.
+     * @return The resulting {@link LeadershipTraitModel}.
+     */
     @Override
     public LeadershipTraitModel toModel(LeadershipTrait leadershipTrait) {
         return Optional.ofNullable(leadershipTrait)

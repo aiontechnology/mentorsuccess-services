@@ -18,62 +18,35 @@ package io.aiontechnology.mentorsuccess.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Entity that represents a game.
+ * Entity that represents an activity focus.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.2.0
  */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@EqualsAndHashCode(callSuper = false)
-@Where(clause = "is_active = true")
-public class Game {
+public class ActivityFocus {
 
+    /** This ID of the activity focus */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The name of the activity focus */
     @Column
     private String name;
-
-    @Column
-    private String description;
-
-    @Column
-    private Integer gradeLevel;
-
-    @Column
-    private Boolean isActive;
-
-    @ManyToMany
-    @JoinTable(name = "game_activityfocus",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "activityfocus_id"))
-    private Collection<ActivityFocus> activityFocuses;
-
-    @ManyToMany
-    @JoinTable(name = "game_leadershipskill",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
-    private Collection<LeadershipSkill> leadershipSkills;
 
 }
