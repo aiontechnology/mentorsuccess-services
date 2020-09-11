@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,6 +86,7 @@ public class GameController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('game:create')")
     public OutboundGame createGame(@RequestBody @Valid InboundGame inboundGame) {
         log.debug("Game: {}", inboundGame);
         return Optional.ofNullable(inboundGame)
@@ -100,6 +102,7 @@ public class GameController {
      * @return A collection of {@link InboundGame} instances for all games.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('games:read')")
     public CollectionModel<OutboundGame> getAllGames() {
         log.debug("Getting all games");
         var games = StreamSupport.stream(gameService.getAllGames().spliterator(), false)
@@ -115,6 +118,7 @@ public class GameController {
      * @return A model that represents the game if it could be found.
      */
     @GetMapping("/{gameId}")
+    @PreAuthorize("hasAuthority('game:read')")
     public OutboundGame getGame(@PathVariable("gameId") UUID gameId) {
         return gameService.findGameById(gameId)
                 .map(game -> gameModelAssembler.toModel(game, linkProvider))
@@ -129,6 +133,7 @@ public class GameController {
      * @return A model representing the updated game.
      */
     @PutMapping("/{gameId}")
+    @PreAuthorize("hasAuthority('game:update')")
     public OutboundGame updateGame(@PathVariable("gameId") UUID gameId, @RequestBody @Valid InboundGame inboundGame) {
         log.debug("Updating book {} with {}", gameId, inboundGame);
         return gameService.findGameById(gameId)
@@ -145,6 +150,7 @@ public class GameController {
      */
     @DeleteMapping("/{gameId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('game:delete')")
     public void deactivateGame(@PathVariable("gameId") UUID gameId) {
         log.debug("Deactivating game: {}", gameId);
         gameService.findGameById(gameId)

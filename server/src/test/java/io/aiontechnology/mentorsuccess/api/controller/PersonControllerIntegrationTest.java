@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundPerson;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -34,6 +35,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -78,6 +80,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/people")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundPerson)));
 
@@ -108,6 +111,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/people")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundPerson)));
 
@@ -138,6 +142,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/people")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundPerson)));
 
@@ -166,6 +171,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/people")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundPerson)));
 
@@ -197,6 +203,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/people")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundPerson)));
 
@@ -217,6 +224,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/people/2f10e8ac-9ad6-4771-a034-ca1d6c387b9b")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -239,6 +247,7 @@ public class PersonControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/people/3f10e8ac-9ad6-4771-a034-ca1d6c387b9b")
+                .with(jwt().authorities(new SimpleGrantedAuthority("person:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation

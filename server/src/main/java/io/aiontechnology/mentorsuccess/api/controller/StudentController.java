@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,6 +87,7 @@ public class StudentController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Transactional
+    @PreAuthorize("hasAuthority('student:create')")
     public OutboundStudent createStudent(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundStudent inboundStudent) {
         log.debug("Creating student {}, for school {}", inboundStudent, schoolId);
@@ -107,6 +109,7 @@ public class StudentController {
      * @return A collection of {@link OutboundStudent} instances for the given school.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('student:read')")
     public CollectionModel<OutboundStudent> getAllStudentsForSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all students for school: {}", schoolId);
         Collection<Student> students = schoolService.getSchoolById(schoolId)
@@ -119,6 +122,7 @@ public class StudentController {
     }
 
     @GetMapping("/{studentId}")
+    @PreAuthorize("hasAuthority('student:read')")
     public OutboundStudent getStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId) {
         return studentService.getStudentById(studentId)
                 .map(s -> studentModelAssembler.toModel(s, linkProvider))
@@ -126,6 +130,7 @@ public class StudentController {
     }
 
     @PutMapping("/{studentId}")
+    @PreAuthorize("hasAuthority('student:update')")
     public OutboundStudent updateStudent(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("studentId") UUID studentId, @RequestBody @Valid InboundStudent inboundStudent) {
         Student student = studentService.getStudentById(studentId)
@@ -140,6 +145,7 @@ public class StudentController {
 
     @DeleteMapping("/{studentId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('student:delete')")
     public void deactivateStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId) {
         studentService.getStudentById(studentId)
                 .ifPresent(studentService::deactivateStudent);

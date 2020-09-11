@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import io.aiontechnology.mentorsuccess.service.PersonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -62,6 +63,7 @@ public class PersonController {
 
     /** Service with business logic for people */
     private final PersonService personService;
+
     /** {@link LinkProvider} implementation for people. */
     private final LinkProvider<OutboundPerson, Person> linkProvider = (personModel, person) ->
             Arrays.asList(
@@ -76,6 +78,7 @@ public class PersonController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('person:create')")
     public OutboundPerson createPerson(@RequestBody @Valid InboundPerson inboundPerson) {
         log.debug("Creating person: {}", inboundPerson);
         return Optional.ofNullable(inboundPerson)
@@ -92,6 +95,7 @@ public class PersonController {
      * @return The {@link InboundPerson} for the desired person if it could be found.
      */
     @GetMapping("/{personId}")
+    @PreAuthorize("hasAuthority('person:read')")
     public OutboundPerson getPerson(@PathVariable("personId") UUID personId) {
         log.debug("Getting person with id: {}", personId);
         return personService.findPersonById(personId)

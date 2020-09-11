@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -49,6 +50,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -104,6 +106,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -142,6 +145,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -183,6 +187,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -221,6 +226,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -264,6 +270,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -304,6 +311,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -347,6 +355,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -388,6 +397,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -431,6 +441,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -471,6 +482,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -514,6 +526,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -554,6 +567,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -612,6 +626,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -662,6 +677,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -714,6 +730,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -753,6 +770,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -808,6 +826,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -873,6 +892,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -939,6 +959,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/f0c08c26-954b-4d05-8536-522403f9e54e")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -972,7 +993,8 @@ public class StudentControllerIntegrationTest {
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2"));
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:delete"))));
 
         // validation
         result.andExpect(status().isNoContent());

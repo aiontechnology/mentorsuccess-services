@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -96,6 +97,7 @@ public class TeacherController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('teacher:create')")
     public OutboundTeacher createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid InboundTeacher inboundTeacher) {
         log.debug("Creating teacher: {}", inboundTeacher);
         return schoolService.getSchoolById(schoolId)
@@ -115,6 +117,7 @@ public class TeacherController {
      * @return A collection of {@link InboundTeacher} instances for the requested school.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('teachers:read')")
     public CollectionModel<OutboundTeacher> getTeachers(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all teachers for school {}", schoolId);
         var session = entityManager.unwrap(Session.class);
@@ -135,6 +138,7 @@ public class TeacherController {
      * @return The personnel if it could be found.
      */
     @GetMapping("/{teacherId}")
+    @PreAuthorize("hasAuthority('teacher:read')")
     public OutboundTeacher getTeacher(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("teacherId") UUID teacherId) {
         return roleService.findRoleById(teacherId)
@@ -151,6 +155,7 @@ public class TeacherController {
      * @return A model that represents the teacher that has been updated.
      */
     @PutMapping("/{teacherId}")
+    @PreAuthorize("hasAuthority('teacher:update')")
     public OutboundTeacher updateTeacher(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("teacherId") UUID teacherId,
             @RequestBody @Valid InboundTeacher inboundTeacher) {
@@ -169,6 +174,7 @@ public class TeacherController {
      */
     @DeleteMapping("/{teacherId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('teacher:delete')")
     public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
         log.debug("Deactivating teacher");
         roleService.findRoleById(teacherId)
