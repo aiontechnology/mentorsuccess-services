@@ -49,6 +49,77 @@ tags:
 
 paths:
 
+  # /api/v1/activityfocuses --------------------------------------------------------
+  /api/v1/activityfocuses:
+
+    # OPTIONS for /api/v1/activityfocuses
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/activityfocuses
+    get:
+      summary: Get activity focuses
+      description: Get all activity focuses
+      tags:
+        - resource
+      operationId: getActivityFocuses
+      responses:
+        "200":
+          description: Returned all activity focuses
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityFocusModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/activityfocuses"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
   # /api/v1/behaviors --------------------------------------------------------------
   /api/v1/behaviors:
 
@@ -2277,6 +2348,19 @@ components:
         the the school endpoint using the `schoolId` from current call.
   schemas:
 
+    # ActivityFocusModelCollection -------------------------------------------------
+    ActivityFocusModelCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            activityFocusModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/NameModel'
+
     # AddressModel -----------------------------------------------------------------
     AddressModel:
       type: object
@@ -2324,7 +2408,7 @@ components:
         _embedded:
           type: object
           properties:
-            interestTraitModelList:
+            behaviorModelList:
               type: array
               items:
                 allOf:
@@ -2458,7 +2542,7 @@ components:
         _embedded:
           type: object
           properties:
-            interestTraitModelList:
+            interestModelList:
               type: array
               items:
                 allOf:
@@ -2590,7 +2674,7 @@ components:
         _embedded:
           type: object
           properties:
-            interestTraitModelList:
+            phonogramModelList:
               type: array
               items:
                 allOf:
