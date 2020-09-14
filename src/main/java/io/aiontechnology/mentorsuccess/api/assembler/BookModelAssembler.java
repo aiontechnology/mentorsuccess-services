@@ -27,15 +27,15 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * A HATEOAS assembler for {@link BookModel}.
+ * Assembles a {@link BookModel} from a {@link Book}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book, BookModel> {
 
-    /** The mapper for mapping between {@link Book} and {@link BookModel}. */
+    /** Mapper to map between {@link Book} and {@link BookModel}. */
     private final BookMapper bookMapper;
 
     /** A utility class for adding links to a model object. */
@@ -72,7 +72,7 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
      *
      * @param book The {@link Book} to map.
      * @param linkProvider An object that provides links.
-     * @return The resulting {@link BookModel}
+     * @return The resulting {@link BookModel}.
      */
     public BookModel toModel(Book book, LinkProvider<BookModel, Book> linkProvider) {
         return Optional.ofNullable(book)

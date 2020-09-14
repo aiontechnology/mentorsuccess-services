@@ -27,15 +27,21 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
+ * Assembles a {@link InterestModel} from an {@link Interest}.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class InterestModelAssembler extends RepresentationModelAssemblerSupport<Interest, InterestModel> {
 
+    /** Mapper to map between {@link Interest} and {@link InterestModel}. */
     private final InterestMapper interestMapper;
 
     /**
-     * Construct an instance.
+     * Constructor
+     *
+     * @param interestMapper The mapper for mapping between {@link Interest} and {@link InterestModel}.
      */
     @Inject
     public InterestModelAssembler(InterestMapper interestMapper) {
@@ -43,6 +49,12 @@ public class InterestModelAssembler extends RepresentationModelAssemblerSupport<
         this.interestMapper = interestMapper;
     }
 
+    /**
+     * Map an {@link Interest} to a {@link InterestModel} without adding links.
+     *
+     * @param interest The {@link Interest} to map.
+     * @return The resulting {@link InterestModel}.
+     */
     @Override
     public InterestModel toModel(Interest interest) {
         return Optional.ofNullable(interest)

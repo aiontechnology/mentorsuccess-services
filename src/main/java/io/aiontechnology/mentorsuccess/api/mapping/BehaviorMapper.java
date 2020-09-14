@@ -21,9 +21,9 @@ import io.aiontechnology.mentorsuccess.api.model.BehaviorModelHolder;
 import io.aiontechnology.mentorsuccess.entity.Behavior;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -31,14 +31,21 @@ import java.util.stream.Collectors;
 /**
  * Mapper between {@link Behavior} and {@link BehaviorModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public class BehaviorMapper implements Mapper<Behavior, BehaviorModel> {
 
+    /** Function for retrieving {@link Behavior} objects by name */
     private final Function<String, Optional<Behavior>> behaviorGetter;
 
+    /**
+     * Map from the given {@link Behavior} to a {@link BehaviorModel}.
+     *
+     * @param behavior The {@link Behavior} to map from.
+     * @return The newly mapped {@link BehaviorModel}.
+     */
     @Override
     public BehaviorModel mapEntityToModel(Behavior behavior) {
         return BehaviorModel.builder()
@@ -46,12 +53,25 @@ public class BehaviorMapper implements Mapper<Behavior, BehaviorModel> {
                 .build();
     }
 
+    /**
+     * Map from the given {@link BehaviorModel} to a {@link Behavior}.
+     *
+     * @param behaviorModel The {@link BehaviorModel} to map from.
+     * @return The newly mapped {@link Behavior}.
+     */
     @Override
     public Behavior mapModelToEntity(BehaviorModel behaviorModel) {
         Behavior behavior = new Behavior();
         return mapModelToEntity(behaviorModel, behavior);
     }
 
+    /**
+     * Map from a given {@link BehaviorModel} into the given {@link Behavior}.
+     *
+     * @param behaviorModel The {@link BehaviorModel} to map from.
+     * @param behavior The {@link Behavior} to map to.
+     * @return The mapped {@link Behavior}.
+     */
     @Override
     public Behavior mapModelToEntity(BehaviorModel behaviorModel, Behavior behavior) {
         return Optional.ofNullable(behaviorModel)
@@ -67,13 +87,25 @@ public class BehaviorMapper implements Mapper<Behavior, BehaviorModel> {
                 .orElseThrow(() -> new IllegalArgumentException("Illegal interest specified"));
     }
 
-    public Set<BehaviorModel> mapBehaviors(Supplier<Set<Behavior>> behaviorSupplier) {
+    /**
+     * Map a collection of {@link Behavior} to a collection of {@link BehaviorModel}.
+     *
+     * @param behaviorSupplier A support that provides the collection of {@link Behavior}.
+     * @return The collection of mapped {@link BehaviorModel}.
+     */
+    public Collection<BehaviorModel> mapBehaviors(Supplier<Collection<Behavior>> behaviorSupplier) {
         return behaviorSupplier.get().stream()
                 .map(this::mapEntityToModel)
                 .collect(Collectors.toSet());
     }
 
-    public Set<Behavior> mapBehaviors(BehaviorModelHolder holder) {
+    /**
+     * Map a collection of {@link BehaviorModel} to a collection of {@link Behavior}.
+     *
+     * @param holder The holder containing the collection of {@link BehaviorModel} to map.
+     * @return The collection of mapped {@link Behavior}.
+     */
+    public Collection<Behavior> mapBehaviors(BehaviorModelHolder holder) {
         if (holder.getBehaviors() != null) {
             return holder.getBehaviors().stream()
                     .map(this::mapModelToEntity)

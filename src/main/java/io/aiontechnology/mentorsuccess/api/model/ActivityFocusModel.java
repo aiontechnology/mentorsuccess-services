@@ -14,20 +14,27 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.repository;
+package io.aiontechnology.mentorsuccess.api.model;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.UUID;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Repository for {@link Person} entities.
+ * Model object that represents an activity focus.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.2.0
  */
-@Repository
-public interface PersonRepository extends CrudRepository<Person, UUID> {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Builder(setterPrefix = "with")
+@ToString
+public class ActivityFocusModel extends RepresentationModel<ActivityFocusModel> {
+
+    /** The activity focus' name */
+    private final String name;
+
 }

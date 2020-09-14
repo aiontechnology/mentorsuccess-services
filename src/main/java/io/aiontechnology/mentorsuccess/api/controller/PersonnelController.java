@@ -21,7 +21,6 @@ import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.PersonnelMapper;
 import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
-import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
@@ -53,12 +51,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * Controller that vends a REST interface for dealing with personnel.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/personnel")
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 @Slf4j
 public class PersonnelController {
 
@@ -160,6 +158,7 @@ public class PersonnelController {
                 .ifPresent(roleService::deactivateRole);
     }
 
+    /** {@link LinkProvider} implementation for personnel. */
     private LinkProvider<PersonnelModel, Role> linkProvider = (personnelModel, role) ->
             Arrays.asList(
                     linkTo(PersonnelController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),

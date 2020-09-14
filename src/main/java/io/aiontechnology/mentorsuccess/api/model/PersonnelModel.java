@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
-import io.aiontechnology.mentorsuccess.entity.Role;
 import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
 import lombok.Builder;
 import lombok.Data;
@@ -28,7 +27,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.*;
+import static io.aiontechnology.mentorsuccess.entity.Role.RoleType;
 
 /**
  * @author Whitney Hunter

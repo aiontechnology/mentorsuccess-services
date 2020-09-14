@@ -1,0 +1,152 @@
+# Copyright 2020 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 18
+      author: whitney
+      changes:
+        - createTable:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: game_activityfocus
+            columns:
+              - column:
+                  name: game_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activityfocus_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: game_activityfocus
+            columnNames: game_id, activityfocus_id
+            constraintName: pk_game_activityfocus
+        - addForeignKeyConstraint:
+            baseTableName: game_activityfocus
+            baseColumnNames: game_id
+            referencedTableName: game
+            referencedColumnNames: id
+            constraintName: fk_gameactivityfocus_game
+        - addForeignKeyConstraint:
+            baseTableName: game_activityfocus
+            baseColumnNames: activityfocus_id
+            referencedTableName: activity_focus
+            referencedColumnNames: id
+            constraintName: fk_gameactivityfocus_activityfocus
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: 383e98ed-9eba-4910-994f-680d65673bc1
+              - column:
+                  name: name
+                  value: Strategy
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: e07484d5-003a-4820-9088-8710ad9eaa3f
+              - column:
+                  name: name
+                  value: Memory
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: e2125343-5bb7-43f3-a668-9ebf9728e586
+              - column:
+                  name: name
+                  value: Fine Motor Skills
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: 569d48b0-f13a-4fd6-ad29-126c05cff90f
+              - column:
+                  name: name
+                  value: Pattern Recognition
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: 3776f931-2cb4-4c96-b6c9-41ef7f365ba1
+              - column:
+                  name: name
+                  value: Drawing
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: 85f0c748-14e6-4f89-bf54-f07d1ab73513
+              - column:
+                  name: name
+                  value: Acting/Role Playing
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: f1cb7ce1-5eb4-411d-b743-0c99a10cacae
+              - column:
+                  name: name
+                  value: Spelling
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: 0a720112-ae5d-4297-af97-bf7aaf64a668
+              - column:
+                  name: name
+                  value: Counting
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: 2769c131-154c-46ea-9f4f-7e33df0d6caf
+              - column:
+                  name: name
+                  value: Reading
+        - insert:
+            tableName: activity_focus
+            columns:
+              - column:
+                  name: id
+                  value: af65be2d-dd03-42ad-8997-3dcf3cd9d6e3
+              - column:
+                  name: name
+                  value: Vocabulary

@@ -29,7 +29,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import java.util.Set;
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -63,30 +63,30 @@ public class Book {
     @JoinTable(name = "book_interest",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
-    private Set<Interest> interests;
+    private Collection<Interest> interests;
 
     @ManyToMany
     @JoinTable(name = "book_leadershipskill",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
-    private Set<LeadershipSkill> leadershipSkills;
+    private Collection<LeadershipSkill> leadershipSkills;
 
     @ManyToMany
     @JoinTable(name = "book_leadershiptrait",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
-    private Set<LeadershipTrait> leadershipTraits;
+    private Collection<LeadershipTrait> leadershipTraits;
 
     @ManyToMany
     @JoinTable(name = "book_phonogram",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "phonogram_id"))
-    private Set<Phonogram> phonograms;
+    private Collection<Phonogram> phonograms;
 
     @ManyToMany
     @JoinTable(name = "book_behavior",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "behavior_id"))
-    private Set<Behavior> behaviors;
+    private Collection<Behavior> behaviors;
 
 }

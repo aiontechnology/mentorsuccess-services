@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -53,12 +52,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * Controller that vends a REST interface for dealing with teachers.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/teachers")
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 @Slf4j
 public class TeacherController {
 
@@ -162,6 +161,7 @@ public class TeacherController {
                 .ifPresent(roleService::deactivateRole);
     }
 
+    /** {@link LinkProvider} implementation for teachers. */
     private LinkProvider<TeacherModel, Role> linkProvider = (teacherModel, role) ->
             Arrays.asList(
                     linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),

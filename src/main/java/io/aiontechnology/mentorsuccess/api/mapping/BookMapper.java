@@ -16,29 +16,44 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
+import io.aiontechnology.mentorsuccess.api.model.BehaviorModel;
 import io.aiontechnology.mentorsuccess.api.model.BookModel;
+import io.aiontechnology.mentorsuccess.api.model.InterestModel;
+import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.api.model.PhonogramModel;
+import io.aiontechnology.mentorsuccess.entity.Behavior;
 import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Interest;
+import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
+import io.aiontechnology.mentorsuccess.entity.Phonogram;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
  * Mapper between {@link Book} and {@link BookModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 @RequiredArgsConstructor
 public class BookMapper implements Mapper<Book, BookModel> {
 
+    /** Mapper between {@link Interest} and {@link InterestModel}. */
     private final InterestMapper interestMapper;
 
+    /** Mapper between {@link LeadershipSkill} and {@link LeadershipSkillModel}. */
     private final LeadershipSkillMapper leadershipSkillMapper;
 
+    /** Mapper between {@link LeadershipTrait} and {@link LeadershipTraitModel}. */
     private final LeadershipTraitMapper leadershipTraitMapper;
 
+    /** Mapper between {@link Phonogram} and {@link PhonogramModel}. */
     private final PhonogramMapper phonogramMapper;
 
+    /** Mapper between {@link Behavior} and {@link BehaviorModel}. */
     private final BehaviorMapper behaviorMapper;
 
     /**

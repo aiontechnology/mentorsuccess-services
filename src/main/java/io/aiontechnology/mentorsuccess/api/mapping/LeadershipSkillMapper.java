@@ -21,35 +21,57 @@ import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModelHolder;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * Mapper between {@link LeadershipSkill} and {@link LeadershipSkillModel}.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public class LeadershipSkillMapper implements Mapper<LeadershipSkill, LeadershipSkillModel> {
 
+    /** Function for retrieving {@link LeadershipSkill} objects by name */
     private final Function<String, Optional<LeadershipSkill>> leadershipSkillGetter;
 
+    /**
+     * Map from the given {@link LeadershipSkill} to a {@link LeadershipSkillModel}.
+     *
+     * @param leadershipSkill The {@link LeadershipSkill} to map from.
+     * @return The newly mapped {@link LeadershipSkillModel}.
+     */
     @Override
-    public LeadershipSkillModel mapEntityToModel(LeadershipSkill interest) {
+    public LeadershipSkillModel mapEntityToModel(LeadershipSkill leadershipSkill) {
         return LeadershipSkillModel.builder()
-                .withName(interest.getName())
+                .withName(leadershipSkill.getName())
                 .build();
     }
 
+    /**
+     * Map from the given {@link LeadershipSkillModel} to a {@link LeadershipSkill}.
+     *
+     * @param leadershipSkillModel The {@link LeadershipSkillModel} to map from.
+     * @return The newly mapped {@link LeadershipSkill}.
+     */
     @Override
     public LeadershipSkill mapModelToEntity(LeadershipSkillModel leadershipSkillModel) {
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         return mapModelToEntity(leadershipSkillModel, leadershipSkill);
     }
 
+    /**
+     * Map from a given {@link LeadershipSkillModel} into the given {@link LeadershipSkill}.
+     *
+     * @param leadershipSkillModel The {@link LeadershipSkillModel} to map from.
+     * @param leadershipSkill The {@link LeadershipSkill} to map to.
+     * @return The mapped {@link LeadershipSkill}.
+     */
     @Override
     public LeadershipSkill mapModelToEntity(LeadershipSkillModel leadershipSkillModel, LeadershipSkill leadershipSkill) {
         return Optional.ofNullable(leadershipSkillModel)
@@ -65,13 +87,25 @@ public class LeadershipSkillMapper implements Mapper<LeadershipSkill, Leadership
                 .orElseThrow(() -> new IllegalArgumentException("Illegal leadership trait specified"));
     }
 
-    public Set<LeadershipSkillModel> mapLeadershipSkills(Supplier<Set<LeadershipSkill>> leadershipSkillsSupplier) {
+    /**
+     * Map a collection of {@link LeadershipSkill} to a collection of {@link LeadershipSkillModel}.
+     *
+     * @param leadershipSkillsSupplier A support that provides the collection of {@link LeadershipSkill}.
+     * @return The collection of mapped {@link LeadershipSkillModel}.
+     */
+    public Collection<LeadershipSkillModel> mapLeadershipSkills(Supplier<Collection<LeadershipSkill>> leadershipSkillsSupplier) {
         return leadershipSkillsSupplier.get().stream()
                 .map(this::mapEntityToModel)
                 .collect(Collectors.toSet());
     }
 
-    public Set<LeadershipSkill> mapLeadershipSkills(LeadershipSkillModelHolder holder) {
+    /**
+     * Map a collection of {@link LeadershipSkillModel} to a collection of {@link LeadershipSkill}.
+     *
+     * @param holder The holder containing the collection of {@link LeadershipSkillModel} to map.
+     * @return The collection of mapped {@link LeadershipSkill}.
+     */
+    public Collection<LeadershipSkill> mapLeadershipSkills(LeadershipSkillModelHolder holder) {
         if (holder.getLeadershipSkills() != null) {
             return holder.getLeadershipSkills().stream()
                     .map(this::mapModelToEntity)

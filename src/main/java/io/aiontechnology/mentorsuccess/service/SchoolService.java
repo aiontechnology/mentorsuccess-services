@@ -21,7 +21,6 @@ import io.aiontechnology.mentorsuccess.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;

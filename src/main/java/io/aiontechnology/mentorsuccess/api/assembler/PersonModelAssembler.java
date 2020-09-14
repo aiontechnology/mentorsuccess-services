@@ -27,20 +27,25 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles {@link PersonModel} instances from {@link Person} entity instances.
+ * Assembles a {@link PersonModel} from a {@link Person}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @author Whitney Hunter
  * @since 1.0.0
  */
 @Component
 public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Person, PersonModel> {
 
+    /** A utility class for adding links to a model object. */
     private final LinkHelper<PersonModel> linkHelper;
 
+    /** Mapper to map between {@link Person} and {@link PersonModel}. */
     private final PersonMapper personMapper;
 
     /**
      * Constructor
+     *
+     * @param personMapper The mapper for mapping between {@link Person} and {@link PersonModel}.
+     * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
     public PersonModelAssembler(PersonMapper personMapper, LinkHelper<PersonModel> linkHelper) {
@@ -50,10 +55,10 @@ public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Pe
     }
 
     /**
-     * Create a {@link PersonModel} instance from the given {@link Person} entity.
+     * Map a {@link Person} to a {@link PersonModel} without adding links.
      *
-     * @param person The {@link Person} entity to assemble.
-     * @return The assembled {@link PersonModel}.
+     * @param person The {@link Person} to map.
+     * @return The resulting {@link PersonModel}.
      */
     @Override
     public PersonModel toModel(Person person) {
@@ -63,12 +68,11 @@ public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Pe
     }
 
     /**
-     * Create a {@link PersonModel} instance from the given {@link Person} entity. Add the links provided by the given
-     * link provider.
+     * Map a {@link Person} to a {@link PersonModel} and add links.
      *
-     * @param person
-     * @param linkProvider
-     * @return
+     * @param person The {@link Person} to map.
+     * @param linkProvider An object that provides links.
+     * @return The resulting {@link PersonModel}.
      */
     public PersonModel toModel(Person person, LinkProvider<PersonModel, Person> linkProvider) {
         return Optional.ofNullable(person)

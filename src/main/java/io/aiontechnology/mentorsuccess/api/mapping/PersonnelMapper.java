@@ -24,17 +24,30 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * Mapper between {@link Role} and {@link PersonnelModel}.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> implements Mapper<Role, PersonnelModel> {
 
+    /**
+     * Constructor
+     *
+     * @param phoneService Service for formatting phone numbers
+     */
     @Inject
     public PersonnelMapper(PhoneService phoneService) {
         super(phoneService);
     }
 
+    /**
+     * Map a {@link Role} to a new {@link PersonnelModel}.
+     *
+     * @param role The {@link Role} to map.
+     * @return The resulting {@link PersonnelModel}.
+     */
     @Override
     public PersonnelModel mapEntityToModel(Role role) {
         return PersonnelModel.builder()
@@ -47,6 +60,13 @@ public class PersonnelMapper extends AbstractRoleMapper<PersonnelModel> implemen
                 .build();
     }
 
+    /**
+     * Template method for mapping from a {@link PersonnelModel} to a {@link Role}.
+     *
+     * @param personnelModel The {@link PersonnelModel} to map from.
+     * @param role The {@link Role} to map into.
+     * @return The resulting {@link Role}.
+     */
     @Override
     protected Role doMapRole(PersonnelModel personnelModel, Role role) {
         role.setType(personnelModel.getType());

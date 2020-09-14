@@ -26,23 +26,28 @@ import javax.inject.Inject;
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class ProgramAdminMapper extends AbstractRoleMapper<ProgramAdminModel> implements Mapper<Role, ProgramAdminModel> {
 
+    /**
+     * Constructor
+     *
+     * @param phoneService Service for formatting phone numbers
+     */
     @Inject
     public ProgramAdminMapper(PhoneService phoneService) {
         super(phoneService);
     }
 
-    @Override
-    protected Role doMapRole(ProgramAdminModel programAdminModel, Role role) {
-        role.setType(PROGRAM_ADMIN);
-        return role;
-    }
-
+    /**
+     * Map a {@link Role} to a new {@link ProgramAdminModel}.
+     *
+     * @param role The {@link Role} to map.
+     * @return The resulting {@link ProgramAdminModel}.
+     */
     @Override
     public ProgramAdminModel mapEntityToModel(Role role) {
         return ProgramAdminModel.builder()
@@ -52,6 +57,19 @@ public class ProgramAdminMapper extends AbstractRoleMapper<ProgramAdminModel> im
                 .withWorkPhone(phoneService.format(role.getPerson().getWorkPhone()))
                 .withCellPhone(phoneService.format(role.getPerson().getCellPhone()))
                 .build();
+    }
+
+    /**
+     * Template method for mapping from a {@link ProgramAdminModel} to a {@link Role}.
+     *
+     * @param programAdminModel The {@link ProgramAdminModel} to map from.
+     * @param role The {@link Role} to map into.
+     * @return The resulting {@link Role}.
+     */
+    @Override
+    protected Role doMapRole(ProgramAdminModel programAdminModel, Role role) {
+        role.setType(PROGRAM_ADMIN);
+        return role;
     }
 
 }

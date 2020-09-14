@@ -21,9 +21,9 @@ import io.aiontechnology.mentorsuccess.api.model.InterestModelHolder;
 import io.aiontechnology.mentorsuccess.entity.Interest;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -31,14 +31,21 @@ import java.util.stream.Collectors;
 /**
  * Mapper between {@link Interest} and {@link InterestModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public class InterestMapper implements Mapper<Interest, InterestModel> {
 
+    /** Function for retrieving {@link Interest} objects by name */
     private final Function<String, Optional<Interest>> interestGetter;
 
+    /**
+     * Map from the given {@link Interest} to a {@link InterestModel}.
+     *
+     * @param interest The {@link Interest} to map from.
+     * @return The newly mapped {@link InterestModel}.
+     */
     @Override
     public InterestModel mapEntityToModel(Interest interest) {
         return InterestModel.builder()
@@ -46,12 +53,25 @@ public class InterestMapper implements Mapper<Interest, InterestModel> {
                 .build();
     }
 
+    /**
+     * Map from the given {@link InterestModel} to a {@link Interest}.
+     *
+     * @param interestModel The {@link InterestModel} to map from.
+     * @return The newly mapped {@link Interest}.
+     */
     @Override
     public Interest mapModelToEntity(InterestModel interestModel) {
         Interest interest = new Interest();
         return mapModelToEntity(interestModel, interest);
     }
 
+    /**
+     * Map from a given {@link InterestModel} into the given {@link Interest}.
+     *
+     * @param interestModel The {@link InterestModel} to map from.
+     * @param interest The {@link Interest} to map to.
+     * @return The mapped {@link Interest}.
+     */
     @Override
     public Interest mapModelToEntity(InterestModel interestModel, Interest interest) {
         return Optional.ofNullable(interestModel)
@@ -67,13 +87,25 @@ public class InterestMapper implements Mapper<Interest, InterestModel> {
                 .orElseThrow(() -> new IllegalArgumentException("Illegal interest specified"));
     }
 
-    public Set<InterestModel> mapInterests(Supplier<Set<Interest>> interestSupplier) {
+    /**
+     * Map a collection of {@link Interest} to a collection of {@link InterestModel}.
+     *
+     * @param interestSupplier A support that provides the collection of {@link Interest}.
+     * @return The collection of mapped {@link InterestModel}.
+     */
+    public Collection<InterestModel> mapInterests(Supplier<Collection<Interest>> interestSupplier) {
         return interestSupplier.get().stream()
                 .map(this::mapEntityToModel)
                 .collect(Collectors.toSet());
     }
 
-    public Set<Interest> mapInterests(InterestModelHolder holder) {
+    /**
+     * Map a collection of {@link InterestModel} to a collection of {@link Interest}.
+     *
+     * @param holder The holder containing the collection of {@link InterestModel} to map.
+     * @return The collection of mapped {@link Interest}.
+     */
+    public Collection<Interest> mapInterests(InterestModelHolder holder) {
         if (holder.getInterests() != null) {
             return holder.getInterests().stream()
                     .map(this::mapModelToEntity)

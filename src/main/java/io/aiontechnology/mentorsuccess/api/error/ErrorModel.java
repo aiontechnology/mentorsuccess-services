@@ -24,21 +24,29 @@ import org.springframework.http.HttpStatus;
 import java.time.ZonedDateTime;
 
 /**
+ * Model for errors produced by the server.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @Builder(setterPrefix = "with")
 @ToString
 public class ErrorModel<T> {
 
+    /** The timestamp of when the error occurred. */
     private final ZonedDateTime timestamp;
 
+    /** The HTTP status that resulted from the error. */
     private final HttpStatus status;
 
+    /** The error. */
     private final T error;
 
+    /** The error message. */
     private final String message;
 
+    /** The path that caused the error. */
     private final String path;
 
 }

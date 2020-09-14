@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -39,7 +38,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
-public class GameModel extends ResourceModel<GameModel> implements LeadershipSkillModelHolder {
+public class GameModel extends ResourceModel<GameModel> implements ActivityFocusModelHolder, LeadershipSkillModelHolder {
 
     private final UUID id;
 
@@ -54,6 +53,8 @@ public class GameModel extends ResourceModel<GameModel> implements LeadershipSki
     @Min(value = 1, message = "{game.gradeLevel.invalid}")
     @Max(value = 6, message = "{game.gradeLevel.invalid}")
     private final Integer gradeLevel;
+
+    private final Collection<ActivityFocusModel> activityFocuses;
 
     private final Collection<LeadershipSkillModel> leadershipSkills;
 

@@ -20,9 +20,15 @@ package io.aiontechnology.mentorsuccess.api.error;
  * And exception that indicates that a requested resource could not be found.
  *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 public class NotFoundException extends RuntimeException {
 
+    /**
+     * Constructor
+     *
+     * @param message The error message.
+     */
     public NotFoundException(String message) {
         super(message);
     }

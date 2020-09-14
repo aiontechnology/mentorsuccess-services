@@ -21,7 +21,6 @@ import io.aiontechnology.mentorsuccess.repository.InterestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,7 +29,7 @@ import java.util.UUID;
  * @since 1.0.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class InterestService {
 
     private final InterestRepository interestRepository;

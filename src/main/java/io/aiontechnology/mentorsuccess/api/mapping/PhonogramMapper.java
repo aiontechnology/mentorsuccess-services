@@ -21,9 +21,9 @@ import io.aiontechnology.mentorsuccess.api.model.PhonogramModelHolder;
 import io.aiontechnology.mentorsuccess.entity.Phonogram;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -31,14 +31,21 @@ import java.util.stream.Collectors;
 /**
  * Mapper between {@link Phonogram} and {@link PhonogramModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public class PhonogramMapper implements Mapper<Phonogram, PhonogramModel> {
 
+    /** Function for retrieving {@link Phonogram} objects by name */
     private final Function<String, Optional<Phonogram>> phonogramGetter;
 
+    /**
+     * Map from the given {@link Phonogram} to a {@link PhonogramModel}.
+     *
+     * @param phonogram The {@link Phonogram} to map from.
+     * @return The newly mapped {@link PhonogramModel}.
+     */
     @Override
     public PhonogramModel mapEntityToModel(Phonogram phonogram) {
         return PhonogramModel.builder()
@@ -46,12 +53,25 @@ public class PhonogramMapper implements Mapper<Phonogram, PhonogramModel> {
                 .build();
     }
 
+    /**
+     * Map from the given {@link PhonogramModel} to a {@link Phonogram}.
+     *
+     * @param phonogramModel The {@link PhonogramModel} to map from.
+     * @return The newly mapped {@link Phonogram}.
+     */
     @Override
     public Phonogram mapModelToEntity(PhonogramModel phonogramModel) {
         Phonogram phonogram = new Phonogram();
         return mapModelToEntity(phonogramModel, phonogram);
     }
 
+    /**
+     * Map from a given {@link PhonogramModel} into the given {@link Phonogram}.
+     *
+     * @param phonogramModel The {@link PhonogramModel} to map from.
+     * @param phonogram The {@link Phonogram} to map to.
+     * @return The mapped {@link Phonogram}.
+     */
     @Override
     public Phonogram mapModelToEntity(PhonogramModel phonogramModel, Phonogram phonogram) {
         return Optional.ofNullable(phonogramModel)
@@ -67,13 +87,25 @@ public class PhonogramMapper implements Mapper<Phonogram, PhonogramModel> {
                 .orElseThrow(() -> new IllegalArgumentException("Illegal phonogram specified"));
     }
 
-    public Set<PhonogramModel> mapPhonograms(Supplier<Set<Phonogram>> phonogramSupplier) {
+    /**
+     * Map a collection of {@link Phonogram} to a collection of {@link PhonogramModel}.
+     *
+     * @param phonogramSupplier A support that provides the collection of {@link Phonogram}.
+     * @return The collection of mapped {@link PhonogramModel}.
+     */
+    public Collection<PhonogramModel> mapPhonograms(Supplier<Collection<Phonogram>> phonogramSupplier) {
         return phonogramSupplier.get().stream()
                 .map(this::mapEntityToModel)
                 .collect(Collectors.toSet());
     }
 
-    public Set<Phonogram> mapPhonograms(PhonogramModelHolder holder) {
+    /**
+     * Map a collection of {@link PhonogramModel} to a collection of {@link Phonogram}.
+     *
+     * @param holder The holder containing the collection of {@link PhonogramModel} to map.
+     * @return The collection of mapped {@link Phonogram}.
+     */
+    public Collection<Phonogram> mapPhonograms(PhonogramModelHolder holder) {
         if (holder.getPhonograms() != null) {
             return holder.getPhonograms().stream()
                     .map(this::mapModelToEntity)

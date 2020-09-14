@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.repository;
+package io.aiontechnology.mentorsuccess.api.model;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.UUID;
+import java.util.Collection;
 
 /**
- * Repository for {@link Person} entities.
+ * Represents an object that contains a collection of {@link ActivityFocusModel} objects.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.2.0
  */
-@Repository
-public interface PersonRepository extends CrudRepository<Person, UUID> {
+public interface ActivityFocusModelHolder {
+
+    Collection<ActivityFocusModel> getActivityFocuses();
+
 }

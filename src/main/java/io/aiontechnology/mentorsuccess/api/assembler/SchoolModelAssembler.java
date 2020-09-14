@@ -27,20 +27,25 @@ import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles {@link SchoolModel} instances from {@link School} entity instances.
+ * Assembles a {@link SchoolModel} from a {@link School}.
  *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<School, SchoolModel> {
 
+    /** A utility class for adding links to a model object. */
     private final LinkHelper<SchoolModel> linkHelper;
 
-    /** Mapper to map from {@link School} to {@link SchoolModel} */
+    /** Mapper to map between {@link School} and {@link SchoolModel}. */
     private final SchoolMapper schoolMapper;
 
     /**
      * Constructor
+     *
+     * @param schoolMapper The mapper for mapping between {@link School} and {@link SchoolModel}.
+     * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
     public SchoolModelAssembler(SchoolMapper schoolMapper, LinkHelper<SchoolModel> linkHelper) {
@@ -50,10 +55,10 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
     }
 
     /**
-     * Create a {@link SchoolModel} instance from the given {@link School} entity instance.
+     * Map a {@link School} to a {@link SchoolModel} without adding links.
      *
-     * @param school The {@link School} entity to assemble.
-     * @return The assembled {@link SchoolModel}.
+     * @param school The {@link School} to map.
+     * @return The resulting {@link SchoolModel}.
      */
     @Override
     public SchoolModel toModel(School school) {
@@ -62,6 +67,13 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
                 .orElse(null);
     }
 
+    /**
+     * Map a {@link School} to a {@link SchoolModel} and add links.
+     *
+     * @param school The {@link School} to map.
+     * @param linkProvider An object that provides links.
+     * @return The resulting {@link SchoolModel}.
+     */
     public SchoolModel toModel(School school, LinkProvider<SchoolModel, School> linkProvider) {
         return Optional.ofNullable(school)
                 .map(this::toModel)
