@@ -23,7 +23,7 @@ INSERT INTO phonogram (id, name) VALUES ('7b3fed7c-2957-454f-ab77-1aadfbde60ff',
 INSERT INTO behavior (id, name) VALUES ('b0fd98b1-b7f1-4752-8a38-d477e201d8c1', 'BEHAVIOR1');
 INSERT INTO behavior (id, name) VALUES ('091099ba-a724-46fb-b2a9-b4bc511a1049', 'BEHAVIOR2');
 
-INSERT INTO book (id, title, author, grade_level, is_active) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', 'TITLE', 'AUTHOR', 1, true);
+INSERT INTO book (id, title, author, grade_level, is_active, location) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', 'TITLE', 'AUTHOR', 1, true, 'OFFLINE');
 INSERT INTO book_interest (book_id, interest_id) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', '548fe589-2765-4b5f-8552-fa40c0722216');
 INSERT INTO book_leadershipskill (book_id, leadershipskill_id) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', '81aea425-4895-462d-9b9f-48a3150b7e49');
 INSERT INTO book_leadershiptrait (book_id, leadershiptrait_id) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', 'ca764852-4973-4c24-8a46-4a61ad000574');
