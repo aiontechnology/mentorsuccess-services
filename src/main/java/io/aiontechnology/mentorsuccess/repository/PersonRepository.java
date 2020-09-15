@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
+import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Person;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -23,10 +24,10 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 /**
- * Repository for {@link Person} entities.
+ * A Spring repository for interacting with {@link Person} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface PersonRepository extends CrudRepository<Person, UUID> {

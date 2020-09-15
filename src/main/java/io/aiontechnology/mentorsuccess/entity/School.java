@@ -33,6 +33,12 @@ import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * Entity that represents a school.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,46 +47,64 @@ import java.util.UUID;
 @FilterDef(name = "roleType", parameters = @ParamDef(name = "type", type = "string"))
 public class School {
 
+    /** The ID of the school. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The name of the school. */
     @Column
     private String name;
 
+    /** The street 1 of the school. */
     @Column
     private String street1;
 
+    /** The street 2 of the school. */
     @Column
     private String street2;
 
+    /** The city of the school. */
     @Column
     private String city;
 
+    /** The state of the school. */
     @Column
     private String state;
 
+    /** The zip code of the school. */
     @Column
     private String zip;
 
+    /** The phone number of the school. */
     @Column
     private String phone;
 
+    /** The district that the school is in. */
     @Column
     private String district;
 
+    /** Is the school private? */
     @Column
     private Boolean isPrivate;
 
+    /** Is the school active? */
     @Column
     private Boolean isActive;
 
+    /** The collection of {@link Role Roles} associated with the school. */
     @OneToMany(mappedBy = "school")
     @Where(clause = "is_active = true")
     @Filter(name = "roleType", condition = "type = :type")
     private Collection<Role> roles;
 
+    /**
+     * Add a {@link Role} to the school.
+     *
+     * @param role The {@link Role} to add to the school.
+     * @return The added {@link Role}.
+     */
     public Role addRole(Role role) {
         role.setSchool(this);
         roles.add(role);

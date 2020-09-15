@@ -25,14 +25,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Repository for {@link Behavior} entities.
+ * A Spring repository for interacting with {@link Behavior} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface BehaviorRepository extends CrudRepository<Behavior, UUID> {
 
+    /**
+     * Find an {@link Behavior} by its name.
+     *
+     * @param name The name of the desired {@link Behavior}.
+     * @return The {@link Behavior} if it could be found.
+     */
     @Cacheable("behaviors")
     Optional<Behavior> findByName(String name);
 

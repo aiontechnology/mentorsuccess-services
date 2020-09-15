@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.model;
-
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
+package io.aiontechnology.mentorsuccess.entity;
 
 /**
- * A model object for phonograms.
+ * An enumeration that specifies the location of the resource.
  *
  * @author Whitney Hunter
- * @since 0.1.0
+ * @since 0.2.0
  */
-@Data
-@EqualsAndHashCode(callSuper = true)
-@Builder(setterPrefix = "with")
-@ToString
-public class PhonogramModel extends RepresentationModel<PhonogramModel> {
-
-    /** The phonogram's name */
-    private final String name;
-
+public enum ResourceLocation {
+    ONLINE,
+    OFFLINE,
+    BOTH
 }

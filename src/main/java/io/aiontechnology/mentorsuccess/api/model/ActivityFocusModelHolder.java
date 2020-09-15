@@ -26,6 +26,11 @@ import java.util.Collection;
  */
 public interface ActivityFocusModelHolder {
 
+    /**
+     * Get the collection of {@link ActivityFocusModel} objects held by the holder.
+     *
+     * @return The collection {@link ActivityFocusModel} objects.
+     */
     Collection<ActivityFocusModel> getActivityFocuses();
 
 }

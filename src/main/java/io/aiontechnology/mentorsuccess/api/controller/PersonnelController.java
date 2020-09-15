@@ -83,7 +83,7 @@ public class PersonnelController {
     @ResponseStatus(HttpStatus.CREATED)
     public PersonnelModel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid PersonnelModel personnelModel) {
         log.debug("Creating personnel: {}", personnelModel);
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(personnelModel)
                         .map(personnelMapper::mapModelToEntity)
                         .map(school::addRole)
@@ -102,7 +102,7 @@ public class PersonnelController {
     @GetMapping
     public CollectionModel<PersonnelModel> getAllPersonnel(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all personnel for school {}", schoolId);
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
                         .filter(role -> !role.getType().equals(TEACHER))
                         .filter(role -> !role.getType().equals(PROGRAM_ADMIN))
@@ -121,7 +121,7 @@ public class PersonnelController {
      */
     @GetMapping("/{personnelId}")
     public PersonnelModel getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("personnelId") UUID personnelId) {
-        return roleService.findRole(personnelId)
+        return roleService.findRoleById(personnelId)
                 .map(role -> personnelModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
@@ -137,7 +137,7 @@ public class PersonnelController {
     public PersonnelModel updateSchool(@PathVariable("schoolId") UUID schoolId,
                                        @PathVariable("personnelId") UUID personnelId,
                                        @RequestBody @Valid PersonnelModel personnelModel) {
-        return roleService.findRole(personnelId)
+        return roleService.findRoleById(personnelId)
                 .map(role -> personnelMapper.mapModelToEntity(personnelModel, role))
                 .map(roleService::updateRole)
                 .map(role -> personnelModelAssembler.toModel(role, linkProvider))
@@ -154,7 +154,7 @@ public class PersonnelController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("personnelId") UUID personnelId) {
         log.debug("Deactivating personnel");
-        roleService.findRole(personnelId)
+        roleService.findRoleById(personnelId)
                 .ifPresent(roleService::deactivateRole);
     }
 

@@ -28,10 +28,10 @@ import javax.validation.constraints.Size;
 import java.util.UUID;
 
 /**
- * Model that represents a school in the API.
+ * A model object for schools.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -51,7 +51,7 @@ public class SchoolModel extends RepresentationModel<SchoolModel> {
     private final @Valid AddressModel address;
 
     /** The school's phone number */
-    @Size(min=14, max = 14, message = "{school.phone.size}")
+    @Size(min = 14, max = 14, message = "{school.phone.size}")
     private final String phone;
 
     /** The school district that the school is in */

@@ -69,6 +69,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
                 .withTitle(book.getTitle())
                 .withAuthor(book.getAuthor())
                 .withGradeLevel(book.getGradeLevel())
+                .withLocation(book.getLocation())
                 .withInterests(interestMapper.mapInterests(() -> book.getInterests()))
                 .withLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(() -> book.getLeadershipSkills()))
                 .withLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(() -> book.getLeadershipTraits()))
@@ -101,6 +102,7 @@ public class BookMapper implements Mapper<Book, BookModel> {
         book.setTitle(bookModel.getTitle());
         book.setAuthor(bookModel.getAuthor());
         book.setGradeLevel(bookModel.getGradeLevel());
+        book.setLocation(bookModel.getLocation());
         book.setInterests(interestMapper.mapInterests(bookModel));
         book.setLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(bookModel));
         book.setLeadershipTraits(leadershipTraitMapper.mapLeadershipTraits(bookModel));

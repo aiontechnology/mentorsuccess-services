@@ -30,32 +30,45 @@ import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.UUID;
 
+/**
+ * Entity that represents a person.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
+ */
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class Person {
 
+    /** The ID of the person. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The first name of the person. */
     @Column
     private String firstName;
 
+    /** The last name of the person. */
     @Column
     private String lastName;
 
+    /** The work phone of the person. */
     @Column
     private String workPhone;
 
+    /** The cell phone of the person. */
     @Column
     private String cellPhone;
 
+    /** The email address of the person. */
     @Column
     private String email;
 
+    /** The roles played by the person. */
     @OneToMany(mappedBy = "person")
     @Where(clause = "is_active = true")
     private Collection<Role> roles;

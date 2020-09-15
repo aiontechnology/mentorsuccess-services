@@ -22,11 +22,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 /**
+ * Configuration for localization.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Configuration
 public class LocalizationConfiguration {
 
+    /**
+     * Create a {@link LocalValidatorFactoryBean}.
+     *
+     * @param messageSource The message source for localization.
+     * @return The {@link LocalValidatorFactoryBean}.
+     */
     @Bean
     public LocalValidatorFactoryBean validator(MessageSource messageSource) {
         LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();

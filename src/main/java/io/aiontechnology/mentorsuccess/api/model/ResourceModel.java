@@ -19,8 +19,10 @@ package io.aiontechnology.mentorsuccess.api.model;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * A model object for resources.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public abstract class ResourceModel<T extends RepresentationModel<? extends T>> extends RepresentationModel<T> {
 }

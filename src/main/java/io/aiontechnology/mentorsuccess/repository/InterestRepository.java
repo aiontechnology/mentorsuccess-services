@@ -25,14 +25,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Repository for {@link Interest} entities.
+ * A Spring repository for interacting with {@link Interest} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface InterestRepository extends CrudRepository<Interest, UUID> {
 
+    /**
+     * Find an {@link Interest} by its name.
+     *
+     * @param name The name of the desired {@link Interest}.
+     * @return The {@link Interest} if it could be found.
+     */
     @Cacheable("interests")
     Optional<Interest> findByName(String name);
 

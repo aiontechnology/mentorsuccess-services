@@ -27,17 +27,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * A service the provides business logic for {@link Game Games}.
+ * Service that provides business logic for games.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class GameService {
 
-    /** The repository for {@link Game Games} in the database */
+    /** The repository used to interact with the database */
     private final GameRepository gameRepository;
 
     /**
@@ -64,22 +64,22 @@ public class GameService {
     }
 
     /**
+     * Find a {@link Game} by its id.
+     *
+     * @param id The id of the desired {@link Game}.
+     * @return The {@link Game} if it could be found.
+     */
+    public Optional<Game> findGameById(UUID id) {
+        return gameRepository.findById(id);
+    }
+
+    /**
      * Get all {@link Game Games} in the system.
      *
      * @return All {@link Game Games}.
      */
     public Iterable<Game> getAllGames() {
         return gameRepository.findAll();
-    }
-
-    /**
-     * Get a {@link Game} for the given id.
-     *
-     * @param id The id of the desired {@link Game}.
-     * @return The {@link Game} if it could be found.
-     */
-    public Optional<Game> getGame(UUID id) {
-        return gameRepository.findById(id);
     }
 
     /**

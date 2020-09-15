@@ -25,14 +25,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Repository for {@link LeadershipTrait} entities.
+ * A Spring repository for interacting with {@link LeadershipTrait} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface LeadershipTraitRepository extends CrudRepository<LeadershipTrait, UUID> {
 
+    /**
+     * Find an {@link LeadershipTrait} by its name.
+     *
+     * @param name The name of the desired {@link LeadershipTrait}.
+     * @return The {@link LeadershipTrait} if it could be found.
+     */
     @Cacheable("character_traits")
     Optional<LeadershipTrait> findByName(String name);
 

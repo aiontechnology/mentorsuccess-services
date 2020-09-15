@@ -21,30 +21,49 @@ import io.aiontechnology.mentorsuccess.repository.BehaviorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * Service that provides business logic for behaviors.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class BehaviorService {
 
+    /** The repository used to interact with the database */
     private final BehaviorRepository behaviorRepository;
 
-    public Optional<Behavior> getBehavior(UUID id) {
+    /**
+     * Find a {@link Behavior} by its id.
+     *
+     * @param id The id of the desired {@link Behavior}.
+     * @return The {@link Behavior} if it could be found.
+     */
+    public Optional<Behavior> findBehaviorById(UUID id) {
         return behaviorRepository.findById(id);
     }
 
-    public Iterable<Behavior> getAllBehaviors() {
-        return behaviorRepository.findAll();
-    }
-
+    /**
+     * Find a {@link Behavior} by its name.
+     *
+     * @param name The name of the desired {@link Behavior}.
+     * @return The {@link Behavior} if it could be found.
+     */
     public Optional<Behavior> findBehaviorByName(String name) {
         return behaviorRepository.findByName(name);
+    }
+
+    /**
+     * Get all {@link Behavior Behaviors}.
+     *
+     * @return All {@link Behavior Behaviors}.
+     */
+    public Iterable<Behavior> getAllBehaviors() {
+        return behaviorRepository.findAll();
     }
 
 }

@@ -106,7 +106,7 @@ public class GameController {
      */
     @GetMapping("/{gameId}")
     public GameModel getGame(@PathVariable("gameId") UUID gameId) {
-        return gameService.getGame(gameId)
+        return gameService.findGameById(gameId)
                 .map(game -> gameModelAssembler.toModel(game, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Game was not found"));
     }
@@ -121,7 +121,7 @@ public class GameController {
     @PutMapping("/{gameId}")
     public GameModel updateGame(@PathVariable("gameId") UUID gameId, @RequestBody @Valid GameModel gameModel) {
         log.debug("Updating book {} with {}", gameId, gameModel);
-        return gameService.getGame(gameId)
+        return gameService.findGameById(gameId)
                 .map(game -> gameMapper.mapModelToEntity(gameModel, game))
                 .map(gameService::updateGame)
                 .map(game -> gameModelAssembler.toModel(game, linkProvider))
@@ -137,7 +137,7 @@ public class GameController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateGame(@PathVariable("gameId") UUID gameId) {
         log.debug("Deactivating game: {}", gameId);
-        gameService.getGame(gameId)
+        gameService.findGameById(gameId)
                 .ifPresent(gameService::deactivateGame);
     }
 

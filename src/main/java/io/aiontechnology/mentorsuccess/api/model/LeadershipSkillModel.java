@@ -23,8 +23,10 @@ import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * A model object for leadership skills.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

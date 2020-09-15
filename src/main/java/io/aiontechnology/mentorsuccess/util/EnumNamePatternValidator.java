@@ -23,18 +23,31 @@ import java.util.regex.Pattern;
 /**
  * Validator for the {@link EnumNamePattern}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public class EnumNamePatternValidator implements ConstraintValidator<EnumNamePattern, Enum<?>> {
 
+    /** The regular expression pattern to validate with */
     private Pattern pattern;
 
+    /**
+     * Initialize the validator.
+     *
+     * @param constraintAnnotation The {@link EnumNamePattern} from which to take the regular expression.
+     */
     @Override
     public void initialize(EnumNamePattern constraintAnnotation) {
         pattern = Pattern.compile(constraintAnnotation.regexp());
     }
 
+    /**
+     * Determine if the validation is valid of not.
+     *
+     * @param value The enumeration value to validate.
+     * @param context The {@link ConstraintValidatorContext}.
+     * @return True if the validation passes.
+     */
     @Override
     public boolean isValid(Enum<?> value, ConstraintValidatorContext context) {
         return value == null ? true : pattern.matcher(value.name()).matches();

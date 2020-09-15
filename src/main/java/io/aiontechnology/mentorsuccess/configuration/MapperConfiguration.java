@@ -54,7 +54,7 @@ public class MapperConfiguration {
      */
     @Bean
     public ActivityFocusMapper activityFocusMapper(ActivityFocusService activityFocusService) {
-        return new ActivityFocusMapper(activityFocusService::findActivityFocustByName);
+        return new ActivityFocusMapper(activityFocusService::findActivityFocusByName);
     }
 
     /**
@@ -98,7 +98,7 @@ public class MapperConfiguration {
      */
     @Bean
     public LeadershipTraitMapper leadershipTraitMapper(LeadershipTraitService leadershipTraitService) {
-        return new LeadershipTraitMapper(leadershipTraitService::findCharacterTraitByName);
+        return new LeadershipTraitMapper(leadershipTraitService::findLeadershipTraitByName);
     }
 
     /**

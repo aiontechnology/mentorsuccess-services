@@ -33,7 +33,10 @@ import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 /**
+ * Entity that represents a role.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Entity
 @NoArgsConstructor
@@ -41,32 +44,40 @@ import java.util.UUID;
 @Data
 public class Role {
 
+    /** The ID of the role. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The school of the role. */
     @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "school_id", referencedColumnName = "id")
     private School school;
 
+    /** The person in the role. */
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "person_id", referencedColumnName = "id")
     private Person person;
 
+    /** The role type. */
     @Column
     @Enumerated(EnumType.STRING)
     private RoleType type;
 
+    /** The lower grade boundary. (for teachers) */
     @Column
     private Integer grade1;
 
+    /** The upper grade boundary. (for teachers) */
     @Column
     private Integer grade2;
 
+    /** Is the role active? */
     @Column
     private Boolean isActive;
 
+    /** An enumeration of valid role types */
     public enum RoleType {
         TEACHER,
         PROGRAM_ADMIN,

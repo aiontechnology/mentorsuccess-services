@@ -28,7 +28,10 @@ import javax.persistence.Id;
 import java.util.UUID;
 
 /**
+ * Entity that represents a leadership trait.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Entity
 @NoArgsConstructor
@@ -36,11 +39,13 @@ import java.util.UUID;
 @Data
 public class LeadershipTrait {
 
+    /** The ID of the leadership trait. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The name of the leadership trait. */
     @Column
     private String name;
 

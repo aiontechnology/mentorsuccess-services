@@ -21,26 +21,41 @@ import io.aiontechnology.mentorsuccess.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Service for managing people.
+ * Service that provides business logic for people.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class PersonService {
 
+    /** The repository used to interact with the database */
     private final PersonRepository personRepository;
 
+    /**
+     * Create a person in the database by saving the provided {@link Person}.
+     *
+     * @param person The {@link Person} to save.
+     * @return The resulting {@link Person}. Will have a db generated id populated.
+     */
     @Transactional
     public Person createPerson(Person person) {
         return personRepository.save(person);
     }
 
-    public Optional<Person> getPerson(UUID id) {
+    /**
+     * Find a {@link Person} by its id.
+     *
+     * @param id The id of the desired {@link Person}.
+     * @return The {@Person Book} if it could be found.
+     */
+    public Optional<Person> findPersonById(UUID id) {
         return personRepository.findById(id);
     }
 

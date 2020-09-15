@@ -34,18 +34,36 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ActivityFocusService {
 
+    /** The repository used to interact with the database */
     private final ActivityFocusRepository activityFocusRepository;
 
-    public Optional<ActivityFocus> getActivityFocus(UUID id) {
+    /**
+     * Find an {@link ActivityFocus} by its id.
+     *
+     * @param id The id of the desired {@link ActivityFocus}.
+     * @return The {@link ActivityFocus} if it could be found.
+     */
+    public Optional<ActivityFocus> findActivityFocusById(UUID id) {
         return activityFocusRepository.findById(id);
     }
 
-    public Iterable<ActivityFocus> getAllActivityFocuses() {
-        return activityFocusRepository.findAll();
+    /**
+     * Find an {@link ActivityFocus} by its name.
+     *
+     * @param name The name of the desired {@link ActivityFocus}.
+     * @return The {@link ActivityFocus} if it could be found.
+     */
+    public Optional<ActivityFocus> findActivityFocusByName(String name) {
+        return activityFocusRepository.findByName(name);
     }
 
-    public Optional<ActivityFocus> findActivityFocustByName(String name) {
-        return activityFocusRepository.findByName(name);
+    /**
+     * Get all {@link ActivityFocus ActivityFocuses}.
+     *
+     * @return All {@link ActivityFocus ActivityFocuses}.
+     */
+    public Iterable<ActivityFocus> getAllActivityFocuses() {
+        return activityFocusRepository.findAll();
     }
 
 }
