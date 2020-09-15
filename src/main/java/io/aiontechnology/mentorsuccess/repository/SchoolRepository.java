@@ -23,10 +23,10 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 /**
- * Repository for {@link School} entities.
+ * A Spring repository for interacting with {@link School} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface SchoolRepository extends CrudRepository<School, UUID> {

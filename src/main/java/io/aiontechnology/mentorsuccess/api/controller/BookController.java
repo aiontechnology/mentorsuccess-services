@@ -106,7 +106,7 @@ public class BookController {
      */
     @GetMapping("/{bookId}")
     public BookModel getBook(@PathVariable("bookId") UUID bookId) {
-        return bookService.getBook(bookId)
+        return bookService.findBookById(bookId)
                 .map(book -> bookModelAssembler.toModel(book, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Book was not found"));
     }
@@ -121,7 +121,7 @@ public class BookController {
     @PutMapping("/{bookId}")
     public BookModel updateBook(@PathVariable("bookId") UUID bookId, @RequestBody @Valid BookModel bookModel) {
         log.debug("Updating book {} with {}", bookId, bookModel);
-        return bookService.getBook(bookId)
+        return bookService.findBookById(bookId)
                 .map(book -> bookMapper.mapModelToEntity(bookModel, book))
                 .map(bookService::updateBook)
                 .map(book -> bookModelAssembler.toModel(book, linkProvider))
@@ -137,7 +137,7 @@ public class BookController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateBook(@PathVariable("bookId") UUID bookId) {
         log.debug("Deactivating book: {}", bookId);
-        bookService.getBook(bookId)
+        bookService.findBookById(bookId)
                 .ifPresent(bookService::deactivateBook);
     }
 

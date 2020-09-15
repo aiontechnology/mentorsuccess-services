@@ -19,13 +19,18 @@ package io.aiontechnology.mentorsuccess.api.model;
 import java.util.Collection;
 
 /**
- * Designates a class that holds a collection of {@link LeadershipSkillModel LeadershipSkillModels}.
+ * Represents an object that contains a collection of {@link LeadershipSkillModel} objects.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public interface LeadershipSkillModelHolder {
 
+    /**
+     * Get the collection of {@link LeadershipSkillModel} objects held by the holder.
+     *
+     * @return The collection {@link LeadershipSkillModel} objects.
+     */
     Collection<LeadershipSkillModel> getLeadershipSkills();
 
 }

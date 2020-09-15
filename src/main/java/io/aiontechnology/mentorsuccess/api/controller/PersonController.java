@@ -89,7 +89,7 @@ public class PersonController {
     @GetMapping("/{personId}")
     public PersonModel getPerson(@PathVariable("personId") UUID personId) {
         log.debug("Getting person with id: {}", personId);
-        return personService.getPerson(personId)
+        return personService.findPersonById(personId)
                 .map(s -> personModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Person was not found"));
     }

@@ -107,7 +107,7 @@ public class SchoolController {
     @GetMapping("/{schoolId}")
     public SchoolModel getSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting school with id {}", schoolId);
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new NotFoundException("School was not found"));
     }
@@ -122,7 +122,7 @@ public class SchoolController {
     @PutMapping("/{schoolId}")
     public SchoolModel updateSchool(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid SchoolModel schoolModel) {
         log.debug("Updating school {} with {}", schoolId, schoolModel);
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> schoolMapper.mapModelToEntity(schoolModel, school))
                 .map(schoolService::updateSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
@@ -138,7 +138,7 @@ public class SchoolController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Deactivating school: {}", schoolId);
-        schoolService.getSchool(schoolId)
+        schoolService.getSchoolById(schoolId)
                 .ifPresent(schoolService::deactivateSchool);
     }
 

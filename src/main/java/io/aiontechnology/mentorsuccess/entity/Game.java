@@ -25,6 +25,8 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -36,8 +38,8 @@ import java.util.UUID;
 /**
  * Entity that represents a game.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Entity
 @NoArgsConstructor
@@ -47,29 +49,41 @@ import java.util.UUID;
 @Where(clause = "is_active = true")
 public class Game {
 
+    /** The ID of the game. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The name of the game. */
     @Column
     private String name;
 
+    /** The description of the game. */
     @Column
     private String description;
 
+    /** The grade level of the game. */
     @Column
     private Integer gradeLevel;
 
+    /** Is the game active? */
     @Column
     private Boolean isActive;
 
+    /** The location of the resource */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
+
+    /** A collection activity focuses for the game. */
     @ManyToMany
     @JoinTable(name = "game_activityfocus",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "activityfocus_id"))
     private Collection<ActivityFocus> activityFocuses;
 
+    /** A collection leadershpi skills for the game. */
     @ManyToMany
     @JoinTable(name = "game_leadershipskill",
             joinColumns = @JoinColumn(name = "game_id"),

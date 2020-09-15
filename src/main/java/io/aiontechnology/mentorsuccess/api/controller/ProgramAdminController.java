@@ -88,7 +88,7 @@ public class ProgramAdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public ProgramAdminModel createProgramAdmin(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid ProgramAdminModel programAdminModel) {
         log.debug("Creating program administrator: {}", programAdminModel);
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(programAdminModel)
                         .map(programAdminMapper::mapModelToEntity)
                         .map(school::addRole)
@@ -111,7 +111,7 @@ public class ProgramAdminController {
         log.debug("Getting all program admins for school {}", schoolId);
         Session session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", PROGRAM_ADMIN.toString());
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
                         .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
@@ -128,7 +128,7 @@ public class ProgramAdminController {
      */
     @GetMapping("/{programAdminId}")
     public ProgramAdminModel getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("programAdminId") UUID programAdminId) {
-        return roleService.findRole(programAdminId)
+        return roleService.findRoleById(programAdminId)
                 .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
@@ -144,7 +144,7 @@ public class ProgramAdminController {
     public ProgramAdminModel updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
                                                 @PathVariable("programAdminId") UUID programAdminId,
                                                 @RequestBody @Valid ProgramAdminModel programAdminModel) {
-        return roleService.findRole(programAdminId)
+        return roleService.findRoleById(programAdminId)
                 .map(role -> programAdminMapper.mapModelToEntity(programAdminModel, role))
                 .map(roleService::updateRole)
                 .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
@@ -161,7 +161,7 @@ public class ProgramAdminController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("programAdminId") UUID programAdminId) {
         log.debug("Deactivating personnel");
-        roleService.findRole(programAdminId)
+        roleService.findRoleById(programAdminId)
                 .ifPresent(roleService::deactivateRole);
     }
 

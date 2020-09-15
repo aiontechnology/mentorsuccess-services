@@ -21,11 +21,20 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
+ * A service for formatting phone numbers.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class PhoneService {
 
+    /**
+     * Normalize a phone number by removing non-numeric symbols. (xxx) yyy-zzzz -> xxxyyyzzzz.
+     *
+     * @param phoneNumber The phone number to normalize.
+     * @return The normalized phone number.
+     */
     public String normalize(String phoneNumber) {
         return Optional.ofNullable(phoneNumber)
                 .map(pn -> pn.replace("(", "")
@@ -35,6 +44,12 @@ public class PhoneService {
                 .orElse(null);
     }
 
+    /**
+     * Formate a phone number for the UI. xxxyyyzzzz -> (xxx) yyy-zzzz.
+     *
+     * @param phoneNumber The phone number to format
+     * @return The formatted phone number.
+     */
     public String format(String phoneNumber) {
         return Optional.ofNullable(phoneNumber)
                 .map(pn -> pn.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "($1) $2-$3"))

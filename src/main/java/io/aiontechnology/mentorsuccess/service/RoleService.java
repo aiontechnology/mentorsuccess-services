@@ -27,21 +27,34 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Service for managing teachers.
+ * Service that provides business logic for roles.
  *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
 @RequiredArgsConstructor(onConstructor = @__({@Inject}))
 public class RoleService {
 
+    /** The repository used to interact with the database */
     private final RoleRepository roleRepository;
 
+    /**
+     * Create a role in the database by saving the provided {@link Role}.
+     *
+     * @param role The {@link Role} to save.
+     * @return The resulting {@link Role}. Will have a db generated id populated.
+     */
     @Transactional
     public Role createRole(Role role) {
         return roleRepository.save(role);
     }
 
+    /**
+     * Deactivate a {@link Role} in the system.
+     *
+     * @param role The {@link Role} to deactivate.
+     */
     @Transactional
     public Role deactivateRole(Role role) {
         role.setIsActive(false);
@@ -49,10 +62,22 @@ public class RoleService {
         return role;
     }
 
-    public Optional<Role> findRole(UUID id) {
+    /**
+     * Find a {@link Role} by its id.
+     *
+     * @param id The id of the desired {@link Role}.
+     * @return The {@link Role} if it could be found.
+     */
+    public Optional<Role> findRoleById(UUID id) {
         return roleRepository.findById(id);
     }
 
+    /**
+     * Update the given {@link Role} in the database.
+     *
+     * @param role The {@link Role} to update.
+     * @return The updated {@link Role}.
+     */
     @Transactional
     public Role updateRole(Role role) {
         return roleRepository.save(role);

@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+import io.aiontechnology.mentorsuccess.entity.ResourceLocation;
+import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -29,10 +31,10 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Model that represents a book in the API.
+ * A model object for books.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -41,28 +43,40 @@ import java.util.UUID;
 public class BookModel extends ResourceModel<BookModel> implements InterestModelHolder, LeadershipSkillModelHolder,
         LeadershipTraitModelHolder, PhonogramModelHolder, BehaviorModelHolder {
 
+    /** The book's id. */
     private final UUID id;
 
+    /** The book's title. */
     @NotNull(message = "{book.title.notNull}")
     @Size(max = 100, message = "{book.title.size}")
     private final String title;
 
+    /** The book's author. */
     @Size(max = 30, message = "{book.author.size}")
     private final String author;
 
+    /** The book's grade level. */
     @NotNull(message = "{book.gradeLevel.notNull}")
     @Min(value = 1, message = "{book.gradeLevel.invalid}")
     @Max(value = 6, message = "{book.gradeLevel.invalid}")
     private final Integer gradeLevel;
 
+    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
+    private final ResourceLocation location;
+
+    /** The interests associated with the book. */
     private final Collection<InterestModel> interests;
 
+    /** The leadership traits associated with the book. */
     private final Collection<LeadershipTraitModel> leadershipTraits;
 
+    /** The leadership skills associated with the book. */
     private final Collection<LeadershipSkillModel> leadershipSkills;
 
+    /** The phonograms associated with the book. */
     private final Collection<PhonogramModel> phonograms;
 
+    /** The behaviors associated with the book. */
     private final Collection<BehaviorModel> behaviors;
 
 }

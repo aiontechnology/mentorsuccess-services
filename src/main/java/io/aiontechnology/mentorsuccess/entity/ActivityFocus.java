@@ -39,13 +39,13 @@ import java.util.UUID;
 @Data
 public class ActivityFocus {
 
-    /** This ID of the activity focus */
+    /** This ID of the activity focus. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    /** The name of the activity focus */
+    /** The name of the activity focus. */
     @Column
     private String name;
 

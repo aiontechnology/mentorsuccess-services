@@ -16,16 +16,23 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+import io.aiontechnology.mentorsuccess.entity.Phonogram;
+
 import java.util.Collection;
 
 /**
- * Designates a class that holds a collection of {@link PhonogramModel PhonogramModels}.
+ * Represents an object that contains a collection of {@link Phonogram} objects.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public interface PhonogramModelHolder {
 
+    /**
+     * Get the collection of {@link PhonogramModel} objects held by the holder.
+     *
+     * @return The collection {@link PhonogramModel} objects.
+     */
     Collection<PhonogramModel> getPhonograms();
 
 }

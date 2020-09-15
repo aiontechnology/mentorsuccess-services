@@ -23,8 +23,10 @@ import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * A model object for leadership traits.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -32,7 +34,7 @@ import org.springframework.hateoas.RepresentationModel;
 @ToString
 public class LeadershipTraitModel extends RepresentationModel<LeadershipTraitModel> {
 
-    /** The character trait's name */
+    /** The leadership trait's name */
     private final String name;
 
 }

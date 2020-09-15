@@ -27,28 +27,40 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
+/**
+ * A model object for people.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
+ */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @ToString
 public class PersonModel extends RepresentationModel<PersonModel> {
 
+    /** The person's id. */
     private final UUID id;
 
+    /** The person's first name. */
     @NotNull(message = "{person.firstName.notNull}")
     @Size(max = 50, message = "{person.firstName.size}")
     private final String firstName;
 
+    /** The person's last name. */
     @NotNull(message = "{person.lastName.notNull}")
     @Size(max = 50, message = "{person.lastName.size}")
     private final String lastName;
 
+    /** The person's email. */
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{person.email.invalid}")
     private final String email;
 
+    /** The person's work phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{person.workPhone.invalid}")
     private final String workPhone;
 
+    /** The person's cell phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{person.cellPhone.invalid}")
     private final String cellPhone;
 

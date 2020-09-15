@@ -25,7 +25,10 @@ import org.springframework.hateoas.RepresentationModel;
 import java.util.UUID;
 
 /**
+ * A model object for a person in a role.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -33,18 +36,25 @@ import java.util.UUID;
 @ToString
 public class PersonInRoleModel extends RepresentationModel<PersonInRoleModel> {
 
+    /** The person's id. */
     private final UUID id;
 
+    /** The person's role. */
     private final String roleName;
 
+    /** The person's first name. */
     private final String firstName;
 
+    /** The person's last name. */
     private final String lastName;
 
+    /** The person's email. */
     private final String email;
 
+    /** The person's work phone. */
     private final String workPhone;
 
+    /** The person's cell phone. */
     private final String cellPhone;
 
 }

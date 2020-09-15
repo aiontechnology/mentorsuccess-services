@@ -22,23 +22,34 @@ import lombok.ToString;
 
 import javax.validation.constraints.Size;
 
+/**
+ * A model object for addresses.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
+ */
 @Data
 @Builder(setterPrefix = "with")
 @ToString
 public class AddressModel {
 
+    /** The first street address. */
     @Size(max = 50, message = "{address.street1.size}")
     private final String street1;
 
+    /** The second street address. */
     @Size(max = 50, message = "{address.street2.size}")
     private final String street2;
 
-    @Size(max = 50,  message = "{address.city.size}")
+    /** The city. */
+    @Size(max = 50, message = "{address.city.size}")
     private final String city;
 
+    /** The state. */
     @Size(min = 2, max = 2, message = "{address.state.size}")
     private final String state;
 
+    /** The zip code */
     @Size(min = 5, max = 9, message = "{address.zip.size}")
     private final String zip;
 

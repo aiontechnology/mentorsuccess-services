@@ -33,6 +33,12 @@ import java.util.UUID;
 @Repository
 public interface ActivityFocusRepository extends CrudRepository<ActivityFocus, UUID> {
 
+    /**
+     * Find an {@link ActivityFocus} by its name.
+     *
+     * @param name The name of the desired {@link ActivityFocus}.
+     * @return The {@link ActivityFocus} if it could be found.
+     */
     @Cacheable("activityfocuses")
     Optional<ActivityFocus> findByName(String name);
 

@@ -30,7 +30,10 @@ import javax.validation.constraints.Size;
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType;
 
 /**
+ * A model object for school personnel.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

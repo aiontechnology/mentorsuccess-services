@@ -25,25 +25,45 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * Service that provides business logic for interests.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
 @RequiredArgsConstructor
 public class InterestService {
 
+    /** The repository used to interact with the database */
     private final InterestRepository interestRepository;
 
-    public Optional<Interest> getInterest(UUID id) {
+    /**
+     * Find an {@link Interest} by its id.
+     *
+     * @param id The id of the desired {@link Interest}.
+     * @return The {@link Interest} if it could be found.
+     */
+    public Optional<Interest> findInterestById(UUID id) {
         return interestRepository.findById(id);
     }
 
-    public Iterable<Interest> getAllInterests() {
-        return interestRepository.findAll();
-    }
-
+    /**
+     * Find an {@link Interest} by its name.
+     *
+     * @param name The name of the desired {@link Interest}.
+     * @return The {@link Interest} if it could be found.
+     */
     public Optional<Interest> findInterestByName(String name) {
         return interestRepository.findByName(name);
+    }
+
+    /**
+     * Get all {@link Interest Interests}.
+     *
+     * @return All {@link Interest Interests}.
+     */
+    public Iterable<Interest> getAllInterests() {
+        return interestRepository.findAll();
     }
 
 }
