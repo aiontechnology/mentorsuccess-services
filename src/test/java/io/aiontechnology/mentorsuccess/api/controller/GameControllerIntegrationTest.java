@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.api.model.GameModel;
+import io.aiontechnology.mentorsuccess.entity.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,6 +32,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.aiontechnology.mentorsuccess.entity.ResourceLocation.OFFLINE;
+import static io.aiontechnology.mentorsuccess.entity.ResourceLocation.ONLINE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -58,7 +61,9 @@ public class GameControllerIntegrationTest {
 
     private static final String NAME = "Monopoly";
     private static final String DESCRIPTION = "Fun with Capitalism";
-    private static final Integer GRADE_LEVEL = 3;
+    private static final Integer GRADE1 = 3;
+    private static final Integer GRADE2 = 4;
+    private static final ResourceLocation LOCATION = OFFLINE;
 
     @Inject
     private MockMvc mvc;
@@ -72,7 +77,9 @@ public class GameControllerIntegrationTest {
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
-                .withGradeLevel(GRADE_LEVEL)
+                .withGrade1(GRADE1)
+                .withGrade2(GRADE2)
+                .withLocation(LOCATION)
                 .build();
 
         // execute the SUT
@@ -85,7 +92,9 @@ public class GameControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
-                .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
+                .andExpect(jsonPath("$.grade1", is(GRADE1)))
+                .andExpect(jsonPath("$.grade2", is(GRADE2)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
@@ -96,7 +105,9 @@ public class GameControllerIntegrationTest {
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(null)
-                .withGradeLevel(GRADE_LEVEL)
+                .withGrade1(GRADE1)
+                .withGrade2(GRADE2)
+                .withLocation(LOCATION)
                 .build();
 
         // execute the SUT
@@ -109,7 +120,9 @@ public class GameControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.description", nullValue()))
-                .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
+                .andExpect(jsonPath("$.grade1", is(GRADE1)))
+                .andExpect(jsonPath("$.grade2", is(GRADE2)))
+                .andExpect(jsonPath("$.location", is(OFFLINE.toString())))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
@@ -120,7 +133,9 @@ public class GameControllerIntegrationTest {
         GameModel gameModel = GameModel.builder()
                 .withName(null)
                 .withDescription(DESCRIPTION)
-                .withGradeLevel(null)
+                .withGrade1(null)
+                .withGrade2(null)
+                .withLocation(null)
                 .build();
 
         // execute the SUT
@@ -132,9 +147,11 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(2)))
+                .andExpect(jsonPath("$.error.length()", is(4)))
                 .andExpect(jsonPath("$.error.name", is("A name is required for a game")))
-                .andExpect(jsonPath("$.error.gradeLevel", is("A grade level is required for a game")))
+                .andExpect(jsonPath("$.error.grade1", is("A starting grade level is required for a game")))
+                .andExpect(jsonPath("$.error.grade2", is("An ending grade level is required for a game")))
+                .andExpect(jsonPath("$.error.location", is("A location is required for a game")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/games")));
     }
@@ -145,7 +162,9 @@ public class GameControllerIntegrationTest {
         GameModel gameModel = GameModel.builder()
                 .withName("12345678901234567890123456789012345678901")
                 .withDescription("123456789012345678901234567890123456789012345678901")
-                .withGradeLevel(7)
+                .withGrade1(7)
+                .withGrade2(7)
+                .withLocation(OFFLINE)
                 .build();
 
         // execute the SUT
@@ -157,10 +176,11 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.length()", is(4)))
                 .andExpect(jsonPath("$.error.name", is("The name of a game can not be longer than 40 characters")))
                 .andExpect(jsonPath("$.error.description", is("The game's description can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.gradeLevel", is("A grade level must be between 1st and 6th")))
+                .andExpect(jsonPath("$.error.grade1", is("A grade level must be between 1st and 6th")))
+                .andExpect(jsonPath("$.error.grade2", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/games")));
     }
@@ -171,7 +191,9 @@ public class GameControllerIntegrationTest {
         Map<String, Object> game = new HashMap<>();
         game.put("name", NAME);
         game.put("description", DESCRIPTION);
-        game.put("gradeLevel", GRADE_LEVEL);
+        game.put("grade1", GRADE1);
+        game.put("grade2", GRADE2);
+        game.put("location", LOCATION);
         game.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
 
         // execute the SUT
@@ -184,7 +206,9 @@ public class GameControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is(NAME)))
                 .andExpect(jsonPath("$.description", is(DESCRIPTION)))
-                .andExpect(jsonPath("$.gradeLevel", is(GRADE_LEVEL)))
+                .andExpect(jsonPath("$.grade1", is(GRADE1)))
+                .andExpect(jsonPath("$.grade2", is(GRADE2)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
@@ -221,7 +245,9 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.id", is("f53af381-d524-40f7-8df9-3e808c9ad46b")))
                 .andExpect(jsonPath("$.name", is("NAME")))
                 .andExpect(jsonPath("$.description", is("DESCRIPTION")))
-                .andExpect(jsonPath("$.gradeLevel", is(1)))
+                .andExpect(jsonPath("$.grade1", is(1)))
+                .andExpect(jsonPath("$.grade2", is(2)))
+                .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
@@ -247,7 +273,9 @@ public class GameControllerIntegrationTest {
         Map<String, Object> updatedGame = new HashMap<>();
         updatedGame.put("name", "NEW_NAME");
         updatedGame.put("description", "NEW_DESCRIPTION");
-        updatedGame.put("gradeLevel", 2);
+        updatedGame.put("grade1", 2);
+        updatedGame.put("grade2", 3);
+        updatedGame.put("location", ONLINE.toString());
         updatedGame.put("interests", Arrays.asList("INTEREST2"));
         updatedGame.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL2"));
 
@@ -261,7 +289,9 @@ public class GameControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is("NEW_NAME")))
                 .andExpect(jsonPath("$.description", is("NEW_DESCRIPTION")))
-                .andExpect(jsonPath("$.gradeLevel", is(2)))
+                .andExpect(jsonPath("$.grade1", is(2)))
+                .andExpect(jsonPath("$.grade2", is(3)))
+                .andExpect(jsonPath("$.location", is(ONLINE.toString())))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL2")))
                 .andExpect(jsonPath("$._links.length()", is(1)))

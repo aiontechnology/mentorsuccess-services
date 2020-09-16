@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.model;
 
 import io.aiontechnology.mentorsuccess.entity.ResourceLocation;
 import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
+import io.aiontechnology.mentorsuccess.util.GradeRange;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -39,8 +40,10 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
+@GradeRange
 @ToString
-public class GameModel extends ResourceModel<GameModel> implements ActivityFocusModelHolder, LeadershipSkillModelHolder {
+public class GameModel extends ResourceModel<GameModel> implements ActivityFocusModelHolder, LeadershipSkillModelHolder,
+        GradeRangeHolder {
 
     /** The game's id. */
     private final UUID id;
@@ -54,12 +57,19 @@ public class GameModel extends ResourceModel<GameModel> implements ActivityFocus
     @Size(max = 50, message = "{game.description.size}")
     private final String description;
 
-    /** The game's grade level. */
-    @NotNull(message = "{game.gradeLevel.notNull}")
-    @Min(value = 1, message = "{game.gradeLevel.invalid}")
-    @Max(value = 6, message = "{game.gradeLevel.invalid}")
-    private final Integer gradeLevel;
+    /** The game's starting grade level. */
+    @NotNull(message = "{game.grade1.notNull}")
+    @Min(value = 1, message = "{game.grade1.invalid}")
+    @Max(value = 6, message = "{game.grade1.invalid}")
+    private final Integer grade1;
 
+    /** The game's ending grade level. */
+    @NotNull(message = "{game.grade2.notNull}")
+    @Min(value = 1, message = "{game.grade2.invalid}")
+    @Max(value = 6, message = "{game.grade2.invalid}")
+    private final Integer grade2;
+
+    @NotNull(message = "{game.location.notNull}")
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
     private final ResourceLocation location;
 

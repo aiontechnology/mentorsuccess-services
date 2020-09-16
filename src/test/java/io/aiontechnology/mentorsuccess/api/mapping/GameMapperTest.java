@@ -42,7 +42,8 @@ public class GameMapperTest {
 
     private static final String NAME = "GAME";
     private static final String DESCRIPTION = "DESCRIPTION";
-    private static final Integer GRADE_LEVEL = 1;
+    private static final Integer GRADE1 = 1;
+    private static final Integer GRADE2 = 2;
     private static final Boolean IS_ACTIVE = TRUE;
 
     private static final String ACTIVITYFOCUS_NAME = "ACTIVITYFOCUS";
@@ -67,7 +68,7 @@ public class GameMapperTest {
         game.setId(ID);
         game.setName(NAME);
         game.setDescription(DESCRIPTION);
-        game.setGradeLevel(GRADE_LEVEL);
+        game.setGrade1(GRADE1);
         game.setIsActive(IS_ACTIVE);
         game.setActivityFocuses(Collections.singleton(activityFocus));
         game.setLeadershipSkills(Collections.singleton(leadershipSkill));
@@ -82,7 +83,7 @@ public class GameMapperTest {
         // validation
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
+        assertThat(result.getGrade1()).isEqualTo(GRADE1);
         assertThat(result.getActivityFocuses()).containsExactly(activityFocusMapper.mapEntityToModel(activityFocus));
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkillMapper.mapEntityToModel(leadershipSkill));
     }
@@ -96,7 +97,8 @@ public class GameMapperTest {
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
-                .withGradeLevel(GRADE_LEVEL)
+                .withGrade1(GRADE1)
+                .withGrade2(GRADE2)
                 .withActivityFocuses(Arrays.asList(activityFocusModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
                 .build();
@@ -117,7 +119,8 @@ public class GameMapperTest {
         // validation
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
+        assertThat(result.getGrade1()).isEqualTo(GRADE1);
+        assertThat(result.getGrade2()).isEqualTo(GRADE2);
         assertThat(result.getActivityFocuses()).containsExactly(activityFocus);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
     }
@@ -131,7 +134,8 @@ public class GameMapperTest {
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
-                .withGradeLevel(GRADE_LEVEL)
+                .withGrade1(GRADE1)
+                .withGrade2(GRADE2)
                 .withActivityFocuses(Arrays.asList(activityFocusModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
                 .build();
@@ -154,7 +158,8 @@ public class GameMapperTest {
         assertThat(result).isSameAs(providedGame);
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
+        assertThat(result.getGrade1()).isEqualTo(GRADE1);
+        assertThat(result.getGrade2()).isEqualTo(GRADE2);
         assertThat(result.getActivityFocuses()).containsExactly(activityFocus);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
     }

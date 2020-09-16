@@ -53,7 +53,8 @@ public class GameMapper implements Mapper<Game, GameModel> {
                 .withId(game.getId())
                 .withName(game.getName())
                 .withDescription(game.getDescription())
-                .withGradeLevel(game.getGradeLevel())
+                .withGrade1(game.getGrade1())
+                .withGrade2(game.getGrade2())
                 .withLocation(game.getLocation())
                 .withActivityFocuses(activityFocusMapper.mapActivityFocuses(() -> game.getActivityFocuses()))
                 .withLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(() -> game.getLeadershipSkills()))
@@ -83,7 +84,8 @@ public class GameMapper implements Mapper<Game, GameModel> {
     public Game mapModelToEntity(GameModel gameModel, Game game) {
         game.setName(gameModel.getName());
         game.setDescription(gameModel.getDescription());
-        game.setGradeLevel(gameModel.getGradeLevel());
+        game.setGrade1(gameModel.getGrade1());
+        game.setGrade2(gameModel.getGrade2());
         game.setLocation(gameModel.getLocation());
         game.setActivityFocuses(activityFocusMapper.mapActivityFocuses(gameModel));
         game.setLeadershipSkills(leadershipSkillMapper.mapLeadershipSkills(gameModel));
