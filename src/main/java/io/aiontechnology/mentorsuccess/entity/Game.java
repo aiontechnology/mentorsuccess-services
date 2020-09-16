@@ -63,9 +63,13 @@ public class Game {
     @Column
     private String description;
 
-    /** The grade level of the game. */
+    /** The start of the game's grade level range. */
     @Column
-    private Integer gradeLevel;
+    private Integer grade1;
+
+    /** The end of the game's grade level range. */
+    @Column
+    private Integer grade2;
 
     /** Is the game active? */
     @Column

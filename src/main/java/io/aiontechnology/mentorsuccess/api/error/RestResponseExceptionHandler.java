@@ -93,7 +93,13 @@ public class RestResponseExceptionHandler {
     private Map<String, String> extractErrors(MethodArgumentNotValidException methodArgumentNotValidException,
                                               Locale locale) {
         return methodArgumentNotValidException.getBindingResult().getAllErrors().stream()
-                .map(e -> new SimpleEntry<>(((FieldError) e).getField(), messageSource.getMessage(e, locale)))
+                .map(e -> {
+                    if (e instanceof FieldError) {
+                        return new SimpleEntry<>(((FieldError) e).getField(), messageSource.getMessage(e, locale));
+                    } else {
+                        return new SimpleEntry<>("form", messageSource.getMessage(e, locale));
+                    }
+                })
                 .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue));
     }
 
