@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.Arrays;
@@ -53,12 +52,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 /**
  * Controller that vends a REST interface for dealing with teachers.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/teachers")
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 @Slf4j
 public class TeacherController {
 
@@ -88,7 +87,7 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.CREATED)
     public TeacherModel createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid TeacherModel teacherModel) {
         log.debug("Creating teacher: {}", teacherModel);
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(teacherModel)
                         .map(teacherMapper::mapModelToEntity)
                         .map(school::addRole)
@@ -108,7 +107,7 @@ public class TeacherController {
         log.debug("Getting all teachers for school {}", schoolId);
         var session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", TEACHER.toString());
-        return schoolService.getSchool(schoolId)
+        return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
@@ -125,7 +124,7 @@ public class TeacherController {
      */
     @GetMapping("/{teacherId}")
     public TeacherModel getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("teacherId") UUID teacherId) {
-        return roleService.findRole(teacherId)
+        return roleService.findRoleById(teacherId)
                 .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
@@ -141,7 +140,7 @@ public class TeacherController {
     public TeacherModel updateTeacher(@PathVariable("schoolId") UUID schoolId,
                                       @PathVariable("teacherId") UUID teacherId,
                                       @RequestBody @Valid TeacherModel teacherModel) {
-        return roleService.findRole(teacherId)
+        return roleService.findRoleById(teacherId)
                 .map(role -> teacherMapper.mapModelToEntity(teacherModel, role))
                 .map(roleService::updateRole)
                 .map(role -> teacherModelAssembler.toModel(role, linkProvider))
@@ -158,10 +157,11 @@ public class TeacherController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
         log.debug("Deactivating teacher");
-        roleService.findRole(teacherId)
+        roleService.findRoleById(teacherId)
                 .ifPresent(roleService::deactivateRole);
     }
 
+    /** {@link LinkProvider} implementation for teachers. */
     private LinkProvider<TeacherModel, Role> linkProvider = (teacherModel, role) ->
             Arrays.asList(
                     linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),

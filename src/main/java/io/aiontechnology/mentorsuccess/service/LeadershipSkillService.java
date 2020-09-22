@@ -16,30 +16,43 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.repository.LeadershipSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 /**
+ * Service that provides business logic for behaviors.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class LeadershipSkillService {
 
+    /** The repository used to interact with the database */
     private final LeadershipSkillRepository leadershipSkillRepository;
 
-    public Iterable<LeadershipSkill> getAllLeadershipSkills() {
-        return leadershipSkillRepository.findAll();
-    }
-
+    /**
+     * Find a {@link LeadershipSkill} by its name.
+     *
+     * @param name The name of the desired {@link LeadershipSkill}.
+     * @return The {@link LeadershipSkill} if it could be found.
+     */
     public Optional<LeadershipSkill> findLeadershipSkillByName(String name) {
         return leadershipSkillRepository.findByName(name);
+    }
+
+    /**
+     * Get all {@link LeadershipSkill LeadershipSkills}.
+     *
+     * @return All {@link LeadershipSkill LeadershipSkills}.
+     */
+    public Iterable<LeadershipSkill> getAllLeadershipSkills() {
+        return leadershipSkillRepository.findAll();
     }
 
 }

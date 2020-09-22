@@ -21,22 +21,29 @@ import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModelHolder;
 import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public class LeadershipTraitMapper implements Mapper<LeadershipTrait, LeadershipTraitModel> {
 
+    /** Function for retrieving {@link LeadershipTrait} objects by name */
     private final Function<String, Optional<LeadershipTrait>> leadershipTraitGetter;
 
+    /**
+     * Map from the given {@link LeadershipTrait} to a {@link LeadershipTraitModel}.
+     *
+     * @param leadershipTrait The {@link LeadershipTrait} to map from.
+     * @return The newly mapped {@link LeadershipTraitModel}.
+     */
     @Override
     public LeadershipTraitModel mapEntityToModel(LeadershipTrait leadershipTrait) {
         return LeadershipTraitModel.builder()
@@ -44,12 +51,25 @@ public class LeadershipTraitMapper implements Mapper<LeadershipTrait, Leadership
                 .build();
     }
 
+    /**
+     * Map from the given {@link LeadershipTraitModel} to a {@link LeadershipTrait}.
+     *
+     * @param leadershipTraitModel The {@link LeadershipTraitModel} to map from.
+     * @return The newly mapped {@link LeadershipTrait}.
+     */
     @Override
     public LeadershipTrait mapModelToEntity(LeadershipTraitModel leadershipTraitModel) {
         LeadershipTrait leadershipTrait = new LeadershipTrait();
         return mapModelToEntity(leadershipTraitModel, leadershipTrait);
     }
 
+    /**
+     * Map from a given {@link LeadershipTraitModel} into the given {@link LeadershipTrait}.
+     *
+     * @param leadershipTraitModel The {@link LeadershipTraitModel} to map from.
+     * @param leadershipTrait The {@link LeadershipTrait} to map to.
+     * @return The mapped {@link LeadershipTrait}.
+     */
     @Override
     public LeadershipTrait mapModelToEntity(LeadershipTraitModel leadershipTraitModel, LeadershipTrait leadershipTrait) {
         return Optional.ofNullable(leadershipTraitModel)
@@ -65,13 +85,25 @@ public class LeadershipTraitMapper implements Mapper<LeadershipTrait, Leadership
                 .orElseThrow(() -> new IllegalArgumentException("Illegal leadership trait specified"));
     }
 
-    public Set<LeadershipTraitModel> mapLeadershipTraits(Supplier<Set<LeadershipTrait>> leadershipTraitSuppler) {
+    /**
+     * Map a collection of {@link LeadershipTrait} to a collection of {@link LeadershipTraitModel}.
+     *
+     * @param leadershipTraitSuppler A support that provides the collection of {@link LeadershipTrait}.
+     * @return The collection of mapped {@link LeadershipTraitModel}.
+     */
+    public Collection<LeadershipTraitModel> mapLeadershipTraits(Supplier<Collection<LeadershipTrait>> leadershipTraitSuppler) {
         return leadershipTraitSuppler.get().stream()
                 .map(this::mapEntityToModel)
                 .collect(Collectors.toSet());
     }
 
-    public Set<LeadershipTrait> mapLeadershipTraits(LeadershipTraitModelHolder holder) {
+    /**
+     * Map a collection of {@link LeadershipTraitModel} to a collection of {@link LeadershipTrait}.
+     *
+     * @param holder The holder containing the collection of {@link LeadershipTraitModel} to map.
+     * @return The collection of mapped {@link LeadershipTrait}.
+     */
+    public Collection<LeadershipTrait> mapLeadershipTraits(LeadershipTraitModelHolder holder) {
         if (holder.getLeadershipTraits() != null) {
             return holder.getLeadershipTraits().stream()
                     .map(this::mapModelToEntity)

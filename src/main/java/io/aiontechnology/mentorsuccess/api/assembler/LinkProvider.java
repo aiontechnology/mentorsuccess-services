@@ -27,6 +27,7 @@ import java.util.function.BiFunction;
  * @param <M> The class of the model object.
  * @param <E> The class of the entity object.
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @FunctionalInterface
 public interface LinkProvider<M, E> extends BiFunction<M, E, List<Link>> {

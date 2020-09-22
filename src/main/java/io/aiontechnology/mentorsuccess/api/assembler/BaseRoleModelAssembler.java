@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.mapping.Mapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Role;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -27,14 +26,16 @@ import java.util.Optional;
 /**
  * An abstract class that provides common functionality for role based assemblers.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public abstract class BaseRoleModelAssembler<T extends RepresentationModel<T>>
         extends RepresentationModelAssemblerSupport<Role, T> {
 
+    /** Component that is used to add links to a model object */
     private final LinkHelper<T> linkHelper;
 
+    /** Mapper to convert from a {@link Role} to a T */
     private final Mapper<Role, T> mapper;
 
     /**
@@ -51,7 +52,7 @@ public abstract class BaseRoleModelAssembler<T extends RepresentationModel<T>>
      * Convert the given {@link Role}.
      *
      * @param role The {@link Role} to convert.
-     * @return The {@link TeacherModel} produced from the {@link Role}.
+     * @return The model produced from the {@link Role}.
      */
     @Override
     public T toModel(Role role) {
@@ -60,6 +61,13 @@ public abstract class BaseRoleModelAssembler<T extends RepresentationModel<T>>
                 .orElse(null);
     }
 
+    /**
+     * Convert the given {@link Role} and add links using the given {@link LinkProvider}.
+     *
+     * @param role The {@link Role} to convert.
+     * @param linkProvider The {@link LinkProvider} to use to add links to the model.
+     * @return The model produced from the {@link Role}.
+     */
     public T toModel(Role role, LinkProvider<T, Role> linkProvider) {
         return Optional.ofNullable(role)
                 .map(this::toModel)

@@ -27,14 +27,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType;
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.SOCIAL_WORKER;
 import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;

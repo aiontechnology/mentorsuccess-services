@@ -16,11 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+import io.aiontechnology.mentorsuccess.entity.ResourceLocation;
+import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
+import io.aiontechnology.mentorsuccess.util.GradeRange;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.springframework.hateoas.RepresentationModel;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -30,36 +32,51 @@ import java.util.Collection;
 import java.util.UUID;
 
 /**
- * Model that represents a game in the API
+ * A model object for games.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
+@GradeRange
 @ToString
-public class GameModel extends ResourceModel<GameModel> implements InterestModelHolder, LeadershipSkillModelHolder,
-        LeadershipTraitModelHolder {
+public class GameModel extends ResourceModel<GameModel> implements ActivityFocusModelHolder, LeadershipSkillModelHolder,
+        GradeRangeHolder {
 
+    /** The game's id. */
     private final UUID id;
 
+    /** The game's name. */
     @NotNull(message = "{game.name.notNull}")
     @Size(max = 40, message = "{game.name.size}")
     private final String name;
 
+    /** The game's description. */
     @Size(max = 50, message = "{game.description.size}")
     private final String description;
 
-    @NotNull(message = "{game.gradeLevel.notNull}")
-    @Min(value = 1, message = "{game.gradeLevel.invalid}")
-    @Max(value = 6, message = "{game.gradeLevel.invalid}")
-    private final Integer gradeLevel;
+    /** The game's starting grade level. */
+    @NotNull(message = "{game.grade1.notNull}")
+    @Min(value = 1, message = "{game.grade1.invalid}")
+    @Max(value = 6, message = "{game.grade1.invalid}")
+    private final Integer grade1;
 
-    private final Collection<InterestModel> interests;
+    /** The game's ending grade level. */
+    @NotNull(message = "{game.grade2.notNull}")
+    @Min(value = 1, message = "{game.grade2.invalid}")
+    @Max(value = 6, message = "{game.grade2.invalid}")
+    private final Integer grade2;
 
-    private final Collection<LeadershipTraitModel> leadershipTraits;
+    @NotNull(message = "{game.location.notNull}")
+    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
+    private final ResourceLocation location;
 
+    /** The activity focus associated with the game. */
+    private final Collection<ActivityFocusModel> activityFocuses;
+
+    /** The leadership skills associated with the book. */
     private final Collection<LeadershipSkillModel> leadershipSkills;
 
 }

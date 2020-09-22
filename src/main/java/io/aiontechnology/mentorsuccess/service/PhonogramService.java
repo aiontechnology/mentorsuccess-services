@@ -21,30 +21,49 @@ import io.aiontechnology.mentorsuccess.repository.PhonogramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * Service that provides business logic for phonograms.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class PhonogramService {
 
+    /** The repository used to interact with the database */
     private final PhonogramRepository phonogramRepository;
 
-    public Optional<Phonogram> getPhonogram(UUID id) {
+    /**
+     * Find a {@link Phonogram} by its id.
+     *
+     * @param id The id of the desired {@link Phonogram}.
+     * @return The {@link Phonogram} if it could be found.
+     */
+    public Optional<Phonogram> findPhonogramById(UUID id) {
         return phonogramRepository.findById(id);
     }
 
-    public Iterable<Phonogram> getAllPhonograms() {
-        return phonogramRepository.findAll();
-    }
-
+    /**
+     * Find a {@link Phonogram} by its name.
+     *
+     * @param name The name of the desired {@link Phonogram}.
+     * @return The {@link Phonogram} if it could be found.
+     */
     public Optional<Phonogram> findPhonogramByName(String name) {
         return phonogramRepository.findByName(name);
+    }
+
+    /**
+     * Get all {@link Phonogram Phonograms}.
+     *
+     * @return All {@link Phonogram Phonograms}.
+     */
+    public Iterable<Phonogram> getAllPhonograms() {
+        return phonogramRepository.findAllByOrderByNameAsc();
     }
 
 }

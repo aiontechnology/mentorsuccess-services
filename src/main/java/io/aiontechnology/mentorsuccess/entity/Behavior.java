@@ -30,8 +30,8 @@ import java.util.UUID;
 /**
  * Entity that represents a behavior.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Entity
 @NoArgsConstructor
@@ -39,11 +39,13 @@ import java.util.UUID;
 @Data
 public class Behavior {
 
+    /** This ID of the behavior. */
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    /** The name of the behavior. */
     @Column
     private String name;
 

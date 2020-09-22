@@ -25,8 +25,8 @@ import lombok.RequiredArgsConstructor;
 /**
  * Helper class for mapping to roles.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RequiredArgsConstructor
 public abstract class AbstractRoleMapper<Model extends Personnel> {

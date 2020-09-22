@@ -27,17 +27,17 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * A service the provides business logic for {@link Book Books}.
+ * Service that provides business logic for books.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class BookService {
 
-    /** The repository for {@link Book Books} in the database */
+    /** The repository used to interact with the database */
     private final BookRepository bookRepository;
 
     /**
@@ -64,22 +64,22 @@ public class BookService {
     }
 
     /**
-     * Get all {@link Book Books} in the system.
+     * Find a {@link Book} by its id.
+     *
+     * @param id The id of the desired {@link Book}.
+     * @return The {@link Book} if it could be found.
+     */
+    public Optional<Book> findBookById(UUID id) {
+        return bookRepository.findById(id);
+    }
+
+    /**
+     * Get all {@link Book Books}.
      *
      * @return All {@link Book Books}.
      */
     public Iterable<Book> getAllBooks() {
         return bookRepository.findAll();
-    }
-
-    /**
-     * Get a {@link Book} for the given id.
-     *
-     * @param id The id of the desired {@link Book}.
-     * @return The {@link Book} if it could be found.
-     */
-    public Optional<Book> getBook(UUID id) {
-        return bookRepository.findById(id);
     }
 
     /**

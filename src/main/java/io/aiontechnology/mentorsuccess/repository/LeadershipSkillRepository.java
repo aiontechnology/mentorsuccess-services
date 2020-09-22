@@ -16,8 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.Book;
-import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
@@ -27,14 +25,20 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Repository for {@link LeadershipSkill} entities.
+ * A Spring repository for interacting with {@link LeadershipSkill} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface LeadershipSkillRepository extends CrudRepository<LeadershipSkill, UUID> {
 
+    /**
+     * Find an {@link LeadershipSkill} by its name.
+     *
+     * @param name The name of the desired {@link LeadershipSkill}.
+     * @return The {@link LeadershipSkill} if it could be found.
+     */
     @Cacheable("leadership_skills")
     Optional<LeadershipSkill> findByName(String name);
 

@@ -24,20 +24,41 @@ import org.springframework.web.server.adapter.ForwardedHeaderTransformer;
 
 import static org.springframework.hateoas.mediatype.hal.HalConfiguration.RenderSingleLinks;
 
+/**
+ * Configuration for the REST interface.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
+ */
 @Configuration
 public class RestConfiguration {
 
+    /**
+     * Create a {@link HalConfiguration} bean.
+     *
+     * @return The {@link HalConfiguration}.
+     */
     @Bean
     public HalConfiguration patternBasedPolicy() {
         return new HalConfiguration()
                 .withRenderSingleLinks(RenderSingleLinks.AS_ARRAY);
     }
 
+    /**
+     * Create a {@link ForwardedHeaderFilter} bean.
+     *
+     * @return The {@link ForwardedHeaderFilter}.
+     */
     @Bean
     public ForwardedHeaderFilter forwardedHeaderFilter() {
         return new ForwardedHeaderFilter();
     }
 
+    /**
+     * Create a {@link ForwardedHeaderFilter} bean.
+     *
+     * @return The {@link ForwardedHeaderFilter}.
+     */
     @Bean
     public ForwardedHeaderTransformer forwardedHeaderTransformer() {
         return new ForwardedHeaderTransformer();

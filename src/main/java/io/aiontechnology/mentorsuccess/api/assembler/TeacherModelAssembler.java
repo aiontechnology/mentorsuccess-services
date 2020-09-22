@@ -25,15 +25,19 @@ import org.springframework.stereotype.Component;
 import javax.inject.Inject;
 
 /**
- * Assembles {@link TeacherModel} instances from {@link Role} entity instances.
+ * Assembles a {@link TeacherModel} from a {@link Role}.
  *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class TeacherModelAssembler extends BaseRoleModelAssembler<TeacherModel> {
 
     /**
-     * Construct an instance.
+     * Constructor
+     *
+     * @param teacherMapper The mapper for mapping between {@link Role} and {@link TeacherModel}.
+     * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
     public TeacherModelAssembler(TeacherMapper teacherMapper, LinkHelper<TeacherModel> linkHelper) {

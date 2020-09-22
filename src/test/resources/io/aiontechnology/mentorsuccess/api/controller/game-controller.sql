@@ -12,14 +12,8 @@
 -- See the License for the specific language governing permissions and
 -- limitations under the License.
 
-INSERT INTO interest (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'INTEREST1');
-INSERT INTO interest (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'INTEREST2');
 INSERT INTO leadership_skill (id, name) VALUES ('81aea425-4895-462d-9b9f-48a3150b7e49', 'LEADERSHIP_SKILL1');
 INSERT INTO leadership_skill (id, name) VALUES ('d14ae031-b14e-4c9a-a9ba-d67703e80c29', 'LEADERSHIP_SKILL2');
-INSERT INTO leadership_trait (id, name) VALUES ('ca764852-4973-4c24-8a46-4a61ad000574', 'LEADERSHIP_TRAIT1');
-INSERT INTO leadership_trait (id, name) VALUES ('6b83bbae-9123-49b4-aedd-852949a50ae5', 'LEADERSHIP_TRAIT2');
 
-INSERT INTO game (id, name, description, grade_level, is_active) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', 'NAME', 'DESCRIPTION', 1, true);
-INSERT INTO game_interest (game_id, interest_id) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', '548fe589-2765-4b5f-8552-fa40c0722216');
+INSERT INTO game (id, name, description, grade1, grade2, is_active, location) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', 'NAME', 'DESCRIPTION', 1, 2, true, 'OFFLINE');
 INSERT INTO game_leadershipskill (game_id, leadershipskill_id) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', '81aea425-4895-462d-9b9f-48a3150b7e49');
-INSERT INTO game_leadershiptrait (game_id, leadershiptrait_id) VALUES ('f53af381-d524-40f7-8df9-3e808c9ad46b', 'ca764852-4973-4c24-8a46-4a61ad000574');

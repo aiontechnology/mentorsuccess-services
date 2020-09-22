@@ -21,22 +21,21 @@ import io.aiontechnology.mentorsuccess.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Service for managing school.
+ * Service that provides business logic for schools.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
 @RequiredArgsConstructor
 public class SchoolService {
 
-    /** Repository for the {@link School} Entity */
+    /** The repository used to interact with the database */
     private final SchoolRepository schoolRepository;
 
     /**
@@ -68,7 +67,7 @@ public class SchoolService {
      * @param id The id of the desired {@link School}.
      * @return The school if it could be found or empty if not.
      */
-    public Optional<School> getSchool(UUID id) {
+    public Optional<School> getSchoolById(UUID id) {
         return schoolRepository.findById(id);
     }
 

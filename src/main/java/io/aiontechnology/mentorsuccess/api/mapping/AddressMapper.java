@@ -24,12 +24,18 @@ import org.springframework.stereotype.Component;
 /**
  * Mapper between {@link School} and {@link AddressModel}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class AddressMapper implements Mapper<School, AddressModel> {
 
+    /**
+     * Map from the given {@link School} to an {@link AddressModel}.
+     *
+     * @param school The {@link School} to map from.
+     * @return The newly mapped {@link AddressModel}.
+     */
     @Override
     public AddressModel mapEntityToModel(School school) {
         return AddressModel.builder()
@@ -41,12 +47,25 @@ public class AddressMapper implements Mapper<School, AddressModel> {
                 .build();
     }
 
+    /**
+     * Map from a given {@link AddressModel} to a {@link School}.
+     *
+     * @param addressModel The {@link AddressModel} to map from.
+     * @return The newly mapped {@link School}.
+     */
     @Override
     public School mapModelToEntity(AddressModel addressModel) {
         School school = new School();
         return mapModelToEntity(addressModel, school);
     }
 
+    /**
+     * Map from a given {@link AddressModel} into the given {@link School}.
+     *
+     * @param addressModel The {@link AddressModel} to map from.
+     * @param school The {@link School} to map to.
+     * @return The mapped {@link School}.
+     */
     @Override
     public School mapModelToEntity(AddressModel addressModel, School school) {
         throw new NotImplementedException();

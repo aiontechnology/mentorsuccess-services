@@ -16,16 +16,47 @@
 
 package io.aiontechnology.mentorsuccess.api.model;
 
+/**
+ * The interface of a school's personnel.
+ *
+ * @author Whitney Hunter
+ * @since 0.1.0
+ */
 public interface Personnel {
 
+    /**
+     * Get the personnel's first name.
+     *
+     * @return The first name.
+     */
     String getFirstName();
 
+    /**
+     * Get the personnel's last name.
+     *
+     * @return The last name.
+     */
     String getLastName();
 
+    /**
+     * Get the personnel's email address.
+     *
+     * @return The email address.
+     */
     String getEmail();
 
+    /**
+     * Get the personnel's work phone number.
+     *
+     * @return The work phone number.
+     */
     String getWorkPhone();
 
+    /**
+     * Get the personnel's cell phone number.
+     *
+     * @return The cell phone number.
+     */
     String getCellPhone();
 
 }

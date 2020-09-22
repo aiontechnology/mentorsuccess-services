@@ -27,20 +27,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 /**
  * Controller that vends a REST interface for dealing with leadership traits.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @RestController
 @RequestMapping("/api/v1/leadership_traits")
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 @Slf4j
 public class LeadershipTraitController {
 
@@ -58,7 +56,7 @@ public class LeadershipTraitController {
     @GetMapping
     public CollectionModel<LeadershipTraitModel> getLeadershipTraits() {
         var leadershipTraitModels =
-                StreamSupport.stream(leadershipTraitService.findAll().spliterator(), false)
+                StreamSupport.stream(leadershipTraitService.getAllLeadershipTraits().spliterator(), false)
                         .map(leadershipTraitModelAssembler::toModel)
                         .collect(Collectors.toList());
         return CollectionModel.of(leadershipTraitModels);

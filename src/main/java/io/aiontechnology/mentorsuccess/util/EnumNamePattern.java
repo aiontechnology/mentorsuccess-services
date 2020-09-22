@@ -33,8 +33,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Annotation that can be used to validate an enumeration.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Target({METHOD, FIELD, ANNOTATION_TYPE, CONSTRUCTOR, PARAMETER, TYPE_USE})
 @Retention(RUNTIME)
@@ -42,12 +42,32 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Constraint(validatedBy = EnumNamePatternValidator.class)
 public @interface EnumNamePattern {
 
+    /**
+     * Get the regular expression.
+     *
+     * @return The regular expression.
+     */
     String regexp();
 
+    /**
+     * Get the message.
+     *
+     * @return The message.
+     */
     String message() default "must match \"{regexp}\"";
 
+    /**
+     * Get the groups.
+     *
+     * @return The groups.
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * Get the payload.
+     *
+     * @return The payload.
+     */
     Class<? extends Payload>[] payload() default {};
 
 }

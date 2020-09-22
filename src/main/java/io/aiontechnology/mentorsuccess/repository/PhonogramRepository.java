@@ -25,15 +25,29 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Repository for {@link Phonogram} entities.
+ * A Spring repository for interacting with {@link Phonogram} entities in the database.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Repository
 public interface PhonogramRepository extends CrudRepository<Phonogram, UUID> {
 
+    /**
+     * Find an {@link Phonogram} by its name.
+     *
+     * @param name The name of the desired {@link Phonogram}.
+     * @return The {@link Phonogram} if it could be found.
+     */
     @Cacheable("phonograms")
     Optional<Phonogram> findByName(String name);
+
+    /**
+     * Find all {@link Phonogram Phonograms} in ascending order by name.
+     *
+     * @return The {@link Phonogram Phonograms}.
+     */
+    @Cacheable("phonograms")
+    Iterable<Phonogram> findAllByOrderByNameAsc();
 
 }

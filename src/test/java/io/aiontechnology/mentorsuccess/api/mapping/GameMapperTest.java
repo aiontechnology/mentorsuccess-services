@@ -16,14 +16,12 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
+import io.aiontechnology.mentorsuccess.api.model.ActivityFocusModel;
 import io.aiontechnology.mentorsuccess.api.model.GameModel;
-import io.aiontechnology.mentorsuccess.api.model.InterestModel;
 import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
-import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
-import io.aiontechnology.mentorsuccess.entity.Interest;
 import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -44,47 +42,40 @@ public class GameMapperTest {
 
     private static final String NAME = "GAME";
     private static final String DESCRIPTION = "DESCRIPTION";
-    private static final Integer GRADE_LEVEL = 1;
+    private static final Integer GRADE1 = 1;
+    private static final Integer GRADE2 = 2;
     private static final Boolean IS_ACTIVE = TRUE;
 
-    private static final String INTEREST_NAME = "INTEREST";
+    private static final String ACTIVITYFOCUS_NAME = "ACTIVITYFOCUS";
     private static final String LEADERSHIPSKILL_NAME = "LEADERSHIPSKILL";
-    private static final String LEADERSHIPTRAIT_NAME = "LEADERSHIPTRAIT";
 
     @Test
     void testMapEntityToModel() throws Exception {
         // setup the fixture
         UUID ID = UUID.randomUUID();
 
-        UUID INTEREST_ID = UUID.randomUUID();
-        Interest interest = new Interest();
-        interest.setId(INTEREST_ID);
-        interest.setName(INTEREST_NAME);
+        UUID ACTIVITYFOCUS_ID = UUID.randomUUID();
+        ActivityFocus activityFocus = new ActivityFocus();
+        activityFocus.setId(ACTIVITYFOCUS_ID);
+        activityFocus.setName(ACTIVITYFOCUS_NAME);
 
         UUID LEADERSHIPSKILL_ID = UUID.randomUUID();
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         leadershipSkill.setId(LEADERSHIPSKILL_ID);
         leadershipSkill.setName(LEADERSHIPSKILL_NAME);
 
-        UUID LEADERSHIPTRAIT_ID = UUID.randomUUID();
-        LeadershipTrait leadershipTrait = new LeadershipTrait();
-        leadershipTrait.setId(LEADERSHIPTRAIT_ID);
-        leadershipTrait.setName(LEADERSHIPTRAIT_NAME);
-
         Game game = new Game();
         game.setId(ID);
         game.setName(NAME);
         game.setDescription(DESCRIPTION);
-        game.setGradeLevel(GRADE_LEVEL);
+        game.setGrade1(GRADE1);
         game.setIsActive(IS_ACTIVE);
-        game.setInterests(Collections.singleton(interest));
+        game.setActivityFocuses(Collections.singleton(activityFocus));
         game.setLeadershipSkills(Collections.singleton(leadershipSkill));
-        game.setLeadershipTraits(Collections.singleton(leadershipTrait));
 
-        InterestMapper interestMapper = new InterestMapper(null);
+        ActivityFocusMapper activityFocusMapper = new ActivityFocusMapper(null);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(null);
-        LeadershipTraitMapper leadershipTraitMapper = new LeadershipTraitMapper(null);
-        GameMapper gameMapper = new GameMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper);
+        GameMapper gameMapper = new GameMapper(activityFocusMapper, leadershipSkillMapper);
 
         // execute the SUT
         GameModel result = gameMapper.mapEntityToModel(game);
@@ -92,39 +83,35 @@ public class GameMapperTest {
         // validation
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
-        assertThat(result.getInterests()).containsExactly(interestMapper.mapEntityToModel(interest));
+        assertThat(result.getGrade1()).isEqualTo(GRADE1);
+        assertThat(result.getActivityFocuses()).containsExactly(activityFocusMapper.mapEntityToModel(activityFocus));
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkillMapper.mapEntityToModel(leadershipSkill));
-        assertThat(result.getLeadershipTraits()).containsExactly(leadershipTraitMapper.mapEntityToModel(leadershipTrait));
     }
 
     @Test
     void testMapModelToEntity_newEntity() throws Exception {
 
         // setup the fixture
-        InterestModel interestModel = InterestModel.builder().withName(INTEREST_NAME).build();
+        ActivityFocusModel activityFocusModel = ActivityFocusModel.builder().withName(ACTIVITYFOCUS_NAME).build();
         LeadershipSkillModel leadershipSkillModel = LeadershipSkillModel.builder().withName(LEADERSHIPSKILL_NAME).build();
-        LeadershipTraitModel leadershipTraitModel = LeadershipTraitModel.builder().withName(LEADERSHIPTRAIT_NAME).build();
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
-                .withGradeLevel(GRADE_LEVEL)
-                .withInterests(Arrays.asList(interestModel))
+                .withGrade1(GRADE1)
+                .withGrade2(GRADE2)
+                .withActivityFocuses(Arrays.asList(activityFocusModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
-                .withLeadershipTraits(Arrays.asList(leadershipTraitModel))
                 .build();
 
-        Interest interest = new Interest();
-        interest.setName(INTEREST_NAME);
-        InterestMapper interestMapper = new InterestMapper(name -> Optional.of(interest));
+        ActivityFocus activityFocus = new ActivityFocus();
+        activityFocus.setName(ACTIVITYFOCUS_NAME);
+        ActivityFocusMapper activityFocusMapper = new ActivityFocusMapper(name -> Optional.of(activityFocus));
+
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         leadershipSkill.setName(LEADERSHIPSKILL_NAME);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(name -> Optional.of(leadershipSkill));
-        LeadershipTrait leadershipTrait = new LeadershipTrait();
-        leadershipTrait.setName(LEADERSHIPTRAIT_NAME);
-        LeadershipTraitMapper leadershipTraitMapper = new LeadershipTraitMapper(name -> Optional.of(leadershipTrait));
 
-        GameMapper gameMapper = new GameMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper);
+        GameMapper gameMapper = new GameMapper(activityFocusMapper, leadershipSkillMapper);
 
         // execute the SUT
         Game result = gameMapper.mapModelToEntity(gameModel);
@@ -132,39 +119,36 @@ public class GameMapperTest {
         // validation
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
-        assertThat(result.getInterests()).containsExactly(interest);
+        assertThat(result.getGrade1()).isEqualTo(GRADE1);
+        assertThat(result.getGrade2()).isEqualTo(GRADE2);
+        assertThat(result.getActivityFocuses()).containsExactly(activityFocus);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
-        assertThat(result.getLeadershipTraits()).containsExactly(leadershipTrait);
     }
 
     @Test
     void testMapModelToEntity_providedEntity() throws Exception {
 
         // setup the fixture
-        InterestModel interestModel = InterestModel.builder().withName(INTEREST_NAME).build();
+        ActivityFocusModel activityFocusModel = ActivityFocusModel.builder().withName(ACTIVITYFOCUS_NAME).build();
         LeadershipSkillModel leadershipSkillModel = LeadershipSkillModel.builder().withName(LEADERSHIPSKILL_NAME).build();
-        LeadershipTraitModel leadershipTraitModel = LeadershipTraitModel.builder().withName(LEADERSHIPTRAIT_NAME).build();
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
                 .withDescription(DESCRIPTION)
-                .withGradeLevel(GRADE_LEVEL)
-                .withInterests(Arrays.asList(interestModel))
+                .withGrade1(GRADE1)
+                .withGrade2(GRADE2)
+                .withActivityFocuses(Arrays.asList(activityFocusModel))
                 .withLeadershipSkills(Arrays.asList(leadershipSkillModel))
-                .withLeadershipTraits(Arrays.asList(leadershipTraitModel))
                 .build();
 
-        Interest interest = new Interest();
-        interest.setName(INTEREST_NAME);
-        InterestMapper interestMapper = new InterestMapper(name -> Optional.of(interest));
+        ActivityFocus activityFocus = new ActivityFocus();
+        activityFocus.setName(ACTIVITYFOCUS_NAME);
+        ActivityFocusMapper activityFocusMapper = new ActivityFocusMapper(name -> Optional.of(activityFocus));
+
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         leadershipSkill.setName(LEADERSHIPSKILL_NAME);
         LeadershipSkillMapper leadershipSkillMapper = new LeadershipSkillMapper(name -> Optional.of(leadershipSkill));
-        LeadershipTrait leadershipTrait = new LeadershipTrait();
-        leadershipTrait.setName(LEADERSHIPTRAIT_NAME);
-        LeadershipTraitMapper leadershipTraitMapper = new LeadershipTraitMapper(name -> Optional.of(leadershipTrait));
 
-        GameMapper gameMapper = new GameMapper(interestMapper, leadershipSkillMapper, leadershipTraitMapper);
+        GameMapper gameMapper = new GameMapper(activityFocusMapper, leadershipSkillMapper);
 
         // execute the SUT
         Game providedGame = new Game();
@@ -174,10 +158,10 @@ public class GameMapperTest {
         assertThat(result).isSameAs(providedGame);
         assertThat(result.getName()).isEqualTo(NAME);
         assertThat(result.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(result.getGradeLevel()).isEqualTo(GRADE_LEVEL);
-        assertThat(result.getInterests()).containsExactly(interest);
+        assertThat(result.getGrade1()).isEqualTo(GRADE1);
+        assertThat(result.getGrade2()).isEqualTo(GRADE2);
+        assertThat(result.getActivityFocuses()).containsExactly(activityFocus);
         assertThat(result.getLeadershipSkills()).containsExactly(leadershipSkill);
-        assertThat(result.getLeadershipTraits()).containsExactly(leadershipTrait);
     }
 
 }

@@ -23,7 +23,10 @@ import lombok.ToString;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
+ * A model object for phonograms.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

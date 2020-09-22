@@ -26,6 +26,7 @@ import java.util.List;
  * Helper component for adding {@link Link Links} to {@link RepresentationModel} instances.
  *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Component
 public class LinkHelper<M extends RepresentationModel<?>> {

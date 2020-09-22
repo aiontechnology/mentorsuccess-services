@@ -21,24 +21,38 @@ import io.aiontechnology.mentorsuccess.repository.LeadershipTraitRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.inject.Inject;
 import java.util.Optional;
 
 /**
+ * Service that provides business logic for leadership skills.
+ *
  * @author Whitney Hunter
+ * @since 0.1.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class LeadershipTraitService {
 
+    /** The repository used to interact with the database */
     private final LeadershipTraitRepository leadershipTraitRepository;
 
-    public Iterable<LeadershipTrait> findAll() {
-        return leadershipTraitRepository.findAll();
+    /**
+     * Find a {@link LeadershipTrait} by its name.
+     *
+     * @param name The name of the desired {@link LeadershipTrait}.
+     * @return The {@link LeadershipTrait} if it could be found.
+     */
+    public Optional<LeadershipTrait> findLeadershipTraitByName(String name) {
+        return leadershipTraitRepository.findByName(name);
     }
 
-    public Optional<LeadershipTrait> findCharacterTraitByName(String name) {
-        return leadershipTraitRepository.findByName(name);
+    /**
+     * Get all {@link LeadershipTrait LeadershipTraits}.
+     *
+     * @return All {@link LeadershipTrait LeadershipTraits}.
+     */
+    public Iterable<LeadershipTrait> getAllLeadershipTraits() {
+        return leadershipTraitRepository.findAll();
     }
 
 }
