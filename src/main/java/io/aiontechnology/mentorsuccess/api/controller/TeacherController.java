@@ -19,9 +19,10 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.TeacherMapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.TEACHER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
@@ -64,8 +65,11 @@ public class TeacherController {
     /** The JPA entity manager */
     private final EntityManager entityManager;
 
-    /** Mapper for converting {@link TeacherModel} instances to {@link Role Roles}. */
-    private final TeacherMapper teacherMapper;
+    /** A mapper for converting {@link TeacherModel} instances to {@link SchoolPersonRole Roles}. */
+    private final OneWayMapper<TeacherModel, SchoolPersonRole> teacherMapper;
+
+    /** An update mapper for converting {@link TeacherModel} instances to {@link SchoolPersonRole Roles}. */
+    private final OneWayUpdateMapper<TeacherModel, SchoolPersonRole> teacherUpdateMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -89,7 +93,7 @@ public class TeacherController {
         log.debug("Creating teacher: {}", teacherModel);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(teacherModel)
-                        .map(teacherMapper::mapModelToEntity)
+                        .flatMap(teacherMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
@@ -123,7 +127,7 @@ public class TeacherController {
      * @return The personnel if it could be found.
      */
     @GetMapping("/{teacherId}")
-    public TeacherModel getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("teacherId") UUID teacherId) {
+    public TeacherModel getTeacher(@PathVariable("schoolId") UUID schoolId, @PathVariable("teacherId") UUID teacherId) {
         return roleService.findRoleById(teacherId)
                 .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
@@ -138,10 +142,10 @@ public class TeacherController {
      */
     @PutMapping("/{teacherId}")
     public TeacherModel updateTeacher(@PathVariable("schoolId") UUID schoolId,
-                                      @PathVariable("teacherId") UUID teacherId,
-                                      @RequestBody @Valid TeacherModel teacherModel) {
+            @PathVariable("teacherId") UUID teacherId,
+            @RequestBody @Valid TeacherModel teacherModel) {
         return roleService.findRoleById(teacherId)
-                .map(role -> teacherMapper.mapModelToEntity(teacherModel, role))
+                .flatMap(role -> teacherUpdateMapper.map(teacherModel, role))
                 .map(roleService::updateRole)
                 .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
@@ -162,7 +166,7 @@ public class TeacherController {
     }
 
     /** {@link LinkProvider} implementation for teachers. */
-    private LinkProvider<TeacherModel, Role> linkProvider = (teacherModel, role) ->
+    private LinkProvider<TeacherModel, SchoolPersonRole> linkProvider = (teacherModel, role) ->
             Arrays.asList(
                     linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
                     linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")

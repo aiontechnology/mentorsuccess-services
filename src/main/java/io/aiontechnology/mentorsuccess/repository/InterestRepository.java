@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.Interest;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -39,7 +39,7 @@ public interface InterestRepository extends CrudRepository<Interest, UUID> {
      * @param name The name of the desired {@link Interest}.
      * @return The {@link Interest} if it could be found.
      */
-    @Cacheable("interests")
+//    @Cacheable("interests")
     Optional<Interest> findByName(String name);
 
 }

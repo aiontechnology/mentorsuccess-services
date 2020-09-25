@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.util;
 
-import io.aiontechnology.mentorsuccess.api.model.GradeRangeHolder;
+import io.aiontechnology.mentorsuccess.api.model.inbound.GradeRangeHolder;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;

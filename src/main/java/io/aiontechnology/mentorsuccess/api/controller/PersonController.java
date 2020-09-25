@@ -19,8 +19,8 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.PersonModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.PersonMapper;
-import io.aiontechnology.mentorsuccess.api.model.PersonModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.service.PersonService;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +58,7 @@ public class PersonController {
     private final PersonModelAssembler personModelAssembler;
 
     /** Factory for converting {@link PersonModel} instances to {@link Person Persons} */
-    private final PersonMapper personMapper;
+    private final OneWayMapper<PersonModel, Person> personMapper;
 
     /** Service with business logic for people */
     private final PersonService personService;
@@ -74,7 +74,7 @@ public class PersonController {
     public PersonModel createPerson(@RequestBody @Valid PersonModel personModel) {
         log.debug("Creating person: {}", personModel);
         return Optional.ofNullable(personModel)
-                .map(personMapper::mapModelToEntity)
+                .flatMap(personMapper::map)
                 .map(personService::createPerson)
                 .map(p -> personModelAssembler.toModel(p, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create person"));

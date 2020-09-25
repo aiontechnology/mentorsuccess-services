@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.repository.PhonogramRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

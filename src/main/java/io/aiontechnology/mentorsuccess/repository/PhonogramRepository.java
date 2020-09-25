@@ -16,8 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.Phonogram;
-import org.springframework.cache.annotation.Cacheable;
+import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +38,6 @@ public interface PhonogramRepository extends CrudRepository<Phonogram, UUID> {
      * @param name The name of the desired {@link Phonogram}.
      * @return The {@link Phonogram} if it could be found.
      */
-    @Cacheable("phonograms")
     Optional<Phonogram> findByName(String name);
 
     /**
@@ -47,7 +45,6 @@ public interface PhonogramRepository extends CrudRepository<Phonogram, UUID> {
      *
      * @return The {@link Phonogram Phonograms}.
      */
-    @Cacheable("phonograms")
     Iterable<Phonogram> findAllByOrderByNameAsc();
 
 }

@@ -17,9 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.LeadershipTraitController;
-import io.aiontechnology.mentorsuccess.api.mapping.LeadershipTraitMapper;
-import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
-import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -35,17 +35,17 @@ import java.util.Optional;
 @Component
 public class LeadershipTraitModelAssembler extends RepresentationModelAssemblerSupport<LeadershipTrait, LeadershipTraitModel> {
 
-    private final LeadershipTraitMapper leadershipTraitMapper;
+    private final OneWayMapper<LeadershipTrait, LeadershipTraitModel> mapper;
 
     /**
      * Constructor
      *
-     * @param leadershipTraitMapper The mapper for mapping between {@link LeadershipTrait} and {@link LeadershipTraitModel}.
+     * @param mapper The mapper for mapping between {@link LeadershipTrait} and {@link LeadershipTraitModel}.
      */
     @Inject
-    public LeadershipTraitModelAssembler(LeadershipTraitMapper leadershipTraitMapper) {
+    public LeadershipTraitModelAssembler(OneWayMapper<LeadershipTrait, LeadershipTraitModel> mapper) {
         super(LeadershipTraitController.class, LeadershipTraitModel.class);
-        this.leadershipTraitMapper = leadershipTraitMapper;
+        this.mapper = mapper;
     }
 
     /**
@@ -57,7 +57,7 @@ public class LeadershipTraitModelAssembler extends RepresentationModelAssemblerS
     @Override
     public LeadershipTraitModel toModel(LeadershipTrait leadershipTrait) {
         return Optional.ofNullable(leadershipTrait)
-                .map(leadershipTraitMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

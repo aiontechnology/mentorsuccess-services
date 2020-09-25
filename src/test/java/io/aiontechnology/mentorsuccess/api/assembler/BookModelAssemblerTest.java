@@ -16,12 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.mapping.BookMapper;
-import io.aiontechnology.mentorsuccess.api.model.BookModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.BookModel;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -48,9 +49,9 @@ public class BookModelAssemblerTest {
         // setup the fixture
         Book book = new Book();
 
-        BookMapper bookMapper = mock(BookMapper.class);
+        OneWayMapper<Book, BookModel> bookMapper = mock(OneWayMapper.class);
         BookModel bookModel = mock(BookModel.class);
-        when(bookMapper.mapEntityToModel(book)).thenReturn(bookModel);
+        when(bookMapper.map(book)).thenReturn(Optional.of(bookModel));
 
         BookModelAssembler assembler = new BookModelAssembler(bookMapper, null);
 
@@ -66,9 +67,9 @@ public class BookModelAssemblerTest {
         // setup the fixture
         Book book = null;
 
-        BookMapper bookMapper = mock(BookMapper.class);
+        OneWayMapper<Book, BookModel> bookMapper = mock(OneWayMapper.class);
         BookModel bookModel = mock(BookModel.class);
-        when(bookMapper.mapEntityToModel(book)).thenReturn(bookModel);
+        when(bookMapper.map(book)).thenReturn(Optional.of(bookModel));
 
         BookModelAssembler assembler = new BookModelAssembler(bookMapper, null);
 
@@ -84,9 +85,9 @@ public class BookModelAssemblerTest {
         // setup the fixture
         Book book = new Book();
 
-        BookMapper bookMapper = mock(BookMapper.class);
+        OneWayMapper<Book, BookModel> bookMapper = mock(OneWayMapper.class);
         BookModel bookModel = mock(BookModel.class);
-        when(bookMapper.mapEntityToModel(book)).thenReturn(bookModel);
+        when(bookMapper.map(book)).thenReturn(Optional.of(bookModel));
 
         LinkProvider<BookModel, Book> linkProvider = mock(LinkProvider.class);
         when(linkProvider.apply(any(), any())).thenReturn(Collections.emptyList());

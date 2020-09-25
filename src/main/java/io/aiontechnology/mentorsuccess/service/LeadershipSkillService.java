@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.repository.LeadershipSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

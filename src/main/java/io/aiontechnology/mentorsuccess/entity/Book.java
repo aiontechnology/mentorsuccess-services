@@ -16,6 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.entity;
 
+import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
+import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

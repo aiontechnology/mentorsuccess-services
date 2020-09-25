@@ -17,9 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.PhonogramController;
-import io.aiontechnology.mentorsuccess.api.mapping.PhonogramMapper;
-import io.aiontechnology.mentorsuccess.api.model.PhonogramModel;
-import io.aiontechnology.mentorsuccess.entity.Phonogram;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PhonogramModel;
+import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -36,17 +36,17 @@ import java.util.Optional;
 public class PhonogramModelAssembler extends RepresentationModelAssemblerSupport<Phonogram, PhonogramModel> {
 
     /** Mapper to map between {@link Phonogram} and {@link PhonogramModel}. */
-    private final PhonogramMapper phonogramMapper;
+    private final OneWayMapper<Phonogram, PhonogramModel> mapper;
 
     /**
      * Constructor
      *
-     * @param phonogramMapper The mapper for mapping between {@link Phonogram} and {@link PhonogramModel}.
+     * @param mapper The mapper for mapping between {@link Phonogram} and {@link PhonogramModel}.
      */
     @Inject
-    public PhonogramModelAssembler(PhonogramMapper phonogramMapper) {
+    public PhonogramModelAssembler(OneWayMapper<Phonogram, PhonogramModel> mapper) {
         super(PhonogramController.class, PhonogramModel.class);
-        this.phonogramMapper = phonogramMapper;
+        this.mapper = mapper;
     }
 
     /**
@@ -58,7 +58,7 @@ public class PhonogramModelAssembler extends RepresentationModelAssemblerSupport
     @Override
     public PhonogramModel toModel(Phonogram phonogram) {
         return Optional.ofNullable(phonogram)
-                .map(phonogramMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

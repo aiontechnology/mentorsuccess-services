@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LeadershipSkillModelAssembler;
-import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipSkillModel;
 import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

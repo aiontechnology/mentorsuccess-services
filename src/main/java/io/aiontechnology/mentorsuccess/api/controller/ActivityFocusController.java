@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.ActivityFocusModelAssembler;
-import io.aiontechnology.mentorsuccess.api.model.ActivityFocusModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.ActivityFocusModel;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import lombok.RequiredArgsConstructor;

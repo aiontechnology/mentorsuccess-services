@@ -10,7 +10,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.type.descriptor.sql: trace
+
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
     username: postgres
+  jpa:
+    show-sql: true

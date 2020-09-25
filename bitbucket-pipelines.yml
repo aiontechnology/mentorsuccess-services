@@ -3,7 +3,7 @@ pipelines:
     develop:
       - step:
           name: Build and test
-          image: adoptopenjdk/openjdk13:centos
+          image: adoptopenjdk:14-jdk-hotspot
           deployment: Test
           caches:
             - gradle

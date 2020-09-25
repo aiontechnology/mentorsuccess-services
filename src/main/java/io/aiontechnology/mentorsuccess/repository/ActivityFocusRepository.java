@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.repository;
 
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +38,6 @@ public interface ActivityFocusRepository extends CrudRepository<ActivityFocus, U
      * @param name The name of the desired {@link ActivityFocus}.
      * @return The {@link ActivityFocus} if it could be found.
      */
-    @Cacheable("activityfocuses")
     Optional<ActivityFocus> findByName(String name);
 
 }

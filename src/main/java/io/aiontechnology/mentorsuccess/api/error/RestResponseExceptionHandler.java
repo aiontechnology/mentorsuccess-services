@@ -25,7 +25,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.ZoneOffset;
@@ -53,9 +52,18 @@ public class RestResponseExceptionHandler {
     /**
      * Handler {@link NotFoundException}.
      */
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NotFoundException.class)
-    public void handleNotFound() {
+    public ResponseEntity<ErrorModel> handleNotFound(NotFoundException notFoundException,
+            HttpServletRequest httpServletRequest) {
+        ErrorModel<Map<String, String>> errorModel = ErrorModel.<Map<String, String>>builder()
+                .withTimestamp(ZonedDateTime.now(ZoneOffset.UTC))
+                .withStatus(HttpStatus.BAD_REQUEST)
+                .withError(Map.of("Not found", notFoundException.getLocalizedMessage()))
+                .withMessage("Not found")
+                .withPath(httpServletRequest.getRequestURI())
+                .build();
+        log.debug("Error {}", errorModel);
+        return new ResponseEntity<>(errorModel, HttpStatus.NOT_FOUND);
     }
 
     /**
@@ -66,7 +74,6 @@ public class RestResponseExceptionHandler {
      * @param locale The local of the caller.
      * @return A response containing the {@link ErrorModel}.
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorModel> handleValidationExceptions(
             MethodArgumentNotValidException methodArgumentNotValidException,
@@ -91,7 +98,7 @@ public class RestResponseExceptionHandler {
      * @return A map or errors.
      */
     private Map<String, String> extractErrors(MethodArgumentNotValidException methodArgumentNotValidException,
-                                              Locale locale) {
+            Locale locale) {
         return methodArgumentNotValidException.getBindingResult().getAllErrors().stream()
                 .map(e -> {
                     if (e instanceof FieldError) {

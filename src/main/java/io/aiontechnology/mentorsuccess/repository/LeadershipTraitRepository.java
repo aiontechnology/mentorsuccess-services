@@ -16,8 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
-import org.springframework.cache.annotation.Cacheable;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +38,6 @@ public interface LeadershipTraitRepository extends CrudRepository<LeadershipTrai
      * @param name The name of the desired {@link LeadershipTrait}.
      * @return The {@link LeadershipTrait} if it could be found.
      */
-    @Cacheable("character_traits")
     Optional<LeadershipTrait> findByName(String name);
 
 }

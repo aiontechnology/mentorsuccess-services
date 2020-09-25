@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.repository.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -40,46 +40,46 @@ public class RoleService {
     private final RoleRepository roleRepository;
 
     /**
-     * Create a role in the database by saving the provided {@link Role}.
+     * Create a role in the database by saving the provided {@link SchoolPersonRole}.
      *
-     * @param role The {@link Role} to save.
-     * @return The resulting {@link Role}. Will have a db generated id populated.
+     * @param role The {@link SchoolPersonRole} to save.
+     * @return The resulting {@link SchoolPersonRole}. Will have a db generated id populated.
      */
     @Transactional
-    public Role createRole(Role role) {
+    public SchoolPersonRole createRole(SchoolPersonRole role) {
         return roleRepository.save(role);
     }
 
     /**
-     * Deactivate a {@link Role} in the system.
+     * Deactivate a {@link SchoolPersonRole} in the system.
      *
-     * @param role The {@link Role} to deactivate.
+     * @param role The {@link SchoolPersonRole} to deactivate.
      */
     @Transactional
-    public Role deactivateRole(Role role) {
+    public SchoolPersonRole deactivateRole(SchoolPersonRole role) {
         role.setIsActive(false);
         roleRepository.save(role);
         return role;
     }
 
     /**
-     * Find a {@link Role} by its id.
+     * Find a {@link SchoolPersonRole} by its id.
      *
-     * @param id The id of the desired {@link Role}.
-     * @return The {@link Role} if it could be found.
+     * @param id The id of the desired {@link SchoolPersonRole}.
+     * @return The {@link SchoolPersonRole} if it could be found.
      */
-    public Optional<Role> findRoleById(UUID id) {
+    public Optional<SchoolPersonRole> findRoleById(UUID id) {
         return roleRepository.findById(id);
     }
 
     /**
-     * Update the given {@link Role} in the database.
+     * Update the given {@link SchoolPersonRole} in the database.
      *
-     * @param role The {@link Role} to update.
-     * @return The updated {@link Role}.
+     * @param role The {@link SchoolPersonRole} to update.
+     * @return The updated {@link SchoolPersonRole}.
      */
     @Transactional
-    public Role updateRole(Role role) {
+    public SchoolPersonRole updateRole(SchoolPersonRole role) {
         return roleRepository.save(role);
     }
 

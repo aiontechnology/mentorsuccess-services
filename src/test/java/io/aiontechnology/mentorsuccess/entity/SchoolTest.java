@@ -43,7 +43,7 @@ public class SchoolTest {
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
-        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.emptyList());
+        School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         // execute the SUT
         entityManager.persist(school);
@@ -51,4 +51,5 @@ public class SchoolTest {
         // validation
         Assertions.assertThat(school.getId()).isNotNull();
     }
+
 }

@@ -16,12 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.mapping.GameMapper;
-import io.aiontechnology.mentorsuccess.api.model.GameModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.GameModel;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,9 +48,9 @@ public class GameModelAssemblerTest {
         // setup the fixture
         Game game = new Game();
 
-        GameMapper gameMapper = mock(GameMapper.class);
+        OneWayMapper<Game, GameModel> gameMapper = mock(OneWayMapper.class);
         GameModel gameModel = mock(GameModel.class);
-        when(gameMapper.mapEntityToModel(game)).thenReturn(gameModel);
+        when(gameMapper.map(game)).thenReturn(Optional.of(gameModel));
 
         GameModelAssembler assembler = new GameModelAssembler(gameMapper, null);
 
@@ -65,9 +66,9 @@ public class GameModelAssemblerTest {
         // setup the fixture
         Game game = null;
 
-        GameMapper gameMapper = mock(GameMapper.class);
+        OneWayMapper<Game, GameModel> gameMapper = mock(OneWayMapper.class);
         GameModel gameModel = mock(GameModel.class);
-        when(gameMapper.mapEntityToModel(game)).thenReturn(gameModel);
+        when(gameMapper.map(game)).thenReturn(Optional.of(gameModel));
 
         GameModelAssembler assembler = new GameModelAssembler(gameMapper, null);
 
@@ -83,9 +84,9 @@ public class GameModelAssemblerTest {
         // setup the fixture
         Game game = new Game();
 
-        GameMapper gameMapper = mock(GameMapper.class);
+        OneWayMapper<Game, GameModel> gameMapper = mock(OneWayMapper.class);
         GameModel gameModel = mock(GameModel.class);
-        when(gameMapper.mapEntityToModel(game)).thenReturn(gameModel);
+        when(gameMapper.map(game)).thenReturn(Optional.of(gameModel));
 
         LinkProvider<GameModel, Game> linkProvider = mock(LinkProvider.class);
         when(linkProvider.apply(any(), any())).thenReturn(Collections.emptyList());

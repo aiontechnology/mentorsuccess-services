@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aiontechnology.mentorsuccess.api.model.GameModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.GameModel;
 import io.aiontechnology.mentorsuccess.entity.ResourceLocation;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

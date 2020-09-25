@@ -17,9 +17,10 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.BehaviorController;
-import io.aiontechnology.mentorsuccess.api.mapping.BehaviorMapper;
-import io.aiontechnology.mentorsuccess.api.model.BehaviorModel;
-import io.aiontechnology.mentorsuccess.entity.Behavior;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.BehaviorEntityToModelMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.BehaviorModel;
+import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -36,21 +37,21 @@ import java.util.Optional;
 public class BehaviorModelAssembler extends RepresentationModelAssemblerSupport<Behavior, BehaviorModel> {
 
     /** Mapper to map between {@link Behavior} and {@link BehaviorModel}. */
-    private final BehaviorMapper behaviorMapper;
+    private final OneWayMapper<Behavior, BehaviorModel> mapper;
 
     /**
      * Construct an instance.
      */
     @Inject
-    public BehaviorModelAssembler(BehaviorMapper behaviorMapper) {
+    public BehaviorModelAssembler(BehaviorEntityToModelMapper mapper) {
         super(BehaviorController.class, BehaviorModel.class);
-        this.behaviorMapper = behaviorMapper;
+        this.mapper = mapper;
     }
 
     @Override
     public BehaviorModel toModel(Behavior behavior) {
         return Optional.ofNullable(behavior)
-                .map(behaviorMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

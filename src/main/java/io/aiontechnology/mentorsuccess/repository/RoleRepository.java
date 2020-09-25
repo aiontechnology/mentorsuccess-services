@@ -16,19 +16,18 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.UUID;
 
 /**
- * A Spring repository for interacting with {@link Role} entities in the database.
+ * A Spring repository for interacting with {@link SchoolPersonRole} entities in the database.
  *
  * @author Whitney Hunter
  * @since 0.1.0
  */
 @Repository
-public interface RoleRepository extends CrudRepository<Role, UUID> {
+public interface RoleRepository extends CrudRepository<SchoolPersonRole, UUID> {
 }

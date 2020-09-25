@@ -16,15 +16,15 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.mapping.ProgramAdminMapper;
-import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
 /**
- * Assembles a {@link ProgramAdminModel} from a {@link Role}.
+ * Assembles a {@link ProgramAdminModel} from a {@link SchoolPersonRole}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
@@ -35,13 +35,13 @@ public class ProgramAdminModelAssembler extends BaseRoleModelAssembler<ProgramAd
     /**
      * Constructor
      *
-     * @param programAdminMapper The mapper for mapping between {@link Role} and {@link ProgramAdminModel}.
+     * @param mapper The mapper for mapping between {@link SchoolPersonRole} and {@link ProgramAdminModel}.
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public ProgramAdminModelAssembler(ProgramAdminMapper programAdminMapper,
-                                      LinkHelper<ProgramAdminModel> linkHelper) {
-        super(ProgramAdminModel.class, ProgramAdminModel.class, programAdminMapper, linkHelper);
+    public ProgramAdminModelAssembler(OneWayMapper<SchoolPersonRole, ProgramAdminModel> mapper,
+            LinkHelper<ProgramAdminModel> linkHelper) {
+        super(ProgramAdminModel.class, ProgramAdminModel.class, mapper, linkHelper);
     }
 
 }

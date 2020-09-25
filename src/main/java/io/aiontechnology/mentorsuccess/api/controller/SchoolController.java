@@ -19,8 +19,9 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
-import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,11 @@ public class SchoolController {
     /** Assembler for creating {@link SchoolModel} instances */
     private final SchoolModelAssembler schoolModelAssembler;
 
-    /** Mapper for converting {@link SchoolModel} instances to {@link School Schools} */
-    private final SchoolMapper schoolMapper;
+    /** A mapper for converting {@link SchoolModel} instances to {@link School} */
+    private final OneWayMapper<SchoolModel, School> schoolMapper;
+
+    /** An update mapper for converting {@link SchoolModel} instances to {@link School} */
+    private final OneWayUpdateMapper<SchoolModel, School> schoolUpdateMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -78,7 +82,7 @@ public class SchoolController {
     public SchoolModel createSchool(@RequestBody @Valid SchoolModel schoolModel) {
         log.debug("Creating school: {}", schoolModel);
         return Optional.ofNullable(schoolModel)
-                .map(schoolMapper::mapModelToEntity)
+                .flatMap(schoolMapper::map)
                 .map(schoolService::createSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
@@ -123,7 +127,7 @@ public class SchoolController {
     public SchoolModel updateSchool(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid SchoolModel schoolModel) {
         log.debug("Updating school {} with {}", schoolId, schoolModel);
         return schoolService.getSchoolById(schoolId)
-                .map(school -> schoolMapper.mapModelToEntity(schoolModel, school))
+                .flatMap(school -> schoolUpdateMapper.map(schoolModel, school))
                 .map(schoolService::updateSchool)
                 .map(s -> schoolModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));

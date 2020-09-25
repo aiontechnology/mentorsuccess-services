@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Behavior;
+import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.repository.BehaviorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -19,9 +19,10 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.PersonnelMapper;
-import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonnelModel;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -44,8 +45,10 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.COUNSELOR;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.PRINCIPAL;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.SOCIAL_WORKER;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.STAFF;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
@@ -60,8 +63,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class PersonnelController {
 
-    /** Mapper for converting {@link PersonnelModel} instances to {@link Role Roles}. */
-    private final PersonnelMapper personnelMapper;
+    /** A mapper for converting {@link PersonnelModel} instances to {@link SchoolPersonRole Roles}. */
+    private final OneWayMapper<PersonnelModel, SchoolPersonRole> personnelMapper;
+
+    /** An update mapper for converting {@link PersonnelModel} instances to {@link SchoolPersonRole Roles}. */
+    private final OneWayUpdateMapper<PersonnelModel, SchoolPersonRole> personnelUpdateMapper;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
@@ -85,7 +91,7 @@ public class PersonnelController {
         log.debug("Creating personnel: {}", personnelModel);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(personnelModel)
-                        .map(personnelMapper::mapModelToEntity)
+                        .flatMap(personnelMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
                         .map(role -> personnelModelAssembler.toModel(role, linkProvider))
@@ -104,8 +110,10 @@ public class PersonnelController {
         log.debug("Getting all personnel for school {}", schoolId);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
-                        .filter(role -> !role.getType().equals(TEACHER))
-                        .filter(role -> !role.getType().equals(PROGRAM_ADMIN))
+                        .filter(role -> role.getType().equals(SOCIAL_WORKER) ||
+                                role.getType().equals(PRINCIPAL) ||
+                                role.getType().equals(COUNSELOR) ||
+                                role.getType().equals(STAFF))
                         .map(role -> personnelModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
                 .map(teachers -> CollectionModel.of(teachers))
@@ -135,10 +143,10 @@ public class PersonnelController {
      */
     @PutMapping("/{personnelId}")
     public PersonnelModel updateSchool(@PathVariable("schoolId") UUID schoolId,
-                                       @PathVariable("personnelId") UUID personnelId,
-                                       @RequestBody @Valid PersonnelModel personnelModel) {
+            @PathVariable("personnelId") UUID personnelId,
+            @RequestBody @Valid PersonnelModel personnelModel) {
         return roleService.findRoleById(personnelId)
-                .map(role -> personnelMapper.mapModelToEntity(personnelModel, role))
+                .flatMap(role -> personnelUpdateMapper.map(personnelModel, role))
                 .map(roleService::updateRole)
                 .map(role -> personnelModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
@@ -159,7 +167,7 @@ public class PersonnelController {
     }
 
     /** {@link LinkProvider} implementation for personnel. */
-    private LinkProvider<PersonnelModel, Role> linkProvider = (personnelModel, role) ->
+    private LinkProvider<PersonnelModel, SchoolPersonRole> linkProvider = (personnelModel, role) ->
             Arrays.asList(
                     linkTo(PersonnelController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
                     linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")

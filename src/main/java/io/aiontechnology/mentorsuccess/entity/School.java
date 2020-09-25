@@ -19,6 +19,7 @@ package io.aiontechnology.mentorsuccess.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.GenericGenerator;
@@ -32,6 +33,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.Collection;
 import java.util.UUID;
+
+import static javax.persistence.CascadeType.*;
 
 /**
  * Entity that represents a school.
@@ -93,22 +96,35 @@ public class School {
     @Column
     private Boolean isActive;
 
-    /** The collection of {@link Role Roles} associated with the school. */
+    /** The collection of {@link SchoolPersonRole Roles} associated with the school. */
+    @ToString.Exclude
     @OneToMany(mappedBy = "school")
     @Where(clause = "is_active = true")
     @Filter(name = "roleType", condition = "type = :type")
-    private Collection<Role> roles;
+    private Collection<SchoolPersonRole> roles;
+
+    /** The collection of {@link Student Students} associated with the school. */
+    @ToString.Exclude
+    @OneToMany(mappedBy = "school", cascade = ALL)
+    @Where(clause = "is_active = true")
+    private Collection<Student> students;
 
     /**
-     * Add a {@link Role} to the school.
+     * Add a {@link SchoolPersonRole} to the school.
      *
-     * @param role The {@link Role} to add to the school.
-     * @return The added {@link Role}.
+     * @param role The {@link SchoolPersonRole} to add to the school.
+     * @return The added {@link SchoolPersonRole}.
      */
-    public Role addRole(Role role) {
+    public SchoolPersonRole addRole(SchoolPersonRole role) {
         role.setSchool(this);
         roles.add(role);
         return role;
+    }
+
+    public Student addStudent(Student student) {
+        students.add(student);
+        student.setSchool(this);
+        return student;
     }
 
 }

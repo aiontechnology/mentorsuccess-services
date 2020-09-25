@@ -17,9 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.ActivityFocusController;
-import io.aiontechnology.mentorsuccess.api.mapping.ActivityFocusMapper;
-import io.aiontechnology.mentorsuccess.api.model.ActivityFocusModel;
-import io.aiontechnology.mentorsuccess.api.model.InterestModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.ActivityFocusModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.InterestModel;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -37,17 +37,17 @@ import java.util.Optional;
 public class ActivityFocusModelAssembler extends RepresentationModelAssemblerSupport<ActivityFocus, ActivityFocusModel> {
 
     /** Mapper to map between {@link ActivityFocus} and {@link InterestModel}. */
-    private final ActivityFocusMapper activityFocusMapper;
+    private final OneWayMapper<ActivityFocus, ActivityFocusModel> mapper;
 
     /**
      * Constructor
      *
-     * @param activityFocusMapper The mapper for mapping between {@link ActivityFocus} and {@link ActivityFocusModel}.
+     * @param mapper The mapper for mapping between {@link ActivityFocus} and {@link ActivityFocusModel}.
      */
     @Inject
-    public ActivityFocusModelAssembler(ActivityFocusMapper activityFocusMapper) {
+    public ActivityFocusModelAssembler(OneWayMapper<ActivityFocus, ActivityFocusModel> mapper) {
         super(ActivityFocusController.class, ActivityFocusModel.class);
-        this.activityFocusMapper = activityFocusMapper;
+        this.mapper = mapper;
     }
 
     /**
@@ -59,7 +59,7 @@ public class ActivityFocusModelAssembler extends RepresentationModelAssemblerSup
     @Override
     public ActivityFocusModel toModel(ActivityFocus activityFocus) {
         return Optional.ofNullable(activityFocus)
-                .map(activityFocusMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

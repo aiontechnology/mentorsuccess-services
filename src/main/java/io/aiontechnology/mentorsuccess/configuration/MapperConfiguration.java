@@ -16,18 +16,47 @@
 
 package io.aiontechnology.mentorsuccess.configuration;
 
-import io.aiontechnology.mentorsuccess.api.mapping.ActivityFocusMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.BehaviorMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.InterestMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.LeadershipSkillMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.LeadershipTraitMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.PhonogramMapper;
+import io.aiontechnology.mentorsuccess.api.assembler.PersonModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
+import io.aiontechnology.mentorsuccess.api.controller.PersonController;
+import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
+import io.aiontechnology.mentorsuccess.api.mapping.AssemblerMapperAdaptor;
+import io.aiontechnology.mentorsuccess.api.mapping.CollectionSyncHelper;
+import io.aiontechnology.mentorsuccess.api.mapping.ModelCollectionToEntityCollectionMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayCollectionMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.UpdateMapperBasedOneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.ActivityFocusModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.BookModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.GameModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonnelModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PhonogramModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.SchoolModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.BehaviorModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.InterestModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundEmergencyContactModel;
+import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundEmergencyContactModel;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.entity.Behavior;
-import io.aiontechnology.mentorsuccess.entity.Interest;
-import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.entity.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Game;
+import io.aiontechnology.mentorsuccess.entity.Person;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
+import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
+import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import io.aiontechnology.mentorsuccess.service.BehaviorService;
 import io.aiontechnology.mentorsuccess.service.InterestService;
@@ -36,6 +65,12 @@ import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import io.aiontechnology.mentorsuccess.service.PhonogramService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Spring configuration class to establish mappers.
@@ -46,70 +81,251 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MapperConfiguration {
 
-    /**
-     * Create a {@link ActivityFocusMapper}.
-     *
-     * @param activityFocusService The {@link ActivityFocusService} from which {@link ActivityFocus} objects can be retrieved.
-     * @return The created {@link ActivityFocusMapper}.
+    /*
+     * ActivityFocus
      */
+
     @Bean
-    public ActivityFocusMapper activityFocusMapper(ActivityFocusService activityFocusService) {
-        return new ActivityFocusMapper(activityFocusService::findActivityFocusByName);
+    public Function<String, Optional<ActivityFocus>> findActivityFocusFunction(ActivityFocusService activityFocusService) {
+        return activityFocusService::findActivityFocusByName;
     }
 
-    /**
-     * Create a {@link BehaviorMapper}.
-     *
-     * @param behaviorService The {@link BehaviorService} from which {@link Behavior} objects can be retrieved.
-     * @return The created {@link BehaviorMapper}.
-     */
     @Bean
-    public BehaviorMapper behaviorMapper(BehaviorService behaviorService) {
-        return new BehaviorMapper(behaviorService::findBehaviorByName);
+    public OneWayCollectionMapper<ActivityFocusModel, ActivityFocus> activityFocusModelToEntityOneWayCollectionMapper(
+            OneWayMapper<ActivityFocusModel, ActivityFocus> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
     }
 
-    /**
-     * Create an {@link InterestMapper}.
-     *
-     * @param interestService The {@link InterestService} from which {@link Interest} objects can be retrieved.
-     * @return The created {@link InterestMapper}.
-     */
     @Bean
-    public InterestMapper interestMapper(InterestService interestService) {
-        return new InterestMapper(interestService::findInterestByName);
+    public OneWayCollectionMapper<ActivityFocus, ActivityFocusModel> activityFocusEntityToModelOneWayCollectionMapper(
+            OneWayMapper<ActivityFocus, ActivityFocusModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
     }
 
-    /**
-     * Create a {@link LeadershipSkillMapper}.
-     *
-     * @param leadershipSkillService The {@link LeadershipSkillService} from which {@link LeadershipSkill} objects can be retrieved.
-     * @return The created {@link LeadershipSkillMapper}.
+    /*
+     * Behavior
      */
+
     @Bean
-    public LeadershipSkillMapper leadershipSkillMapper(LeadershipSkillService leadershipSkillService) {
-        return new LeadershipSkillMapper(leadershipSkillService::findLeadershipSkillByName);
+    public Function<String, Optional<Behavior>> findBehaviorFunction(BehaviorService behaviorService) {
+        return behaviorService::findBehaviorByName;
     }
 
-    /**
-     * Create a {@link LeadershipTraitMapper}.
-     *
-     * @param leadershipTraitService The {@link LeadershipTraitService} from which {@link LeadershipTrait} objects can be retrieved.
-     * @return The created {@link LeadershipTraitMapper}.
-     */
     @Bean
-    public LeadershipTraitMapper leadershipTraitMapper(LeadershipTraitService leadershipTraitService) {
-        return new LeadershipTraitMapper(leadershipTraitService::findLeadershipTraitByName);
+    public OneWayCollectionMapper<BehaviorModel, Behavior> behaviorModelToEntityOneWayCollectionMapper(
+            OneWayMapper<BehaviorModel, Behavior> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
     }
 
-    /**
-     * Create a {@link PhonogramMapper}.
-     *
-     * @param phonogramService The {@link PhonogramService} from which {@link Phonogram} objects can be retrieved.
-     * @return The created {@link PhonogramMapper}.
-     */
     @Bean
-    public PhonogramMapper phonogramMapper(PhonogramService phonogramService) {
-        return new PhonogramMapper(phonogramService::findPhonogramByName);
+    public OneWayCollectionMapper<Behavior, BehaviorModel> behaviorEntityToModelOneWayCollectionMapper(
+            OneWayMapper<Behavior, BehaviorModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * Book
+     */
+
+    @Bean
+    public OneWayMapper<BookModel, Book> bookModelToEntityMapper(OneWayUpdateMapper<BookModel, Book> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, Book.class);
+    }
+
+    /*
+     * Game
+     */
+
+    @Bean
+    public OneWayMapper<GameModel, Game> gameModelToEntityMapper(OneWayUpdateMapper<GameModel, Game> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, Game.class);
+    }
+
+    /*
+     * Interest
+     */
+
+    @Bean
+    public Function<String, Optional<Interest>> findInterestFunction(InterestService interestService) {
+        return interestService::findInterestByName;
+    }
+
+    @Bean
+    public OneWayCollectionMapper<InterestModel, Interest> interestModelToEntityOneWayCollectionMapper(
+            OneWayMapper<InterestModel, Interest> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<Interest, InterestModel> interestEntityToModelOneWayCollectionMapper(
+            OneWayMapper<Interest, InterestModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * LeadershipSkill
+     */
+
+    @Bean
+    public Function<String, Optional<LeadershipSkill>> findLeadershipSkillFunction(LeadershipSkillService leadershipSkillService) {
+        return leadershipSkillService::findLeadershipSkillByName;
+    }
+
+    @Bean
+    public OneWayCollectionMapper<LeadershipSkillModel, LeadershipSkill> leadershipSkillModelToEntityOneWayCollectionMapper(
+            OneWayMapper<LeadershipSkillModel, LeadershipSkill> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<LeadershipSkill, LeadershipSkillModel> leadershipSkillEntityToModelOneWayCollectionMapper(
+            OneWayMapper<LeadershipSkill, LeadershipSkillModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * LeadershipTrait
+     */
+
+    @Bean
+    public Function<String, Optional<LeadershipTrait>> findLeadershipTraitFunction(LeadershipTraitService leadershipTraitService) {
+        return leadershipTraitService::findLeadershipTraitByName;
+    }
+
+    @Bean
+    public OneWayCollectionMapper<LeadershipTraitModel, LeadershipTrait> leadershipTraitModelToEntityOneWayCollectionMapper(
+            OneWayMapper<LeadershipTraitModel, LeadershipTrait> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<LeadershipTrait, LeadershipTraitModel> leadershipTraitEntityToModelOneWayCollectionMapper(
+            OneWayMapper<LeadershipTrait, LeadershipTraitModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * Person
+     */
+
+    @Bean
+    public OneWayMapper<PersonModel, Person> personModelToEntityMapper(OneWayUpdateMapper<PersonModel, Person> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, Person.class);
+    }
+
+    @Bean("personAssemblerMapperAdaptor")
+    public OneWayMapper<Person, PersonModel> personAssemblerMapperAdaptor(PersonModelAssembler personModelAssembler) {
+        return new AssemblerMapperAdaptor<>(personModelAssembler,
+                (personModel, person) -> Arrays.asList(
+                        linkTo(PersonController.class).slash(person.getId()).withSelfRel()
+                )
+        );
+    }
+
+    /*
+     * Personnel
+     */
+
+    @Bean
+    public OneWayMapper<PersonnelModel, SchoolPersonRole> personnelModelToEntityMapper(OneWayUpdateMapper<PersonnelModel, SchoolPersonRole> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
+    }
+
+    /*
+     * Phonogram
+     */
+
+    @Bean
+    public Function<String, Optional<Phonogram>> findPhonogramFunction(PhonogramService phonogramService) {
+        return phonogramService::findPhonogramByName;
+    }
+
+    @Bean
+    public OneWayCollectionMapper<PhonogramModel, Phonogram> phonogramModelToEntityOneWayCollectionMapper(
+            OneWayMapper<PhonogramModel, Phonogram> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<Phonogram, PhonogramModel> phonogramEntityToModelOneWayCollectionMapper(
+            OneWayMapper<Phonogram, PhonogramModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * ProgramAdmin
+     */
+
+    @Bean
+    public OneWayMapper<ProgramAdminModel, SchoolPersonRole> programAdminModelToEntityMapper(OneWayUpdateMapper<ProgramAdminModel, SchoolPersonRole> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
+    }
+
+    /*
+     * School
+     */
+
+    @Bean
+    public OneWayMapper<SchoolModel, School> schoolModelToEntityMapper(OneWayUpdateMapper<SchoolModel, School> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, School.class);
+    }
+
+    /*
+     * Student
+     */
+
+    @Bean
+    public OneWayMapper<InboundStudentModel, Student> studentModelToEntityMapper(OneWayUpdateMapper<InboundStudentModel, Student> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, Student.class);
+    }
+
+    /*
+     * StudentBehavior
+     */
+
+    @Bean
+    public CollectionSyncHelper<StudentBehavior> studentBehaviorCollectionSyncHelper() {
+        return new CollectionSyncHelper<>();
+    }
+
+    /*
+     * StudentPerson
+     */
+
+    @Bean
+    public OneWayMapper<InboundEmergencyContactModel, StudentPerson> studentPersonModelToEntityMapper(
+            OneWayUpdateMapper<InboundEmergencyContactModel, StudentPerson> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentPerson.class);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<InboundEmergencyContactModel, StudentPerson> studentPersonModelToEntityOneWayCollectionMapper(
+            OneWayMapper<InboundEmergencyContactModel, StudentPerson> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<StudentPerson, OutboundEmergencyContactModel> studentPersonEntityToModelOneWayCollectionMapper(
+            OneWayMapper<StudentPerson, OutboundEmergencyContactModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * Teacher
+     */
+
+    @Bean
+    public OneWayMapper<TeacherModel, SchoolPersonRole> teacherModelToEntityMapper(OneWayUpdateMapper<TeacherModel, SchoolPersonRole> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
+    }
+
+    @Bean("teacherAssemblerMapperAdaptor")
+    public OneWayMapper<SchoolPersonRole, TeacherModel> teacherAssemblerMapperAdaptor(TeacherModelAssembler teacherModelAssembler) {
+        return new AssemblerMapperAdaptor<>(teacherModelAssembler,
+                (teacherModel, role) -> Arrays.asList(
+                        linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel()
+                )
+        );
     }
 
 }

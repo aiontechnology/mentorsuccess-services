@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.PhonogramModelAssembler;
-import io.aiontechnology.mentorsuccess.api.model.PhonogramModel;
-import io.aiontechnology.mentorsuccess.entity.Phonogram;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PhonogramModel;
+import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.service.PhonogramService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
