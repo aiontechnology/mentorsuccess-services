@@ -13,6 +13,4 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:32768/mentorsuccess
     username: postgres
-    password: allgr899
