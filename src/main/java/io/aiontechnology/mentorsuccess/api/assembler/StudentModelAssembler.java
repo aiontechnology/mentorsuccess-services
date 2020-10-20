@@ -38,10 +38,15 @@ public class StudentModelAssembler extends RepresentationModelAssemblerSupport<S
 
     private final OneWayMapper<Student, OutboundStudentModel> entityToModelMapper;
 
+    /** A utility class for adding links to a model object. */
+    private final LinkHelper<OutboundStudentModel> linkHelper;
+
     @Inject
-    public StudentModelAssembler(StudentEntityToModelMapper entityToModelMapper) {
+    public StudentModelAssembler(StudentEntityToModelMapper entityToModelMapper,
+            LinkHelper<OutboundStudentModel> linkHelper) {
         super(StudentController.class, OutboundStudentModel.class);
         this.entityToModelMapper = entityToModelMapper;
+        this.linkHelper = linkHelper;
     }
 
     @Override
@@ -50,6 +55,13 @@ public class StudentModelAssembler extends RepresentationModelAssemblerSupport<S
                 .map(entityToModelMapper::map)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
+                .orElse(null);
+    }
+
+    public OutboundStudentModel toModel(Student student, LinkProvider<OutboundStudentModel, Student> linkProvider) {
+        return Optional.ofNullable(student)
+                .map(this::toModel)
+                .map(model -> linkHelper.addLinks(model, linkProvider.apply(model, student)))
                 .orElse(null);
     }
 

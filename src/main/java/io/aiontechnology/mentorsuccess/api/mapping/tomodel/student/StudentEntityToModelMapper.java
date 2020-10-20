@@ -18,19 +18,19 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.student;
 
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayCollectionMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundContactModel;
 import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundStudentModel;
-import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundEmergencyContactModel;
-import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundStudentTeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -46,16 +46,17 @@ import java.util.Optional;
 @Getter(AccessLevel.PRIVATE)
 public class StudentEntityToModelMapper implements OneWayMapper<Student, OutboundStudentModel> {
 
+    private final OneWayCollectionMapper<Interest, String> interestModelToEntityMapper;
+
     private final OneWayCollectionMapper<StudentBehavior, String> studentBehaviorEntityToModelMapper;
 
     private final OneWayCollectionMapper<StudentLeadershipSkill, String> studentLeadershipSkillEntityToModelMapper;
 
     private final OneWayCollectionMapper<StudentLeadershipTrait, String> studentLeadershipTraitEntityToModelMapper;
 
-    private final OneWayCollectionMapper<StudentPerson, OutboundEmergencyContactModel> studentPersonEntityToModelMapper;
+    private final OneWayCollectionMapper<StudentPersonRole, OutboundContactModel> studentPersonEntityToModelMapper;
 
-    @Qualifier("teacherAssemblerMapperAdaptor")
-    private final OneWayMapper<SchoolPersonRole, TeacherModel> teacherEntityToModelMapper;
+    private final OneWayMapper<StudentStaff, OutboundStudentTeacherModel> studentStaffEntityToModelMapper;
 
     /**
      * Map the given {@link Student} to a {@link OutboundStudentModel}.
@@ -67,18 +68,19 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
     public Optional<OutboundStudentModel> map(Student student) {
         return Optional.ofNullable(student)
                 .map(s -> OutboundStudentModel.builder()
-                        .withFirstName(student.getFirstName())
-                        .withLastName(student.getLastName())
-                        .withGrade(student.getGrade())
-                        .withLocation(student.getLocation())
-                        .withPreferredTime(student.getPreferredTime())
-                        .withMediaReleaseSigned(student.getIsMediaReleaseSigned())
-                        .withStudentBehaviors(getStudentBehaviorEntityToModelMapper().map(student.getStudentBehaviors()))
-                        .withStudentLeadershipSkills(getStudentLeadershipSkillEntityToModelMapper().map(student.getStudentLeadershipSkills()))
-                        .withStudentLeadershipTraits(getStudentLeadershipTraitEntityToModelMapper().map(student.getStudentLeadershipTraits()))
-                        .withEmergencyContacts(getStudentPersonEntityToModelMapper().map(student.getStudentPersons()))
-                        .withTeacher(getTeacherEntityToModelMapper().map(student.getTeacher())
-                                .orElse(null))
+                        .withFirstName(s.getFirstName())
+                        .withLastName(s.getLastName())
+                        .withGrade(s.getGrade())
+                        .withAllergyInfo(s.getAllergyInfo())
+                        .withLocation(s.getLocation())
+                        .withPreferredTime(s.getPreferredTime())
+                        .withMediaReleaseSigned(s.getIsMediaReleaseSigned())
+                        .withInterests(getInterestModelToEntityMapper().map(s.getInterests()))
+                        .withBehaviors(getStudentBehaviorEntityToModelMapper().map(s.getStudentBehaviors()))
+                        .withLeadershipSkills(getStudentLeadershipSkillEntityToModelMapper().map(s.getStudentLeadershipSkills()))
+                        .withLeadershipTraits(getStudentLeadershipTraitEntityToModelMapper().map(s.getStudentLeadershipTraits()))
+                        .withContacts(getStudentPersonEntityToModelMapper().map(s.getStudentPersonRoles()))
+                        .withTeacher(getStudentStaffEntityToModelMapper().map(s.getTeacher()).orElse(null))
                         .build());
     }
 

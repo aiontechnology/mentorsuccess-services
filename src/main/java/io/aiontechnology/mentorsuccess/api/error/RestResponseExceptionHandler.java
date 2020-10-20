@@ -59,7 +59,7 @@ public class RestResponseExceptionHandler {
                 .withTimestamp(ZonedDateTime.now(ZoneOffset.UTC))
                 .withStatus(HttpStatus.BAD_REQUEST)
                 .withError(Map.of("Not found", notFoundException.getLocalizedMessage()))
-                .withMessage("Not found")
+                .withMessage(notFoundException.getKey() != null ? notFoundException.getKey() : "Not found")
                 .withPath(httpServletRequest.getRequestURI())
                 .build();
         log.debug("Error {}", errorModel);

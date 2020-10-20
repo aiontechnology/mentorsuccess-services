@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.model.inbound.student;
-
-import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipSkillModel;
-import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
-
-import java.util.Collection;
+package io.aiontechnology.mentorsuccess.entity;
 
 /**
- * Represents an object that contains a collection of {@link LeadershipSkill} objects.
- *
  * @author Whitney Hunter
  * @since 0.3.0
  */
-public interface StudentLeadershipSkillModelHolder {
-
-    Collection<LeadershipSkillModel> getLeadershipSkills();
-
+public enum ContactMethod {
+    CELLPHONE,
+    WORKPHONE,
+    EMAIL
 }

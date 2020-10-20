@@ -19,9 +19,10 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.student;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
-import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundEmergencyContactModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundContactModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -33,25 +34,30 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundEmergencyContactModel, StudentPerson> {
+public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundContactModel, StudentPersonRole> {
 
     private final OneWayMapper<PersonModel, Person> personModelToEntityMapper;
 
+    private final PhoneService phoneService;
+
     @Override
-    public Optional<StudentPerson> map(InboundEmergencyContactModel inboundEmergencyContactModel, StudentPerson studentPerson) {
-        return Optional.ofNullable(inboundEmergencyContactModel)
-                .map(s -> {
-                    studentPerson.setPersonType(inboundEmergencyContactModel.getType());
+    public Optional<StudentPersonRole> map(InboundContactModel inboundContactModel, StudentPersonRole studentPersonRole) {
+        return Optional.ofNullable(inboundContactModel)
+                .map(contactModel -> {
+                    studentPersonRole.setPersonType(contactModel.getType());
                     PersonModel personModel = PersonModel.builder()
-                            .withFirstName(inboundEmergencyContactModel.getFirstName())
-                            .withLastName(inboundEmergencyContactModel.getLastName())
-                            .withWorkPhone(inboundEmergencyContactModel.getWorkPhone())
-                            .withCellPhone(inboundEmergencyContactModel.getCellPhone())
-                            .withEmail(inboundEmergencyContactModel.getEmail())
+                            .withFirstName(contactModel.getFirstName())
+                            .withLastName(contactModel.getLastName())
+                            .withWorkPhone(phoneService.normalize(contactModel.getWorkPhone()))
+                            .withCellPhone(phoneService.normalize(contactModel.getCellPhone()))
+                            .withEmail(contactModel.getEmail())
                             .build();
-                    studentPerson.setPerson(personModelToEntityMapper.map(personModel)
+                    studentPersonRole.setPerson(personModelToEntityMapper.map(personModel)
                             .orElse(null));
-                    return studentPerson;
+                    studentPersonRole.setIsEmergencyContact(contactModel.getIsEmergencyContact());
+                    studentPersonRole.setPreferredContactMethod(contactModel.getPreferredContactMethod());
+                    studentPersonRole.setComment(contactModel.getComment());
+                    return studentPersonRole;
                 });
     }
 

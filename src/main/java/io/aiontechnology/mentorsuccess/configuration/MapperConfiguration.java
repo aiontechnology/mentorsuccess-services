@@ -40,18 +40,22 @@ import io.aiontechnology.mentorsuccess.api.model.inbound.reference.InterestModel
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipSkillModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundContactModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentModel;
-import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundEmergencyContactModel;
-import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundEmergencyContactModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentTeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundContactModel;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.entity.StudentStaff;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
@@ -159,6 +163,12 @@ public class MapperConfiguration {
     @Bean
     public OneWayCollectionMapper<Interest, InterestModel> interestEntityToModelOneWayCollectionMapper(
             OneWayMapper<Interest, InterestModel> mapper) {
+        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<Interest, String> interestEntityToStringOneWayCollectionMapper(
+            OneWayMapper<Interest, String> mapper) {
         return new ModelCollectionToEntityCollectionMapper<>(mapper);
     }
 
@@ -289,25 +299,53 @@ public class MapperConfiguration {
     }
 
     /*
+     * StudentLeadershipSkill
+     */
+
+    @Bean
+    public CollectionSyncHelper<StudentLeadershipSkill> studentLeadershipSkillCollectionSyncHelper() {
+        return new CollectionSyncHelper<>();
+    }
+
+    /*
+     * StudentLeadershipTrait
+     */
+
+    @Bean
+    public CollectionSyncHelper<StudentLeadershipTrait> studentLeadershipTraitCollectionSyncHelper() {
+        return new CollectionSyncHelper<>();
+    }
+
+    /*
      * StudentPerson
      */
 
     @Bean
-    public OneWayMapper<InboundEmergencyContactModel, StudentPerson> studentPersonModelToEntityMapper(
-            OneWayUpdateMapper<InboundEmergencyContactModel, StudentPerson> mapper) {
-        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentPerson.class);
+    public OneWayMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityMapper(
+            OneWayUpdateMapper<InboundContactModel, StudentPersonRole> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentPersonRole.class);
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundEmergencyContactModel, StudentPerson> studentPersonModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundEmergencyContactModel, StudentPerson> mapper) {
+    public OneWayCollectionMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityOneWayCollectionMapper(
+            OneWayMapper<InboundContactModel, StudentPersonRole> mapper) {
         return new ModelCollectionToEntityCollectionMapper<>(mapper);
     }
 
     @Bean
-    public OneWayCollectionMapper<StudentPerson, OutboundEmergencyContactModel> studentPersonEntityToModelOneWayCollectionMapper(
-            OneWayMapper<StudentPerson, OutboundEmergencyContactModel> mapper) {
+    public OneWayCollectionMapper<StudentPersonRole, OutboundContactModel> studentPersonEntityToModelOneWayCollectionMapper(
+            OneWayMapper<StudentPersonRole, OutboundContactModel> mapper) {
         return new ModelCollectionToEntityCollectionMapper<>(mapper);
+    }
+
+    /*
+     * StudentTeacher
+     */
+
+    @Bean
+    public OneWayMapper<InboundStudentTeacherModel, StudentStaff> studentTeacherModelToEntityMapper(
+            OneWayUpdateMapper<InboundStudentTeacherModel, StudentStaff> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentStaff.class);
     }
 
     /*

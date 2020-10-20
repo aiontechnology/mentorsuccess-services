@@ -33,7 +33,7 @@ import javax.persistence.ManyToOne;
 import java.util.UUID;
 
 /**
- * Entity that represents a role.
+ * Entity that represents a person's role related to a student.
  *
  * @author Whitney Hunter
  * @since 0.1.0

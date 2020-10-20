@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.api.error;
 
+import lombok.Getter;
+
 /**
  * And exception that indicates that a requested resource could not be found.
  *
@@ -24,6 +26,9 @@ package io.aiontechnology.mentorsuccess.api.error;
  */
 public class NotFoundException extends RuntimeException {
 
+    @Getter
+    private String key;
+
     /**
      * Constructor
      *
@@ -31,6 +36,11 @@ public class NotFoundException extends RuntimeException {
      */
     public NotFoundException(String message) {
         super(message);
+    }
+
+    public NotFoundException(String message, String key) {
+        super(message);
+        this.key = key;
     }
 
 }

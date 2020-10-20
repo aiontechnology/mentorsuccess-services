@@ -20,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Optional;
 
 /**
@@ -43,7 +44,7 @@ public class UpdateMapperBasedOneWayMapper<FROM, TO> implements OneWayMapper<FRO
                     try {
                         Constructor<TO> ctor = toClass.getConstructor();
                         return mapper.map(f, ctor.newInstance());
-                    } catch (Exception e) {
+                    } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
                         log.error("Can't create instance of class: {}", toClass);
                         throw new RuntimeException("Invalid class provided", e);
                     }

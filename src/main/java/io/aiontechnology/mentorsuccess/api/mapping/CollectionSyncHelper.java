@@ -16,8 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping;
 
-import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -29,12 +27,18 @@ import java.util.Collection;
  */
 public class CollectionSyncHelper<T> {
 
+    /**
+     * Synchronize the given toSync collection with the syncFrom collection.
+     *
+     * @param toSync The collection to sync to.
+     * @param syncFrom The collection to sync from.
+     * @return The resulting synced collection.
+     */
     public Collection<T> sync(Collection<T> toSync, Collection<T> syncFrom) {
-        Collection<T> newCollection = new ArrayList<>(syncFrom);
         Collection<T> toRemove = new ArrayList<>(toSync);
-        toRemove.removeAll(newCollection);
-        Collection<T> toAdd = new ArrayList<>(newCollection);
-        toAdd.removeAll(syncFrom);
+        toRemove.removeAll(syncFrom);
+        Collection<T> toAdd = new ArrayList<>(syncFrom);
+        toAdd.removeAll(toSync);
 
         toSync.removeAll(toRemove);
         toSync.addAll(toAdd);

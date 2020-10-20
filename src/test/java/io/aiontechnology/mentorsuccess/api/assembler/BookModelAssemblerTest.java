@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -34,15 +33,10 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link BookModelAssembler}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public class BookModelAssemblerTest {
-
-    private static final String TITLE = "TITLE";
-    private static final String AUTHOR = "AUTHOR";
-    private static final Integer GRADE_LEVEL = 1;
-    private static final Boolean IS_ACTIVE = TRUE;
 
     @Test
     void testToModel() throws Exception {

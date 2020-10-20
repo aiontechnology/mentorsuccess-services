@@ -16,17 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.api.model.outbound.student;
 
-import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
+import io.aiontechnology.mentorsuccess.entity.ContactMethod;
 import io.aiontechnology.mentorsuccess.entity.RoleType;
-import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.net.URI;
 
 /**
  * @author Whitney Hunter
@@ -35,23 +29,29 @@ import java.net.URI;
 @Data
 @EqualsAndHashCode
 @Builder(setterPrefix = "with")
-public class OutboundEmergencyContactModel {
+public class OutboundContactModel {
 
     private final RoleType type;
 
-    /** The person's first name. */
+    /** The contact's first name. */
     private final String firstName;
 
-    /** The person's last name. */
+    /** The contact's last name. */
     private final String lastName;
 
-    /** The person's email. */
+    /** The contact's email. */
     private final String email;
 
-    /** The person's work phone number. */
+    /** The contact's work phone number. */
     private final String workPhone;
 
-    /** The person's cell phone number. */
+    /** The contact's cell phone number. */
     private final String cellPhone;
+
+    private Boolean isEmergencyContact;
+
+    private ContactMethod preferredContactMethod;
+
+    private String comment;
 
 }

@@ -16,9 +16,9 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.student;
 
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.CollectionSyncHelper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.OneWayToCollectionMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.BehaviorModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentBehaviorModel;
@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -51,21 +50,28 @@ public class StudentBehaviorModelToEntityCollectionUpdateMapper implements
     @Override
     public Collection<StudentBehavior> map(InboundStudentBehaviorModel inboundStudentBehaviorModel,
             Collection<StudentBehavior> studentBehaviors) {
-        Collection<StudentBehavior> newCollection = createNewCollection(inboundStudentBehaviorModel);
-
+        Collection<StudentBehavior> newCollection = doMap(inboundStudentBehaviorModel);
         return syncHelper.sync(studentBehaviors, newCollection);
     }
 
-    private Collection<StudentBehavior> createNewCollection(InboundStudentBehaviorModel inboundStudentBehaviorModel) {
+    /**
+     * Map the set of {@link BehaviorModel} instances contained in the provided {@link InboundStudentBehaviorModel}
+     * to a collection of {@link StudentBehavior} instances.
+     *
+     * @param inboundStudentBehaviorModel The {@link InboundStudentBehaviorModel} from which to get the
+     * {@link BehaviorModel} instances to map.
+     * @return The resulting set of {@link StudentBehavior} instances.
+     */
+    private Collection<StudentBehavior> doMap(InboundStudentBehaviorModel inboundStudentBehaviorModel) {
         return inboundStudentBehaviorModel.getBehaviors().stream()
                 .map(behaviorModel -> {
                     StudentBehavior studentBehavior = new StudentBehavior();
                     studentBehavior.setRole(teacherUriToEntityMapper
                             .map(inboundStudentBehaviorModel.getTeacher())
-                            .orElse(null));
+                            .orElseThrow(() -> new NotFoundException("Unable to find teacher")));
                     studentBehavior.setBehavior(behaviorModelToEntityMapper
                             .map(behaviorModel)
-                            .orElse(null));
+                            .orElseThrow(() -> new NotFoundException("Invalid behavior: " + behaviorModel.getName())));
                     return studentBehavior;
                 })
                 .collect(Collectors.toList());

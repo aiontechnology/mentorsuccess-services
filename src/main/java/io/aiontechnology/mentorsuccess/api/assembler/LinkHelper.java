@@ -21,6 +21,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Helper component for adding {@link Link Links} to {@link RepresentationModel} instances.
@@ -39,9 +40,7 @@ public class LinkHelper<M extends RepresentationModel<?>> {
      * @return The model object.
      */
     public M addLinks(M model, List<Link> links) {
-        for (Link link : links) {
-            model.add(link);
-        }
+        links.stream().forEach(model::add);
         return model;
     }
 

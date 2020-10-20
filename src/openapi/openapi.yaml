@@ -14,14 +14,14 @@
 
 openapi: 3.0.1
 info:
-#  title: Mentor Success API
-#  description: API for the Mentor Success application
+  title: Mentor Success API
+  description: API for the Mentor Success application
   contact:
     email: whitney@aiontechnology.io
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: "1.0.0"
+  version: "0.3.0"
 
 servers:
   - url: "https://ve17iw2h0g.execute-api.us-west-2.amazonaws.com/{basePath}"
@@ -2032,6 +2032,94 @@ paths:
         httpMethod: "DELETE"
         type: "http"
 
+  # /api/v1/schools/{schoolId}/students --------------------------------------------
+  /api/v1/schools/{schoolId}/students:
+    parameters:
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/students
+    options:
+      tags:
+        - school
+        - student
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # POST for /api/v1/schools/{schoolId}/students
+    post:
+      summary: Create a student
+      description: Create a new student for a school
+      tags:
+        - school
+        - student
+      operationId: createStudent
+      requestBody:
+        description: The new student
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentModel'
+      responses:
+        "201":
+          description: The student is created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResultModel'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/students"
+        responses:
+          default:
+            statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "POST"
+        type: "http"
+
   # /api/v1/schools/{schoolId}/teachers --------------------------------------------
   /api/v1/schools/{schoolId}/teachers:
     parameters:
@@ -2792,6 +2880,163 @@ components:
         self:
           allOf:
             - $ref: '#/components/schemas/UrlArray'
+
+    # StudentModel -----------------------------------------------------------------
+    StudentModel:
+      required:
+        - firstName
+        - lastName
+        - grade
+        - location
+        - mediaReleaseSigned
+        - teacher
+      properties:
+        firstName:
+          type: string
+          example: Sammy
+        lastName:
+          type: string
+          example: Smith
+        grade:
+          type: integer
+          example: 2
+        allergyInfo:
+          type: string
+          example: Peanuts
+        preferredTime:
+          type: string
+          example: 2:00pm
+        location:
+          type: string
+          example: OFFLINE
+        mediaReleaseSigned:
+          type: boolean
+          example: true
+        teacher:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/StudentTeacherModel'
+        behaviors:
+          type: array
+          items:
+            type: string
+        interests:
+          type: array
+          items:
+            type: string
+        leadershipSkills:
+          type: array
+          items:
+            type: string
+        leadershipTraits:
+          type: array
+          items:
+            type: string
+        contacts:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/StudentContactModel'
+
+    # StudentResultModel
+    StudentResultModel:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: Sammy
+        lastName:
+          type: string
+          example: Smith
+        grade:
+          type: integer
+          example: 2
+        allergyInfo:
+          type: string
+          example: Peanuts
+        preferredTime:
+          type: string
+          example: 2:00pm
+        location:
+          type: string
+          example: OFFLINE
+        mediaReleaseSigned:
+          type: boolean
+          example: true
+        teacher:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/TeacherModel'
+          properties:
+            _links:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/SelfLink'
+        behaviors:
+          type: array
+          items:
+            type: string
+        interests:
+          type: array
+          items:
+            type: string
+        leadershipSkills:
+          type: array
+          items:
+            type: string
+        leadershipTraits:
+          type: array
+          items:
+            type: string
+        contacts:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/StudentContactModel'
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
+
+    # StudentTeacherModel ----------------------------------------------------------
+    StudentTeacherModel:
+      required:
+        - uri
+      properties:
+        uri:
+          type: string
+          format: uuid
+        comment:
+          type: string
+          maxLength: 255
+          example: Your student is doing well
+
+    # StudentContactModel ----------------------------------------------------------
+    StudentContactModel:
+      required:
+        - type
+        - firstName
+        - lastName
+        - isEmergencyContact
+      properties:
+        type:
+          type: string
+          enum: [PARENT_GUARDIAN, GRANDPARENT]
+        firstName:
+          type: string
+          maxLength: 50
+        lastNane:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          maxLength: 50
+        workPhone:
+          type: string
+          maxLength: 14
+        cellPhone:
+          type: string
+          maxLength: 14
+        isEmergencyContact:
+          type: boolean
 
     # TeacherModel -----------------------------------------------------------------
     TeacherModel:

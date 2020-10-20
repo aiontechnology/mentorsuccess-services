@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
+import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.StudentModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
@@ -41,11 +42,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with students.
@@ -85,7 +89,8 @@ public class StudentController {
         return Optional.ofNullable(inboundStudentModel)
                 .flatMap(studentModelToEntityMapper::map)
                 .map(school::addStudent)
-                .map(s -> studentModelAssembler.toModel(s))
+                .map(studentService::updateStudent)
+                .map(s -> studentModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException(("Unable to create student")));
     }
 
@@ -101,9 +106,16 @@ public class StudentController {
                 .map(School::getStudents)
                 .orElse(Collections.EMPTY_LIST);
         Collection<OutboundStudentModel> studentModels = students.stream()
-                .map(studentModelAssembler::toModel)
+                .map(s -> studentModelAssembler.toModel(s, linkProvider))
                 .collect(Collectors.toList());
         return CollectionModel.of(studentModels);
+    }
+
+    @GetMapping("/{studentId}")
+    public OutboundStudentModel getStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId) {
+        return studentService.getStudentById(studentId)
+                .map(s -> studentModelAssembler.toModel(s, linkProvider))
+                .orElseThrow(() -> new NotFoundException("Student was not found"));
     }
 
     @PutMapping("/{studentId}")
@@ -115,8 +127,14 @@ public class StudentController {
         return Optional.ofNullable(inboundStudentModel)
                 .flatMap(inbound -> studentModelToEntityUpdateMapper.map(inbound, student))
                 .map(studentService::updateStudent)
-                .map(s -> studentModelAssembler.toModel(s))
+                .map(s -> studentModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException(("Unable to update student")));
     }
+
+    /** {@link LinkProvider} implementation for schools. */
+    private LinkProvider<OutboundStudentModel, Student> linkProvider = (studentModel, student) ->
+            Arrays.asList(
+                    linkTo(StudentController.class, student.getSchool().getId()).slash(student.getId()).withSelfRel()
+            );
 
 }

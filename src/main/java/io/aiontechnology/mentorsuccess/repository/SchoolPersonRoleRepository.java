@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.entity;
+package io.aiontechnology.mentorsuccess.repository;
+
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
 
 /**
- * An enumeration of valid role types.
+ * A Spring repository for interacting with {@link SchoolPersonRole} entities in the database.
  *
  * @author Whitney Hunter
- * @since 0.3.0
+ * @since 0.1.0
  */
-public enum RoleType {
-    TEACHER,
-    PROGRAM_ADMIN,
-    SOCIAL_WORKER,
-    PRINCIPAL,
-    COUNSELOR,
-    STAFF,
-    PARENT_GUARDIAN,
-    GRANDPARENT
+@Repository
+public interface SchoolPersonRoleRepository extends CrudRepository<SchoolPersonRole, UUID> {
 }
