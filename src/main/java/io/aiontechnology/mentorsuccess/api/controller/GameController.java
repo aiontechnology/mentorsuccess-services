@@ -19,8 +19,9 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.GameMapper;
-import io.aiontechnology.mentorsuccess.api.model.GameModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.GameModel;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.service.GameService;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,11 @@ public class GameController {
     /** Service for interacting with {@link Game Games}. */
     private final GameService gameService;
 
-    /** A mapper between {@link Game Games} and {@link GameModel GameModels}. */
-    private final GameMapper gameMapper;
+    /** A mapper between {@link GameModel GameModels} and {@link Game Games}. */
+    private final OneWayMapper<GameModel, Game> gameMapper;
+
+    /** An update mapper between {@link GameModel GameModels} and {@link Game Games}. */
+    private final OneWayUpdateMapper<GameModel, Game> gameUpdateMapper;
 
     /** A HATEOAS assembler for {@link GameModel GameModels}. */
     private final GameModelAssembler gameModelAssembler;
@@ -78,7 +82,7 @@ public class GameController {
     public GameModel createGame(@RequestBody @Valid GameModel gameModel) {
         log.debug("Game: {}", gameModel);
         return Optional.ofNullable(gameModel)
-                .map(gameMapper::mapModelToEntity)
+                .flatMap(gameMapper::map)
                 .map(gameService::createGame)
                 .map(b -> gameModelAssembler.toModel(b, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
@@ -122,7 +126,7 @@ public class GameController {
     public GameModel updateGame(@PathVariable("gameId") UUID gameId, @RequestBody @Valid GameModel gameModel) {
         log.debug("Updating book {} with {}", gameId, gameModel);
         return gameService.findGameById(gameId)
-                .map(game -> gameMapper.mapModelToEntity(gameModel, game))
+                .flatMap(game -> gameUpdateMapper.map(gameModel, game))
                 .map(gameService::updateGame)
                 .map(game -> gameModelAssembler.toModel(game, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update game"));

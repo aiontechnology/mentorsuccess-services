@@ -71,6 +71,6 @@ public class Person {
     /** The roles played by the person. */
     @OneToMany(mappedBy = "person")
     @Where(clause = "is_active = true")
-    private Collection<Role> roles;
+    private Collection<SchoolPersonRole> roles;
 
 }

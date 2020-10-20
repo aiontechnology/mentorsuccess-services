@@ -17,15 +17,15 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
-import io.aiontechnology.mentorsuccess.api.mapping.TeacherMapper;
-import io.aiontechnology.mentorsuccess.api.model.TeacherModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
 /**
- * Assembles a {@link TeacherModel} from a {@link Role}.
+ * Assembles a {@link TeacherModel} from a {@link SchoolPersonRole}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
@@ -36,12 +36,12 @@ public class TeacherModelAssembler extends BaseRoleModelAssembler<TeacherModel> 
     /**
      * Constructor
      *
-     * @param teacherMapper The mapper for mapping between {@link Role} and {@link TeacherModel}.
+     * @param mapper The mapper for mapping between {@link SchoolPersonRole} and {@link TeacherModel}.
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public TeacherModelAssembler(TeacherMapper teacherMapper, LinkHelper<TeacherModel> linkHelper) {
-        super(TeacherController.class, TeacherModel.class, teacherMapper, linkHelper);
+    public TeacherModelAssembler(OneWayMapper<SchoolPersonRole, TeacherModel> mapper, LinkHelper<TeacherModel> linkHelper) {
+        super(TeacherController.class, TeacherModel.class, mapper, linkHelper);
     }
 
 }

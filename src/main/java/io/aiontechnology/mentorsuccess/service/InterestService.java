@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Interest;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.repository.InterestRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

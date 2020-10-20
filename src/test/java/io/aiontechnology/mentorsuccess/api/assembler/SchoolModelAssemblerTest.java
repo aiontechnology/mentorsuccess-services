@@ -17,9 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
-import io.aiontechnology.mentorsuccess.api.mapping.AddressMapper;
-import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
-import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
+import io.aiontechnology.mentorsuccess.api.mapping.tomodel.misc.AddressEntityToModelMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.tomodel.school.SchoolEntityToModelMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
@@ -54,9 +54,10 @@ public class SchoolModelAssemblerTest {
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
-        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.emptyList());
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
-        SchoolModelAssembler assembler = new SchoolModelAssembler(new SchoolMapper(new AddressMapper(), new PhoneService()), new LinkHelper<>());
+        SchoolModelAssembler assembler = new SchoolModelAssembler(
+                new SchoolEntityToModelMapper(new AddressEntityToModelMapper(), new PhoneService()), new LinkHelper<>());
 
         // execute the SUT
         SchoolModel schoolModel = assembler.toModel(school);
@@ -88,7 +89,7 @@ public class SchoolModelAssemblerTest {
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
-        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.emptyList());
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         LinkProvider<SchoolModel, School> linkProvider = (schoolModel, s) ->
                 Arrays.asList(
@@ -96,7 +97,8 @@ public class SchoolModelAssemblerTest {
                         linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers")
                 );
 
-        SchoolModelAssembler assembler = new SchoolModelAssembler(new SchoolMapper(new AddressMapper(), new PhoneService()), new LinkHelper<>());
+        SchoolModelAssembler assembler = new SchoolModelAssembler(new SchoolEntityToModelMapper(
+                new AddressEntityToModelMapper(), new PhoneService()), new LinkHelper<>());
 
         // execute the SUT
         SchoolModel schoolModel = assembler.toModel(school, linkProvider);

@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.SchoolController;
-import io.aiontechnology.mentorsuccess.api.mapping.SchoolMapper;
-import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.SchoolModel;
 import io.aiontechnology.mentorsuccess.entity.School;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -39,18 +39,18 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
     private final LinkHelper<SchoolModel> linkHelper;
 
     /** Mapper to map between {@link School} and {@link SchoolModel}. */
-    private final SchoolMapper schoolMapper;
+    private final OneWayMapper<School, SchoolModel> mapper;
 
     /**
      * Constructor
      *
-     * @param schoolMapper The mapper for mapping between {@link School} and {@link SchoolModel}.
+     * @param mapper The mapper for mapping between {@link School} and {@link SchoolModel}.
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public SchoolModelAssembler(SchoolMapper schoolMapper, LinkHelper<SchoolModel> linkHelper) {
+    public SchoolModelAssembler(OneWayMapper<School, SchoolModel> mapper, LinkHelper<SchoolModel> linkHelper) {
         super(SchoolController.class, SchoolModel.class);
-        this.schoolMapper = schoolMapper;
+        this.mapper = mapper;
         this.linkHelper = linkHelper;
     }
 
@@ -63,7 +63,7 @@ public class SchoolModelAssembler extends RepresentationModelAssemblerSupport<Sc
     @Override
     public SchoolModel toModel(School school) {
         return Optional.ofNullable(school)
-                .map(schoolMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

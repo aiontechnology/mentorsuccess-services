@@ -17,10 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.PersonController;
-import io.aiontechnology.mentorsuccess.api.mapping.PersonMapper;
-import io.aiontechnology.mentorsuccess.api.model.PersonModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
@@ -33,25 +32,21 @@ import java.util.Optional;
  * @since 1.0.0
  */
 @Component
-public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Person, PersonModel> {
-
-    /** A utility class for adding links to a model object. */
-    private final LinkHelper<PersonModel> linkHelper;
+public class PersonModelAssembler extends LinkAddingRepresentationModelAssemblerSupport<Person, PersonModel> {
 
     /** Mapper to map between {@link Person} and {@link PersonModel}. */
-    private final PersonMapper personMapper;
+    private final OneWayMapper<Person, PersonModel> mapper;
 
     /**
      * Constructor
      *
-     * @param personMapper The mapper for mapping between {@link Person} and {@link PersonModel}.
+     * @param mapper The mapper for mapping between {@link Person} and {@link PersonModel}.
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public PersonModelAssembler(PersonMapper personMapper, LinkHelper<PersonModel> linkHelper) {
-        super(PersonController.class, PersonModel.class);
-        this.personMapper = personMapper;
-        this.linkHelper = linkHelper;
+    public PersonModelAssembler(OneWayMapper<Person, PersonModel> mapper, LinkHelper<PersonModel> linkHelper) {
+        super(PersonController.class, PersonModel.class, linkHelper);
+        this.mapper = mapper;
     }
 
     /**
@@ -63,7 +58,7 @@ public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Pe
     @Override
     public PersonModel toModel(Person person) {
         return Optional.ofNullable(person)
-                .map(personMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 
@@ -77,7 +72,7 @@ public class PersonModelAssembler extends RepresentationModelAssemblerSupport<Pe
     public PersonModel toModel(Person person, LinkProvider<PersonModel, Person> linkProvider) {
         return Optional.ofNullable(person)
                 .map(this::toModel)
-                .map(model -> linkHelper.addLinks(model, linkProvider.apply(model, person)))
+                .map(model -> getLinkHelper().addLinks(model, linkProvider.apply(model, person)))
                 .orElse(null);
     }
 

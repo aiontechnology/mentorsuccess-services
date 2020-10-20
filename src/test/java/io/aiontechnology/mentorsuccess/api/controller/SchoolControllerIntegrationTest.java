@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aiontechnology.mentorsuccess.api.model.AddressModel;
-import io.aiontechnology.mentorsuccess.api.model.SchoolModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.AddressModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.SchoolModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

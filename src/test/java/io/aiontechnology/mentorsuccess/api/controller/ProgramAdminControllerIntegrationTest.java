@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.ProgramAdminModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

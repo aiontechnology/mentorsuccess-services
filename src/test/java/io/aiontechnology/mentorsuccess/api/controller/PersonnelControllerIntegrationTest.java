@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonnelModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,9 +30,9 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType;
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.SOCIAL_WORKER;
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.TEACHER;
+import io.aiontechnology.mentorsuccess.entity.RoleType;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.SOCIAL_WORKER;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.TEACHER;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;

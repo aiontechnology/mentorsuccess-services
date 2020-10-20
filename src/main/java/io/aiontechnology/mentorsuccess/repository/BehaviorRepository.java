@@ -16,8 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.Behavior;
-import org.springframework.cache.annotation.Cacheable;
+import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +38,6 @@ public interface BehaviorRepository extends CrudRepository<Behavior, UUID> {
      * @param name The name of the desired {@link Behavior}.
      * @return The {@link Behavior} if it could be found.
      */
-    @Cacheable("behaviors")
     Optional<Behavior> findByName(String name);
 
 }

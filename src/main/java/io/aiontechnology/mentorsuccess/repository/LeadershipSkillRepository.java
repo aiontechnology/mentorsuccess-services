@@ -16,8 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.repository;
 
-import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
-import org.springframework.cache.annotation.Cacheable;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -39,7 +38,6 @@ public interface LeadershipSkillRepository extends CrudRepository<LeadershipSkil
      * @param name The name of the desired {@link LeadershipSkill}.
      * @return The {@link LeadershipSkill} if it could be found.
      */
-    @Cacheable("leadership_skills")
     Optional<LeadershipSkill> findByName(String name);
 
 }

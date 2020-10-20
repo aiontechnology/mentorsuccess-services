@@ -19,8 +19,9 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.BookMapper;
-import io.aiontechnology.mentorsuccess.api.model.BookModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.BookModel;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -61,8 +62,11 @@ public class BookController {
     /** Service for interacting with {@link Book Books}. */
     private final BookService bookService;
 
-    /** A mapper between {@link Book Books} and {@link BookModel BookModels}. */
-    private final BookMapper bookMapper;
+    /** A mapper between {@link BookModel BookModels} and {@link Book Books}. */
+    private final OneWayMapper<BookModel, Book> bookMapper;
+
+    /** An update mapper between {@link BookModel BookModels} and {@link Book Books}. */
+    private final OneWayUpdateMapper<BookModel, Book> bookUpdateMapper;
 
     /** A HATEOAS assembler for {@link BookModel BookModels}. */
     private final BookModelAssembler bookModelAssembler;
@@ -78,7 +82,7 @@ public class BookController {
     public BookModel createBook(@RequestBody @Valid BookModel bookModel) {
         log.debug("Book: {}", bookModel);
         return Optional.ofNullable(bookModel)
-                .map(bookMapper::mapModelToEntity)
+                .flatMap(bookMapper::map)
                 .map(bookService::createBook)
                 .map(b -> bookModelAssembler.toModel(b, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
@@ -122,7 +126,7 @@ public class BookController {
     public BookModel updateBook(@PathVariable("bookId") UUID bookId, @RequestBody @Valid BookModel bookModel) {
         log.debug("Updating book {} with {}", bookId, bookModel);
         return bookService.findBookById(bookId)
-                .map(book -> bookMapper.mapModelToEntity(bookModel, book))
+                .flatMap(book -> bookUpdateMapper.map(bookModel, book))
                 .map(bookService::updateBook)
                 .map(book -> bookModelAssembler.toModel(book, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update book"));

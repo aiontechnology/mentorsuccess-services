@@ -17,15 +17,15 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.PersonnelController;
-import io.aiontechnology.mentorsuccess.api.mapping.PersonnelMapper;
-import io.aiontechnology.mentorsuccess.api.model.PersonnelModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.PersonnelModel;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 
 /**
- * Assembles a {@link PersonnelModel} from a {@link Role}.
+ * Assembles a {@link PersonnelModel} from a {@link SchoolPersonRole}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
@@ -36,12 +36,12 @@ public class PersonnelModelAssembler extends BaseRoleModelAssembler<PersonnelMod
     /**
      * Constructor
      *
-     * @param personnelMapper The mapper for mapping between {@link Role} and {@link PersonnelModel}.
+     * @param mapper The mapper for mapping between {@link SchoolPersonRole} and {@link PersonnelModel}.
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public PersonnelModelAssembler(PersonnelMapper personnelMapper, LinkHelper<PersonnelModel> linkHelper) {
-        super(PersonnelController.class, PersonnelModel.class, personnelMapper, linkHelper);
+    public PersonnelModelAssembler(OneWayMapper<SchoolPersonRole, PersonnelModel> mapper, LinkHelper<PersonnelModel> linkHelper) {
+        super(PersonnelController.class, PersonnelModel.class, mapper, linkHelper);
     }
 
 }

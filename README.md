@@ -3,7 +3,7 @@
 This project vents a REST API for use with the MentorSuccess front end. It uses 
 the following technologies:
 
-1. Java 13
+1. Java 14
 1. Gradle
 1. Spring Boot 2.3.4 (and related Spring technologies)
 1. Postgres
@@ -18,7 +18,7 @@ JDK and Gradle are needed. The Gradle wrapper can be used to install it.
 It is possible to run the server without a dedicated database. This can be done 
 with the following command:
 
-> ./gradlew bootRun -args="--spring.profiles.active=h2"
+> ./gradlew bootRun --args="--spring.profiles.active=h2"
 
 The advantage of this approach is that there is no need to set up an external
 Postgres database. The disadvantage is that you will loose all of your data
@@ -32,11 +32,14 @@ launch a servier instance:
 
 > docker run --name postgres -e POSTGRES_PASSWORD=\<db password\> -P -d postgres
 
-Once Postgres is running, check the port on which it is running using:
+Once Postgres is running, use a tool such as `pgAdmin` to log into Postgres
+and create a new database called `mentorsuccess`.
+
+Now check the port on which Postgres is running using:
 
 > docker ps
 
-Then you can run the server with this command:
+Then run the server with this command:
 
 > ./gradlew bootRun --args="--spring.profiles.active=postgres \
 > --spring.datasource.url=jdbc:postgresql://localhost:\<port\>/mentorsuccess \

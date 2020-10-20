@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.BookController;
-import io.aiontechnology.mentorsuccess.api.mapping.BookMapper;
-import io.aiontechnology.mentorsuccess.api.model.BookModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.BookModel;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ import java.util.Optional;
 public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book, BookModel> {
 
     /** Mapper to map between {@link Book} and {@link BookModel}. */
-    private final BookMapper bookMapper;
+    private final OneWayMapper<Book, BookModel> bookMapper;
 
     /** A utility class for adding links to a model object. */
     private final LinkHelper<BookModel> linkHelper;
@@ -48,7 +48,7 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public BookModelAssembler(BookMapper bookMapper, LinkHelper<BookModel> linkHelper) {
+    public BookModelAssembler(OneWayMapper<Book, BookModel> bookMapper, LinkHelper<BookModel> linkHelper) {
         super(BookController.class, BookModel.class);
         this.bookMapper = bookMapper;
         this.linkHelper = linkHelper;
@@ -63,7 +63,7 @@ public class BookModelAssembler extends RepresentationModelAssemblerSupport<Book
     @Override
     public BookModel toModel(Book book) {
         return Optional.ofNullable(book)
-                .map(bookMapper::mapEntityToModel)
+                .flatMap(bookMapper::map)
                 .orElse(null);
     }
 

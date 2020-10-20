@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.BehaviorModelAssembler;
-import io.aiontechnology.mentorsuccess.api.model.BehaviorModel;
-import io.aiontechnology.mentorsuccess.entity.Behavior;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.BehaviorModel;
+import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.service.BehaviorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

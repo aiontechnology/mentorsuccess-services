@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LeadershipTraitModelAssembler;
-import io.aiontechnology.mentorsuccess.api.model.LeadershipTraitModel;
-import io.aiontechnology.mentorsuccess.entity.LeadershipTrait;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.GameController;
-import io.aiontechnology.mentorsuccess.api.mapping.GameMapper;
-import io.aiontechnology.mentorsuccess.api.model.GameModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.GameModel;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ import java.util.Optional;
 public class GameModelAssembler extends RepresentationModelAssemblerSupport<Game, GameModel> {
 
     /** Mapper to map between {@link Game} and {@link GameModel}. */
-    private final GameMapper gameMapper;
+    private final OneWayMapper<Game, GameModel> mapper;
 
     /** A utility class for adding links to a model object. */
     private final LinkHelper<GameModel> linkHelper;
@@ -44,13 +44,13 @@ public class GameModelAssembler extends RepresentationModelAssemblerSupport<Game
     /**
      * Constructor
      *
-     * @param gameMapper The mapper for mapping between {@link Game} and {@link GameModel}.
+     * @param mapper The mapper for mapping between {@link Game} and {@link GameModel}.
      * @param linkHelper A utility class for adding links to a model object.
      */
     @Inject
-    public GameModelAssembler(GameMapper gameMapper, LinkHelper<GameModel> linkHelper) {
+    public GameModelAssembler(OneWayMapper<Game, GameModel> mapper, LinkHelper<GameModel> linkHelper) {
         super(GameController.class, GameModel.class);
-        this.gameMapper = gameMapper;
+        this.mapper = mapper;
         this.linkHelper = linkHelper;
     }
 
@@ -63,7 +63,7 @@ public class GameModelAssembler extends RepresentationModelAssemblerSupport<Game
     @Override
     public GameModel toModel(Game game) {
         return Optional.ofNullable(game)
-                .map(gameMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

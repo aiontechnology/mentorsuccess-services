@@ -16,8 +16,9 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.repository.SchoolRepository;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +46,8 @@ public class SchoolServiceTest {
     private static String DISTRICT = "DISTRICT";
     private static Boolean IS_PRIVATE = Boolean.TRUE;
     private static Boolean IS_ACTIVE = Boolean.TRUE;
-    private static Collection<Role> ROLES = Collections.EMPTY_LIST;
+    private static Collection<SchoolPersonRole> ROLES = Collections.EMPTY_LIST;
+    private static Collection<Student> STUDENTS = Collections.EMPTY_LIST;
 
     @Test
     void shouldCreateASchool() {
@@ -156,7 +158,7 @@ public class SchoolServiceTest {
     }
 
     private School generateSchool(UUID id) {
-        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, IS_ACTIVE, ROLES);
+        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, IS_ACTIVE, ROLES, STUDENTS);
     }
 
 }

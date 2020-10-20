@@ -17,9 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.LeadershipSkillController;
-import io.aiontechnology.mentorsuccess.api.mapping.LeadershipSkillMapper;
-import io.aiontechnology.mentorsuccess.api.model.LeadershipSkillModel;
-import io.aiontechnology.mentorsuccess.entity.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipSkillModel;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -36,17 +36,17 @@ import java.util.Optional;
 public class LeadershipSkillModelAssembler extends RepresentationModelAssemblerSupport<LeadershipSkill, LeadershipSkillModel> {
 
     /** Mapper to map between {@link LeadershipSkill} and {@link LeadershipSkillModel}. */
-    private final LeadershipSkillMapper leadershipSkillMapper;
+    private final OneWayMapper<LeadershipSkill, LeadershipSkillModel> mapper;
 
     /**
      * Constructor
      *
-     * @param leadershipSkillMapper The mapper for mapping between {@link LeadershipSkill} and {@link LeadershipSkillModel}.
+     * @param mapper The mapper for mapping between {@link LeadershipSkill} and {@link LeadershipSkillModel}.
      */
     @Inject
-    public LeadershipSkillModelAssembler(LeadershipSkillMapper leadershipSkillMapper) {
+    public LeadershipSkillModelAssembler(OneWayMapper<LeadershipSkill, LeadershipSkillModel> mapper) {
         super(LeadershipSkillController.class, LeadershipSkillModel.class);
-        this.leadershipSkillMapper = leadershipSkillMapper;
+        this.mapper = mapper;
     }
 
     /**
@@ -58,7 +58,7 @@ public class LeadershipSkillModelAssembler extends RepresentationModelAssemblerS
     @Override
     public LeadershipSkillModel toModel(LeadershipSkill leadershipSkill) {
         return Optional.ofNullable(leadershipSkill)
-                .map(leadershipSkillMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

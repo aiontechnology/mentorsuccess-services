@@ -17,9 +17,9 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.mentorsuccess.api.controller.InterestController;
-import io.aiontechnology.mentorsuccess.api.mapping.InterestMapper;
-import io.aiontechnology.mentorsuccess.api.model.InterestModel;
-import io.aiontechnology.mentorsuccess.entity.Interest;
+import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.InterestEntityToModelMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.InterestModel;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
@@ -36,17 +36,17 @@ import java.util.Optional;
 public class InterestModelAssembler extends RepresentationModelAssemblerSupport<Interest, InterestModel> {
 
     /** Mapper to map between {@link Interest} and {@link InterestModel}. */
-    private final InterestMapper interestMapper;
+    private final InterestEntityToModelMapper mapper;
 
     /**
      * Constructor
      *
-     * @param interestMapper The mapper for mapping between {@link Interest} and {@link InterestModel}.
+     * @param mapper The mapper for mapping between {@link Interest} and {@link InterestModel}.
      */
     @Inject
-    public InterestModelAssembler(InterestMapper interestMapper) {
+    public InterestModelAssembler(InterestEntityToModelMapper mapper) {
         super(InterestController.class, InterestModel.class);
-        this.interestMapper = interestMapper;
+        this.mapper = mapper;
     }
 
     /**
@@ -58,7 +58,7 @@ public class InterestModelAssembler extends RepresentationModelAssemblerSupport<
     @Override
     public InterestModel toModel(Interest interest) {
         return Optional.ofNullable(interest)
-                .map(interestMapper::mapEntityToModel)
+                .flatMap(mapper::map)
                 .orElse(null);
     }
 

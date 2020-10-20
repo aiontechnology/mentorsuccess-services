@@ -19,9 +19,10 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.ProgramAdminModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.api.mapping.ProgramAdminMapper;
-import io.aiontechnology.mentorsuccess.api.model.ProgramAdminModel;
-import io.aiontechnology.mentorsuccess.entity.Role;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -47,7 +48,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static io.aiontechnology.mentorsuccess.entity.Role.RoleType.PROGRAM_ADMIN;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.PROGRAM_ADMIN;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
@@ -65,13 +66,16 @@ public class ProgramAdminController {
     /** The JPA entity manager */
     private final EntityManager entityManager;
 
-    /** A mapper between {@link Role Roles} and {@link ProgramAdminModel ProgramAdminModels}. */
-    private final ProgramAdminMapper programAdminMapper;
+    /** A mapper between {@link ProgramAdminModel ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
+    private final OneWayMapper<ProgramAdminModel, SchoolPersonRole> programAdminMapper;
+
+    /** An update mapper between {@link ProgramAdminModel ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
+    private final OneWayUpdateMapper<ProgramAdminModel, SchoolPersonRole> programAdminUpdateMapper;
 
     /** A HATEOAS assembler for {@link ProgramAdminModel ProgramAdminModels}. */
     private final ProgramAdminModelAssembler programAdminModelAssembler;
 
-    /** Service for interacting with {@link Role Roles}. */
+    /** Service for interacting with {@link SchoolPersonRole Roles}. */
     private final RoleService roleService;
 
     /** Service for interacting with {@link School Schools}. */
@@ -90,7 +94,7 @@ public class ProgramAdminController {
         log.debug("Creating program administrator: {}", programAdminModel);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(programAdminModel)
-                        .map(programAdminMapper::mapModelToEntity)
+                        .flatMap(programAdminMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
                         .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
@@ -142,10 +146,10 @@ public class ProgramAdminController {
      */
     @PutMapping("/{programAdminId}")
     public ProgramAdminModel updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
-                                                @PathVariable("programAdminId") UUID programAdminId,
-                                                @RequestBody @Valid ProgramAdminModel programAdminModel) {
+            @PathVariable("programAdminId") UUID programAdminId,
+            @RequestBody @Valid ProgramAdminModel programAdminModel) {
         return roleService.findRoleById(programAdminId)
-                .map(role -> programAdminMapper.mapModelToEntity(programAdminModel, role))
+                .flatMap(role -> programAdminUpdateMapper.map(programAdminModel, role))
                 .map(roleService::updateRole)
                 .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
@@ -166,7 +170,7 @@ public class ProgramAdminController {
     }
 
     /** {@link LinkProvider} implementation for program admins. */
-    private LinkProvider<ProgramAdminModel, Role> linkProvider = (programAdminModel, role) ->
+    private LinkProvider<ProgramAdminModel, SchoolPersonRole> linkProvider = (programAdminModel, role) ->
             Arrays.asList(
                     linkTo(ProgramAdminController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
                     linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")

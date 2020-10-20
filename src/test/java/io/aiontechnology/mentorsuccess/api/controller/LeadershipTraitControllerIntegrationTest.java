@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Tests for the {@link LeadershipTraitController}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
+ * @author Whitney Hunter
  * @since 1.0.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
