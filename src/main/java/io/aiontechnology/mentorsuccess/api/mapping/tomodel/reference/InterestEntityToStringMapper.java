@@ -14,20 +14,24 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.model.inbound.student;
+package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
-import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
+import org.springframework.stereotype.Component;
 
-import java.util.Collection;
+import java.util.Optional;
 
 /**
- * Represents an object that contains a collection of {@link LeadershipTraitModel} objects.
- *
  * @author Whitney Hunter
  * @since 0.3.0
  */
-public interface StudentLeadershipTraitModelHolder {
+@Component
+public class InterestEntityToStringMapper implements OneWayMapper<Interest, String> {
 
-    Collection<LeadershipTraitModel> getLeadershipTraits();
+    @Override
+    public Optional<String> map(Interest interest) {
+        return Optional.of(interest.getName());
+    }
 
 }

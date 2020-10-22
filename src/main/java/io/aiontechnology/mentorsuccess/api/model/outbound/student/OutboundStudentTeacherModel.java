@@ -14,20 +14,22 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.repository;
+package io.aiontechnology.mentorsuccess.api.model.outbound.student;
 
-import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
-
-import java.util.UUID;
+import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
+import lombok.Builder;
+import lombok.Data;
 
 /**
- * A Spring repository for interacting with {@link SchoolPersonRole} entities in the database.
- *
  * @author Whitney Hunter
- * @since 0.1.0
+ * @since 0.3.0
  */
-@Repository
-public interface RoleRepository extends CrudRepository<SchoolPersonRole, UUID> {
+@Data
+@Builder(setterPrefix = "with")
+public class OutboundStudentTeacherModel {
+
+    private TeacherModel teacher;
+
+    private String comment;
+
 }

@@ -18,9 +18,10 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.student;
 
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
-import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundEmergencyContactModel;
+import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundContactModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,22 +38,27 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Getter(AccessLevel.PRIVATE)
-public class StudentPersonEntityToModelMapper implements OneWayMapper<StudentPerson, OutboundEmergencyContactModel> {
+public class StudentPersonEntityToModelMapper implements OneWayMapper<StudentPersonRole, OutboundContactModel> {
 
     /** Mapper from {@link Person} to {@link URI}. */
     @Qualifier("personAssemblerMapperAdaptor")
     private final OneWayMapper<Person, PersonModel> personEntityToModelMapper;
 
+    private final PhoneService phoneService;
+
     @Override
-    public Optional<OutboundEmergencyContactModel> map(StudentPerson studentPerson) {
-        return Optional.ofNullable(studentPerson)
-                .map(s -> OutboundEmergencyContactModel.builder()
-                        .withFirstName(studentPerson.getPerson().getFirstName())
-                        .withLastName(studentPerson.getPerson().getLastName())
-                        .withWorkPhone(studentPerson.getPerson().getWorkPhone())
-                        .withCellPhone(studentPerson.getPerson().getCellPhone())
-                        .withEmail(studentPerson.getPerson().getEmail())
-                        .withType(studentPerson.getPersonType())
+    public Optional<OutboundContactModel> map(StudentPersonRole studentPersonRole) {
+        return Optional.ofNullable(studentPersonRole)
+                .map(s -> OutboundContactModel.builder()
+                        .withFirstName(s.getPerson().getFirstName())
+                        .withLastName(s.getPerson().getLastName())
+                        .withWorkPhone(phoneService.format(s.getPerson().getWorkPhone()))
+                        .withCellPhone(phoneService.format(s.getPerson().getCellPhone()))
+                        .withEmail(s.getPerson().getEmail())
+                        .withType(s.getPersonType())
+                        .withIsEmergencyContact(s.getIsEmergencyContact())
+                        .withPreferredContactMethod(s.getPreferredContactMethod())
+                        .withComment(s.getComment())
                         .build());
     }
 

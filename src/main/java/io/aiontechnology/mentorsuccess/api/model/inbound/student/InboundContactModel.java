@@ -16,9 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.api.model.inbound.student;
 
+import io.aiontechnology.mentorsuccess.entity.ContactMethod;
 import io.aiontechnology.mentorsuccess.entity.RoleType;
 import io.aiontechnology.mentorsuccess.util.EnumNamePattern;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -33,33 +35,43 @@ import java.net.URI;
  * @since 0.3.0
  */
 @AllArgsConstructor
+@Builder(setterPrefix = "with")
 @Getter
-public class InboundEmergencyContactModel {
+public class InboundContactModel {
 
-    @NotNull(message = "{emergencycontact.type.notNull}")
-    @EnumNamePattern(regexp = "PARENT|GUARDIAN", message = "{emergencycontact.type.invalid}")
+    @NotNull(message = "{contact.type.notNull}")
+    @EnumNamePattern(regexp = "PARENT_GUARDIAN|GRANDPARENT", message = "{contact.type.invalid}")
     private final RoleType type;
 
-    /** The person's first name. */
-    @NotNull(message = "{emergencycontact.firstName.notNull}")
-    @Size(max = 50, message = "{emergencycontact.firstName.size}")
+    /** The contact's first name. */
+    @NotNull(message = "{contact.firstName.notNull}")
+    @Size(max = 50, message = "{contact.firstName.size}")
     private final String firstName;
 
-    /** The person's last name. */
-    @NotNull(message = "{emergencycontact.lastName.notNull}")
-    @Size(max = 50, message = "{emergencycontact.lastName.size}")
+    /** The contact's last name. */
+    @NotNull(message = "{contact.lastName.notNull}")
+    @Size(max = 50, message = "{contact.lastName.size}")
     private final String lastName;
 
-    /** The person's email. */
-    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{emergencycontact.email.invalid}")
+    /** The contact's email. */
+    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{contact.email.invalid}")
     private final String email;
 
-    /** The person's work phone number. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{emergencycontact.workPhone.invalid}")
+    /** The contact's work phone number. */
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.workPhone.invalid}")
     private final String workPhone;
 
-    /** The person's cell phone number. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{emergencycontact.cellPhone.invalid}")
+    /** The contact's cell phone number. */
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.cellPhone.invalid}")
     private final String cellPhone;
+
+    @NotNull(message = "{contact.isEmergencyContact.notNull}")
+    private Boolean isEmergencyContact;
+
+    @EnumNamePattern(regexp = "CELLPHONE|WORKPHONE|EMAIL", message = "{contact.preferredContactMethod.invalid}")
+    private ContactMethod preferredContactMethod;
+
+    @Size(max = 255, message = "{contact.comment.size}")
+    private String comment;
 
 }

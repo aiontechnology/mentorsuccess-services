@@ -16,18 +16,18 @@
 
 package io.aiontechnology.mentorsuccess.entity;
 
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -35,7 +35,7 @@ import java.io.Serializable;
 import java.util.UUID;
 
 /**
- * An entity that connects {@link Person Persons} to a {@link Student}.
+ * An entity that connects {@link Interest LeadershipSkills} to a {@link Student}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
@@ -45,16 +45,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class StudentPerson {
+@ToString(onlyExplicitlyIncluded = true)
+public class StudentInterest {
 
     @EmbeddedId
-    @EqualsAndHashCode.Include
-    private StudentPersonPK studentPersonPK = new StudentPersonPK();
-
-    /** The type of the person associated with this entry */
-    @Column
-    @Enumerated(EnumType.STRING)
-    private RoleType personType;
+    private StudentInterestPK studentInterestPK = new StudentInterestPK();
 
     /** The associated {@link Student}. */
     @MapsId("student_id")
@@ -62,20 +57,30 @@ public class StudentPerson {
     @JoinColumn(name = "student_id", referencedColumnName = "id")
     private Student student;
 
-    /** The associated {@link Person}. */
-    @MapsId("person_Id")
+    /** The associated {@link LeadershipSkill}. */
+    @MapsId("interest_id")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
-    @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person person;
+    @JoinColumn(name = "interest_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Include
+    @ToString.Include
+    private Interest interest;
+
+    /** The associated {@link SchoolPersonRole}. */
+    @MapsId("role_id")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Include
+    private SchoolPersonRole role;
 
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
-    public static class StudentPersonPK implements Serializable {
+    public static class StudentInterestPK implements Serializable {
 
         private UUID student_id;
-        private UUID person_Id;
+        private UUID interest_id;
+        private UUID role_id;
 
     }
 

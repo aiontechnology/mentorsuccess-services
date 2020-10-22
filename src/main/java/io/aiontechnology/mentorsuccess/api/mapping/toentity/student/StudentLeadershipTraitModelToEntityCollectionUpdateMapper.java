@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.student;
 
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
+import io.aiontechnology.mentorsuccess.api.mapping.CollectionSyncHelper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
@@ -27,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -44,30 +45,25 @@ public class StudentLeadershipTraitModelToEntityCollectionUpdateMapper implement
 
     private final OneWayMapper<URI, SchoolPersonRole> personModelToEntityMapper;
 
+    private final CollectionSyncHelper<StudentLeadershipTrait> syncHelper;
+
     @Override
     public Collection<StudentLeadershipTrait> map(InboundStudentLeadershipTraitModel inboundStudentLeadershipTraitModel,
             Collection<StudentLeadershipTrait> studentLeadershipTraits) {
-        Collection<StudentLeadershipTrait> newCollection = createNewCollection(inboundStudentLeadershipTraitModel);
-        Collection<StudentLeadershipTrait> toRemove = new ArrayList<>(studentLeadershipTraits);
-        toRemove.removeAll(newCollection);
-        Collection<StudentLeadershipTrait> toAdd = new ArrayList<>(newCollection);
-        toAdd.removeAll(studentLeadershipTraits);
-
-        studentLeadershipTraits.removeAll(toRemove);
-        studentLeadershipTraits.addAll(toAdd);
-        return studentLeadershipTraits;
+        Collection<StudentLeadershipTrait> newCollection = map(inboundStudentLeadershipTraitModel);
+        return syncHelper.sync(studentLeadershipTraits, newCollection);
     }
 
-    private Collection<StudentLeadershipTrait> createNewCollection(InboundStudentLeadershipTraitModel inboundStudentLeadershipTraitModel) {
+    private Collection<StudentLeadershipTrait> map(InboundStudentLeadershipTraitModel inboundStudentLeadershipTraitModel) {
         return inboundStudentLeadershipTraitModel.getLeadershipTraits().stream()
                 .map(leadershipTraitModel -> {
                     StudentLeadershipTrait studentLeadershipTrait = new StudentLeadershipTrait();
                     studentLeadershipTrait.setRole(personModelToEntityMapper
                             .map(inboundStudentLeadershipTraitModel.getTeacher())
-                            .orElse(null));
+                            .orElseThrow(() -> new NotFoundException("Unable to find teacher")));
                     studentLeadershipTrait.setLeadershipTrait(leadershipTraitModelToEntityMapper.
                             map(leadershipTraitModel)
-                            .orElse(null));
+                            .orElseThrow(() -> new NotFoundException("Invalid leadership trait: " + leadershipTraitModel.getName())));
                     return studentLeadershipTrait;
                 })
                 .collect(Collectors.toList());

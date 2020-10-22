@@ -16,18 +16,25 @@
 
 package io.aiontechnology.mentorsuccess.api.model.inbound.student;
 
-import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 
-import java.util.Collection;
+import javax.validation.constraints.NotNull;
+import java.net.URI;
 
 /**
- * Represents an object that contains a collection of {@link PersonModel} objects.
- *
  * @author Whitney Hunter
  * @since 0.3.0
  */
-public interface StudentPersonModelHolder {
+@AllArgsConstructor
+@Builder(setterPrefix = "with")
+@Getter
+public class InboundStudentTeacherModel {
 
-    Collection<InboundEmergencyContactModel> getEmergencyContacts();
+    @NotNull(message = "{teacher.uri.notNull}")
+    private final URI uri;
+
+    private String comment;
 
 }

@@ -16,19 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.student;
 
-import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundEmergencyContactModel;
-import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
 
-import java.net.URI;
 import java.util.Optional;
 
-import static io.aiontechnology.mentorsuccess.entity.RoleType.PRINCIPAL;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests of {@link StudentPersonModelToEntityUpdateMapper}.
@@ -36,7 +30,7 @@ import static org.mockito.Mockito.when;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-public class StudentPersonModelToEntityUpdateMapperTest {
+public class StudentPersonRoleModelToEntityUpdateMapperTest {
 
     @Test
     void testMapping() throws Exception {
@@ -68,13 +62,13 @@ public class StudentPersonModelToEntityUpdateMapperTest {
     @Test
     void testNull() throws Exception {
         // setup the fixture
-        StudentPerson studentPerson = new StudentPerson();
+        StudentPersonRole studentPersonRole = new StudentPersonRole();
 
         StudentPersonModelToEntityUpdateMapper studentPersonModelToEntityUpdateMapper =
-                new StudentPersonModelToEntityUpdateMapper(null);
+                new StudentPersonModelToEntityUpdateMapper(null, new PhoneService());
 
         // execute the SUT
-        Optional<StudentPerson> result = studentPersonModelToEntityUpdateMapper.map(null, studentPerson);
+        Optional<StudentPersonRole> result = studentPersonModelToEntityUpdateMapper.map(null, studentPersonRole);
 
         // validation
         assertThat(result).isEmpty();

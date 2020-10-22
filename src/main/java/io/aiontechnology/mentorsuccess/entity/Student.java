@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.entity;
 
 import io.aiontechnology.mentorsuccess.api.mapping.CollectionSyncHelper;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,8 +33,11 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
@@ -51,6 +55,18 @@ import java.util.stream.Collectors;
 @Data
 @Where(clause = "is_active = true")
 public class Student {
+
+    private static final CollectionSyncHelper<Interest> interestSyncHelper =
+            new CollectionSyncHelper<>();
+
+    private static final CollectionSyncHelper<StudentBehavior> studentBehaviorSyncHelper =
+            new CollectionSyncHelper<>();
+
+    private static final CollectionSyncHelper<StudentLeadershipSkill> studentLeadershipSkillSyncHelper =
+            new CollectionSyncHelper<>();
+
+    private static final CollectionSyncHelper<StudentLeadershipTrait> studentLeadershipTraitSyncHelper =
+            new CollectionSyncHelper<>();
 
     /** The ID of the student. */
     @Id
@@ -85,6 +101,9 @@ public class Student {
     @Column
     private Boolean isMediaReleaseSigned;
 
+    @Column
+    private String allergyInfo;
+
     /** Is the student active? */
     @Column
     private Boolean isActive;
@@ -97,9 +116,17 @@ public class Student {
 
     /** The student's teacher. */
     @ToString.Exclude
-    @ManyToOne(cascade = {CascadeType.DETACH})
-    @JoinColumn(name = "teacher_id", referencedColumnName = "id")
-    private SchoolPersonRole teacher;
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private StudentStaff teacher;
+
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "student_interest",
+            joinColumns = {@JoinColumn(name = "student_id")},
+            inverseJoinColumns = {@JoinColumn(name = "interest_id")}
+    )
+    private Collection<Interest> interests = new ArrayList<>();
 
     /** The collection of {@link StudentBehavior StudentBehaviors} associated with the student. */
     @ToString.Exclude
@@ -119,7 +146,11 @@ public class Student {
     /** The collection of {@link Person Persons} associated with the student. */
     @ToString.Exclude
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private Collection<StudentPerson> studentPersons;
+    private Collection<StudentPersonRole> studentPersonRoles;
+
+    public void setStudentInterests(Collection<Interest> interests) {
+        this.interests = interestSyncHelper.sync(this.interests, interests);
+    }
 
     public void setStudentBehaviors(Collection<StudentBehavior> studentBehaviors) {
         Collection<StudentBehavior> newCollection = studentBehaviors.stream()
@@ -129,38 +160,44 @@ public class Student {
                     return studentBehavior;
                 })
                 .collect(Collectors.toList());
-        this.studentBehaviors =
-                new CollectionSyncHelper<StudentBehavior>().sync(this.studentBehaviors, newCollection);
+        this.studentBehaviors = studentBehaviorSyncHelper.sync(this.studentBehaviors, newCollection);
     }
 
     public void setStudentLeadershipSkills(Collection<StudentLeadershipSkill> studentLeadershipSkills) {
-        this.studentLeadershipSkills = studentLeadershipSkills.stream()
+        Collection<StudentLeadershipSkill> newCollection = studentLeadershipSkills.stream()
                 .map(studentLeadershipSkill -> {
                     studentLeadershipSkill.getStudentLeadershipSkillPK().setStudent_id(getId());
                     studentLeadershipSkill.setStudent(this);
                     return studentLeadershipSkill;
                 })
                 .collect(Collectors.toList());
+        this.studentLeadershipSkills = studentLeadershipSkillSyncHelper.sync(this.studentLeadershipSkills, newCollection);
     }
 
     public void setStudentLeadershipTraits(Collection<StudentLeadershipTrait> studentLeadershipTraits) {
-        this.studentLeadershipTraits = studentLeadershipTraits.stream()
+        Collection<StudentLeadershipTrait> newCollection = studentLeadershipTraits.stream()
                 .map(studentLeadershipTrait -> {
                     studentLeadershipTrait.getStudentLeadershipTraitPK().setStudent_id(getId());
                     studentLeadershipTrait.setStudent(this);
                     return studentLeadershipTrait;
                 })
                 .collect(Collectors.toList());
+        this.studentLeadershipTraits = studentLeadershipTraitSyncHelper.sync(this.studentLeadershipTraits, newCollection);
     }
 
-    public void setStudentPersons(Collection<StudentPerson> studentPersons) {
-        this.studentPersons = studentPersons.stream()
+    public void setStudentPersonRoles(Collection<StudentPersonRole> studentPersonRoles) {
+        this.studentPersonRoles = studentPersonRoles.stream()
                 .map(studentPerson -> {
                     studentPerson.getStudentPersonPK().setStudent_id(getId());
                     studentPerson.setStudent(this);
                     return studentPerson;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public void setTeacher(StudentStaff teacher) {
+        teacher.setStudent(this);
+        this.teacher = teacher;
     }
 
 }

@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;

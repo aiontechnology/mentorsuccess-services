@@ -21,28 +21,30 @@ import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.BehaviorModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.reference.InterestModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipSkillModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.reference.LeadershipTraitModel;
-import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundEmergencyContactModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundContactModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentBehaviorModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentLeadershipSkillModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentLeadershipTraitModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentModel;
-import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.api.model.inbound.student.InboundStudentTeacherModel;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 /**
+ * Map an {@link InboundStudentModel} instance to a {@link Student} entity.
+ *
  * @author Whitney Hunter
  * @since 0.3.0
  */
@@ -50,65 +52,87 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundStudentModel, Student> {
 
+    private final OneWayCollectionMapper<InterestModel, Interest> interestModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentBehaviorModel, StudentBehavior> studentBehaviorModelToEntityMapper;
 
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipSkillModel, StudentLeadershipSkill> studentLeadershipSkillModelToEntityMapper;
 
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipTraitModel, StudentLeadershipTrait> studentLeadershipTraitModelToEntityMapper;
 
-    private final OneWayCollectionMapper<InboundEmergencyContactModel, StudentPerson> studentPersonModelToEntityMapper;
+    private final OneWayCollectionMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityMapper;
 
-    private final OneWayMapper<URI, SchoolPersonRole> teacherModelToEntityMapper;
+    private final OneWayMapper<InboundStudentTeacherModel, StudentStaff> studentTeacherModelToEntityMapper;
 
+    /**
+     * Map the set of {@link BehaviorModel} instances in the {@link InboundStudentModel} into a new
+     * {@link InboundStudentBehaviorModel} assuming that the behaviors were provided by the student's teacher.
+     */
+    private final OneWayMapper<InboundStudentModel, InboundStudentBehaviorModel> studentBehaviorModelMapper =
+            inboundStudentModel -> Optional.of(inboundStudentModel)
+                    .map(InboundStudentModel::getBehaviors)
+                    .map(behaviorModels -> new InboundStudentBehaviorModel(behaviorModels,
+                            inboundStudentModel.getTeacher().getUri()));
+
+    /**
+     * Map the set of {@link LeadershipSkillModel} instances in the {@link InboundStudentModel} into a new
+     * {@link InboundStudentLeadershipSkillModel} assuming that the skills were provided by the student's teacher.
+     */
+    private final OneWayMapper<InboundStudentModel, InboundStudentLeadershipSkillModel> studentLeadershipSkillModelMapper =
+            inboundStudentModel -> Optional.of(inboundStudentModel)
+                    .map(InboundStudentModel::getLeadershipSkills)
+                    .map(leadershipSkillModels -> new InboundStudentLeadershipSkillModel(leadershipSkillModels,
+                            inboundStudentModel.getTeacher().getUri()));
+
+    /**
+     * Map the set of {@link LeadershipTraitModel} instances in the {@link InboundStudentModel} into a new
+     * {@link InboundStudentLeadershipTraitModel} assuming that the skills were provided by the student's teacher.
+     */
+    private final OneWayMapper<InboundStudentModel, InboundStudentLeadershipTraitModel> studentLeadershipTraitModelMapper =
+            inboundStudentModel -> Optional.of(inboundStudentModel)
+                    .map(InboundStudentModel::getLeadershipTraits)
+                    .map(leadershipTraitModels -> new InboundStudentLeadershipTraitModel(leadershipTraitModels,
+                            inboundStudentModel.getTeacher().getUri()));
+
+    /**
+     * Map the given {@link InboundStudentModel} to the given {@link Student}.
+     *
+     * @param inboundStudentModel The {@link InboundStudentModel} to map from.
+     * @param student The {@link Student} to map to.
+     * @return The mapped {@link Student}.
+     */
     @Override
     public Optional<Student> map(InboundStudentModel inboundStudentModel, Student student) {
         return Optional.ofNullable(inboundStudentModel)
                 .map(s -> {
-                    student.setFirstName(inboundStudentModel.getFirstName());
-                    student.setLastName(inboundStudentModel.getLastName());
-                    student.setGrade(inboundStudentModel.getGrade());
-                    student.setPreferredTime(inboundStudentModel.getPreferredTime());
-                    student.setLocation(inboundStudentModel.getLocation());
-                    student.setIsMediaReleaseSigned(inboundStudentModel.getMediaReleaseSigned());
+                    student.setFirstName(s.getFirstName());
+                    student.setLastName(s.getLastName());
+                    student.setGrade(s.getGrade());
+                    student.setAllergyInfo(s.getAllergyInfo());
+                    student.setPreferredTime(s.getPreferredTime());
+                    student.setLocation(s.getLocation());
+                    student.setIsMediaReleaseSigned(s.getMediaReleaseSigned());
                     student.setIsActive(true);
-                    Optional<InboundStudentBehaviorModel> inboundStudentBehaviorModel =
-                            createInboundStudentBehaviorModel(inboundStudentModel);
-                    inboundStudentBehaviorModel.ifPresent(i -> student.setStudentBehaviors(
-                            studentBehaviorModelToEntityMapper.map(i, student.getStudentBehaviors())));
-                    processLeadershipSkills(inboundStudentModel, student);
-                    processLeadershipTraits(inboundStudentModel, student);
-                    student.setStudentPersons(studentPersonModelToEntityMapper.map(inboundStudentModel.getEmergencyContacts()));
-                    student.setTeacher(teacherModelToEntityMapper.map(inboundStudentModel.getTeacher()).orElse(null));
+                    student.setInterests(interestModelToEntityMapper.map(s.getInterests()));
+                    studentBehaviorModelMapper
+                            .map(s)
+                            .ifPresent(inboundStudentBehaviorModel ->
+                                    student.setStudentBehaviors(studentBehaviorModelToEntityMapper
+                                            .map(inboundStudentBehaviorModel, student.getStudentBehaviors())));
+                    studentLeadershipSkillModelMapper
+                            .map(s)
+                            .ifPresent(inboundStudentBehaviorModel ->
+                                    student.setStudentLeadershipSkills(studentLeadershipSkillModelToEntityMapper
+                                            .map(inboundStudentBehaviorModel, student.getStudentLeadershipSkills())));
+                    studentLeadershipTraitModelMapper
+                            .map(inboundStudentModel)
+                            .ifPresent(inboundStudentBehaviorModel ->
+                                    student.setStudentLeadershipTraits(studentLeadershipTraitModelToEntityMapper
+                                            .map(inboundStudentBehaviorModel, student.getStudentLeadershipTraits())));
+                    student.setStudentPersonRoles(studentPersonModelToEntityMapper.map(s.getContacts()));
+                    student.setTeacher(studentTeacherModelToEntityMapper.map(s.getTeacher()).orElse(null));
                     return student;
                 });
-    }
-
-    private Optional<InboundStudentBehaviorModel> createInboundStudentBehaviorModel(InboundStudentModel inboundStudentModel) {
-        if (inboundStudentModel.getBehaviors() != null) {
-            Set<BehaviorModel> behaviorModels = new HashSet<>(inboundStudentModel.getBehaviors());
-            return Optional.of(new InboundStudentBehaviorModel(behaviorModels, inboundStudentModel.getTeacher()));
-        }
-        return Optional.empty();
-    }
-
-    private void processLeadershipSkills(InboundStudentModel inboundStudentModel, Student student) {
-        if (inboundStudentModel.getLeadershipSkills() != null) {
-            Set<LeadershipSkillModel> behaviorModels = new HashSet<>(inboundStudentModel.getLeadershipSkills());
-            InboundStudentLeadershipSkillModel studentLeadershipSkill = new InboundStudentLeadershipSkillModel(
-                    behaviorModels, inboundStudentModel.getTeacher());
-            student.setStudentLeadershipSkills(studentLeadershipSkillModelToEntityMapper.map(studentLeadershipSkill,
-                    student.getStudentLeadershipSkills()));
-        }
-    }
-
-    private void processLeadershipTraits(InboundStudentModel inboundStudentModel, Student student) {
-        if (inboundStudentModel.getLeadershipTraits() != null) {
-            Set<LeadershipTraitModel> behaviorModels = new HashSet<>(inboundStudentModel.getLeadershipTraits());
-            InboundStudentLeadershipTraitModel studentLeadershipTrait = new InboundStudentLeadershipTraitModel(
-                    behaviorModels, inboundStudentModel.getTeacher());
-            student.setStudentLeadershipTraits(studentLeadershipTraitModelToEntityMapper.map(studentLeadershipTrait,
-                    student.getStudentLeadershipTraits()));
-        }
     }
 
 }

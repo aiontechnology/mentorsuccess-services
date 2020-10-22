@@ -40,20 +40,24 @@ public class OutboundStudentModel extends RepresentationModel<OutboundStudentMod
 
     private final Integer grade;
 
+    private final String allergyInfo;
+
     private final String preferredTime;
 
     private final ResourceLocation location;
 
     private Boolean mediaReleaseSigned;
 
-    private final TeacherModel teacher;
+    private final OutboundStudentTeacherModel teacher;
 
-    private Collection<String> studentBehaviors;
+    private Collection<String> interests;
 
-    private Collection<String> studentLeadershipSkills;
+    private Collection<String> behaviors;
 
-    private Collection<String> studentLeadershipTraits;
+    private Collection<String> leadershipSkills;
 
-    private Collection<OutboundEmergencyContactModel> emergencyContacts;
+    private Collection<String> leadershipTraits;
+
+    private Collection<OutboundContactModel> contacts;
 
 }

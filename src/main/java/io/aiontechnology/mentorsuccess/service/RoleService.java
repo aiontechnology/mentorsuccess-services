@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
-import io.aiontechnology.mentorsuccess.repository.RoleRepository;
+import io.aiontechnology.mentorsuccess.repository.SchoolPersonRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +37,7 @@ import java.util.UUID;
 public class RoleService {
 
     /** The repository used to interact with the database */
-    private final RoleRepository roleRepository;
+    private final SchoolPersonRoleRepository schoolPersonRoleRepository;
 
     /**
      * Create a role in the database by saving the provided {@link SchoolPersonRole}.
@@ -47,7 +47,7 @@ public class RoleService {
      */
     @Transactional
     public SchoolPersonRole createRole(SchoolPersonRole role) {
-        return roleRepository.save(role);
+        return schoolPersonRoleRepository.save(role);
     }
 
     /**
@@ -58,7 +58,7 @@ public class RoleService {
     @Transactional
     public SchoolPersonRole deactivateRole(SchoolPersonRole role) {
         role.setIsActive(false);
-        roleRepository.save(role);
+        schoolPersonRoleRepository.save(role);
         return role;
     }
 
@@ -69,7 +69,7 @@ public class RoleService {
      * @return The {@link SchoolPersonRole} if it could be found.
      */
     public Optional<SchoolPersonRole> findRoleById(UUID id) {
-        return roleRepository.findById(id);
+        return schoolPersonRoleRepository.findById(id);
     }
 
     /**
@@ -80,7 +80,7 @@ public class RoleService {
      */
     @Transactional
     public SchoolPersonRole updateRole(SchoolPersonRole role) {
-        return roleRepository.save(role);
+        return schoolPersonRoleRepository.save(role);
     }
 
 }

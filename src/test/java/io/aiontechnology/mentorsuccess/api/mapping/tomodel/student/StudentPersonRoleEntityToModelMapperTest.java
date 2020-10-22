@@ -18,9 +18,10 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.student;
 
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
-import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundEmergencyContactModel;
+import io.aiontechnology.mentorsuccess.api.model.outbound.student.OutboundContactModel;
 import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.StudentPerson;
+import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -37,7 +38,7 @@ import static org.mockito.Mockito.when;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-public class StudentPersonEntityToModelMapperTest {
+public class StudentPersonRoleEntityToModelMapperTest {
 
     @Test
     void testMapping() throws Exception {
@@ -48,15 +49,15 @@ public class StudentPersonEntityToModelMapperTest {
         OneWayMapper<Person, PersonModel> personEntityToModelMapper = mock(OneWayMapper.class);
         when(personEntityToModelMapper.map(person)).thenReturn(Optional.of(personModel));
 
-        StudentPerson studentPerson = new StudentPerson();
-        studentPerson.setPerson(person);
-        studentPerson.setPersonType(PRINCIPAL);
+        StudentPersonRole studentPersonRole = new StudentPersonRole();
+        studentPersonRole.setPerson(person);
+        studentPersonRole.setPersonType(PRINCIPAL);
 
         StudentPersonEntityToModelMapper studentPersonEntityToModelMapper =
-                new StudentPersonEntityToModelMapper(personEntityToModelMapper);
+                new StudentPersonEntityToModelMapper(personEntityToModelMapper, new PhoneService());
 
         // execute the SUT
-        Optional<OutboundEmergencyContactModel> result = studentPersonEntityToModelMapper.map(studentPerson);
+        Optional<OutboundContactModel> result = studentPersonEntityToModelMapper.map(studentPersonRole);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -75,10 +76,10 @@ public class StudentPersonEntityToModelMapperTest {
         when(personEntityToModelMapper.map(any())).thenReturn(Optional.empty());
 
         StudentPersonEntityToModelMapper studentPersonEntityToModelMapper =
-                new StudentPersonEntityToModelMapper(personEntityToModelMapper);
+                new StudentPersonEntityToModelMapper(personEntityToModelMapper, new PhoneService());
 
         // execute the SUT
-        Optional<OutboundEmergencyContactModel> result = studentPersonEntityToModelMapper.map(null);
+        Optional<OutboundContactModel> result = studentPersonEntityToModelMapper.map(null);
 
         // validation
         assertThat(result).isEmpty();
