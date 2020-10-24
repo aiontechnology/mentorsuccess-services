@@ -65,7 +65,7 @@ public class StudentBehavior {
     @JoinColumn(name = "behavior_id", referencedColumnName = "id", insertable = false, updatable = false)
     @EqualsAndHashCode.Include
     @ToString.Include
-    private Behavior behavior;
+    private Behavior behavior = new Behavior();
 
     /** The associated {@link Person}. */
     @MapsId("role_id")

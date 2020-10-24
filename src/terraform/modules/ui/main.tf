@@ -26,8 +26,8 @@ resource "aws_cloudwatch_log_group" "ecs-log-group" {
   name = "${local.resource_tag}-ui-log-group"
 
   tags = {
-    Environment = "${var.environment}"
-    Application = "${var.name}"
+    Environment = var.environment
+    Application = var.name
   }
 }
 

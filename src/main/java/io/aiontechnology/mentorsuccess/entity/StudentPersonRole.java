@@ -48,22 +48,25 @@ import java.util.UUID;
 public class StudentPersonRole {
 
     @EmbeddedId
-    @EqualsAndHashCode.Include
     private StudentPersonPK studentPersonPK = new StudentPersonPK();
 
     /** The type of the person associated with this entry */
     @Column
     @Enumerated(EnumType.STRING)
+    @EqualsAndHashCode.Include
     private RoleType personType;
 
     @Column
+    @EqualsAndHashCode.Include
     private Boolean isEmergencyContact;
 
     @Column
     @Enumerated(EnumType.STRING)
+    @EqualsAndHashCode.Include
     private ContactMethod preferredContactMethod;
 
     @Column
+    @EqualsAndHashCode.Include
     private String comment;
 
     /** The associated {@link Student}. */
@@ -73,10 +76,11 @@ public class StudentPersonRole {
     private Student student;
 
     /** The associated {@link Person}. */
-    @MapsId("person_Id")
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @MapsId("person_id")
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "person_id", referencedColumnName = "id")
-    private Person person;
+    @EqualsAndHashCode.Include
+    private Person person = new Person();
 
     @Embeddable
     @NoArgsConstructor
@@ -85,7 +89,7 @@ public class StudentPersonRole {
     public static class StudentPersonPK implements Serializable {
 
         private UUID student_id;
-        private UUID person_Id;
+        private UUID person_id;
 
     }
 

@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
@@ -46,6 +47,7 @@ public class Person {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @EqualsAndHashCode.Exclude
     private UUID id;
 
     /** The first name of the person. */
@@ -69,8 +71,9 @@ public class Person {
     private String email;
 
     /** The roles played by the person. */
-    @OneToMany(mappedBy = "person")
-    @Where(clause = "is_active = true")
-    private Collection<SchoolPersonRole> roles;
+//    @OneToMany(mappedBy = "person")
+//    @Where(clause = "is_active = true")
+//    @EqualsAndHashCode.Exclude
+//    private Collection<SchoolPersonRole> roles;
 
 }
