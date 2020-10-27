@@ -35,14 +35,19 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -643,6 +648,66 @@ public class StudentControllerIntegrationTest {
     }
 
     @Test
+    void testUpdateStudent() throws Exception {
+        // setup the fixture
+        Map<String, Object> teacherModel = new HashMap<>();
+        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        teacherModel.put("comment", "We need to talk");
+
+        Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
+        Set<String> interests = Set.of("Cats", "Dogs");
+        Set<String> leadershipSkills = Set.of("Decision Making", "Planning");
+        Set<String> leadershipTraits = Set.of("Humility", "Responsibility");
+
+        Map<String, Object> contact1 = new HashMap<>();
+        contact1.put("type", "PARENT_GUARDIAN");
+        contact1.put("firstName", "Peter");
+        contact1.put("lastName", "Parent");
+        contact1.put("isEmergencyContact", true);
+
+        Map<String, Object> studentModel = new HashMap<>();
+        studentModel.put("firstName", "NEW FIRST NAME");
+        studentModel.put("lastName", "NEW LAST NAME");
+        studentModel.put("grade", 3);
+        studentModel.put("preferredTime", "10:00am");
+        studentModel.put("location", "OFFLINE");
+        studentModel.put("mediaReleaseSigned", false);
+        studentModel.put("allergyInfo", "ketchup");
+        studentModel.put("teacher", teacherModel);
+        studentModel.put("behaviors", behaviors);
+        studentModel.put("interests", interests);
+        studentModel.put("leadershipSkills", leadershipSkills);
+        studentModel.put("leadershipTraits", leadershipTraits);
+        studentModel.put("contacts", Arrays.asList(contact1));
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is("NEW FIRST NAME")))
+                .andExpect(jsonPath("$.lastName", is("NEW LAST NAME")))
+                .andExpect(jsonPath("$.grade", is(3)))
+                .andExpect(jsonPath("$.preferredTime", is("10:00am")))
+                .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
+                .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
+                .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
+                .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
+                .andExpect(jsonPath("$.behaviors.size()", is(2)))
+                .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
+                .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
+                .andExpect(jsonPath("$.leadershipSkills", hasItems("Decision Making", "Planning")))
+                .andExpect(jsonPath("$.leadershipTraits", hasItems("Humility", "Responsibility")))
+                .andExpect(jsonPath("$.contacts[0].type", is("PARENT_GUARDIAN")))
+                .andExpect(jsonPath("$.contacts[0].firstName", is("Peter")))
+                .andExpect(jsonPath("$.contacts[0].lastName", is("Parent")))
+                .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
+    }
+
     void testDeactivateStudent() throws Exception {
         // setup the fixture
         // See SQL file

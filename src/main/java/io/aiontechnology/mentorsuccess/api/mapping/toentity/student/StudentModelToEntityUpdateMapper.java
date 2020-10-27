@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.student;
 
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayCollectionMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayCollectionUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
@@ -60,9 +61,9 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
 
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipTraitModel, StudentLeadershipTrait> studentLeadershipTraitModelToEntityMapper;
 
-    private final OneWayCollectionMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityMapper;
+    private final OneWayCollectionUpdateMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityMapper;
 
-    private final OneWayMapper<InboundStudentTeacherModel, StudentStaff> studentTeacherModelToEntityMapper;
+    private final OneWayUpdateMapper<InboundStudentTeacherModel, StudentStaff> studentTeacherModelToEntityMapper;
 
     /**
      * Map the set of {@link BehaviorModel} instances in the {@link InboundStudentModel} into a new
@@ -129,8 +130,10 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
                             .ifPresent(inboundStudentBehaviorModel ->
                                     student.setStudentLeadershipTraits(studentLeadershipTraitModelToEntityMapper
                                             .map(inboundStudentBehaviorModel, student.getStudentLeadershipTraits())));
-                    student.setStudentPersonRoles(studentPersonModelToEntityMapper.map(s.getContacts()));
-                    student.setTeacher(studentTeacherModelToEntityMapper.map(s.getTeacher()).orElse(null));
+                    student.setStudentPersonRoles(studentPersonModelToEntityMapper
+                            .map(s.getContacts(), student.getStudentPersonRoles()));
+                    student.setTeacher(studentTeacherModelToEntityMapper.map(s.getTeacher(), student.getTeacher())
+                            .orElse(null));
                     return student;
                 });
     }

@@ -36,7 +36,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundContactModel, StudentPersonRole> {
 
-    private final OneWayMapper<PersonModel, Person> personModelToEntityMapper;
+    private final OneWayUpdateMapper<PersonModel, Person> personModelToEntityMapper;
 
     private final PhoneService phoneService;
 
@@ -52,7 +52,7 @@ public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMappe
                             .withCellPhone(phoneService.normalize(contactModel.getCellPhone()))
                             .withEmail(contactModel.getEmail())
                             .build();
-                    studentPersonRole.setPerson(personModelToEntityMapper.map(personModel)
+                    studentPersonRole.setPerson(personModelToEntityMapper.map(personModel, studentPersonRole.getPerson())
                             .orElse(null));
                     studentPersonRole.setIsEmergencyContact(contactModel.getIsEmergencyContact());
                     studentPersonRole.setPreferredContactMethod(contactModel.getPreferredContactMethod());

@@ -321,16 +321,21 @@ public class MapperConfiguration {
      */
 
     @Bean
+    public CollectionSyncHelper<StudentPersonRole> studentPersonRoleCollectionSyncHelper() {
+        return new CollectionSyncHelper<>();
+    }
+
+    @Bean
     public OneWayMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityMapper(
             OneWayUpdateMapper<InboundContactModel, StudentPersonRole> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, StudentPersonRole.class);
     }
 
-    @Bean
-    public OneWayCollectionMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundContactModel, StudentPersonRole> mapper) {
-        return new ModelCollectionToEntityCollectionMapper<>(mapper);
-    }
+//    @Bean
+//    public OneWayCollectionMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityOneWayCollectionMapper(
+//            OneWayMapper<InboundContactModel, StudentPersonRole> mapper) {
+//        return new ModelCollectionToEntityCollectionMapper<>(mapper);
+//    }
 
     @Bean
     public OneWayCollectionMapper<StudentPersonRole, OutboundContactModel> studentPersonEntityToModelOneWayCollectionMapper(

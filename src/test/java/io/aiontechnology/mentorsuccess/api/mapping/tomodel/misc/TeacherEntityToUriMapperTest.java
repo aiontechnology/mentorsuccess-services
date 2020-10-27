@@ -118,7 +118,7 @@ public class TeacherEntityToUriMapperTest {
         role.setType(PRINCIPAL);
 
         role.setPerson(person);
-        person.setRoles(Arrays.asList(role));
+//        person.setRoles(Arrays.asList(role));
         return role;
     }
 

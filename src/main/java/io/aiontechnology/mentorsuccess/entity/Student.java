@@ -20,6 +20,7 @@ import io.aiontechnology.mentorsuccess.api.mapping.CollectionSyncHelper;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
@@ -68,6 +69,9 @@ public class Student {
     private static final CollectionSyncHelper<StudentLeadershipTrait> studentLeadershipTraitSyncHelper =
             new CollectionSyncHelper<>();
 
+    private static final CollectionSyncHelper<StudentPersonRole> studentPersonRoleSyncHelper =
+            new CollectionSyncHelper<>();
+
     /** The ID of the student. */
     @Id
     @GeneratedValue(generator = "UUID")
@@ -110,16 +114,19 @@ public class Student {
 
     /** The school which the student attends. */
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(cascade = {CascadeType.DETACH})
     @JoinColumn(name = "school_id", referencedColumnName = "id")
     private School school;
 
     /** The student's teacher. */
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private StudentStaff teacher;
+    private StudentStaff teacher = new StudentStaff();
 
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "student_interest",
@@ -130,23 +137,27 @@ public class Student {
 
     /** The collection of {@link StudentBehavior StudentBehaviors} associated with the student. */
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<StudentBehavior> studentBehaviors = new ArrayList<>();
 
     /** The collection of {@link StudentLeadershipSkill StudentLeadershipSkills} associated with the student. */
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<StudentLeadershipSkill> studentLeadershipSkills = new ArrayList<>();
 
     /** The collection of {@link StudentLeadershipTrait StudentLeadershipTraits} associated with the student. */
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<StudentLeadershipTrait> studentLeadershipTraits = new ArrayList<>();
 
     /** The collection of {@link Person Persons} associated with the student. */
     @ToString.Exclude
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private Collection<StudentPersonRole> studentPersonRoles;
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<StudentPersonRole> studentPersonRoles = new ArrayList<>();
 
     public void setStudentInterests(Collection<Interest> interests) {
         this.interests = interestSyncHelper.sync(this.interests, interests);
@@ -186,13 +197,14 @@ public class Student {
     }
 
     public void setStudentPersonRoles(Collection<StudentPersonRole> studentPersonRoles) {
-        this.studentPersonRoles = studentPersonRoles.stream()
+        Collection<StudentPersonRole> newCollection = studentPersonRoles.stream()
                 .map(studentPerson -> {
                     studentPerson.getStudentPersonPK().setStudent_id(getId());
                     studentPerson.setStudent(this);
                     return studentPerson;
                 })
                 .collect(Collectors.toList());
+        this.studentPersonRoles = studentPersonRoleSyncHelper.sync(this.studentPersonRoles, newCollection);
     }
 
     public void setTeacher(StudentStaff teacher) {

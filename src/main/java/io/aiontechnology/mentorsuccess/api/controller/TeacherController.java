@@ -98,7 +98,7 @@ public class TeacherController {
                         .map(roleService::createRole)
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create teacher")))
-                .orElseThrow(() -> new IllegalArgumentException("School not found"));
+                .orElseThrow(() -> new NotFoundException("School not found"));
     }
 
     /**
@@ -116,7 +116,7 @@ public class TeacherController {
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
                 .map(teachers -> CollectionModel.of(teachers))
-                .orElseThrow(() -> new IllegalArgumentException("Requested school not found"));
+                .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
     /**
