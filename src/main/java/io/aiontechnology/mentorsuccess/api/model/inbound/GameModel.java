@@ -55,10 +55,6 @@ public class GameModel extends ResourceModel<GameModel> implements ActivityFocus
     @Size(max = 40, message = "{game.name.size}")
     private final String name;
 
-    /** The game's description. */
-    @Size(max = 50, message = "{game.description.size}")
-    private final String description;
-
     /** The game's starting grade level. */
     @NotNull(message = "{game.grade1.notNull}")
     @Min(value = 1, message = "{game.grade1.invalid}")

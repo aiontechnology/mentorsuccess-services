@@ -60,10 +60,6 @@ public class Game {
     @Column
     private String name;
 
-    /** The description of the game. */
-    @Column
-    private String description;
-
     /** The start of the game's grade level range. */
     @Column
     private Integer grade1;

@@ -47,7 +47,6 @@ public class GameEntityToModelMapperTest {
         // setup the fixture
         UUID id = UUID.randomUUID();
         String name = "NAME";
-        String description = "DESCRIPTION";
         Integer gradeLevel1 = 1;
         Integer gradeLevel2 = 2;
         ResourceLocation location = ONLINE;
@@ -57,7 +56,6 @@ public class GameEntityToModelMapperTest {
         Game game = new Game();
         game.setId(id);
         game.setName(name);
-        game.setDescription(description);
         game.setGrade1(gradeLevel1);
         game.setGrade2(gradeLevel2);
         game.setLocation(location);
@@ -78,7 +76,6 @@ public class GameEntityToModelMapperTest {
         // validation
         assertThat(result).isNotEmpty();
         assertThat(result.get().getName()).isEqualTo(name);
-        assertThat(result.get().getDescription()).isEqualTo(description);
         assertThat(result.get().getGrade1()).isEqualTo(gradeLevel1);
         assertThat(result.get().getGrade2()).isEqualTo(gradeLevel2);
         assertThat(result.get().getLocation()).isEqualTo(location);

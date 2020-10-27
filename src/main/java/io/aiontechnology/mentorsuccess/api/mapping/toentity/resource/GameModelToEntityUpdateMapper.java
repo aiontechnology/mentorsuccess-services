@@ -59,7 +59,6 @@ public class GameModelToEntityUpdateMapper implements OneWayUpdateMapper<GameMod
         return Optional.ofNullable(gameModel)
                 .map(g -> {
                     game.setName(g.getName());
-                    game.setDescription(g.getDescription());
                     game.setGrade1(g.getGrade1());
                     game.setGrade2(g.getGrade2());
                     game.setLocation(g.getLocation());
