@@ -60,7 +60,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class GameControllerIntegrationTest {
 
     private static final String NAME = "Monopoly";
-    private static final String DESCRIPTION = "Fun with Capitalism";
     private static final Integer GRADE1 = 3;
     private static final Integer GRADE2 = 4;
     private static final ResourceLocation LOCATION = OFFLINE;
@@ -76,7 +75,6 @@ public class GameControllerIntegrationTest {
         // setup the fixture
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
-                .withDescription(DESCRIPTION)
                 .withGrade1(GRADE1)
                 .withGrade2(GRADE2)
                 .withLocation(LOCATION)
@@ -91,7 +89,6 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is(NAME)))
-                .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.grade1", is(GRADE1)))
                 .andExpect(jsonPath("$.grade2", is(GRADE2)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
@@ -104,7 +101,6 @@ public class GameControllerIntegrationTest {
         // setup the fixture
         GameModel gameModel = GameModel.builder()
                 .withName(NAME)
-                .withDescription(null)
                 .withGrade1(GRADE1)
                 .withGrade2(GRADE2)
                 .withLocation(LOCATION)
@@ -119,7 +115,6 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is(NAME)))
-                .andExpect(jsonPath("$.description", nullValue()))
                 .andExpect(jsonPath("$.grade1", is(GRADE1)))
                 .andExpect(jsonPath("$.grade2", is(GRADE2)))
                 .andExpect(jsonPath("$.location", is(OFFLINE.toString())))
@@ -132,7 +127,6 @@ public class GameControllerIntegrationTest {
         // setup the fixture
         GameModel gameModel = GameModel.builder()
                 .withName(null)
-                .withDescription(DESCRIPTION)
                 .withGrade1(null)
                 .withGrade2(null)
                 .withLocation(null)
@@ -161,7 +155,6 @@ public class GameControllerIntegrationTest {
         // setup the fixture
         GameModel gameModel = GameModel.builder()
                 .withName("12345678901234567890123456789012345678901")
-                .withDescription("123456789012345678901234567890123456789012345678901")
                 .withGrade1(7)
                 .withGrade2(7)
                 .withLocation(OFFLINE)
@@ -176,9 +169,8 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(4)))
+                .andExpect(jsonPath("$.error.length()", is(3)))
                 .andExpect(jsonPath("$.error.name", is("The name of a game can not be longer than 40 characters")))
-                .andExpect(jsonPath("$.error.description", is("The game's description can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.grade1", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.error.grade2", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
@@ -190,7 +182,6 @@ public class GameControllerIntegrationTest {
         // setup the fixture
         Map<String, Object> game = new HashMap<>();
         game.put("name", NAME);
-        game.put("description", DESCRIPTION);
         game.put("grade1", GRADE1);
         game.put("grade2", GRADE2);
         game.put("location", LOCATION);
@@ -205,7 +196,6 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is(NAME)))
-                .andExpect(jsonPath("$.description", is(DESCRIPTION)))
                 .andExpect(jsonPath("$.grade1", is(GRADE1)))
                 .andExpect(jsonPath("$.grade2", is(GRADE2)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
@@ -244,7 +234,6 @@ public class GameControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.id", is("f53af381-d524-40f7-8df9-3e808c9ad46b")))
                 .andExpect(jsonPath("$.name", is("NAME")))
-                .andExpect(jsonPath("$.description", is("DESCRIPTION")))
                 .andExpect(jsonPath("$.grade1", is(1)))
                 .andExpect(jsonPath("$.grade2", is(2)))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
@@ -272,7 +261,6 @@ public class GameControllerIntegrationTest {
         // setup the fixture
         Map<String, Object> updatedGame = new HashMap<>();
         updatedGame.put("name", "NEW_NAME");
-        updatedGame.put("description", "NEW_DESCRIPTION");
         updatedGame.put("grade1", 2);
         updatedGame.put("grade2", 3);
         updatedGame.put("location", ONLINE.toString());
@@ -288,7 +276,6 @@ public class GameControllerIntegrationTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.name", is("NEW_NAME")))
-                .andExpect(jsonPath("$.description", is("NEW_DESCRIPTION")))
                 .andExpect(jsonPath("$.grade1", is(2)))
                 .andExpect(jsonPath("$.grade2", is(3)))
                 .andExpect(jsonPath("$.location", is(ONLINE.toString())))

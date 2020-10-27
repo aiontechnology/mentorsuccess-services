@@ -57,7 +57,6 @@ public class GameEntityToModelMapper implements OneWayMapper<Game, GameModel> {
                 .map(g -> GameModel.builder()
                         .withId(game.getId())
                         .withName(game.getName())
-                        .withDescription(game.getDescription())
                         .withGrade1(game.getGrade1())
                         .withGrade2(game.getGrade2())
                         .withLocation(game.getLocation())
