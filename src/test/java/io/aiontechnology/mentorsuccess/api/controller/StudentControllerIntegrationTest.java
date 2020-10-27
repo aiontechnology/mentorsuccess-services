@@ -41,6 +41,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -639,6 +640,18 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.['contacts[0].isEmergencyContact']", is("The contact must be specified as an emergency contact or not")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
+    }
+
+    @Test
+    void testDeactivateStudent() throws Exception {
+        // setup the fixture
+        // See SQL file
+
+        // execute the SUT
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2"));
+
+        // validation
+        result.andExpect(status().isNoContent());
     }
 
 }
