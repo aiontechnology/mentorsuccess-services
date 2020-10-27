@@ -38,6 +38,12 @@ public class StudentService {
     /** The repository used to interact with the database */
     private final StudentRepository studentRepository;
 
+    @Transactional
+    public void deactivateStudent(Student student) {
+        student.setIsActive(false);
+        studentRepository.save(student);
+    }
+
     /**
      * Find a {@link Student} by its id.
      *

@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -129,6 +130,13 @@ public class StudentController {
                 .map(studentService::updateStudent)
                 .map(s -> studentModelAssembler.toModel(s, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException(("Unable to update student")));
+    }
+
+    @DeleteMapping("/{studentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deactivateStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId) {
+        studentService.getStudentById(studentId)
+                .ifPresent(studentService::deactivateStudent);
     }
 
     /** {@link LinkProvider} implementation for schools. */
