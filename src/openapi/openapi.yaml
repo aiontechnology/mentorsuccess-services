@@ -2078,6 +2078,42 @@ paths:
         passthroughBehavior: "when_no_match"
         type: "mock"
 
+    # GET for /api/v1/schools/{schoolId}/students
+    get:
+      summary: Get all students for a school
+      description: Get all students for a school
+      tags:
+        - school
+        - student
+      operationId: getStudents
+      responses:
+        "200":
+          description: All students for a school
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResultModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/students"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
     # POST for /api/v1/schools/{schoolId}/students
     post:
       summary: Create a student
@@ -2118,6 +2154,135 @@ paths:
         connectionType: "VPC_LINK"
         connectionId: "$${stageVariables.vpc_link_id}"
         httpMethod: "POST"
+        type: "http"
+
+  # /api/v1/schools/{schoolId}/students/{studentId} --------------------------------
+  /api/v1/schools/{schoolId}/students/{studentId}:
+    parameters:
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+      - in: path
+        name: studentId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired student
+
+    # OPTIONS for /api/v1/schools/{schoolId}/students/{studentId}
+    options:
+      tags:
+        - school
+        - student
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # PUT for /api/v1/schools/{schoolId}/students/{studentId}
+    put:
+      summary: Update a student
+      description: Update the student with the given id
+      tags:
+        - school
+        - student
+      operationId: updateStudent
+      requestBody:
+        description: The updated student
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentModel'
+      responses:
+        "200":
+          description: The student was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResultModel'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/students/{studentId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.studentId: "method.request.path.studentId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "PUT"
+        type: "http"
+
+    # DELETE for /api/v1/schools/{schoolId}/students/{studentId}
+    delete:
+      summary: Deactivate a student
+      description: Deactivate a particular student for a particular school
+      tags:
+        - school
+        - student
+      operationId: deactivateStudent
+      responses:
+        "204":
+          description: The student has been deactivated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/students/{studentId}"
+        responses:
+          default:
+            statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.studentId: "method.request.path.studentId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "DELETE"
         type: "http"
 
   # /api/v1/schools/{schoolId}/teachers --------------------------------------------
@@ -2995,6 +3160,19 @@ components:
           type: object
           allOf:
             - $ref: '#/components/schemas/SelfLink'
+
+    # StudentResultModelCollection -------------------------------------------------
+    StudentResultModelCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            studentModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/StudentResultModel'
 
     # StudentTeacherModel ----------------------------------------------------------
     StudentTeacherModel:
