@@ -1694,6 +1694,39 @@ paths:
         httpMethod: "PUT"
         type: "http"
 
+    # DELETE for /api/v1/schools/{schoolId}/mentors/{mentorId}
+    delete:
+      summary: Deactivate a mentor
+      description: Deactivate a particular mentor for a particular school
+      tags:
+        - school
+        - mentor
+      operationId: deactivateMentor
+      responses:
+        "204":
+          description: The mentor has been deactivated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/mentors/{mentorId}"
+        responses:
+          default:
+            statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.mentorId: "method.request.path.mentorId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "DELETE"
+        type: "http"
+
   # /api/v1/schools/{schoolId}/personnel -------------------------------------------
   /api/v1/schools/{schoolId}/personnel:
     parameters:

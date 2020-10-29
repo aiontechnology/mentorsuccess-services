@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.InboundMentorModel;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -298,7 +297,6 @@ public class MentorControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     void testDeactivateMentor() throws Exception {
         // setup the fixture
 
