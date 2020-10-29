@@ -1514,6 +1514,42 @@ paths:
         httpMethod: "POST"
         type: "http"
 
+    # GET for /api/v1/schools/{schoolId}/mentors
+    get:
+      summary: Get all mentors for a school
+      description: Get all mentors for a school
+      tags:
+        - school
+        - mentor
+      operationId: getMentors
+      responses:
+        "200":
+          description: All mentors for a school
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorResultModelCollection'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/mentors"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
   # /api/v1/schools/{schoolId}/mentors/{mentorId} ----------------------------------
   /api/v1/schools/{schoolId}/mentors/{mentorId}:
     parameters:
@@ -3039,6 +3075,19 @@ components:
           allOf:
             - $ref: '#/components/schemas/SelfLink'
             - $ref: '#/components/schemas/SchoolLink'
+
+    # MentorResultModelCollection --------------------------------------------------
+    MentorResultModelCollection:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            mentorModelList:
+              type: array
+              items:
+                allOf:
+                  - $ref: '#/components/schemas/MentorResultModel'
 
     # NameModel --------------------------------------------------------------------
     NameModel:

@@ -220,7 +220,6 @@ public class MentorControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     void testGetAllMentors() throws Exception {
         // setup the fixture
 
