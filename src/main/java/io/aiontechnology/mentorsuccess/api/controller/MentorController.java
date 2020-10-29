@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -142,7 +143,7 @@ public class MentorController {
      * @return A model that represents the teacher that has been updated.
      */
     @PutMapping("/{mentorId}")
-    public OutboundMentorModel updateTeacher(@PathVariable("schoolId") UUID schoolId,
+    public OutboundMentorModel updateMentor(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("mentorId") UUID mentorId,
             @RequestBody @Valid InboundMentorModel mentorModel) {
         return roleService.findRoleById(mentorId)
@@ -150,6 +151,20 @@ public class MentorController {
                 .map(roleService::updateRole)
                 .map(role -> mentorModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update mentor"));
+    }
+
+    /**
+     * A REST endpoint for deactivating a teacher.
+     *
+     * @param studentId The school from which the teacher should be deactivated.
+     * @param mentorId The id of the mentor to remove.
+     */
+    @DeleteMapping("/{mentorId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deactivateMentor(@PathVariable("schoolId") UUID studentId, @PathVariable("mentorId") UUID mentorId) {
+        log.debug("Deactivating mentor");
+        roleService.findRoleById(mentorId)
+                .ifPresent(roleService::deactivateRole);
     }
 
     /** {@link LinkProvider} implementation for mentors. */
