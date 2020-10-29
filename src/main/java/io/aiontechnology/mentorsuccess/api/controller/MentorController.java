@@ -20,8 +20,8 @@ import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.MentorModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.InboundMentorModel;
-import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
 import io.aiontechnology.mentorsuccess.api.model.outbound.OutboundMentorModel;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.service.RoleService;
@@ -34,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -47,7 +48,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.entity.RoleType.MENTOR;
-import static io.aiontechnology.mentorsuccess.entity.RoleType.TEACHER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
@@ -67,6 +67,9 @@ public class MentorController {
 
     /** A mapper for converting {@link InboundMentorModel} instances to {@link SchoolPersonRole Roles}. */
     private final OneWayMapper<InboundMentorModel, SchoolPersonRole> mentorMapper;
+
+    /** An update mapper for converting {@link InboundMentorModel} instances to {@link SchoolPersonRole Roles}. */
+    private final OneWayUpdateMapper<InboundMentorModel, SchoolPersonRole> mentorUpdateMapper;
 
     /** Assembler for creating {@link OutboundMentorModel} instances */
     private final MentorModelAssembler mentorModelAssembler;
@@ -129,6 +132,24 @@ public class MentorController {
         return roleService.findRoleById(mentorId)
                 .map(role -> mentorModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
+     * A REST endpoint for updating a mentor.
+     *
+     * @param schoolId The id of the school.
+     * @param mentorId The model that represents the updated mentor.
+     * @return A model that represents the teacher that has been updated.
+     */
+    @PutMapping("/{mentorId}")
+    public OutboundMentorModel updateTeacher(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("mentorId") UUID mentorId,
+            @RequestBody @Valid InboundMentorModel mentorModel) {
+        return roleService.findRoleById(mentorId)
+                .flatMap(role -> mentorUpdateMapper.map(mentorModel, role))
+                .map(roleService::updateRole)
+                .map(role -> mentorModelAssembler.toModel(role, linkProvider))
+                .orElseThrow(() -> new IllegalArgumentException("Unable to update mentor"));
     }
 
     /** {@link LinkProvider} implementation for mentors. */
