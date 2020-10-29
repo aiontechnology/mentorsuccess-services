@@ -33,7 +33,7 @@ import java.util.UUID;
  * @since 0.1.0
  */
 @Service
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 public class RoleService {
 
     /** The repository used to interact with the database */

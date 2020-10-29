@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.mapping.tomodel.person;
 
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
+import io.aiontechnology.mentorsuccess.api.model.outbound.OutboundMentorModel;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 /**
- * Mapper that converts a {@link SchoolPersonRole} to a {@link TeacherModel}.
+ * Mapper that converts a {@link SchoolPersonRole} to a {@link OutboundMentorModel}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
@@ -35,28 +35,21 @@ import java.util.Optional;
 @Component
 @RequiredArgsConstructor
 @Primary
-public class TeacherEntityToModelMapper implements OneWayMapper<SchoolPersonRole, TeacherModel> {
+public class MentorEntityToModelMapper implements OneWayMapper<SchoolPersonRole, OutboundMentorModel> {
 
     /** Service for formatting phone numbers */
     private final PhoneService phoneService;
 
-    /**
-     * Map the given {@link SchoolPersonRole} to a {@link TeacherModel}.
-     *
-     * @param role The {@link SchoolPersonRole} to map.
-     * @return The mapped {@link TeacherModel}.
-     */
     @Override
-    public Optional<TeacherModel> map(SchoolPersonRole role) {
+    public Optional<OutboundMentorModel> map(SchoolPersonRole role) {
         return Optional.ofNullable(role)
-                .map(t -> TeacherModel.builder()
-                        .withFirstName(t.getPerson().getFirstName())
-                        .withLastName(t.getPerson().getLastName())
-                        .withEmail(t.getPerson().getEmail())
-                        .withWorkPhone(phoneService.format(t.getPerson().getWorkPhone()))
-                        .withCellPhone(phoneService.format(t.getPerson().getCellPhone()))
-                        .withGrade1(t.getGrade1())
-                        .withGrade2(t.getGrade2())
+                .map(m -> OutboundMentorModel.builder()
+                        .withFirstName(m.getPerson().getFirstName())
+                        .withLastName(m.getPerson().getLastName())
+                        .withEmail(m.getPerson().getEmail())
+                        .withWorkPhone(phoneService.format(m.getPerson().getWorkPhone()))
+                        .withCellPhone(phoneService.format(m.getPerson().getCellPhone()))
+                        .withAvailability(role.getAvailability())
                         .build());
     }
 

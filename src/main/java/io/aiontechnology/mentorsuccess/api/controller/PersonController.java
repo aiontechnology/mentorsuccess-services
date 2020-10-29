@@ -34,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
@@ -50,7 +49,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
  */
 @RestController
 @RequestMapping("/api/v1/people")
-@RequiredArgsConstructor(onConstructor = @__({@Inject}))
+@RequiredArgsConstructor
 @Slf4j
 public class PersonController {
 

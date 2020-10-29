@@ -23,12 +23,13 @@ package io.aiontechnology.mentorsuccess.entity;
  * @since 0.3.0
  */
 public enum RoleType {
-    TEACHER,
+    COUNSELOR,
+    GRANDPARENT,
+    MENTOR,
+    PARENT_GUARDIAN,
+    PRINCIPAL,
     PROGRAM_ADMIN,
     SOCIAL_WORKER,
-    PRINCIPAL,
-    COUNSELOR,
     STAFF,
-    PARENT_GUARDIAN,
-    GRANDPARENT
+    TEACHER
 }
