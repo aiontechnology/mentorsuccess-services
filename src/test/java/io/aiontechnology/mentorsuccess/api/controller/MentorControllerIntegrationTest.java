@@ -268,7 +268,6 @@ public class MentorControllerIntegrationTest {
     }
 
     @Test
-    @Disabled
     void testUpdateMentor() throws Exception {
         // setup the fixture
         Map<String, Object> mentorModel = new HashMap<>();
@@ -280,7 +279,7 @@ public class MentorControllerIntegrationTest {
         mentorModel.put("availability", "never");
 
         // execute the SUT
-        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/metnors/ba238442-ce51-450d-a474-2e36872abe05")
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ba238442-ce51-450d-a474-2e36872abe05")
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
