@@ -46,8 +46,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Tests for {@link TeacherController}
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
@@ -190,8 +190,8 @@ public class TeacherControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.email", is("The provided teacher's email is invalid or longer that 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided teacher's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided teacher's work phone must be exactly 14 digits")))
-                .andExpect(jsonPath("$.error.grade1", is("A teaher's grade must be between 1st and 6th")))
-                .andExpect(jsonPath("$.error.grade2", is("A teaher's grade must be between 1st and 6th")))
+                .andExpect(jsonPath("$.error.grade1", is("A teacher's grade must be between 1st and 6th")))
+                .andExpect(jsonPath("$.error.grade2", is("A teacher's grade must be between 1st and 6th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")));
     }

@@ -34,8 +34,8 @@ import static org.mockito.Mockito.when;
 /**
  * Tests for {@link GameModelAssembler}.
  *
- * @author <a href="mailto:whitney@aiontechnology.io">Whitney Hunter</a>
- * @since 1.0.0
+ * @author Whitney Hunter
+ * @since 0.1.0
  */
 public class GameModelAssemblerTest {
     private static final String NAME = "NAME";

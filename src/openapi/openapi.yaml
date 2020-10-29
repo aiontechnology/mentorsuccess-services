@@ -1426,6 +1426,195 @@ paths:
         httpMethod: "PUT"
         type: "http"
 
+  # /api/v1/schools/{schoolId}/mentors ---------------------------------------------
+  /api/v1/schools/{schoolId}/mentors:
+    parameters:
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/mentors
+    options:
+      tags:
+        - school
+        - mentor
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # POST for /api/v1/schools/{schoolId}/mentors
+    post:
+      summary: Create a mentor
+      description: Create a new mentor for a school
+      tags:
+        - school
+        - mentor
+      operationId: createMentor
+      requestBody:
+        description: The new mentor
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MentorModel'
+      responses:
+        "201":
+          description: The mentor is created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorResultModel'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/mentors"
+        responses:
+          default:
+            statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "POST"
+        type: "http"
+
+  # /api/v1/schools/{schoolId}/mentors/{mentorId} ----------------------------------
+  /api/v1/schools/{schoolId}/mentors/{mentorId}:
+    parameters:
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+      - in: path
+        name: mentorId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired mentor
+
+    # OPTIONS for /api/v1/schools/{schoolId}/mentors/{mentorId}
+    options:
+      tags:
+        - school
+        - mentor
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/menetors/{mentorId}
+    get:
+      summary: Get a mentor
+      description: Get a particular mentor by id
+      tags:
+        - school
+        - mentor
+      operationId: getMentor
+      responses:
+        "200":
+          description: The mentor was returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MentorResultModel'
+          links:
+            self:
+              operationId: getMentor
+              parameters:
+                schoolId: '$request.path.schoolId'
+                teacherId: '$request.path.mentorId'
+              description: >
+                The `Mentor` object can be retrieved by doing a `GET`
+                to the current URL
+            school:
+              $ref: '#/components/links/school'
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/mentors/{mentorId}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.mentorId: "method.request.path.mentorId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
   # /api/v1/schools/{schoolId}/personnel -------------------------------------------
   /api/v1/schools/{schoolId}/personnel:
     parameters:
@@ -2826,6 +3015,30 @@ components:
               items:
                 allOf:
                   - $ref: '#/components/schemas/NameModel'
+
+    # MentorModel ------------------------------------------------------------------
+    MentorModel:
+      required:
+        - firstName
+        - lastName
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PersonModel'
+      properties:
+        availability:
+          type: string
+
+    # MentorResultModel ------------------------------------------------------------
+    MentorResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/MentorModel'
+      properties:
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
+            - $ref: '#/components/schemas/SchoolLink'
 
     # NameModel --------------------------------------------------------------------
     NameModel:

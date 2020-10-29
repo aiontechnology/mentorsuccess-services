@@ -73,6 +73,10 @@ public class SchoolPersonRole {
     @Column
     private Integer grade2;
 
+    /** Availability. (for mentors) */
+    @Column
+    private String availability;
+
     /** Is the role active? */
     @Column
     private Boolean isActive;

@@ -30,6 +30,7 @@ import io.aiontechnology.mentorsuccess.api.mapping.UpdateMapperBasedOneWayMapper
 import io.aiontechnology.mentorsuccess.api.model.inbound.ActivityFocusModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.BookModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.GameModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.InboundMentorModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.PersonModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.PersonnelModel;
 import io.aiontechnology.mentorsuccess.api.model.inbound.PhonogramModel;
@@ -215,6 +216,16 @@ public class MapperConfiguration {
     }
 
     /*
+     * Mentor
+     */
+
+    @Bean
+    public OneWayMapper<InboundMentorModel, SchoolPersonRole> mentorModelToEntityMapper(
+            OneWayUpdateMapper<InboundMentorModel, SchoolPersonRole> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
+    }
+
+    /*
      * Person
      */
 
@@ -330,12 +341,6 @@ public class MapperConfiguration {
             OneWayUpdateMapper<InboundContactModel, StudentPersonRole> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, StudentPersonRole.class);
     }
-
-//    @Bean
-//    public OneWayCollectionMapper<InboundContactModel, StudentPersonRole> studentPersonModelToEntityOneWayCollectionMapper(
-//            OneWayMapper<InboundContactModel, StudentPersonRole> mapper) {
-//        return new ModelCollectionToEntityCollectionMapper<>(mapper);
-//    }
 
     @Bean
     public OneWayCollectionMapper<StudentPersonRole, OutboundContactModel> studentPersonEntityToModelOneWayCollectionMapper(

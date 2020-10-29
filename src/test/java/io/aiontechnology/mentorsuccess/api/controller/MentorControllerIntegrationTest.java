@@ -17,7 +17,8 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.aiontechnology.mentorsuccess.api.model.inbound.reference.ProgramAdminModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.InboundMentorModel;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -44,22 +45,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Tests for {@link ProgramAdminController}
+ * Tests for {@link MentorController}.
  *
  * @author Whitney Hunter
- * @since 0.1.0
+ * @since 0.3.0
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@Sql({"/io/aiontechnology/mentorsuccess/api/controller/program-admin-controller.sql"})
+@Sql({"/io/aiontechnology/mentorsuccess/api/controller/mentor-controller.sql"})
 @Transactional
-public class ProgramAdminControllerIntegrationTest {
+public class MentorControllerIntegrationTest {
+
 
     private static String FIRST_NAME = "Fred";
     private static String LAST_NAME = "Rogers";
     private static String EMAIL = "fred@rogers.com";
     private static String WORK_PHONE = "(360) 111-2222";
     private static String CELL_PHONE = "(360) 333-4444";
+    private static String AVAILABILITY = "AVAILABILITY";
 
     @Inject
     private MockMvc mvc;
@@ -68,20 +71,21 @@ public class ProgramAdminControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testCreateProgramAdmin() throws Exception {
+    void testCreateMentor() throws Exception {
         // setup the fixture
-        ProgramAdminModel programAdminModel = ProgramAdminModel.builder()
+        InboundMentorModel mentorModel = InboundMentorModel.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withEmail(EMAIL)
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
+                .withAvailability(AVAILABILITY)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(programAdminModel)));
+                .content(objectMapper.writeValueAsString(mentorModel)));
 
         // validation
         result.andExpect(status().isCreated())
@@ -91,26 +95,28 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.email", is(EMAIL)))
                 .andExpect(jsonPath("$.workPhone", is(WORK_PHONE)))
                 .andExpect(jsonPath("$.cellPhone", is(CELL_PHONE)))
+                .andExpect(jsonPath("$.availability", is(AVAILABILITY)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/")))
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
     }
 
     @Test
-    void testCreateProgramAdmin_nullAllowedFields() throws Exception {
+    void testCreateMentor_nullAllowedFields() throws Exception {
         // setup the fixture
-        ProgramAdminModel programAdminModel = ProgramAdminModel.builder()
+        InboundMentorModel mentorModel = InboundMentorModel.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withEmail(null)
                 .withWorkPhone(null)
                 .withCellPhone(null)
+                .withAvailability(null)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/")
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(programAdminModel)));
+                .content(objectMapper.writeValueAsString(mentorModel)));
 
         // validation
         result.andExpect(status().isCreated())
@@ -120,100 +126,106 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.email", nullValue()))
                 .andExpect(jsonPath("$.workPhone", nullValue()))
                 .andExpect(jsonPath("$.cellPhone", nullValue()))
+                .andExpect(jsonPath("$.availability", nullValue()))
                 .andExpect(jsonPath("$._links.length()", is(2)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/")))
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
     }
 
     @Test
-    void testCreateProgramAdmin_nullRequiredValues() throws Exception {
+    void testCreateMentor_nullRequiredValues() throws Exception {
         // setup the fixture
-        ProgramAdminModel programAdminModel = ProgramAdminModel.builder()
+        InboundMentorModel mentorModel = InboundMentorModel.builder()
                 .withFirstName(null)
                 .withLastName(null)
                 .withEmail(EMAIL)
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
+                .withAvailability(AVAILABILITY)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(programAdminModel)));
+                .content(objectMapper.writeValueAsString(mentorModel)));
 
         // validation
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(2)))
-                .andExpect(jsonPath("$.error.firstName", is("A program admin must have a first name")))
-                .andExpect(jsonPath("$.error.lastName", is("A program admin must have a last name")))
+                .andExpect(jsonPath("$.error.firstName", is("A mentor must have a first name")))
+                .andExpect(jsonPath("$.error.lastName", is("A mentor must have a last name")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
-                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")));
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")));
     }
 
     @Test
-    void testCreateProgramAdmin_fieldsInvalid() throws Exception {
+    void testCreateMentor_fieldsInvalid() throws Exception {
         // setup the fixture
-        ProgramAdminModel programAdminModel = ProgramAdminModel.builder()
+        InboundMentorModel mentorModel = InboundMentorModel.builder()
                 .withFirstName("123456789012345678901234567890123456789012345678901")
                 .withLastName("123456789012345678901234567890123456789012345678901")
                 .withEmail("123456789012345678901234567890123456789012345678901")
                 .withWorkPhone("12345678901")
                 .withCellPhone("12345678901")
+                .withAvailability("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(programAdminModel)));
+                .content(objectMapper.writeValueAsString(mentorModel)));
 
         // validation
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(5)))
-                .andExpect(jsonPath("$.error.firstName", is("A program admin's first name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.lastName", is("A program admin's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is invalid or longer that 50 characters")))
-                .andExpect(jsonPath("$.error.cellPhone", is("The provided program admin's cell phone must be exactly 14 digits")))
-                .andExpect(jsonPath("$.error.workPhone", is("The provided program admin's work phone must be exactly 14 digits")))
+                .andExpect(jsonPath("$.error.length()", is(6)))
+                .andExpect(jsonPath("$.error.firstName", is("A mentor's first name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.lastName", is("A mentor's last name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided mentor's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.cellPhone", is("The provided mentor's cell phone must be exactly 14 digits")))
+                .andExpect(jsonPath("$.error.workPhone", is("The provided mentor's work phone must be exactly 14 digits")))
+                .andExpect(jsonPath("$.error.availability", is("A mentor's availability can not be longer than 100 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
-                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")));
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")));
     }
 
     @Test
-    void testCreateProgramAdmin_emailInvalid() throws Exception {
+    void testCreateMentor_emailInvalid() throws Exception {
         // setup the fixture
-        ProgramAdminModel programAdminModel = ProgramAdminModel.builder()
+        InboundMentorModel mentorModel = InboundMentorModel.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withEmail("invalid")
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
+                .withAvailability(AVAILABILITY)
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(programAdminModel)));
+                .content(objectMapper.writeValueAsString(mentorModel)));
 
         // validation
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(1)))
-                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided mentor's email is invalid or longer that 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
-                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")));
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")));
     }
 
     @Test
-    void testGetAllProgramAdmins() throws Exception {
+    @Disabled
+    void testGetAllMentors() throws Exception {
         // setup the fixture
 
         // execute the SUT
-        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")
+        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -221,12 +233,12 @@ public class ProgramAdminControllerIntegrationTest {
     }
 
     @Test
-    void testGetProgramAdminById_found() throws Exception {
+    void testGetMentorById_found() throws Exception {
         // setup the fixture
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ba238442-ce51-450d-a474-2e36872abe05")
+        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ba238442-ce51-450d-a474-2e36872abe05")
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -236,19 +248,20 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.email", is("fred@rogers.com")))
                 .andExpect(jsonPath("$.workPhone", is("(360) 111-2222")))
                 .andExpect(jsonPath("$.cellPhone", is("(360) 333-4444")))
+                .andExpect(jsonPath("$.availability", is("anytime")))
                 .andExpect(jsonPath("$._links.length()", is(2)))
-                .andExpect(jsonPath("$._links.self[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ba238442-ce51-450d-a474-2e36872abe05")))
+                .andExpect(jsonPath("$._links.self[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ba238442-ce51-450d-a474-2e36872abe05")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
 
     }
 
     @Test
-    void testGetProgramAdminById_notFound() throws Exception {
+    void testGetMentorById_notFound() throws Exception {
         // setup the fixture
         // None
 
         // execute the SUT
-        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ca238442-ce51-450d-a474-2e36872abe05")
+        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ca238442-ce51-450d-a474-2e36872abe05")
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -256,19 +269,21 @@ public class ProgramAdminControllerIntegrationTest {
     }
 
     @Test
-    void testUpdateProgramAdmin() throws Exception {
+    @Disabled
+    void testUpdateMentor() throws Exception {
         // setup the fixture
-        Map<String, Object> programAdminModel = new HashMap<>();
-        programAdminModel.put("firstName", "NEW FIRST NAME");
-        programAdminModel.put("lastName", "NEW LAST NAME");
-        programAdminModel.put("email", "new@email.com");
-        programAdminModel.put("workPhone", "(360) 765-4321");
-        programAdminModel.put("cellPhone", "(360) 765-4322");
+        Map<String, Object> mentorModel = new HashMap<>();
+        mentorModel.put("firstName", "NEW FIRST NAME");
+        mentorModel.put("lastName", "NEW LAST NAME");
+        mentorModel.put("email", "new@email.com");
+        mentorModel.put("workPhone", "(360) 765-4321");
+        mentorModel.put("cellPhone", "(360) 765-4322");
+        mentorModel.put("availability", "never");
 
         // execute the SUT
-        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ba238442-ce51-450d-a474-2e36872abe05")
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/metnors/ba238442-ce51-450d-a474-2e36872abe05")
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(programAdminModel)));
+                .content(objectMapper.writeValueAsString(mentorModel)));
 
         // validation
         result.andExpect(status().isOk())
@@ -278,17 +293,19 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.email", is("new@email.com")))
                 .andExpect(jsonPath("$.workPhone", is("(360) 765-4321")))
                 .andExpect(jsonPath("$.cellPhone", is("(360) 765-4322")))
+                .andExpect(jsonPath("$.availability", is("never")))
                 .andExpect(jsonPath("$._links.length()", is(2)))
-                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/")))
+                .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
     }
 
     @Test
-    void testDeactivateProgramAdmin() throws Exception {
+    @Disabled
+    void testDeactivateMentor() throws Exception {
         // setup the fixture
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/ca238442-ce51-450d-a474-2e36872abe05"));
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ca238442-ce51-450d-a474-2e36872abe05"));
 
         // validation
         result.andExpect(status().isNoContent());

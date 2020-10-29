@@ -14,45 +14,40 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.api.model.outbound.student;
+package io.aiontechnology.mentorsuccess.api.model.outbound;
 
-import io.aiontechnology.mentorsuccess.entity.ContactMethod;
-import io.aiontechnology.mentorsuccess.entity.RoleType;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 /**
- * Model object representing a contact to be returned to a client.
+ * Model object representing a mentor to be returned to a client.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
-public class OutboundContactModel {
+public class OutboundMentorModel extends RepresentationModel<OutboundMentorModel> {
 
-    private final RoleType type;
-
-    /** The contact's first name. */
+    /** The first name of the mentor. */
     private final String firstName;
 
-    /** The contact's last name. */
+    /** The last name of the mentor. */
     private final String lastName;
 
-    /** The contact's email. */
+    /** The mentor's email address. */
     private final String email;
 
-    /** The contact's work phone number. */
+    /** The mentor's work phone number. */
     private final String workPhone;
 
-    /** The contact's cell phone number. */
+    /** The mentor's cell phone */
     private final String cellPhone;
 
-    private Boolean isEmergencyContact;
-
-    private ContactMethod preferredContactMethod;
-
-    private String comment;
+    /** The mentor's availability */
+    private final String availability;
 
 }
