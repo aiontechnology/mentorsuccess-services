@@ -115,7 +115,7 @@ public class TeacherController {
                 .map(school -> school.getRoles().stream()
                         .map(role -> teacherModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
-                .map(teachers -> CollectionModel.of(teachers))
+                .map(CollectionModel::of)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 

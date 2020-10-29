@@ -21,12 +21,15 @@ import io.aiontechnology.mentorsuccess.api.assembler.MentorModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.api.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.model.inbound.InboundMentorModel;
+import io.aiontechnology.mentorsuccess.api.model.inbound.TeacherModel;
 import io.aiontechnology.mentorsuccess.api.model.outbound.OutboundMentorModel;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,11 +39,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.persistence.EntityManager;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static io.aiontechnology.mentorsuccess.entity.RoleType.MENTOR;
+import static io.aiontechnology.mentorsuccess.entity.RoleType.TEACHER;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
@@ -54,6 +61,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @RequiredArgsConstructor
 @Slf4j
 public class MentorController {
+
+    /** The JPA entity manager */
+    private final EntityManager entityManager;
 
     /** A mapper for converting {@link InboundMentorModel} instances to {@link SchoolPersonRole Roles}. */
     private final OneWayMapper<InboundMentorModel, SchoolPersonRole> mentorMapper;
@@ -87,6 +97,24 @@ public class MentorController {
                         .map(role -> mentorModelAssembler.toModel(role, linkProvider))
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create mentor")))
                 .orElseThrow(() -> new NotFoundException("School not found"));
+    }
+
+    /**
+     * A REST endpoint for retrieving all mentors.
+     *
+     * @return A collection of {@link OutboundMentorModel} instances for the requested school.
+     */
+    @GetMapping
+    public CollectionModel<OutboundMentorModel> getMentors(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Getting all mentors for school {}", schoolId);
+        var session = entityManager.unwrap(Session.class);
+        session.enableFilter("roleType").setParameter("type", MENTOR.toString());
+        return schoolService.getSchoolById(schoolId)
+                .map(school -> school.getRoles().stream()
+                        .map(role -> mentorModelAssembler.toModel(role, linkProvider))
+                        .collect(Collectors.toList()))
+                .map(CollectionModel::of)
+                .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
     /**
