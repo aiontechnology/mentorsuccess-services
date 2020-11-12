@@ -18,8 +18,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LeadershipTraitModelAssembler;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipTrait;
 import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,10 +50,10 @@ public class LeadershipTraitController {
     /**
      * A REST endpoint for retrieving all leadership traits.
      *
-     * @return A collection of {@link InboundLeadershipTrait} instances.
+     * @return A collection of leadership trait strings.
      */
     @GetMapping
-    public CollectionModel<OutboundLeadershipTrait> getLeadershipTraits() {
+    public CollectionModel<String> getLeadershipTraits() {
         var leadershipTraitModels =
                 StreamSupport.stream(leadershipTraitService.getAllLeadershipTraits().spliterator(), false)
                         .map(leadershipTraitModelAssembler::toModel)

@@ -16,9 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,35 +29,34 @@ import javax.validation.constraints.Size;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@AllArgsConstructor
+@Value
 @Builder(setterPrefix = "with")
-@Getter
 public class InboundMentor {
 
     /** The first name of the mentor. */
     @NotNull(message = "{mentor.firstName.notNull}")
     @Size(max = 50, message = "{mentor.firstName.size}")
-    private final String firstName;
+    String firstName;
 
     /** The last name of the mentor. */
     @NotNull(message = "{mentor.lastName.notNull}")
     @Size(max = 50, message = "{mentor.lastName.size}")
-    private final String lastName;
+    String lastName;
 
     /** The mentor's email address. */
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{mentor.email.invalid}")
-    private final String email;
+    String email;
 
     /** The mentor's work phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{mentor.workPhone.invalid}")
-    private final String workPhone;
+    String workPhone;
 
     /** The mentor's cell phone */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{mentor.cellPhone.invalid}")
-    private final String cellPhone;
+    String cellPhone;
 
     /** The mentor's availability */
     @Size(max = 100, message = "{mentor.availability.size}")
-    private final String availability;
+    String availability;
 
 }

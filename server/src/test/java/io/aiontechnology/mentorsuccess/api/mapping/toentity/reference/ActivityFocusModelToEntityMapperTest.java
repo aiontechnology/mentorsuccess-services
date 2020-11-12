@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundActivityFocus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -43,15 +42,11 @@ public class ActivityFocusModelToEntityMapperTest {
         String activityFocusName = "ACTIVITY_FOCUS";
         activityFocus.setName(activityFocusName);
 
-        InboundActivityFocus inboundActivityFocus = InboundActivityFocus.builder()
-                .withName(activityFocusName)
-                .build();
-
         Function<String, Optional<ActivityFocus>> getterFunction = m -> Optional.of(activityFocus);
         ActivityFocusModelToEntityMapper activityFocusModelToEntityMapper = new ActivityFocusModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<ActivityFocus> result = activityFocusModelToEntityMapper.map(inboundActivityFocus);
+        Optional<ActivityFocus> result = activityFocusModelToEntityMapper.map(activityFocusName);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -62,15 +57,12 @@ public class ActivityFocusModelToEntityMapperTest {
     void testNotFound() {
         // setup the fixture
         String activityFocusName = "ACTIVITY_FOCUS";
-        InboundActivityFocus inboundActivityFocus = InboundActivityFocus.builder()
-                .withName(activityFocusName)
-                .build();
 
         Function<String, Optional<ActivityFocus>> getterFunction = m -> Optional.empty();
         ActivityFocusModelToEntityMapper activityFocusModelToEntityMapper = new ActivityFocusModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<ActivityFocus> result = activityFocusModelToEntityMapper.map(inboundActivityFocus);
+        Optional<ActivityFocus> result = activityFocusModelToEntityMapper.map(activityFocusName);
 
         // validation
         assertThat(result).isEmpty();

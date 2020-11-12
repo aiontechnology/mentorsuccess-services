@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -43,15 +42,11 @@ public class LeadershipSkillModelToEntityMapperTest {
         String leadershipSkillName = "LEADERSHIP_SKILL";
         leadershipSkill.setName(leadershipSkillName);
 
-        InboundLeadershipSkill inboundLeadershipSkill = InboundLeadershipSkill.builder()
-                .withName(leadershipSkillName)
-                .build();
-
         Function<String, Optional<LeadershipSkill>> getterFunction = m -> Optional.of(leadershipSkill);
         LeadershipSkillModelToEntityMapper leadershipSkillModelToEntityMapper = new LeadershipSkillModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<LeadershipSkill> result = leadershipSkillModelToEntityMapper.map(inboundLeadershipSkill);
+        Optional<LeadershipSkill> result = leadershipSkillModelToEntityMapper.map(leadershipSkillName);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -62,15 +57,12 @@ public class LeadershipSkillModelToEntityMapperTest {
     void testNotFound() {
         // setup the fixture
         String leadershipSkillName = "BEHAVIOR";
-        InboundLeadershipSkill behaviorModel = InboundLeadershipSkill.builder()
-                .withName(leadershipSkillName)
-                .build();
 
         Function<String, Optional<LeadershipSkill>> getterFunction = m -> Optional.empty();
         LeadershipSkillModelToEntityMapper leadershipSkillModelToEntityMapper = new LeadershipSkillModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<LeadershipSkill> result = leadershipSkillModelToEntityMapper.map(behaviorModel);
+        Optional<LeadershipSkill> result = leadershipSkillModelToEntityMapper.map(leadershipSkillName);
 
         // validation
         assertThat(result).isEmpty();

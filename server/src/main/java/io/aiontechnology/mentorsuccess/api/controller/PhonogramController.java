@@ -18,8 +18,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.PhonogramModelAssembler;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundPhonogram;
 import io.aiontechnology.mentorsuccess.service.PhonogramService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +41,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class PhonogramController {
 
-    /** A HATEOAS assembler for {@link InboundPhonogramModel PhonogramModels}. */
+    /** A HATEOAS assembler for a phonogram. */
     private final PhonogramModelAssembler phonogramModelAssembler;
 
     /** Service for interacting with {@link Phonogram Phonograms}. */
@@ -55,7 +53,7 @@ public class PhonogramController {
      * @return A collection of models that represents the phonograms in the system.
      */
     @GetMapping
-    public CollectionModel<OutboundPhonogram> getPhonograms() {
+    public CollectionModel<String> getPhonograms() {
         var phonogramModels = StreamSupport.stream(phonogramService.getAllPhonograms().spliterator(), false)
                 .map(phonogramModelAssembler::toModel)
                 .collect(Collectors.toList());

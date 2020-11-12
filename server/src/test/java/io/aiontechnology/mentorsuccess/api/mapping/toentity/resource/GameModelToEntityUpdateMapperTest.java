@@ -21,9 +21,7 @@ import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundActivityFocus;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -50,8 +48,8 @@ public class GameModelToEntityUpdateMapperTest {
         Integer gradeLevel1 = 1;
         Integer gradeLevel2 = 2;
         ResourceLocation location = ONLINE;
-        Collection<InboundActivityFocus> inboundActivityFoci = Arrays.asList(InboundActivityFocus.builder().build());
-        Collection<InboundLeadershipSkill> inboundLeadershipSkills = Arrays.asList(InboundLeadershipSkill.builder().build());
+        Collection<String> inboundActivityFoci = Arrays.asList("FOCUS");
+        Collection<String> inboundLeadershipSkills = Arrays.asList("SKILL");
 
         InboundGame inboundGame = InboundGame.builder()
                 .withId(id)
@@ -65,9 +63,9 @@ public class GameModelToEntityUpdateMapperTest {
 
         Game game = new Game();
 
-        OneWayCollectionMapper<InboundActivityFocus, ActivityFocus> activityFocusModelToEntityMapper =
+        OneWayCollectionMapper<String, ActivityFocus> activityFocusModelToEntityMapper =
                 (b -> Arrays.asList(new ActivityFocus()));
-        OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityMapper =
+        OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
                 (l -> Arrays.asList(new LeadershipSkill()));
 
         GameModelToEntityUpdateMapper gameModelToEntityUpdateMapper = new GameModelToEntityUpdateMapper(
@@ -92,9 +90,9 @@ public class GameModelToEntityUpdateMapperTest {
         // setup the fixture
         Game game = new Game();
 
-        OneWayCollectionMapper<InboundActivityFocus, ActivityFocus> activityFocusModelToEntityMapper =
+        OneWayCollectionMapper<String, ActivityFocus> activityFocusModelToEntityMapper =
                 (b -> Arrays.asList(new ActivityFocus()));
-        OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityMapper =
+        OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
                 (l -> Arrays.asList(new LeadershipSkill()));
 
         GameModelToEntityUpdateMapper gameModelToEntityUpdateMapper = new GameModelToEntityUpdateMapper(

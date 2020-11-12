@@ -60,9 +60,9 @@ public class LeadershipSkillControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.leadershipSkillModelList").isArray())
-                .andExpect(jsonPath("$._embedded.leadershipSkillModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.leadershipSkillModelList[*].name", hasItems("LEADERSHIP_SKILL1", "LEADERSHIP_SKILL2")));
+                .andExpect(jsonPath("$._embedded.stringList").isArray())
+                .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("LEADERSHIP_SKILL1", "LEADERSHIP_SKILL2")));
     }
 
 }

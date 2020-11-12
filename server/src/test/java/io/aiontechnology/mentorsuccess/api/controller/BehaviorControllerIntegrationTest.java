@@ -60,9 +60,9 @@ public class BehaviorControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.behaviorModelList").isArray())
-                .andExpect(jsonPath("$._embedded.behaviorModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.behaviorModelList[*].name", hasItems("BEHAVIOR1", "BEHAVIOR2")));
+                .andExpect(jsonPath("$._embedded.stringList").isArray())
+                .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("BEHAVIOR1", "BEHAVIOR2")));
     }
 
 }

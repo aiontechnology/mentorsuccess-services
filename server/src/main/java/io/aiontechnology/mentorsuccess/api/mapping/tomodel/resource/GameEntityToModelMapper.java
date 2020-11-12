@@ -22,10 +22,7 @@ import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -41,11 +38,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GameEntityToModelMapper implements OneWayMapper<Game, OutboundGame> {
 
-    /** Mapper between {@link LeadershipSkill} and {@link InboundLeadershipSkill}. */
-    private final OneWayCollectionMapper<ActivityFocus, OutboundActivityFocus> activityFocusEntityToModelMapper;
+    /** Mapper between {@link LeadershipSkill} and an activity focus string. */
+    private final OneWayCollectionMapper<ActivityFocus, String> activityFocusEntityToModelMapper;
 
-    /** Mapper between {@link LeadershipSkill} and {@link InboundLeadershipSkill}. */
-    private final OneWayCollectionMapper<LeadershipSkill, OutboundLeadershipSkill> leadershipSkillEntityToModelMapper;
+    /** Mapper between {@link LeadershipSkill} and a leadership skill string. */
+    private final OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelMapper;
 
     /**
      * Map the given {@link Game} to a {@link OutboundGame}.

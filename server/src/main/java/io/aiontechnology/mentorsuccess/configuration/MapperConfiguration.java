@@ -45,7 +45,6 @@ import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundActivityFocus;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundMentor;
@@ -54,22 +53,11 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundPersonnel;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundSchool;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundPerson;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundBehavior;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundInterest;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundPhonogram;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import io.aiontechnology.mentorsuccess.service.BehaviorService;
@@ -105,14 +93,14 @@ public class MapperConfiguration {
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundActivityFocus, ActivityFocus> activityFocusModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundActivityFocus, ActivityFocus> mapper) {
+    public OneWayCollectionMapper<String, ActivityFocus> activityFocusModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, ActivityFocus> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
     @Bean
-    public OneWayCollectionMapper<ActivityFocus, OutboundActivityFocus> activityFocusEntityToModelOneWayCollectionMapper(
-            OneWayMapper<ActivityFocus, OutboundActivityFocus> mapper) {
+    public OneWayCollectionMapper<ActivityFocus, String> activityFocusEntityToModelOneWayCollectionMapper(
+            OneWayMapper<ActivityFocus, String> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
@@ -126,14 +114,14 @@ public class MapperConfiguration {
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundBehavior, Behavior> behaviorModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundBehavior, Behavior> mapper) {
+    public OneWayCollectionMapper<String, Behavior> behaviorModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, Behavior> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
     @Bean
-    public OneWayCollectionMapper<Behavior, OutboundBehavior> behaviorEntityToModelOneWayCollectionMapper(
-            OneWayMapper<Behavior, OutboundBehavior> mapper) {
+    public OneWayCollectionMapper<Behavior, String> behaviorEntityToModelOneWayCollectionMapper(
+            OneWayMapper<Behavior, String> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
@@ -165,14 +153,8 @@ public class MapperConfiguration {
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundInterest, Interest> interestModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundInterest, Interest> mapper) {
-        return new SimpleOneWayCollectionMapper<>(mapper);
-    }
-
-    @Bean
-    public OneWayCollectionMapper<Interest, OutboundInterest> interestEntityToModelOneWayCollectionMapper(
-            OneWayMapper<Interest, OutboundInterest> mapper) {
+    public OneWayCollectionMapper<String, Interest> interestModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, Interest> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
@@ -192,14 +174,14 @@ public class MapperConfiguration {
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundLeadershipSkill, LeadershipSkill> mapper) {
+    public OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, LeadershipSkill> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
     @Bean
-    public OneWayCollectionMapper<LeadershipSkill, OutboundLeadershipSkill> leadershipSkillEntityToModelOneWayCollectionMapper(
-            OneWayMapper<LeadershipSkill, OutboundLeadershipSkill> mapper) {
+    public OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelOneWayCollectionMapper(
+            OneWayMapper<LeadershipSkill, String> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
@@ -213,14 +195,14 @@ public class MapperConfiguration {
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundLeadershipTrait, LeadershipTrait> leadershipTraitModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundLeadershipTrait, LeadershipTrait> mapper) {
+    public OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, LeadershipTrait> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
     @Bean
-    public OneWayCollectionMapper<LeadershipTrait, OutboundLeadershipTrait> leadershipTraitEntityToModelOneWayCollectionMapper(
-            OneWayMapper<LeadershipTrait, OutboundLeadershipTrait> mapper) {
+    public OneWayCollectionMapper<LeadershipTrait, String> leadershipTraitEntityToModelOneWayCollectionMapper(
+            OneWayMapper<LeadershipTrait, String> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
@@ -271,14 +253,14 @@ public class MapperConfiguration {
     }
 
     @Bean
-    public OneWayCollectionMapper<InboundPhonogramModel, Phonogram> phonogramModelToEntityOneWayCollectionMapper(
-            OneWayMapper<InboundPhonogramModel, Phonogram> mapper) {
+    public OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, Phonogram> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
     @Bean
-    public OneWayCollectionMapper<Phonogram, OutboundPhonogram> phonogramEntityToModelOneWayCollectionMapper(
-            OneWayMapper<Phonogram, OutboundPhonogram> mapper) {
+    public OneWayCollectionMapper<Phonogram, String> phonogramEntityToModelOneWayCollectionMapper(
+            OneWayMapper<Phonogram, String> mapper) {
         return new SimpleOneWayCollectionMapper<>(mapper);
     }
 

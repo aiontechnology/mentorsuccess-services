@@ -2,8 +2,8 @@ package io.aiontechnology.mentorsuccess.model.outbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -11,28 +11,28 @@ import org.springframework.hateoas.server.core.Relation;
  * @author Whitney Hunter
  * @since 0.4.0
  */
-@Data
+@Value
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @Relation("personnelModelList")
 public class OutboundPersonnel extends RepresentationModel<OutboundPersonnel> {
 
     /** The personnel type */
-    private final RoleType type;
+    RoleType type;
 
     /** The first name. */
-    private final String firstName;
+    String firstName;
 
     /** The last name. */
-    private final String lastName;
+    String lastName;
 
     /** The email address. */
-    private final String email;
+    String email;
 
     /** The work phone number. */
-    private final String workPhone;
+    String workPhone;
 
     /** The cell phone number. */
-    private final String cellPhone;
+    String cellPhone;
 
 }

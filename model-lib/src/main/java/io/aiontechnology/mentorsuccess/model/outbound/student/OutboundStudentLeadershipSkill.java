@@ -17,9 +17,8 @@
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
 import java.util.Collection;
 
@@ -27,14 +26,14 @@ import java.util.Collection;
  * @author Whitney Hunter
  * @since 0.3.0
  */
+@Value
 @Builder(setterPrefix = "with")
-@Getter
 public class OutboundStudentLeadershipSkill {
 
     /** The associated leadership skill */
-    private final Collection<OutboundLeadershipSkill> leadershipSkills;
+    Collection<String> leadershipSkills;
 
     /** The URI of the associated person */
-    private final OutboundTeacher teacher;
+    OutboundTeacher teacher;
 
 }

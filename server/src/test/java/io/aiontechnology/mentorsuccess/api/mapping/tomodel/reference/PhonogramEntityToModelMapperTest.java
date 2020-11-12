@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundPhonogram;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -45,11 +44,11 @@ public class PhonogramEntityToModelMapperTest {
         PhonogramEntityToModelMapper phonogramEntityToModelMapper = new PhonogramEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundPhonogram> result = phonogramEntityToModelMapper.map(phonogram);
+        Optional<String> result = phonogramEntityToModelMapper.map(phonogram);
 
         // validation
         assertThat(result).isNotEmpty();
-        assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get()).isEqualTo(name);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class PhonogramEntityToModelMapperTest {
         PhonogramEntityToModelMapper phonogramEntityToModelMapper = new PhonogramEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundPhonogram> result = phonogramEntityToModelMapper.map(null);
+        Optional<String> result = phonogramEntityToModelMapper.map(null);
 
         // validation
         assertThat(result).isEmpty();

@@ -199,7 +199,7 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade2", is(GRADE2)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
-                .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
+                .andExpect(jsonPath("$.leadershipSkills[0]", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
@@ -237,7 +237,7 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade2", is(2)))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
-                .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL1")))
+                .andExpect(jsonPath("$.leadershipSkills[0]", is("LEADERSHIP_SKILL1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
@@ -279,7 +279,7 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade2", is(3)))
                 .andExpect(jsonPath("$.location", is(ONLINE.toString())))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
-                .andExpect(jsonPath("$.leadershipSkills[0].name", is("LEADERSHIP_SKILL2")))
+                .andExpect(jsonPath("$.leadershipSkills[0]", is("LEADERSHIP_SKILL2")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }

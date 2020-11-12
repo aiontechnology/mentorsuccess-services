@@ -49,7 +49,7 @@ public class GameModelAssemblerTest {
         Game game = new Game();
 
         OneWayMapper<Game, OutboundGame> gameMapper = mock(OneWayMapper.class);
-        OutboundGame outboundGame = mock(OutboundGame.class);
+        OutboundGame outboundGame = OutboundGame.builder().build();
         when(gameMapper.map(game)).thenReturn(Optional.of(outboundGame));
 
         GameModelAssembler assembler = new GameModelAssembler(gameMapper, null);
@@ -67,7 +67,7 @@ public class GameModelAssemblerTest {
         Game game = null;
 
         OneWayMapper<Game, OutboundGame> gameMapper = mock(OneWayMapper.class);
-        OutboundGame outboundGame = mock(OutboundGame.class);
+        OutboundGame outboundGame = OutboundGame.builder().build();
         when(gameMapper.map(game)).thenReturn(Optional.of(outboundGame));
 
         GameModelAssembler assembler = new GameModelAssembler(gameMapper, null);
@@ -85,7 +85,7 @@ public class GameModelAssemblerTest {
         Game game = new Game();
 
         OneWayMapper<Game, OutboundGame> gameMapper = mock(OneWayMapper.class);
-        OutboundGame outboundGame = mock(OutboundGame.class);
+        OutboundGame outboundGame = OutboundGame.builder().build();
         when(gameMapper.map(game)).thenReturn(Optional.of(outboundGame));
 
         LinkProvider<OutboundGame, Game> linkProvider = mock(LinkProvider.class);

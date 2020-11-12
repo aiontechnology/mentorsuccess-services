@@ -28,10 +28,6 @@ import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentStaff;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
@@ -53,7 +49,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundStudent, Student> {
 
-    private final OneWayCollectionMapper<InboundInterest, Interest> interestModelToEntityMapper;
+    private final OneWayCollectionMapper<String, Interest> interestModelToEntityMapper;
 
     private final OneWayToCollectionUpdateMapper<InboundStudentBehavior, StudentBehavior> studentBehaviorModelToEntityMapper;
 
@@ -66,34 +62,40 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
     private final OneWayUpdateMapper<InboundStudentTeacher, StudentStaff> studentTeacherModelToEntityMapper;
 
     /**
-     * Map the set of {@link InboundBehavior} instances in the {@link InboundStudent} into a new
+     * Map the set of behavior strings in the {@link InboundStudent} into a new
      * {@link InboundStudentBehavior} assuming that the behaviors were provided by the student's teacher.
      */
     private final OneWayMapper<InboundStudent, InboundStudentBehavior> studentBehaviorModelMapper =
             inboundStudent -> Optional.of(inboundStudent)
                     .map(InboundStudent::getBehaviors)
-                    .map(behaviorModels -> new InboundStudentBehavior(behaviorModels,
-                            inboundStudent.getTeacher().getUri()));
+                    .map(behaviorModels -> InboundStudentBehavior.builder()
+                            .withBehaviors(behaviorModels)
+                            .withTeacher(inboundStudent.getTeacher().getUri())
+                            .build());
 
     /**
-     * Map the set of {@link InboundLeadershipSkill} instances in the {@link InboundStudent} into a new
+     * Map the set of leadership skill strings in the {@link InboundStudent} into a new
      * {@link InboundStudentLeadershipSkill} assuming that the skills were provided by the student's teacher.
      */
     private final OneWayMapper<InboundStudent, InboundStudentLeadershipSkill> studentLeadershipSkillModelMapper =
             inboundStudent -> Optional.of(inboundStudent)
                     .map(InboundStudent::getLeadershipSkills)
-                    .map(leadershipSkillModels -> new InboundStudentLeadershipSkill(leadershipSkillModels,
-                            inboundStudent.getTeacher().getUri()));
+                    .map(leadershipSkillModels -> InboundStudentLeadershipSkill.builder()
+                            .withLeadershipSkills(leadershipSkillModels)
+                            .withTeacher(inboundStudent.getTeacher().getUri())
+                            .build());
 
     /**
-     * Map the set of {@link InboundLeadershipTrait} instances in the {@link InboundStudent} into a new
+     * Map the set of leadership trait strings in the {@link InboundStudent} into a new
      * {@link InboundStudentLeadershipTrait} assuming that the skills were provided by the student's teacher.
      */
     private final OneWayMapper<InboundStudent, InboundStudentLeadershipTrait> studentLeadershipTraitModelMapper =
             inboundStudent -> Optional.of(inboundStudent)
                     .map(InboundStudent::getLeadershipTraits)
-                    .map(leadershipTraitModels -> new InboundStudentLeadershipTrait(leadershipTraitModels,
-                            inboundStudent.getTeacher().getUri()));
+                    .map(leadershipTraitModels -> InboundStudentLeadershipTrait.builder()
+                            .withLeadershipTraits(leadershipTraitModels)
+                            .withTeacher(inboundStudent.getTeacher().getUri())
+                            .build());
 
     /**
      * Map the given {@link InboundStudent} to the given {@link Student}.

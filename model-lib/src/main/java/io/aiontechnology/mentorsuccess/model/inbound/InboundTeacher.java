@@ -17,8 +17,7 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -32,41 +31,40 @@ import javax.validation.constraints.Size;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundTeacher {
 
     /** The first name of the teacher. */
     @NotNull(message = "{teacher.firstName.notNull}")
     @Size(max = 50, message = "{teacher.firstName.size}")
-    private final String firstName;
+    String firstName;
 
     /** The last name of the teacher. */
     @NotNull(message = "{teacher.lastName.notNull}")
     @Size(max = 50, message = "{teacher.lastName.size}")
-    private final String lastName;
+    String lastName;
 
     /** The teacher's email address. */
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{teacher.email.invalid}")
-    private final String email;
+    String email;
 
     /** The teacher's work phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{teacher.workPhone.invalid}")
-    private final String workPhone;
+    String workPhone;
 
     /** The teacher's cell phone */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{teacher.cellPhone.invalid}")
-    private final String cellPhone;
+    String cellPhone;
 
     /** First grade taught by teacher. */
     @Min(value = 1, message = "{teacher.grade1.invalid}")
     @Max(value = 6, message = "{teacher.grade1.invalid}")
-    private final Integer grade1;
+    Integer grade1;
 
     /** Second grade taught by teacher. Null if there is only one grade. */
     @Min(value = 1, message = "{teacher.grade1.invalid}")
     @Max(value = 6, message = "{teacher.grade1.invalid}")
-    private final Integer grade2;
+    Integer grade2;
 
 }

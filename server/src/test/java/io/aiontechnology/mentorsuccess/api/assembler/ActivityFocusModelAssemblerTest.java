@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -40,17 +39,17 @@ public class ActivityFocusModelAssemblerTest {
         // setup the fixture
         ActivityFocus activityFocus = new ActivityFocus();
 
-        OneWayMapper<ActivityFocus, OutboundActivityFocus> activityFocusMapper = mock(OneWayMapper.class);
-        OutboundActivityFocus inboundActivityFocusModel = mock(OutboundActivityFocus.class);
-        when(activityFocusMapper.map(activityFocus)).thenReturn(Optional.of(inboundActivityFocusModel));
+        OneWayMapper<ActivityFocus, String> activityFocusMapper = mock(OneWayMapper.class);
+        String activityFocusString = "ACTIVITY_FOCUS";
+        when(activityFocusMapper.map(activityFocus)).thenReturn(Optional.of(activityFocusString));
 
         ActivityFocusModelAssembler assembler = new ActivityFocusModelAssembler(activityFocusMapper);
 
         // execute the SUT
-        OutboundActivityFocus result = assembler.toModel(activityFocus);
+        String result = assembler.toModel(activityFocus);
 
         // validation
-        assertThat(result).isSameAs(inboundActivityFocusModel);
+        assertThat(result).isSameAs(activityFocusString);
     }
 
     @Test
@@ -58,14 +57,14 @@ public class ActivityFocusModelAssemblerTest {
         // setup the fixture
         ActivityFocus activityFocus = null;
 
-        OneWayMapper<ActivityFocus, OutboundActivityFocus> activityFocusMapper = mock(OneWayMapper.class);
-        OutboundActivityFocus inboundActivityFocusModel = mock(OutboundActivityFocus.class);
-        when(activityFocusMapper.map(activityFocus)).thenReturn(Optional.of(inboundActivityFocusModel));
+        OneWayMapper<ActivityFocus, String> activityFocusMapper = mock(OneWayMapper.class);
+        String activityFocusString = "ACTIVITY_FOCUS";
+        when(activityFocusMapper.map(activityFocus)).thenReturn(Optional.of(activityFocusString));
 
         ActivityFocusModelAssembler assembler = new ActivityFocusModelAssembler(activityFocusMapper);
 
         // execute the SUT
-        OutboundActivityFocus result = assembler.toModel(activityFocus);
+        String result = assembler.toModel(activityFocus);
 
         // validation
         assertThat(result).isNull();

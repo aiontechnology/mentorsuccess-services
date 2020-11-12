@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -43,15 +42,11 @@ public class PhonogramModelToEntityMapperTest {
         String phonogramName = "PHONOGRAM";
         phonogram.setName(phonogramName);
 
-        InboundPhonogramModel inboundPhonogramModel = InboundPhonogramModel.builder()
-                .withName(phonogramName)
-                .build();
-
         Function<String, Optional<Phonogram>> getterFunction = m -> Optional.of(phonogram);
         PhonogramModelToEntityMapper phonogramModelToEntityMapper = new PhonogramModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<Phonogram> result = phonogramModelToEntityMapper.map(inboundPhonogramModel);
+        Optional<Phonogram> result = phonogramModelToEntityMapper.map(phonogramName);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -62,15 +57,12 @@ public class PhonogramModelToEntityMapperTest {
     void testNotFound() {
         // setup the fixture
         String phonogramName = "PHONOGRAM";
-        InboundPhonogramModel inboundPhonogramModel = InboundPhonogramModel.builder()
-                .withName(phonogramName)
-                .build();
 
         Function<String, Optional<Phonogram>> getterFunction = m -> Optional.empty();
         PhonogramModelToEntityMapper phonogramModelToEntityMapper = new PhonogramModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<Phonogram> result = phonogramModelToEntityMapper.map(inboundPhonogramModel);
+        Optional<Phonogram> result = phonogramModelToEntityMapper.map(phonogramName);
 
         // validation
         assertThat(result).isEmpty();

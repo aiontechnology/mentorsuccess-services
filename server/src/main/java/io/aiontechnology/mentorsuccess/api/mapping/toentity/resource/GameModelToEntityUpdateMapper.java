@@ -21,9 +21,7 @@ import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundActivityFocus;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -40,11 +38,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GameModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundGame, Game> {
 
-    /** Mapper between {@link InboundActivityFocus} and {@link ActivityFocus}. */
-    private final OneWayCollectionMapper<InboundActivityFocus, ActivityFocus> activityFocusModelToEntityMapper;
+    /** Mapper between an activity focus string and {@link ActivityFocus}. */
+    private final OneWayCollectionMapper<String, ActivityFocus> activityFocusModelToEntityMapper;
 
-    /** Mapper between {@link InboundLeadershipSkill} and {@link LeadershipSkill}. */
-    private final OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityMapper;
+    /** Mapper between a leadership skill string and {@link LeadershipSkill}. */
+    private final OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper;
 
     /**
      * Update the given {@link Game} with the given {@link InboundGame}.

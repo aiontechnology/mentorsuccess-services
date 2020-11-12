@@ -16,9 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound.student;
 
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -30,16 +29,16 @@ import java.util.Set;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@AllArgsConstructor
-@Getter
+@Value
+@Builder(setterPrefix = "with")
 public class InboundStudentLeadershipSkill {
 
     /** The associated leadership skill */
     @NotNull
-    private final Set<InboundLeadershipSkill> leadershipSkills;
+    Set<String> leadershipSkills;
 
     /** The URI of the associated person */
     @NotNull
-    private final URI teacher;
+    URI teacher;
 
 }

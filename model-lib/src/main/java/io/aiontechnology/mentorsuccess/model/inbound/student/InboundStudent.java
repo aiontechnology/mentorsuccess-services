@@ -17,14 +17,9 @@
 package io.aiontechnology.mentorsuccess.model.inbound.student;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Value;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Max;
@@ -40,47 +35,49 @@ import java.util.Set;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@AllArgsConstructor
+@Value
 @Builder(setterPrefix = "with")
-@Getter
 public class InboundStudent {
 
     @NotNull(message = "{student.firstname.notNull}")
     @Size(max = 50, message = "{student.firstname.size}")
-    private final String firstName;
+    String firstName;
 
     @NotNull(message = "{student.lastname.notNull}")
     @Size(max = 50, message = "{student.lastname.size}")
-    private final String lastName;
+    String lastName;
 
     @NotNull(message = "{student.grade.notNull}")
     @Min(value = 0, message = "{student.grade.invalid}")
     @Max(value = 5, message = "{student.grade.invalid}")
-    private final Integer grade;
+    Integer grade;
 
     @Size(max = 255, message = "{student.alergyInfo.size}")
-    private final String allergyInfo;
+    String allergyInfo;
 
     @Size(max = 10, message = "{student.preferredTime.size}")
-    private final String preferredTime;
+    String preferredTime;
 
     @NotNull(message = "{student.location.notNull}")
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{student.location.invalid}")
-    private final ResourceLocation location;
+    ResourceLocation location;
+
     @NotNull(message = "{student.teacher.notNull}")
     @Valid
-    private final InboundStudentTeacher teacher;
+    InboundStudentTeacher teacher;
+
     @NotNull(message = "{student.mediaRelease.notNull}")
-    private final Boolean mediaReleaseSigned;
-    private final Set<InboundBehavior> behaviors;
+    Boolean mediaReleaseSigned;
 
-    private final Set<InboundInterest> interests;
+    Set<String> behaviors;
 
-    private final Set<InboundLeadershipSkill> leadershipSkills;
+    Set<String> interests;
 
-    private final Set<InboundLeadershipTrait> leadershipTraits;
+    Set<String> leadershipSkills;
+
+    Set<String> leadershipTraits;
 
     @Valid
-    private final Collection<InboundContact> contacts;
+    Collection<InboundContact> contacts;
 
 }

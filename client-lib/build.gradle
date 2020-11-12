@@ -15,13 +15,23 @@ plugins {
     id 'mentorsuccess.publishing-conventions'
 }
 
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+}
+
 dependencies {
     api project(':model-lib')
 
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-
-    implementation 'io.github.openfeign:feign-core:11.0'
-    implementation 'io.github.openfeign:feign-jackson:11.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 }
 
 bintray {

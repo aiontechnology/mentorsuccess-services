@@ -18,18 +18,18 @@ package io.aiontechnology.mentorsuccess.model.outbound.student;
 
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
 /**
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
 public class OutboundStudentTeacher {
 
-    private OutboundTeacher teacher;
+    OutboundTeacher teacher;
 
-    private String comment;
+    String comment;
 
 }

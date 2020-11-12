@@ -17,8 +17,7 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -30,31 +29,30 @@ import javax.validation.constraints.Size;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundProgramAdmin {
 
     /** The first name of the program admin. */
     @NotNull(message = "{programAdmin.firstName.notNull}")
     @Size(max = 50, message = "{programAdmin.firstName.size}")
-    private final String firstName;
+    String firstName;
 
     /** The last name of the program admin. */
     @NotNull(message = "{programAdmin.lastName.notNull}")
     @Size(max = 50, message = "{programAdmin.lastName.size}")
-    private final String lastName;
+    String lastName;
 
     /** The program admin's email address. */
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{programAdmin.email.invalid}")
-    private final String email;
+    String email;
 
     /** The program admin's work phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{programAdmin.workPhone.invalid}")
-    private final String workPhone;
+    String workPhone;
 
     /** The program admin's cell phone. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{programAdmin.cellPhone.invalid}")
-    private final String cellPhone;
+    String cellPhone;
 
 }

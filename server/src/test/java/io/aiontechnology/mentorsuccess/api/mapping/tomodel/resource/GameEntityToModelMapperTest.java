@@ -21,9 +21,7 @@ import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -62,10 +60,10 @@ public class GameEntityToModelMapperTest {
         game.setActivityFocuses(activityFocuses);
         game.setLeadershipSkills(leadershipSkills);
 
-        OneWayCollectionMapper<ActivityFocus, OutboundActivityFocus> activityFocusEntityToModelMapper =
-                (b -> Arrays.asList(OutboundActivityFocus.builder().build()));
-        OneWayCollectionMapper<LeadershipSkill, OutboundLeadershipSkill> leadershipSkillEntityToModelMapper =
-                (l -> Arrays.asList(OutboundLeadershipSkill.builder().build()));
+        OneWayCollectionMapper<ActivityFocus, String> activityFocusEntityToModelMapper =
+                (b -> Arrays.asList("ACTIVITY_FOCUS"));
+        OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelMapper =
+                (l -> Arrays.asList("LEADERSHIP_SKILL"));
 
         GameEntityToModelMapper gameEntityToModelMapper = new GameEntityToModelMapper(activityFocusEntityToModelMapper,
                 leadershipSkillEntityToModelMapper);
@@ -86,10 +84,10 @@ public class GameEntityToModelMapperTest {
     @Test
     void testNull() throws Exception {
         // setup the fixture
-        OneWayCollectionMapper<ActivityFocus, OutboundActivityFocus> activityFocusEntityToModelMapper =
-                (b -> Arrays.asList(OutboundActivityFocus.builder().build()));
-        OneWayCollectionMapper<LeadershipSkill, OutboundLeadershipSkill> leadershipSkillEntityToModelMapper =
-                (l -> Arrays.asList(OutboundLeadershipSkill.builder().build()));
+        OneWayCollectionMapper<ActivityFocus, String> activityFocusEntityToModelMapper =
+                (b -> Arrays.asList("ACTIVITY FOCUS"));
+        OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelMapper =
+                (l -> Arrays.asList("LEADERSHIP_SKILL"));
 
         GameEntityToModelMapper gameEntityToModelMapper = new GameEntityToModelMapper(activityFocusEntityToModelMapper,
                 leadershipSkillEntityToModelMapper);

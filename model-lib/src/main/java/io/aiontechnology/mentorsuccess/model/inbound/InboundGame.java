@@ -17,13 +17,11 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import io.aiontechnology.mentorsuccess.model.validation.GradeRange;
 import io.aiontechnology.mentorsuccess.model.validation.GradeRangeHolder;
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -38,40 +36,39 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
 @GradeRange
-@ToString
 public class InboundGame implements GradeRangeHolder {
 
     /** The game's id. */
-    private final UUID id;
+    UUID id;
 
     /** The game's name. */
     @NotNull(message = "{game.name.notNull}")
     @Size(max = 40, message = "{game.name.size}")
-    private final String name;
+    String name;
 
     /** The game's starting grade level. */
     @NotNull(message = "{game.grade1.notNull}")
     @Min(value = 1, message = "{game.grade1.invalid}")
     @Max(value = 6, message = "{game.grade1.invalid}")
-    private final Integer grade1;
+    Integer grade1;
 
     /** The game's ending grade level. */
     @NotNull(message = "{game.grade2.notNull}")
     @Min(value = 1, message = "{game.grade2.invalid}")
     @Max(value = 6, message = "{game.grade2.invalid}")
-    private final Integer grade2;
+    Integer grade2;
 
     @NotNull(message = "{game.location.notNull}")
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
-    private final ResourceLocation location;
+    ResourceLocation location;
 
     /** The activity focus associated with the game. */
-    private final Collection<InboundActivityFocus> activityFocuses;
+    Collection<String> activityFocuses;
 
     /** The leadership skills associated with the book. */
-    private final Collection<InboundLeadershipSkill> leadershipSkills;
+    Collection<String> leadershipSkills;
 
 }

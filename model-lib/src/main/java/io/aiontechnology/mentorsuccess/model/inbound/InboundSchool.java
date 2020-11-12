@@ -17,8 +17,7 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -31,31 +30,31 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundSchool {
 
     /** The school's id */
-    private final UUID id;
+    UUID id;
 
     /** The name of the school */
     @NotNull(message = "{school.name.notNull}")
     @Size(max = 50, message = "{school.name.size}")
-    private final String name;
+    String name;
 
     /** The school's address */
-    private final @Valid InboundAddress address;
+    @Valid
+    InboundAddress address;
 
     /** The school's phone number */
     @Size(min = 14, max = 14, message = "{school.phone.size}")
-    private final String phone;
+    String phone;
 
     /** The school district that the school is in */
     @Size(max = 50, message = "{school.district.size}")
-    private final String district;
+    String district;
 
     /** Indicates whether the school is private or public */
-    private final Boolean isPrivate;
+    Boolean isPrivate;
 
 }

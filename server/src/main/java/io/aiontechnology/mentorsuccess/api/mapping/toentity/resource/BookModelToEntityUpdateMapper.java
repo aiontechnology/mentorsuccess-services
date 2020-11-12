@@ -25,11 +25,6 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -46,20 +41,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundBook, Book> {
 
-    /** Mapper between {@link InboundBehavior} and {@link Behavior}. */
-    private final OneWayCollectionMapper<InboundBehavior, Behavior> behaviorModelToEntityMapper;
+    /** Mapper between a behavior string and {@link Behavior}. */
+    private final OneWayCollectionMapper<String, Behavior> behaviorModelToEntityMapper;
 
-    /** Mapper between {@link InboundInterest} and {@link Interest}. */
-    private final OneWayCollectionMapper<InboundInterest, Interest> interestModelToEntityMapper;
+    /** Mapper between an interest string and {@link Interest}. */
+    private final OneWayCollectionMapper<String, Interest> interestModelToEntityMapper;
 
-    /** Mapper between {@link InboundLeadershipSkill} and {@link LeadershipSkill}. */
-    private final OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityMapper;
+    /** Mapper between a leadership skill string and {@link LeadershipSkill}. */
+    private final OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper;
 
-    /** Mapper between {@link InboundLeadershipTrait} and {@link LeadershipTrait}. */
-    private final OneWayCollectionMapper<InboundLeadershipTrait, LeadershipTrait> leadershipTraitModelToEntityMapper;
+    /** Mapper between a leadership trait string and {@link LeadershipTrait}. */
+    private final OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper;
 
-    /** Mapper between {@link InboundPhonogramModel} and {@link Phonogram}. */
-    private final OneWayCollectionMapper<InboundPhonogramModel, Phonogram> phonogramModelToEntityMapper;
+    /** Mapper between a phonogram and {@link Phonogram}. */
+    private final OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper;
 
     /**
      * Update the given {@link Book} with the given {@link InboundBook}.

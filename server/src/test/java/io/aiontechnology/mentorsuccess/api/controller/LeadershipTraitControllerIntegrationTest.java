@@ -60,9 +60,9 @@ public class LeadershipTraitControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.leadershipTraitModelList").isArray())
-                .andExpect(jsonPath("$._embedded.leadershipTraitModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.leadershipTraitModelList[*].name", hasItems("LEADERSHIP_TRAIT1", "LEADERSHIP_TRAIT2")));
+                .andExpect(jsonPath("$._embedded.stringList").isArray())
+                .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("LEADERSHIP_TRAIT1", "LEADERSHIP_TRAIT2")));
     }
 
 }

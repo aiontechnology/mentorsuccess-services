@@ -60,9 +60,9 @@ public class PhonogramControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.phonogramModelList").isArray())
-                .andExpect(jsonPath("$._embedded.phonogramModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.phonogramModelList[*].name", hasItems("PH1", "PH2")));
+                .andExpect(jsonPath("$._embedded.stringList").isArray())
+                .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("PH1", "PH2")));
     }
 
 }

@@ -25,11 +25,6 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -56,11 +51,11 @@ public class BookModelToEntityUpdateMapperTest {
         String author = "AUTHOR";
         Integer gradeLevel = 1;
         ResourceLocation location = ONLINE;
-        Collection<InboundBehavior> inboundBehaviors = Arrays.asList(InboundBehavior.builder().build());
-        Collection<InboundInterest> inboundInterests = Arrays.asList(InboundInterest.builder().build());
-        Collection<InboundLeadershipSkill> inboundLeadershipSkills = Arrays.asList(InboundLeadershipSkill.builder().build());
-        Collection<InboundLeadershipTrait> inboundLeadershipTraits = Arrays.asList(InboundLeadershipTrait.builder().build());
-        Collection<InboundPhonogramModel> inboundPhonogramModels = Arrays.asList(InboundPhonogramModel.builder().build());
+        Collection<String> inboundBehaviors = Arrays.asList("BEHAVIOR");
+        Collection<String> inboundInterests = Arrays.asList("INTEREST");
+        Collection<String> inboundLeadershipSkills = Arrays.asList("LEADERSHIP_SKILL");
+        Collection<String> inboundLeadershipTraits = Arrays.asList("LEADERSHIP_TRAIT");
+        Collection<String> inboundPhonogramModels = Arrays.asList("PHONOGRAM");
 
         InboundBook inboundBook = InboundBook.builder()
                 .withId(id)
@@ -77,15 +72,15 @@ public class BookModelToEntityUpdateMapperTest {
 
         Book book = new Book();
 
-        OneWayCollectionMapper<InboundBehavior, Behavior> behaviorModelToEntityMapper =
+        OneWayCollectionMapper<String, Behavior> behaviorModelToEntityMapper =
                 (b -> Arrays.asList(new Behavior()));
-        OneWayCollectionMapper<InboundInterest, Interest> interestModelToEntityMapper =
+        OneWayCollectionMapper<String, Interest> interestModelToEntityMapper =
                 (i -> Arrays.asList(new Interest()));
-        OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityMapper =
+        OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
                 (l -> Arrays.asList(new LeadershipSkill()));
-        OneWayCollectionMapper<InboundLeadershipTrait, LeadershipTrait> leadershipTraitModelToEntityMapper =
+        OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
                 (l -> Arrays.asList(new LeadershipTrait()));
-        OneWayCollectionMapper<InboundPhonogramModel, Phonogram> phonogramModelToEntityMapper =
+        OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper =
                 (p -> Arrays.asList(new Phonogram()));
 
         BookModelToEntityUpdateMapper bookModelToEntityUpdateMapper = new BookModelToEntityUpdateMapper(
@@ -115,19 +110,19 @@ public class BookModelToEntityUpdateMapperTest {
         Book book = new Book();
 
         Behavior behavior = new Behavior();
-        OneWayCollectionMapper<InboundBehavior, Behavior> behaviorModelToEntityMapper =
+        OneWayCollectionMapper<String, Behavior> behaviorModelToEntityMapper =
                 (b -> Arrays.asList(behavior));
         Interest interest = new Interest();
-        OneWayCollectionMapper<InboundInterest, Interest> interestModelToEntityMapper =
+        OneWayCollectionMapper<String, Interest> interestModelToEntityMapper =
                 (i -> Arrays.asList(interest));
         LeadershipSkill leadershipSkill = new LeadershipSkill();
-        OneWayCollectionMapper<InboundLeadershipSkill, LeadershipSkill> leadershipSkillModelToEntityMapper =
+        OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
                 (l -> Arrays.asList(leadershipSkill));
         LeadershipTrait leadershipTrait = new LeadershipTrait();
-        OneWayCollectionMapper<InboundLeadershipTrait, LeadershipTrait> leadershipTraitModelToEntityMapper =
+        OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
                 (l -> Arrays.asList(leadershipTrait));
         Phonogram phonogram = new Phonogram();
-        OneWayCollectionMapper<InboundPhonogramModel, Phonogram> phonogramModelToEntityMapper =
+        OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper =
                 (p -> Arrays.asList(phonogram));
 
         BookModelToEntityUpdateMapper bookModelToEntityUpdateMapper = new BookModelToEntityUpdateMapper(

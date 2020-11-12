@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundBehavior;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -45,11 +44,11 @@ public class BehaviorEntityToModelMapperTest {
         BehaviorEntityToModelMapper behaviorEntityToModelMapper = new BehaviorEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundBehavior> result = behaviorEntityToModelMapper.map(behavior);
+        Optional<String> result = behaviorEntityToModelMapper.map(behavior);
 
         // validation
         assertThat(result).isNotEmpty();
-        assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get()).isEqualTo(name);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class BehaviorEntityToModelMapperTest {
         BehaviorEntityToModelMapper behaviorEntityToModelMapper = new BehaviorEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundBehavior> result = behaviorEntityToModelMapper.map(null);
+        Optional<String> result = behaviorEntityToModelMapper.map(null);
 
         // validation
         assertThat(result).isEmpty();

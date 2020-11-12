@@ -19,7 +19,7 @@ package io.aiontechnology.mentorsuccess.model.outbound.student;
 import io.aiontechnology.mentorsuccess.model.enumeration.ContactMethod;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Value;
 
 /**
  * Model object representing a contact to be returned to a client.
@@ -27,31 +27,31 @@ import lombok.Data;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
 public class OutboundContact {
 
-    private final RoleType type;
+    RoleType type;
 
     /** The contact's first name. */
-    private final String firstName;
+    String firstName;
 
     /** The contact's last name. */
-    private final String lastName;
+    String lastName;
 
     /** The contact's email. */
-    private final String email;
+    String email;
 
     /** The contact's work phone number. */
-    private final String workPhone;
+    String workPhone;
 
     /** The contact's cell phone number. */
-    private final String cellPhone;
+    String cellPhone;
 
-    private Boolean isEmergencyContact;
+    Boolean isEmergencyContact;
 
-    private ContactMethod preferredContactMethod;
+    ContactMethod preferredContactMethod;
 
-    private String comment;
+    String comment;
 
 }

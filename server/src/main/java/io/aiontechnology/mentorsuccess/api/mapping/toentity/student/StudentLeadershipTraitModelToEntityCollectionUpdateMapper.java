@@ -23,7 +23,6 @@ import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,7 +40,7 @@ import java.util.stream.Collectors;
 public class StudentLeadershipTraitModelToEntityCollectionUpdateMapper implements
         OneWayToCollectionUpdateMapper<InboundStudentLeadershipTrait, StudentLeadershipTrait> {
 
-    private final OneWayMapper<InboundLeadershipTrait, LeadershipTrait> leadershipTraitModelToEntityMapper;
+    private final OneWayMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper;
 
     private final OneWayMapper<URI, SchoolPersonRole> personModelToEntityMapper;
 
@@ -63,7 +62,7 @@ public class StudentLeadershipTraitModelToEntityCollectionUpdateMapper implement
                             .orElseThrow(() -> new NotFoundException("Unable to find teacher")));
                     studentLeadershipTrait.setLeadershipTrait(leadershipTraitModelToEntityMapper.
                             map(leadershipTraitModel)
-                            .orElseThrow(() -> new NotFoundException("Invalid leadership trait: " + leadershipTraitModel.getName())));
+                            .orElseThrow(() -> new NotFoundException("Invalid leadership trait: " + leadershipTraitModel)));
                     return studentLeadershipTrait;
                 })
                 .collect(Collectors.toList());

@@ -287,7 +287,7 @@ public class StudentControllerIntegrationTest {
                 .withLocation(LOCATION)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
-                .withBehaviors(new HashSet(Arrays.asList("INVALID")))
+                .withBehaviors(new HashSet<String>(Arrays.asList("INVALID")))
                 .build();
 
         // execute the SUT

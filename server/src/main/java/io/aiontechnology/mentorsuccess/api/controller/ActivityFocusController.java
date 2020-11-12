@@ -18,8 +18,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.ActivityFocusModelAssembler;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundActivityFocus;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +41,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class ActivityFocusController {
 
-    /** A HATEOAS assembler for {@link InboundActivityFocus ActivityFocusModels}. */
+    /** A HATEOAS assembler for an activity focus string. */
     private final ActivityFocusModelAssembler activityFocusModelAssembler;
 
     /** Service for interacting with {@link ActivityFocus IActivityFocuss}. */
@@ -55,7 +53,7 @@ public class ActivityFocusController {
      * @return A collection of models that represents the activity focuses in the system.
      */
     @GetMapping
-    public CollectionModel<OutboundActivityFocus> getInterests() {
+    public CollectionModel<String> getInterests() {
         var activityFocusModels = StreamSupport.stream(activityFocusService.getAllActivityFocuses().spliterator(), false)
                 .map(activityFocusModelAssembler::toModel)
                 .collect(Collectors.toList());

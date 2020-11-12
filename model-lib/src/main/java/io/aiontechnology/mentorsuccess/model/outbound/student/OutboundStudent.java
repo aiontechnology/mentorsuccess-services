@@ -18,8 +18,8 @@ package io.aiontechnology.mentorsuccess.model.outbound.student;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Collection;
@@ -28,32 +28,35 @@ import java.util.Collection;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@Data
+@Value
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
-    private final String firstName;
+    String firstName;
 
-    private final String lastName;
+    String lastName;
 
-    private final Integer grade;
+    Integer grade;
 
-    private final String allergyInfo;
+    String allergyInfo;
 
-    private final String preferredTime;
+    String preferredTime;
 
-    private final ResourceLocation location;
-    private final OutboundStudentTeacher teacher;
-    private Boolean mediaReleaseSigned;
-    private Collection<String> interests;
+    ResourceLocation location;
 
-    private Collection<String> behaviors;
+    OutboundStudentTeacher teacher;
 
-    private Collection<String> leadershipSkills;
+    Boolean mediaReleaseSigned;
 
-    private Collection<String> leadershipTraits;
+    Collection<String> interests;
 
-    private Collection<OutboundContact> contacts;
+    Collection<String> behaviors;
+
+    Collection<String> leadershipSkills;
+
+    Collection<String> leadershipTraits;
+
+    Collection<OutboundContact> contacts;
 
 }

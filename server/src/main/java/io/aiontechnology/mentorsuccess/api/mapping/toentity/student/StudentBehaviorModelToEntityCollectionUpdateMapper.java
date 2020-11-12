@@ -23,7 +23,6 @@ import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -41,7 +40,7 @@ import java.util.stream.Collectors;
 public class StudentBehaviorModelToEntityCollectionUpdateMapper implements
         OneWayToCollectionUpdateMapper<InboundStudentBehavior, StudentBehavior> {
 
-    private final OneWayMapper<InboundBehavior, Behavior> behaviorModelToEntityMapper;
+    private final OneWayMapper<String, Behavior> behaviorModelToEntityMapper;
 
     private final OneWayMapper<URI, SchoolPersonRole> teacherUriToEntityMapper;
 
@@ -55,11 +54,11 @@ public class StudentBehaviorModelToEntityCollectionUpdateMapper implements
     }
 
     /**
-     * Map the set of {@link InboundBehavior} instances contained in the provided {@link InboundStudentBehavior}
-     * to a collection of {@link StudentBehavior} instances.
+     * Map the set of behavior strings contained in the provided {@link InboundStudentBehavior} to a collection of
+     * {@link StudentBehavior} instances.
      *
-     * @param inboundStudentBehavior The {@link InboundStudentBehavior} from which to get the
-     * {@link InboundBehavior} instances to map.
+     * @param inboundStudentBehavior The {@link InboundStudentBehavior} from which to get the @link InboundBehavior}
+     * instances to map.
      * @return The resulting set of {@link StudentBehavior} instances.
      */
     private Collection<StudentBehavior> doMap(InboundStudentBehavior inboundStudentBehavior) {
@@ -71,7 +70,7 @@ public class StudentBehaviorModelToEntityCollectionUpdateMapper implements
                             .orElseThrow(() -> new NotFoundException("Unable to find teacher")));
                     studentBehavior.setBehavior(behaviorModelToEntityMapper
                             .map(behaviorModel)
-                            .orElseThrow(() -> new NotFoundException("Invalid behavior: " + behaviorModel.getName())));
+                            .orElseThrow(() -> new NotFoundException("Invalid behavior: " + behaviorModel)));
                     return studentBehavior;
                 })
                 .collect(Collectors.toList());

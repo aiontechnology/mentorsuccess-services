@@ -17,47 +17,41 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.controller.LeadershipSkillController;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles a {@link OutboundLeadershipSkill} from a {@link LeadershipSkill}.
+ * Assembles a leadership skill string from a {@link LeadershipSkill}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
  */
 @Component
-public class LeadershipSkillModelAssembler extends RepresentationModelAssemblerSupport<LeadershipSkill, OutboundLeadershipSkill> {
+public class LeadershipSkillModelAssembler {
 
-    /** Mapper to map between {@link LeadershipSkill} and {@link InboundLeadershipSkill}. */
-    private final OneWayMapper<LeadershipSkill, OutboundLeadershipSkill> mapper;
+    /** Mapper to map between {@link LeadershipSkill} and leadership skill string. */
+    private final OneWayMapper<LeadershipSkill, String> mapper;
 
     /**
      * Constructor
      *
-     * @param mapper The mapper for mapping between {@link LeadershipSkill} and {@link InboundLeadershipSkill}.
+     * @param mapper The mapper for mapping between {@link LeadershipSkill} and leadership skill string.
      */
     @Inject
-    public LeadershipSkillModelAssembler(OneWayMapper<LeadershipSkill, OutboundLeadershipSkill> mapper) {
-        super(LeadershipSkillController.class, OutboundLeadershipSkill.class);
+    public LeadershipSkillModelAssembler(OneWayMapper<LeadershipSkill, String> mapper) {
         this.mapper = mapper;
     }
 
     /**
-     * Map a {@link LeadershipSkill} to a {@link InboundLeadershipSkill} without adding links.
+     * Map a {@link LeadershipSkill} to a leadership skill string.
      *
      * @param leadershipSkill The {@link LeadershipSkill} to map.
-     * @return The resulting {@link InboundLeadershipSkill}.
+     * @return The resulting leadership skill string.
      */
-    @Override
-    public OutboundLeadershipSkill toModel(LeadershipSkill leadershipSkill) {
+    public String toModel(LeadershipSkill leadershipSkill) {
         return Optional.ofNullable(leadershipSkill)
                 .flatMap(mapper::map)
                 .orElse(null);
