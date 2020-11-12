@@ -39,8 +39,8 @@ Now check the port on which Postgres is running using:
 
 > docker ps
 
-Then run the server with this command:
+Then run the server with this command from the `server` directory:
 
-> ./gradlew bootRun --args="--spring.profiles.active=postgres \
+> ../gradlew bootRun --args="--spring.profiles.active=postgres \
 > --spring.datasource.url=jdbc:postgresql://localhost:\<port\>/mentorsuccess \
 > --spring.datasource.password=\<db password\>"
