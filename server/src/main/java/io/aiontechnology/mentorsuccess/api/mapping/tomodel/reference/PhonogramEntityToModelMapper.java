@@ -18,32 +18,29 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundPhonogram;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 /**
- * Mapper that converts a {@link Phonogram} to a {@link OutboundPhonogram}.
+ * Mapper that converts a {@link Phonogram} to a phonogram string.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
-public class PhonogramEntityToModelMapper implements OneWayMapper<Phonogram, OutboundPhonogram> {
+public class PhonogramEntityToModelMapper implements OneWayMapper<Phonogram, String> {
 
     /**
-     * Map the given {@link Phonogram} to a {@link OutboundPhonogram}.
+     * Map the given {@link Phonogram} to a phonogram string.
      *
      * @param phonogram The {@link Phonogram} to map.
-     * @return The mapped {@link OutboundPhonogram}.
+     * @return The mapped {phonogram string.
      */
     @Override
-    public Optional<OutboundPhonogram> map(Phonogram phonogram) {
+    public Optional<String> map(Phonogram phonogram) {
         return Optional.ofNullable(phonogram)
-                .map(p -> OutboundPhonogram.builder()
-                        .withName(phonogram.getName())
-                        .build());
+                .map(Phonogram::getName);
     }
 
 }

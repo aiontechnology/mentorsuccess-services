@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,28 +25,27 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Mapper that converts a {@link InboundPhonogramModel} to a {@link Phonogram}.
+ * Mapper that converts a phonogram string to a {@link Phonogram}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
 @RequiredArgsConstructor
-public class PhonogramModelToEntityMapper implements OneWayMapper<InboundPhonogramModel, Phonogram> {
+public class PhonogramModelToEntityMapper implements OneWayMapper<String, Phonogram> {
 
     /** Function that retrieves a {@link Phonogram} by its name */
     private final Function<String, Optional<Phonogram>> getter;
 
     /**
-     * Map the given {@link InboundPhonogramModel}
+     * Map the given phonogram string.
      *
-     * @param inboundPhonogramModel The {@link InboundPhonogramModel} to map.
+     * @param inboundPhonogramModel The phonogram string to map.
      * @return The resulting {@link Phonogram}.
      */
     @Override
-    public Optional<Phonogram> map(InboundPhonogramModel inboundPhonogramModel) {
+    public Optional<Phonogram> map(String inboundPhonogramModel) {
         return Optional.ofNullable(inboundPhonogramModel)
-                .map(InboundPhonogramModel::getName)
                 .flatMap(getter::apply);
     }
 

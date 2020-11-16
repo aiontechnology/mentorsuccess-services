@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -45,11 +44,11 @@ public class ActivityFocusEntityToModelMapperTest {
         ActivityFocusEntityToModelMapper activityFocusEntityToModelMapper = new ActivityFocusEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundActivityFocus> result = activityFocusEntityToModelMapper.map(activityFocus);
+        Optional<String> result = activityFocusEntityToModelMapper.map(activityFocus);
 
         // validation
         assertThat(result).isNotEmpty();
-        assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get()).isEqualTo(name);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class ActivityFocusEntityToModelMapperTest {
         ActivityFocusEntityToModelMapper activityFocusEntityToModelMapper = new ActivityFocusEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundActivityFocus> result = activityFocusEntityToModelMapper.map(null);
+        Optional<String> result = activityFocusEntityToModelMapper.map(null);
 
         // validation
         assertThat(result).isEmpty();

@@ -17,15 +17,9 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundPhonogramModel;
 import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -40,45 +34,44 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundBook {
 
     /** The book's id. */
-    private final UUID id;
+    UUID id;
 
     /** The book's title. */
     @NotNull(message = "{book.title.notNull}")
     @Size(max = 100, message = "{book.title.size}")
-    private final String title;
+    String title;
 
     /** The book's author. */
     @Size(max = 30, message = "{book.author.size}")
-    private final String author;
+    String author;
 
     /** The book's grade level. */
     @NotNull(message = "{book.gradeLevel.notNull}")
     @Min(value = 1, message = "{book.gradeLevel.invalid}")
     @Max(value = 6, message = "{book.gradeLevel.invalid}")
-    private final Integer gradeLevel;
+    Integer gradeLevel;
 
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
-    private final ResourceLocation location;
+    ResourceLocation location;
 
     /** The interests associated with the book. */
-    private final Collection<InboundInterest> interests;
+    Collection<String> interests;
 
     /** The leadership traits associated with the book. */
-    private final Collection<InboundLeadershipTrait> leadershipTraits;
+    Collection<String> leadershipTraits;
 
     /** The leadership skills associated with the book. */
-    private final Collection<InboundLeadershipSkill> leadershipSkills;
+    Collection<String> leadershipSkills;
 
     /** The phonograms associated with the book. */
-    private final Collection<InboundPhonogramModel> phonograms;
+    Collection<String> phonograms;
 
     /** The behaviors associated with the book. */
-    private final Collection<InboundBehavior> behaviors;
+    Collection<String> behaviors;
 
 }

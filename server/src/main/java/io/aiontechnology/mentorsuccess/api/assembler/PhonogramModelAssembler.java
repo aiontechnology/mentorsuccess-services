@@ -17,46 +17,41 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.controller.PhonogramController;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundPhonogram;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles a {@link OutboundPhonogram} from a {@link Phonogram}.
+ * Assembles a phonogram string from a {@link Phonogram}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
  */
 @Component
-public class PhonogramModelAssembler extends RepresentationModelAssemblerSupport<Phonogram, OutboundPhonogram> {
+public class PhonogramModelAssembler {
 
-    /** Mapper to map between {@link Phonogram} and {@link OutboundPhonogram}. */
-    private final OneWayMapper<Phonogram, OutboundPhonogram> mapper;
+    /** Mapper to map between {@link Phonogram} and a phonogram string. */
+    private final OneWayMapper<Phonogram, String> mapper;
 
     /**
      * Constructor
      *
-     * @param mapper The mapper for mapping between {@link Phonogram} and {@link OutboundPhonogram}.
+     * @param mapper The mapper for mapping between {@link Phonogram} and a phonogram string.
      */
     @Inject
-    public PhonogramModelAssembler(OneWayMapper<Phonogram, OutboundPhonogram> mapper) {
-        super(PhonogramController.class, OutboundPhonogram.class);
+    public PhonogramModelAssembler(OneWayMapper<Phonogram, String> mapper) {
         this.mapper = mapper;
     }
 
     /**
-     * Map a {@link Phonogram} to a {@link OutboundPhonogram} without adding links.
+     * Map a {@link Phonogram} to a phonogram string.
      *
      * @param phonogram The {@link Phonogram} to map.
-     * @return The resulting {@link OutboundPhonogram}.
+     * @return The resulting phonogram string.
      */
-    @Override
-    public OutboundPhonogram toModel(Phonogram phonogram) {
+    public String toModel(Phonogram phonogram) {
         return Optional.ofNullable(phonogram)
                 .flatMap(mapper::map)
                 .orElse(null);

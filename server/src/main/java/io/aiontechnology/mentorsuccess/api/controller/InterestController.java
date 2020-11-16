@@ -18,8 +18,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.InterestModelAssembler;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundInterest;
 import io.aiontechnology.mentorsuccess.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +41,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class InterestController {
 
-    /** A HATEOAS assembler for {@link InboundInterest InterestModels}. */
+    /** A HATEOAS assembler for interest strings. */
     private final InterestModelAssembler interestModelAssembler;
 
     /** Service for interacting with {@link Interest Interests}. */
@@ -55,7 +53,7 @@ public class InterestController {
      * @return A collection of models that represents the interests in the system.
      */
     @GetMapping
-    public CollectionModel<OutboundInterest> getInterests() {
+    public CollectionModel<String> getInterests() {
         var interestModels = StreamSupport.stream(interestService.getAllInterests().spliterator(), false)
                 .map(interestModelAssembler::toModel)
                 .collect(Collectors.toList());

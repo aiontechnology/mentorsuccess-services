@@ -17,8 +17,7 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -31,34 +30,33 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundPerson {
 
     /** The person's id. */
-    private final UUID id;
+    UUID id;
 
     /** The person's first name. */
     @NotNull(message = "{person.firstName.notNull}")
     @Size(max = 50, message = "{person.firstName.size}")
-    private final String firstName;
+    String firstName;
 
     /** The person's last name. */
     @NotNull(message = "{person.lastName.notNull}")
     @Size(max = 50, message = "{person.lastName.size}")
-    private final String lastName;
+    String lastName;
 
     /** The person's email. */
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{person.email.invalid}")
-    private final String email;
+    String email;
 
     /** The person's work phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{person.workPhone.invalid}")
-    private final String workPhone;
+    String workPhone;
 
     /** The person's cell phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{person.cellPhone.invalid}")
-    private final String cellPhone;
+    String cellPhone;
 
 }

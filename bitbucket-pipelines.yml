@@ -24,7 +24,7 @@ pipelines:
           artifacts:
             - server/build/**
       - step:
-          name: Deplay to jfrog
+          name: Deploy to jfrog
           image: adoptopenjdk:14-jdk-hotspot
           caches:
             - gradle

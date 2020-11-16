@@ -18,8 +18,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.BehaviorModelAssembler;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundBehavior;
 import io.aiontechnology.mentorsuccess.service.BehaviorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +41,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class BehaviorController {
 
-    /** A HATEOAS assembler for {@link InboundBehavior BehaviorModels}. */
+    /** A HATEOAS assembler for behavior string. */
     private final BehaviorModelAssembler behaviorModelAssembler;
 
     /** Service for interacting with {@link Behavior Behaviors}. */
@@ -55,7 +53,7 @@ public class BehaviorController {
      * @return A collection of models that represents the interests in the system.
      */
     @GetMapping
-    public CollectionModel<OutboundBehavior> getBehaviors() {
+    public CollectionModel<String> getBehaviors() {
         var behaviorModels = StreamSupport.stream(behaviorService.getAllBehaviors().spliterator(), false)
                 .map(behaviorModelAssembler::toModel)
                 .collect(Collectors.toList());

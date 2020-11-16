@@ -19,6 +19,7 @@ package io.aiontechnology.mentorsuccess.model.inbound.student;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -27,14 +28,13 @@ import java.net.URI;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@AllArgsConstructor
+@Value
 @Builder(setterPrefix = "with")
-@Getter
 public class InboundStudentTeacher {
 
     @NotNull(message = "{teacher.uri.notNull}")
-    private final URI uri;
+    URI uri;
 
-    private final String comment;
+    String comment;
 
 }

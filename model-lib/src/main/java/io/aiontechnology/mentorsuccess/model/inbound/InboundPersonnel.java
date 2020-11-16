@@ -19,8 +19,7 @@ package io.aiontechnology.mentorsuccess.model.inbound;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -32,36 +31,35 @@ import javax.validation.constraints.Size;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundPersonnel {
 
     /** The personnel type */
     @NotNull(message = "{personnel.type.notNull}")
     @EnumNamePattern(regexp = "SOCIAL_WORKER|PRINCIPAL|COUNSELOR|STAFF", message = "{personnel.type.invalid}")
-    private final RoleType type;
+    RoleType type;
 
     /** The first name. */
     @NotNull(message = "{personnel.firstName.notNull}")
     @Size(max = 50, message = "{personnel.firstName.size}")
-    private final String firstName;
+    String firstName;
 
     /** The last name. */
     @NotNull(message = "{personnel.lastName.notNull}")
     @Size(max = 50, message = "{personnel.lastName.size}")
-    private final String lastName;
+    String lastName;
 
     /** The email address. */
     @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{personnel.email.invalid}")
-    private final String email;
+    String email;
 
     /** The work phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{personnel.workPhone.invalid}")
-    private final String workPhone;
+    String workPhone;
 
     /** The cell phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{personnel.cellPhone.invalid}")
-    private final String cellPhone;
+    String cellPhone;
 
 }

@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundActivityFocus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,28 +25,27 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Mapper that converts a {@link InboundActivityFocus} to a {@link ActivityFocus}.
+ * Mapper that converts an activity focus string to a {@link ActivityFocus}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
 @RequiredArgsConstructor
-public class ActivityFocusModelToEntityMapper implements OneWayMapper<InboundActivityFocus, ActivityFocus> {
+public class ActivityFocusModelToEntityMapper implements OneWayMapper<String, ActivityFocus> {
 
     /** Function that retrieves a {@link ActivityFocus} by its name */
     private final Function<String, Optional<ActivityFocus>> getter;
 
     /**
-     * Map the given {@link InboundActivityFocus}
+     * Map the given activity focus string.
      *
-     * @param inboundActivityFocus The {@link InboundActivityFocus} to map.
+     * @param inboundActivityFocus The activity focus string to map.
      * @return The resulting {@link ActivityFocus}.
      */
     @Override
-    public Optional<ActivityFocus> map(InboundActivityFocus inboundActivityFocus) {
+    public Optional<ActivityFocus> map(String inboundActivityFocus) {
         return Optional.ofNullable(inboundActivityFocus)
-                .map(InboundActivityFocus::getName)
                 .flatMap(getter::apply);
     }
 

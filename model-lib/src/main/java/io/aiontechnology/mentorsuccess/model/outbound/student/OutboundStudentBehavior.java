@@ -17,10 +17,9 @@
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundBehavior;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Collection;
@@ -29,15 +28,15 @@ import java.util.Collection;
  * @author Whitney Hunter
  * @since 0.3.0
  */
+@Value
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
-@Getter
 public class OutboundStudentBehavior extends RepresentationModel<OutboundStudentBehavior> {
 
     /** The associated leadership skill */
-    private final Collection<OutboundBehavior> behaviors;
+    Collection<String> behaviors;
 
     /** The URI of the associated person */
-    private final OutboundTeacher teacher;
+    OutboundTeacher teacher;
 
 }

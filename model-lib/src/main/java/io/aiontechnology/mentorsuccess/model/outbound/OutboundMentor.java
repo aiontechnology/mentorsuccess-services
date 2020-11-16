@@ -17,8 +17,8 @@
 package io.aiontechnology.mentorsuccess.model.outbound;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 
 /**
@@ -27,27 +27,27 @@ import org.springframework.hateoas.RepresentationModel;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@Data
+@Value
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 public class OutboundMentor extends RepresentationModel<OutboundMentor> {
 
     /** The first name of the mentor. */
-    private final String firstName;
+    String firstName;
 
     /** The last name of the mentor. */
-    private final String lastName;
+    String lastName;
 
     /** The mentor's email address. */
-    private final String email;
+    String email;
 
     /** The mentor's work phone number. */
-    private final String workPhone;
+    String workPhone;
 
     /** The mentor's cell phone */
-    private final String cellPhone;
+    String cellPhone;
 
     /** The mentor's availability */
-    private final String availability;
+    String availability;
 
 }

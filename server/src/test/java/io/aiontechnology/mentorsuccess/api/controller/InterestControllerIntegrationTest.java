@@ -60,9 +60,9 @@ public class InterestControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.interestModelList").isArray())
-                .andExpect(jsonPath("$._embedded.interestModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.interestModelList[*].name", hasItems("INTEREST1", "INTEREST2")));
+                .andExpect(jsonPath("$._embedded.stringList").isArray())
+                .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("INTEREST1", "INTEREST2")));
     }
 
 }

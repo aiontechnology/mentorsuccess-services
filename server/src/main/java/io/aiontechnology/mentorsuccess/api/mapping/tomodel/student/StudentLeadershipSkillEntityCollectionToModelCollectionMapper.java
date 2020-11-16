@@ -25,7 +25,6 @@ import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentLeadershipSkill;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,7 +53,7 @@ public class StudentLeadershipSkillEntityCollectionToModelCollectionMapper imple
     private final CollectionClassifier<RoleType, StudentLeadershipSkill> byTypeListClassifier =
             new FunctionBasedCollectionClassifier<>((studentLeadershipSkill -> studentLeadershipSkill.getRole().getType()));
 
-    private final OneWayCollectionMapper<LeadershipSkill, OutboundLeadershipSkill> leadershipSkillEntityToModelCollectionMapper;
+    private final OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelCollectionMapper;
 
     @Qualifier("teacherAssemblerMapperAdaptor")
     private final OneWayMapper<SchoolPersonRole, OutboundTeacher> teacherEntityToModelMapper;
@@ -69,9 +68,7 @@ public class StudentLeadershipSkillEntityCollectionToModelCollectionMapper imple
                         })
                         .collect(Collectors.toCollection(ArrayList::new));
         return outboundStudentLeadershipSkills.stream().findFirst()
-                .map(o -> o.getLeadershipSkills().stream()
-                        .map(OutboundLeadershipSkill::getName)
-                        .collect(Collectors.toList()))
+                .map(OutboundStudentLeadershipSkill::getLeadershipSkills)
                 .orElse(Collections.emptyList());
     }
 

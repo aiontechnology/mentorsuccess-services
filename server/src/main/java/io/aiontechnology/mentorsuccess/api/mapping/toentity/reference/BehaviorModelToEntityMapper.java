@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,28 +25,27 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Mapper that converts a {@link InboundBehavior} to a {@link Behavior}.
+ * Mapper that converts a behavior string to a {@link Behavior}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
 @RequiredArgsConstructor
-public class BehaviorModelToEntityMapper implements OneWayMapper<InboundBehavior, Behavior> {
+public class BehaviorModelToEntityMapper implements OneWayMapper<String, Behavior> {
 
     /** Function that retrieves a {@link Behavior} by its name */
     private final Function<String, Optional<Behavior>> getter;
 
     /**
-     * Map the given {@link InboundBehavior}
+     * Map the given behavior string
      *
-     * @param inboundBehavior The {@link InboundBehavior} to map.
+     * @param inboundBehavior The behavior string to map.
      * @return The resulting {@link Behavior}.
      */
     @Override
-    public Optional<Behavior> map(InboundBehavior inboundBehavior) {
+    public Optional<Behavior> map(String inboundBehavior) {
         return Optional.ofNullable(inboundBehavior)
-                .map(InboundBehavior::getName)
                 .flatMap(getter::apply);
     }
 

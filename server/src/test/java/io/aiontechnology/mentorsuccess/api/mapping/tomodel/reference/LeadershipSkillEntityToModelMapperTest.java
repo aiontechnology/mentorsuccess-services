@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -46,11 +45,11 @@ public class LeadershipSkillEntityToModelMapperTest {
                 new LeadershipSkillEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundLeadershipSkill> result = leadershipSkillEntityToModelMapper.map(leadershipSkill);
+        Optional<String> result = leadershipSkillEntityToModelMapper.map(leadershipSkill);
 
         // validation
         assertThat(result).isNotEmpty();
-        assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get()).isEqualTo(name);
     }
 
     @Test
@@ -59,7 +58,7 @@ public class LeadershipSkillEntityToModelMapperTest {
         LeadershipSkillEntityToModelMapper leadershipSkillEntityToModelMapper = new LeadershipSkillEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundLeadershipSkill> result = leadershipSkillEntityToModelMapper.map(null);
+        Optional<String> result = leadershipSkillEntityToModelMapper.map(null);
 
         // validation
         assertThat(result).isEmpty();

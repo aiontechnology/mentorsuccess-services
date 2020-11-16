@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -43,15 +42,11 @@ public class LeadershipTraitModelToEntityMapperTest {
         String leadershipTraitName = "LEADERSHIP_TRAIT";
         leadershipTrait.setName(leadershipTraitName);
 
-        InboundLeadershipTrait inboundLeadershipTrait = InboundLeadershipTrait.builder()
-                .withName(leadershipTraitName)
-                .build();
-
         Function<String, Optional<LeadershipTrait>> getterFunction = m -> Optional.of(leadershipTrait);
         LeadershipTraitModelToEntityMapper leadershipTraitModelToEntityMapper = new LeadershipTraitModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<LeadershipTrait> result = leadershipTraitModelToEntityMapper.map(inboundLeadershipTrait);
+        Optional<LeadershipTrait> result = leadershipTraitModelToEntityMapper.map(leadershipTraitName);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -62,15 +57,12 @@ public class LeadershipTraitModelToEntityMapperTest {
     void testNotFound() {
         // setup the fixture
         String leadershipTraitName = "LEADERSHIP_TRAIT";
-        InboundLeadershipTrait inboundLeadershipTrait = InboundLeadershipTrait.builder()
-                .withName(leadershipTraitName)
-                .build();
 
         Function<String, Optional<LeadershipTrait>> getterFunction = m -> Optional.empty();
         LeadershipTraitModelToEntityMapper leadershipTraitModelToEntityMapper = new LeadershipTraitModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<LeadershipTrait> result = leadershipTraitModelToEntityMapper.map(inboundLeadershipTrait);
+        Optional<LeadershipTrait> result = leadershipTraitModelToEntityMapper.map(leadershipTraitName);
 
         // validation
         assertThat(result).isEmpty();

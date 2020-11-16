@@ -17,41 +17,36 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.controller.BehaviorController;
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.BehaviorEntityToModelMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundBehavior;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles a {@link OutboundBehavior} from a {@link Behavior}.
+ * Assembles a behavior string from a {@link Behavior}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
  */
 @Component
-public class BehaviorModelAssembler extends RepresentationModelAssemblerSupport<Behavior, OutboundBehavior> {
+public class BehaviorModelAssembler {
 
-    /** Mapper to map between {@link Behavior} and {@link OutboundBehavior}. */
-    private final OneWayMapper<Behavior, OutboundBehavior> mapper;
+    /** Mapper to map between {@link Behavior} and behavior string. */
+    private final OneWayMapper<Behavior, String> mapper;
 
     /**
      * Construct an instance.
      *
-     * @param mapper Mapper to map between {@link Behavior} and {@link OutboundBehavior}
+     * @param mapper Mapper to map between {@link Behavior} and a behavior string.
      */
     @Inject
     public BehaviorModelAssembler(BehaviorEntityToModelMapper mapper) {
-        super(BehaviorController.class, OutboundBehavior.class);
         this.mapper = mapper;
     }
 
-    @Override
-    public OutboundBehavior toModel(Behavior behavior) {
+    public String toModel(Behavior behavior) {
         return Optional.ofNullable(behavior)
                 .flatMap(mapper::map)
                 .orElse(null);

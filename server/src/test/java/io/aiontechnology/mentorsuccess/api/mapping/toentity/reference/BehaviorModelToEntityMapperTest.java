@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -43,15 +42,11 @@ public class BehaviorModelToEntityMapperTest {
         String behaviorName = "BEHAVIOR";
         behavior.setName(behaviorName);
 
-        InboundBehavior inboundBehavior = InboundBehavior.builder()
-                .withName(behaviorName)
-                .build();
-
         Function<String, Optional<Behavior>> getterFunction = m -> Optional.of(behavior);
         BehaviorModelToEntityMapper behaviorModelToEntityMapper = new BehaviorModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<Behavior> result = behaviorModelToEntityMapper.map(inboundBehavior);
+        Optional<Behavior> result = behaviorModelToEntityMapper.map(behaviorName);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -62,15 +57,12 @@ public class BehaviorModelToEntityMapperTest {
     void testNotFound() {
         // setup the fixture
         String behaviorName = "BEHAVIOR";
-        InboundBehavior inboundBehavior = InboundBehavior.builder()
-                .withName(behaviorName)
-                .build();
 
         Function<String, Optional<Behavior>> getterFunction = m -> Optional.empty();
         BehaviorModelToEntityMapper behaviorModelToEntityMapper = new BehaviorModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<Behavior> result = behaviorModelToEntityMapper.map(inboundBehavior);
+        Optional<Behavior> result = behaviorModelToEntityMapper.map(behaviorName);
 
         // validation
         assertThat(result).isEmpty();

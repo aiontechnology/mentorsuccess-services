@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundInterest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -45,11 +44,11 @@ public class InterestEntityToModelMapperTest {
         InterestEntityToModelMapper interestEntityToModelMapper = new InterestEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundInterest> result = interestEntityToModelMapper.map(interest);
+        Optional<String> result = interestEntityToModelMapper.map(interest);
 
         // validation
         assertThat(result).isNotEmpty();
-        assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get()).isEqualTo(name);
     }
 
     @Test
@@ -58,7 +57,7 @@ public class InterestEntityToModelMapperTest {
         InterestEntityToModelMapper interestEntityToModelMapper = new InterestEntityToModelMapper();
 
         // execute the SUT
-        Optional<OutboundInterest> result = interestEntityToModelMapper.map(null);
+        Optional<String> result = interestEntityToModelMapper.map(null);
 
         // validation
         assertThat(result).isEmpty();

@@ -1,8 +1,8 @@
 package io.aiontechnology.mentorsuccess.model.outbound;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -12,28 +12,28 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.4.0
  */
-@Data
+@Value
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @Relation(collectionRelation = "schoolModelList")
 public class OutboundSchool extends RepresentationModel<OutboundSchool> {
 
     /** The school's id */
-    private final UUID id;
+    UUID id;
 
     /** The name of the school */
-    private final String name;
+    String name;
 
     /** The school's address */
-    private final OutboundAddress address;
+    OutboundAddress address;
 
     /** The school's phone number */
-    private final String phone;
+    String phone;
 
     /** The school district that the school is in */
-    private final String district;
+    String district;
 
     /** Indicates whether the school is private or public */
-    private final Boolean isPrivate;
+    Boolean isPrivate;
 
 }

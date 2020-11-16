@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,28 +25,27 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Mapper that converts a {@link InboundLeadershipTrait} to a {@link LeadershipTrait}.
+ * Mapper that converts a leadership trait string to a {@link LeadershipTrait}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
 @RequiredArgsConstructor
-public class LeadershipTraitModelToEntityMapper implements OneWayMapper<InboundLeadershipTrait, LeadershipTrait> {
+public class LeadershipTraitModelToEntityMapper implements OneWayMapper<String, LeadershipTrait> {
 
     /** Function that retrieves a {@link LeadershipTrait} by its name */
     private final Function<String, Optional<LeadershipTrait>> getter;
 
     /**
-     * Map the given {@link InboundLeadershipTrait}
+     * Map the given leadership trait string.
      *
-     * @param inboundLeadershipTrait The {@link InboundLeadershipTrait} to map.
+     * @param inboundLeadershipTrait The leadership trait string to map.
      * @return The resulting {@link LeadershipTrait}.
      */
     @Override
-    public Optional<LeadershipTrait> map(InboundLeadershipTrait inboundLeadershipTrait) {
+    public Optional<LeadershipTrait> map(String inboundLeadershipTrait) {
         return Optional.ofNullable(inboundLeadershipTrait)
-                .map(InboundLeadershipTrait::getName)
                 .flatMap(getter::apply);
     }
 

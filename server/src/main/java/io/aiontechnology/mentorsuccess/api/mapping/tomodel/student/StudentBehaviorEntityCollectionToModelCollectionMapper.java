@@ -25,7 +25,6 @@ import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundBehavior;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentBehavior;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -54,7 +53,7 @@ public class StudentBehaviorEntityCollectionToModelCollectionMapper implements
     private final CollectionClassifier<RoleType, StudentBehavior> byTypeListClassifier =
             new FunctionBasedCollectionClassifier<>((studentBehavior -> studentBehavior.getRole().getType()));
 
-    private final OneWayCollectionMapper<Behavior, OutboundBehavior> behaviorEntityToModelCollectionMapper;
+    private final OneWayCollectionMapper<Behavior, String> behaviorEntityToModelCollectionMapper;
 
     @Qualifier("teacherAssemblerMapperAdaptor")
     private final OneWayMapper<SchoolPersonRole, OutboundTeacher> teacherEntityToModelMapper;
@@ -69,9 +68,7 @@ public class StudentBehaviorEntityCollectionToModelCollectionMapper implements
                         })
                         .collect(Collectors.toCollection(ArrayList::new));
         return outboundStudentBehaviors.stream().findFirst()
-                .map(o -> o.getBehaviors().stream()
-                        .map(OutboundBehavior::getName)
-                        .collect(Collectors.toList()))
+                .map(OutboundStudentBehavior::getBehaviors)
                 .orElse(Collections.emptyList());
     }
 

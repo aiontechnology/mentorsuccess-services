@@ -1,8 +1,8 @@
 package io.aiontechnology.mentorsuccess.model.outbound;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -10,25 +10,25 @@ import org.springframework.hateoas.server.core.Relation;
  * @author Whitney Hunter
  * @since 0.4.0
  */
-@Data
+@Value
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @Relation("programAdminModelList")
 public class OutboundProgramAdmin extends RepresentationModel<OutboundProgramAdmin> {
 
     /** The first name of the program admin. */
-    private final String firstName;
+    String firstName;
 
     /** The last name of the program admin. */
-    private final String lastName;
+    String lastName;
 
     /** The program admin's email address. */
-    private final String email;
+    String email;
 
     /** The program admin's work phone number. */
-    private final String workPhone;
+    String workPhone;
 
     /** The program admin's cell phone. */
-    private final String cellPhone;
+    String cellPhone;
 
 }

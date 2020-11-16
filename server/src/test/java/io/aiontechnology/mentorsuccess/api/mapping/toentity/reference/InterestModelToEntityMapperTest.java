@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.InterestEntityToModelMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -44,15 +43,11 @@ public class InterestModelToEntityMapperTest {
         String interestName = "INTEREST";
         interest.setName(interestName);
 
-        InboundInterest inboundInterest = InboundInterest.builder()
-                .withName(interestName)
-                .build();
-
         Function<String, Optional<Interest>> getterFunction = m -> Optional.of(interest);
         InterestModelToEntityMapper interestModelToEntityMapper = new InterestModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<Interest> result = interestModelToEntityMapper.map(inboundInterest);
+        Optional<Interest> result = interestModelToEntityMapper.map(interestName);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -63,15 +58,12 @@ public class InterestModelToEntityMapperTest {
     void testNotFound() {
         // setup the fixture
         String interestName = "INTEREST";
-        InboundInterest inboundInterest = InboundInterest.builder()
-                .withName(interestName)
-                .build();
 
         Function<String, Optional<Interest>> getterFunction = m -> Optional.empty();
         InterestModelToEntityMapper interestModelToEntityMapper = new InterestModelToEntityMapper(getterFunction);
 
         // execute the SUT
-        Optional<Interest> result = interestModelToEntityMapper.map(inboundInterest);
+        Optional<Interest> result = interestModelToEntityMapper.map(interestName);
 
         // validation
         assertThat(result).isEmpty();

@@ -17,8 +17,6 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.LeadershipSkillModelAssembler;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipSkill;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipSkill;
 import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +40,7 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class LeadershipSkillController {
 
-    /** Assembler for creating {@link InboundLeadershipSkill} instances */
+    /** Assembler for creating leadership skill instances */
     private final LeadershipSkillModelAssembler leadershipSkillModelAssembler;
 
     /** Service with business logic for leadership skills */
@@ -51,10 +49,10 @@ public class LeadershipSkillController {
     /**
      * A REST endpoint for retrieving all leadership skills.
      *
-     * @return A collection of {@link InboundLeadershipSkill} instances.
+     * @return A collection of leadership skill strings.
      */
     @GetMapping
-    public CollectionModel<OutboundLeadershipSkill> getLeaderhipSkills() {
+    public CollectionModel<String> getLeaderhipSkills() {
         var interestModels = StreamSupport.stream(leadershipSkillService.getAllLeadershipSkills().spliterator(), false)
                 .map(leadershipSkillModelAssembler::toModel)
                 .collect(Collectors.toList());

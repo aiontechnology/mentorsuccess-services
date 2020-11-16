@@ -17,8 +17,7 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.Value;
 
 import javax.validation.constraints.Size;
 
@@ -28,29 +27,28 @@ import javax.validation.constraints.Size;
  * @author Whitney Hunter
  * @since 0.1.0
  */
-@Data
+@Value
 @Builder(setterPrefix = "with")
-@ToString
 public class InboundAddress {
 
     /** The first street address. */
     @Size(max = 50, message = "{address.street1.size}")
-    private final String street1;
+    String street1;
 
     /** The second street address. */
     @Size(max = 50, message = "{address.street2.size}")
-    private final String street2;
+    String street2;
 
     /** The city. */
     @Size(max = 50, message = "{address.city.size}")
-    private final String city;
+    String city;
 
     /** The state. */
     @Size(min = 2, max = 2, message = "{address.state.size}")
-    private final String state;
+    String state;
 
     /** The zip code */
     @Size(min = 5, max = 9, message = "{address.zip.size}")
-    private final String zip;
+    String zip;
 
 }

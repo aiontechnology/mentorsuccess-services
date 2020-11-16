@@ -18,32 +18,29 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundActivityFocus;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 /**
- * Mapper that converts an {@link ActivityFocus} to a {@link OutboundActivityFocus}.
+ * Mapper that converts an {@link ActivityFocus} to an activity focus string.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
-public class ActivityFocusEntityToModelMapper implements OneWayMapper<ActivityFocus, OutboundActivityFocus> {
+public class ActivityFocusEntityToModelMapper implements OneWayMapper<ActivityFocus, String> {
 
     /**
-     * Map the given {@link ActivityFocus} to a {@link OutboundActivityFocus}.
+     * Map the given {@link ActivityFocus} to an activity focus string.
      *
      * @param activityFocus The {@link ActivityFocus} to map.
-     * @return The mapped {@link OutboundActivityFocus}.
+     * @return The mapped activity focus string.
      */
     @Override
-    public Optional<OutboundActivityFocus> map(ActivityFocus activityFocus) {
+    public Optional<String> map(ActivityFocus activityFocus) {
         return Optional.ofNullable(activityFocus)
-                .map(a -> OutboundActivityFocus.builder()
-                        .withName(activityFocus.getName())
-                        .build());
+                .map(ActivityFocus::getName);
     }
 
 }

@@ -18,7 +18,6 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.reference;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,28 +25,27 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Mapper that converts a {@link InboundInterest} to a {@link Interest}.
+ * Mapper that converts an interest string to a {@link Interest}.
  *
  * @author Whitney Hunter
  * @since 0.3.0
  */
 @Component
 @RequiredArgsConstructor
-public class InterestModelToEntityMapper implements OneWayMapper<InboundInterest, Interest> {
+public class InterestModelToEntityMapper implements OneWayMapper<String, Interest> {
 
     /** Function that retrieves a {@link Interest} by its name */
     private final Function<String, Optional<Interest>> getter;
 
     /**
-     * Map the given {@link InboundInterest}
+     * Map the given interest string
      *
-     * @param inboundInterest The {@link InboundInterest} to map.
+     * @param inboundInterest The interest string to map.
      * @return The resulting {@link Interest}.
      */
     @Override
-    public Optional<Interest> map(InboundInterest inboundInterest) {
+    public Optional<Interest> map(String inboundInterest) {
         return Optional.ofNullable(inboundInterest)
-                .map(InboundInterest::getName)
                 .flatMap(getter::apply);
     }
 

@@ -16,9 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound.student;
 
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundBehavior;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Value;
+import org.springframework.context.annotation.Bean;
 
 import javax.validation.constraints.NotNull;
 import java.net.URI;
@@ -30,16 +32,16 @@ import java.util.Set;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@AllArgsConstructor
-@Getter
+@Value
+@Builder(setterPrefix = "with")
 public class InboundStudentBehavior {
 
     /** The associated leadership skill */
     @NotNull(message = "{studentbehavior.behavior.notNull")
-    private final Set<InboundBehavior> behaviors;
+    Set<String> behaviors;
 
     /** The URI of the associated person */
     @NotNull(message = "{studentbehavior.person.notNull}")
-    private final URI teacher;
+    URI teacher;
 
 }

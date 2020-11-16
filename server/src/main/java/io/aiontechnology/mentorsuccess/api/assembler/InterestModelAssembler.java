@@ -16,48 +16,42 @@
 
 package io.aiontechnology.mentorsuccess.api.assembler;
 
-import io.aiontechnology.mentorsuccess.api.controller.InterestController;
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.InterestEntityToModelMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundInterest;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundInterest;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles a {@link OutboundInterest} from an {@link Interest}.
+ * Assembles an interest string from an {@link Interest}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
  */
 @Component
-public class InterestModelAssembler extends RepresentationModelAssemblerSupport<Interest, OutboundInterest> {
+public class InterestModelAssembler {
 
-    /** Mapper to map between {@link Interest} and {@link OutboundInterest}. */
+    /** Mapper to map between {@link Interest} and an interest string. */
     private final InterestEntityToModelMapper mapper;
 
     /**
      * Constructor
      *
-     * @param mapper The mapper for mapping between {@link Interest} and {@link OutboundInterest}.
+     * @param mapper The mapper for mapping between {@link Interest} and an interest string.
      */
     @Inject
     public InterestModelAssembler(InterestEntityToModelMapper mapper) {
-        super(InterestController.class, OutboundInterest.class);
         this.mapper = mapper;
     }
 
     /**
-     * Map an {@link Interest} to a {@link InboundInterest} without adding links.
+     * Map an {@link Interest} to an interest string.
      *
      * @param interest The {@link Interest} to map.
-     * @return The resulting {@link InboundInterest}.
+     * @return The resulting interest string.
      */
-    @Override
-    public OutboundInterest toModel(Interest interest) {
+    public String toModel(Interest interest) {
         return Optional.ofNullable(interest)
                 .flatMap(mapper::map)
                 .orElse(null);

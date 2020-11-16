@@ -44,7 +44,7 @@ public class BookModelAssemblerTest {
         Book book = new Book();
 
         OneWayMapper<Book, OutboundBook> bookMapper = mock(OneWayMapper.class);
-        OutboundBook outboundBook = mock(OutboundBook.class);
+        OutboundBook outboundBook = OutboundBook.builder().build();
         when(bookMapper.map(book)).thenReturn(Optional.of(outboundBook));
 
         BookModelAssembler assembler = new BookModelAssembler(bookMapper, null);
@@ -62,7 +62,7 @@ public class BookModelAssemblerTest {
         Book book = null;
 
         OneWayMapper<Book, OutboundBook> bookMapper = mock(OneWayMapper.class);
-        OutboundBook outboundBook = mock(OutboundBook.class);
+        OutboundBook outboundBook = OutboundBook.builder().build();
         when(bookMapper.map(book)).thenReturn(Optional.of(outboundBook));
 
         BookModelAssembler assembler = new BookModelAssembler(bookMapper, null);
@@ -80,7 +80,7 @@ public class BookModelAssemblerTest {
         Book book = new Book();
 
         OneWayMapper<Book, OutboundBook> bookMapper = mock(OneWayMapper.class);
-        OutboundBook outboundBook = mock(OutboundBook.class);
+        OutboundBook outboundBook = OutboundBook.builder().build();
         when(bookMapper.map(book)).thenReturn(Optional.of(outboundBook));
 
         LinkProvider<OutboundBook, Book> linkProvider = mock(LinkProvider.class);

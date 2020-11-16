@@ -17,46 +17,40 @@
 package io.aiontechnology.mentorsuccess.api.assembler;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
-import io.aiontechnology.mentorsuccess.api.controller.LeadershipTraitController;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.reference.InboundLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.outbound.reference.OutboundLeadershipTrait;
-import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.stereotype.Component;
 
 import javax.inject.Inject;
 import java.util.Optional;
 
 /**
- * Assembles a {@link OutboundLeadershipTrait} from a {@link LeadershipTrait}.
+ * Assembles a leadership trait string from a {@link LeadershipTrait}.
  *
  * @author Whitney Hunter
  * @since 0.1.0
  */
 @Component
-public class LeadershipTraitModelAssembler extends RepresentationModelAssemblerSupport<LeadershipTrait, OutboundLeadershipTrait> {
+public class LeadershipTraitModelAssembler {
 
-    private final OneWayMapper<LeadershipTrait, OutboundLeadershipTrait> mapper;
+    private final OneWayMapper<LeadershipTrait, String> mapper;
 
     /**
      * Constructor
      *
-     * @param mapper The mapper for mapping between {@link LeadershipTrait} and {@link OutboundLeadershipTrait}.
+     * @param mapper The mapper for mapping between {@link LeadershipTrait} and a leadership trait string.
      */
     @Inject
-    public LeadershipTraitModelAssembler(OneWayMapper<LeadershipTrait, OutboundLeadershipTrait> mapper) {
-        super(LeadershipTraitController.class, OutboundLeadershipTrait.class);
+    public LeadershipTraitModelAssembler(OneWayMapper<LeadershipTrait, String> mapper) {
         this.mapper = mapper;
     }
 
     /**
-     * Map a {@link LeadershipTrait} to a {@link InboundLeadershipTrait} without adding links.
+     * Map a {@link LeadershipTrait} to a leadership trait string.
      *
      * @param leadershipTrait The {@link LeadershipTrait} to map.
-     * @return The resulting {@link InboundLeadershipTrait}.
+     * @return The resulting leadership trait string.
      */
-    @Override
-    public OutboundLeadershipTrait toModel(LeadershipTrait leadershipTrait) {
+    public String toModel(LeadershipTrait leadershipTrait) {
         return Optional.ofNullable(leadershipTrait)
                 .flatMap(mapper::map)
                 .orElse(null);
