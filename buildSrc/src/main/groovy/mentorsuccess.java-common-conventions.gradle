@@ -53,6 +53,13 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
+task copyJar(type: Copy) {
+    from jar
+    into "$buildDir/docker"
+}
+
+build.dependsOn copyJar
+
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier 'sources'
     from sourceSets.main.allSource
