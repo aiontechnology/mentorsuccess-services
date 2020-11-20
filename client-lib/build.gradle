@@ -48,8 +48,6 @@ bintray {
         publicDownloadNumbers = true
         override = true
         version {
-            name = '0.4.0'
-            desc = '0.4.0 build'
             released = new Date()
         }
     }

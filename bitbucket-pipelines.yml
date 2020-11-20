@@ -57,6 +57,13 @@ pipelines:
           artifacts:
             - server/build/**
       - step:
+          name: Deploy to jcenter
+          image: adoptopenjdk:14-jdk-hotspot
+          caches:
+            - gradle
+          script:
+            - bash ./gradlew bintrayUpload
+      - step:
           name: Deploy
           image: python:3.7.4-alpine3.10
           services:

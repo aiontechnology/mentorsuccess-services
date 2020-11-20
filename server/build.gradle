@@ -29,7 +29,7 @@ dependencies {
 //    implementation 'org.springframework.cloud:spring-cloud-starter-aws'
 //    implementation 'org.springframework.cloud:spring-cloud-starter-aws-jdbc'
 
-    implementation 'io.aiontechnology:atlas:0.1.1-SNAPSHOT'
+    implementation "io.aiontechnology:atlas:$atlasVersion"
 
     implementation 'javax.inject:javax.inject:1'
 
