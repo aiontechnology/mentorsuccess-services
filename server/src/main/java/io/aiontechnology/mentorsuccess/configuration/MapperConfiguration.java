@@ -23,8 +23,10 @@ import io.aiontechnology.atlas.mapping.impl.SimpleOneWayCollectionMapper;
 import io.aiontechnology.atlas.mapping.impl.UpdateMapperBasedOneWayMapper;
 import io.aiontechnology.atlas.synchronization.CollectionSynchronizer;
 import io.aiontechnology.atlas.synchronization.impl.SimpleCollectionSynchronizer;
+import io.aiontechnology.mentorsuccess.api.assembler.MentorModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.PersonModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
+import io.aiontechnology.mentorsuccess.api.controller.MentorController;
 import io.aiontechnology.mentorsuccess.api.controller.PersonController;
 import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
 import io.aiontechnology.mentorsuccess.api.mapping.AssemblerMapperAdaptor;
@@ -39,7 +41,7 @@ import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
-import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.StudentTeacher;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
@@ -56,6 +58,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundPerson;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
@@ -216,6 +219,15 @@ public class MapperConfiguration {
         return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
     }
 
+    @Bean("mentorAssemblerMapperAdaptor")
+    public OneWayMapper<SchoolPersonRole, OutboundMentor> mentorAssemblerMapperAdaptor(MentorModelAssembler mentorModelAssembler) {
+        return new AssemblerMapperAdaptor<>(mentorModelAssembler,
+                (mentorModel, role) -> Arrays.asList(
+                        linkTo(MentorController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel()
+                )
+        );
+    }
+
     /*
      * Person
      */
@@ -344,9 +356,9 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public OneWayMapper<InboundStudentTeacher, StudentStaff> studentTeacherModelToEntityMapper(
-            OneWayUpdateMapper<InboundStudentTeacher, StudentStaff> mapper) {
-        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentStaff.class);
+    public OneWayMapper<InboundStudentTeacher, StudentTeacher> studentTeacherModelToEntityMapper(
+            OneWayUpdateMapper<InboundStudentTeacher, StudentTeacher> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentTeacher.class);
     }
 
     /*

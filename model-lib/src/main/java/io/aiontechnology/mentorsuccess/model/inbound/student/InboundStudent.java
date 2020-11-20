@@ -66,6 +66,9 @@ public class InboundStudent {
     @Valid
     InboundStudentTeacher teacher;
 
+    @Valid
+    InboundStudentMentor mentor;
+
     @NotNull(message = "{student.mediaRelease.notNull}")
     Boolean mediaReleaseSigned;
 

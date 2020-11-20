@@ -50,6 +50,8 @@ public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
     OutboundStudentTeacher teacher;
 
+    OutboundStudentMentor mentor;
+
     Boolean mediaReleaseSigned;
 
     Collection<String> interests;
