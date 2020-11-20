@@ -1,0 +1,108 @@
+# Copyright 2020 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 23
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: student
+            columns:
+              - column:
+                  name: allergy_info
+                  type: varchar(255)
+        - dropForeignKeyConstraint:
+            baseTableName: student
+            constraintName: fk_student_teacher
+        - dropColumn:
+            tableName: student
+            columns:
+              name: teacher_id
+        - renameTable:
+            oldTableName: student_person
+            newTableName: student_person_role
+        - addColumn:
+            tableName: student_person_role
+            columns:
+              - column:
+                  name: is_emergency_contact
+                  type: boolean
+              - column:
+                  name: preferred_contact_method
+                  type: varchar(15)
+              - column:
+                  name: comment
+                  type: varchar(255)
+        - createTable:
+            tableName: student_interest
+            columns:
+              - column:
+                  name: student_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: interest_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: student_interest
+            columnNames: student_id, interest_id
+            constraintName: pk_student_interest
+        - addForeignKeyConstraint:
+            baseTableName: student_interest
+            baseColumnNames: student_id
+            referencedTableName: student
+            referencedColumnNames: id
+            constraintName: fk_studentinterest_student
+        - addForeignKeyConstraint:
+            baseTableName: student_interest
+            baseColumnNames: interest_id
+            referencedTableName: interest
+            referencedColumnNames: id
+            constraintName: fk_studentinterest_interest
+        - createTable:
+            tableName: student_staff
+            columns:
+              - column:
+                  name: student_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: staff_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: varchar(255)
+        - addPrimaryKey:
+            tableName: student_staff
+            columnNames: student_id, staff_id
+            constraintName: pk_student_staff
+        - addForeignKeyConstraint:
+            baseTableName: student_staff
+            baseColumnNames: student_id
+            referencedTableName: student
+            referencedColumnNames: id
+            constraintName: fk_studentstaff_student
+        - addForeignKeyConstraint:
+            baseTableName: student_staff
+            baseColumnNames: staff_id
+            referencedTableName: school_person_role
+            referencedColumnNames: id
+            constraintName: fk_studentstaff_studentpersonrole

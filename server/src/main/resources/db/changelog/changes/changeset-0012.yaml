@@ -1,0 +1,692 @@
+# Copyright 2020 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 12
+      author: whitney
+      changes:
+        - createTable:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(5)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: book_phonogram
+            columns:
+              - column:
+                  name: book_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phonogram_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: book_phonogram
+            columnNames: book_id, phonogram_id
+            constraintName: pk_book_phonogram
+        - addForeignKeyConstraint:
+            baseTableName: book_phonogram
+            baseColumnNames: book_id
+            referencedTableName: book
+            referencedColumnNames: id
+            constraintName: fk_bookphonogram_book
+        - addForeignKeyConstraint:
+            baseTableName: book_phonogram
+            baseColumnNames: phonogram_id
+            referencedTableName: phonogram
+            referencedColumnNames: id
+            constraintName: fk_bookphonogram_phonogram
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: c86f2466-b851-47e3-b71d-9481b7cdb294
+              - column:
+                  name: name
+                  value: a
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 7cdeaab6-df6f-4127-8c72-2b26eead86dc
+              - column:
+                  name: name
+                  value: c
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 67c48f8f-6389-4cfb-9eb9-62e34d6bb922
+              - column:
+                  name: name
+                  value: d
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 4114da21-fb1a-47e3-b7cf-cdfd0bef1544
+              - column:
+                  name: name
+                  value: f
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 536f7279-94d1-45a7-82ab-daf61f37993a
+              - column:
+                  name: name
+                  value: g
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: b329f055-25db-4938-9a27-1ddb3b383935
+              - column:
+                  name: name
+                  value: o
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 07926661-aa29-4dd1-a98a-16ff5be2ef37
+              - column:
+                  name: name
+                  value: s
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: fb72ea2b-4b78-41b7-bd8c-3a6714b414fa
+              - column:
+                  name: name
+                  value: qu
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 727deb7c-04eb-40ee-a4f1-13b2e9d8ebbf
+              - column:
+                  name: name
+                  value: b
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 7d5fbbf8-f51b-430b-aca0-0a5727010299
+              - column:
+                  name: name
+                  value: e
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: d1a0bc79-458f-4679-8d48-13b9cdb31a4f
+              - column:
+                  name: name
+                  value: h
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: c081d17f-dfa0-4e93-85cc-e4f6650509b7
+              - column:
+                  name: name
+                  value: i
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 40684678-b470-4ece-9694-3a05e1374f7a
+              - column:
+                  name: name
+                  value: j
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 6cc85411-564b-4cfd-9742-f208829128d1
+              - column:
+                  name: name
+                  value: k
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: c21ed771-22c6-4fb7-9dd2-307db82725f2
+              - column:
+                  name: name
+                  value: l
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: a9c6cb6c-9b06-4ce4-b6ca-01dd337ec9b3
+              - column:
+                  name: name
+                  value: m
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 0ee2fa2b-b2e0-4505-9c76-4765b7f77bbf
+              - column:
+                  name: name
+                  value: n
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: b97cd012-98e0-4c3b-bc26-e7adb64aa6ca
+              - column:
+                  name: name
+                  value: p
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 654e370d-5b0c-4e44-9b10-238e396ddbf9
+              - column:
+                  name: name
+                  value: r
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 1a16f725-6276-46f9-8c9a-d9b6f697f488
+              - column:
+                  name: name
+                  value: t
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 89a80dbe-1d34-4f76-aa85-00148750602e
+              - column:
+                  name: name
+                  value: u
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 995a3520-ccb0-4ad3-b848-1d52b73285e1
+              - column:
+                  name: name
+                  value: v
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: ccf341b2-3040-4ec5-b404-18257779f792
+              - column:
+                  name: name
+                  value: w
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 20899226-2a32-4a6a-8cf5-ffaa34e6fbc4
+              - column:
+                  name: name
+                  value: x
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 1c97052b-e637-46af-ace9-1a0236a8a527
+              - column:
+                  name: name
+                  value: y
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: e9f0867a-ac78-4be1-96cb-251f58cd346f
+              - column:
+                  name: name
+                  value: z
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 15c85285-71a6-4fda-b7de-d61765de24ed
+              - column:
+                  name: name
+                  value: sh
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: e43599aa-0066-4ef5-a33a-565187e2a44f
+              - column:
+                  name: name
+                  value: ee
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 9711d02b-16f5-4a37-811d-c6fe2a5ad8d9
+              - column:
+                  name: name
+                  value: th
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 40c348e0-933d-4f5e-b8f4-4b2a30a919d9
+              - column:
+                  name: name
+                  value: ow
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: c819d5cf-cf3a-4d16-ad2d-9c58a0d10adc
+              - column:
+                  name: name
+                  value: ou
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 479afa5c-bb81-4f30-8096-c3c10cba0bc3
+              - column:
+                  name: name
+                  value: oo
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: f704d41d-b29a-489f-8b75-70ad5e8e28c6
+              - column:
+                  name: name
+                  value: ch
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: a0ef4b2a-1f90-4eb0-80ab-eb51e22974c2
+              - column:
+                  name: name
+                  value: ar
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 8ebfb0bc-78a1-449b-a858-cc2d01a68eb8
+              - column:
+                  name: name
+                  value: ay
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: ce4e6d39-08c9-420b-9d5e-1431d64e9c9c
+              - column:
+                  name: name
+                  value: ai
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: d13d2c96-3280-4106-9bbc-b1f79be76482
+              - column:
+                  name: name
+                  value: oy
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: e073dde3-f1e9-4a32-8b14-e75051077427
+              - column:
+                  name: name
+                  value: oi
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 39d338b2-df95-46b8-8b64-7b40fbe775e4
+              - column:
+                  name: name
+                  value: er
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 157680ec-164f-4656-aae8-141e91daa9d3
+              - column:
+                  name: name
+                  value: ir
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 0bc6d85d-f9b1-44ff-887b-9529b3619af5
+              - column:
+                  name: name
+                  value: ur
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: a91cfc15-998a-4d48-9325-c832a68d7ef9
+              - column:
+                  name: name
+                  value: wor
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 09aa296a-4482-499b-a9bb-1c3c915cfbb0
+              - column:
+                  name: name
+                  value: ear
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 08d19293-9273-4614-8081-a09c75b0ca55
+              - column:
+                  name: name
+                  value: ng
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 46e4fbcd-466b-4caa-b7a7-93410378584d
+              - column:
+                  name: name
+                  value: ea
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 06115a53-e780-4833-8796-2493fb15ede9
+              - column:
+                  name: name
+                  value: aw
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 94954312-0272-45c6-bd56-9c81e8213956
+              - column:
+                  name: name
+                  value: au
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: cd723de8-0dc9-4c68-bd93-3155b7e9b5e3
+              - column:
+                  name: name
+                  value: or
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: a904c7ea-40f2-4213-a155-0f3bee3c6bc1
+              - column:
+                  name: name
+                  value: ck
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 20ef1b6a-f622-4cf5-8e76-24106e351d00
+              - column:
+                  name: name
+                  value: wh
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 137b6fa8-819b-4919-b459-57bb0a4f3728
+              - column:
+                  name: name
+                  value: ed
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 99a1cabb-aa7b-459f-8b92-2c5c793cd0f3
+              - column:
+                  name: name
+                  value: ew
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 01082c83-2a70-48d7-b57f-aec5dcb153af
+              - column:
+                  name: name
+                  value: ui
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 4d0c498a-eaef-4be7-8027-73c3d06c847b
+              - column:
+                  name: name
+                  value: oa
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: d3a8948f-da37-44e5-9eea-415beb540070
+              - column:
+                  name: name
+                  value: gu
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 742c399c-0525-4925-a070-dc2e0afd2500
+              - column:
+                  name: name
+                  value: ph
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: a64d482b-55d8-42f7-97f0-ef813f5f0cc8
+              - column:
+                  name: name
+                  value: ough
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: f670f61a-dde6-48ea-84a6-1efe23edef3a
+              - column:
+                  name: name
+                  value: oe
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 9811dc50-2abf-4627-938b-fa9a4d4f7230
+              - column:
+                  name: name
+                  value: ey
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 2cc182fc-c424-4a46-bdba-7a40599e5fe8
+              - column:
+                  name: name
+                  value: igh
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 658a936b-e05b-40d6-8195-f2b00b710217
+              - column:
+                  name: name
+                  value: kn
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: c604b80e-a5d4-4256-a293-1f52deb483bc
+              - column:
+                  name: name
+                  value: gn
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 935997cb-af43-4509-8397-441c1adb7538
+              - column:
+                  name: name
+                  value: wr
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: eabfd99e-fd92-45a7-a1e6-ba8bcd8197e2
+              - column:
+                  name: name
+                  value: ie
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 19a7d3c9-eb9d-4a8a-b46f-3c44304320ce
+              - column:
+                  name: name
+                  value: dge
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: ad93ffe9-4e63-4c92-817c-a27ae8919feb
+              - column:
+                  name: name
+                  value: ei
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: f38a68ef-7cdf-47bb-84e7-ff24e2c7370e
+              - column:
+                  name: name
+                  value: eigh
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: d691540f-cd4f-45b9-a4dc-5a849626df25
+              - column:
+                  name: name
+                  value: ti
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 70abe751-6d5d-4671-b036-2313f27c9499
+              - column:
+                  name: name
+                  value: si
+        - insert:
+            tableName: phonogram
+            columns:
+              - column:
+                  name: id
+                  value: 0229f604-9528-4c5d-9020-711daa489501
+              - column:
+                  name: name
+                  value: ci
