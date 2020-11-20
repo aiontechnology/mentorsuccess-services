@@ -68,6 +68,7 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
     public Optional<OutboundStudent> map(Student student) {
         return Optional.ofNullable(student)
                 .map(s -> OutboundStudent.builder()
+                        .withId(s.getId())
                         .withFirstName(s.getFirstName())
                         .withLastName(s.getLastName())
                         .withGrade(s.getGrade())
