@@ -23,6 +23,7 @@ import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Collection;
+import java.util.UUID;
 
 /**
  * @author Whitney Hunter
@@ -32,6 +33,8 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 public class OutboundStudent extends RepresentationModel<OutboundStudent> {
+
+    UUID id;
 
     String firstName;
 
