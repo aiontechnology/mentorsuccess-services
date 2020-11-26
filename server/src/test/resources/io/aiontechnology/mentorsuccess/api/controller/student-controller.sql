@@ -24,6 +24,6 @@ INSERT INTO student (id, student_id, first_name, last_name, grade, preferred_tim
 INSERT INTO student (id, student_id, first_name, last_name, grade, preferred_time, location, is_media_release_signed, is_active, school_id, allergy_info) VALUES ('f0c08c26-954b-4d05-8536-522403f9e54e', '1234', 'Sam', 'Student', 2, '2:00pm', 'OFFLINE', true, true, 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', 'peanuts');
 
 INSERT INTO student_teacher (student_id, role_id, comment) values ('2a8c5871-a21d-47a1-a516-a6376a6b8bf2', 'ba238442-ce51-450d-a474-2e36872abe05', 'comment');
-INSERT INTO student_teacher (student_id, role_id, comment) values ('f0c08c26-954b-4d05-8536-522403f9e54egit ', 'ba238442-ce51-450d-a474-2e36872abe05', 'comment');
+INSERT INTO student_teacher (student_id, role_id, comment) values ('f0c08c26-954b-4d05-8536-522403f9e54e', 'ba238442-ce51-450d-a474-2e36872abe05', 'comment');
 
 INSERT INTO student_mentor (student_id, role_id, start_date, time) values ('2a8c5871-a21d-47a1-a516-a6376a6b8bf2', '46771afb-a8ef-474e-b8e5-c693529cc5a8', '2020-12-01', 'Monday morning');
