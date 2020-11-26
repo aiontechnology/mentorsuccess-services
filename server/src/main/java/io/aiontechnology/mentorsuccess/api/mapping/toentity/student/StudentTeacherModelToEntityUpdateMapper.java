@@ -20,7 +20,7 @@ import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
-import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.StudentTeacher;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -34,15 +34,15 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-public class StudentTeacherModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundStudentTeacher, StudentStaff> {
+public class StudentTeacherModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundStudentTeacher, StudentTeacher> {
 
     private final OneWayMapper<URI, SchoolPersonRole> teacherModelToEntityMapper;
 
     @Override
-    public Optional<StudentStaff> map(InboundStudentTeacher inboundStudentTeacher, StudentStaff studentTeacher) {
+    public Optional<StudentTeacher> map(InboundStudentTeacher inboundStudentTeacher, StudentTeacher studentTeacher) {
         return Optional.ofNullable(inboundStudentTeacher)
                 .map(studentTeacherModel -> {
-                    studentTeacher.setTeacher(teacherModelToEntityMapper.map(studentTeacherModel.getUri())
+                    studentTeacher.setRole(teacherModelToEntityMapper.map(studentTeacherModel.getUri())
                             .orElseThrow(() -> new NotFoundException("Unable to find specified teacher")));
                     studentTeacher.setComment(studentTeacherModel.getComment());
                     return studentTeacher;

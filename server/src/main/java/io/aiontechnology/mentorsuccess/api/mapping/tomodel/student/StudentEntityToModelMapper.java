@@ -22,11 +22,13 @@ import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
+import io.aiontechnology.mentorsuccess.entity.StudentMentor;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
-import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.StudentTeacher;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudent;
+import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentMentor;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentTeacher;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -56,7 +58,9 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
 
     private final OneWayCollectionMapper<StudentPersonRole, OutboundContact> studentPersonEntityToModelMapper;
 
-    private final OneWayMapper<StudentStaff, OutboundStudentTeacher> studentStaffEntityToModelMapper;
+    private final OneWayMapper<StudentTeacher, OutboundStudentTeacher> studentTeacherEntityToModelMapper;
+
+    private final OneWayMapper<StudentMentor, OutboundStudentMentor> studentMentorEntityToModelMapper;
 
     /**
      * Map the given {@link Student} to a {@link OutboundStudent}.
@@ -81,7 +85,8 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
                         .withLeadershipSkills(getStudentLeadershipSkillEntityToModelMapper().map(s.getStudentLeadershipSkills()))
                         .withLeadershipTraits(getStudentLeadershipTraitEntityToModelMapper().map(s.getStudentLeadershipTraits()))
                         .withContacts(getStudentPersonEntityToModelMapper().map(s.getStudentPersonRoles()))
-                        .withTeacher(getStudentStaffEntityToModelMapper().map(s.getTeacher()).orElse(null))
+                        .withTeacher(getStudentTeacherEntityToModelMapper().map(s.getTeacher()).orElse(null))
+                        .withMentor(getStudentMentorEntityToModelMapper().map(s.getMentor()).orElse(null))
                         .build());
     }
 

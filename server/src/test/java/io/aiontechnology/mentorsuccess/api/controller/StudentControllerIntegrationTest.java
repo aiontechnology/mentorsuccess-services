@@ -22,6 +22,7 @@ import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentMentor;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -44,6 +46,7 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -76,6 +79,8 @@ public class StudentControllerIntegrationTest {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
                 "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        final URI MENTOR_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -118,7 +123,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.teacher.teacher.grade1", is(1)))
                 .andExpect(jsonPath("$.teacher.teacher.grade2", is(2)))
                 .andExpect(jsonPath("$.teacher.teacher._links.self[0].href", is(TEACHER_URI.toString())))
-                .andExpect(jsonPath("$.teacher.comment", is(COMMENT)));
+                .andExpect(jsonPath("$.teacher.comment", is(COMMENT)))
+                .andExpect(jsonPath("$.mentor", nullValue()));
     }
 
     @Test
@@ -648,6 +654,73 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }
 
+    void testCreateStudent_withMentor() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        final URI MENTOR_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+        Date startDate = new Date();
+        InboundStudentMentor inboundStudentMentor = InboundStudentMentor.builder()
+                .withUri(MENTOR_URI)
+                .withStartDate(startDate)
+                .withTime("Tuesdays")
+                .build();
+
+        String FIRST_NAME = "FIRST_NAME";
+        String LAST_NAME = "LAST_NAME";
+        int GRADE = 1;
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withTeacher(inboundStudentTeacher)
+                .withMentor(inboundStudentMentor)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.grade", is(GRADE)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
+                .andExpect(jsonPath("$.teacher", notNullValue()))
+                .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
+                .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
+                .andExpect(jsonPath("$.teacher.teacher.email", is("fred@rogers.com")))
+                .andExpect(jsonPath("$.teacher.teacher.workPhone", is("(360) 111-2222")))
+                .andExpect(jsonPath("$.teacher.teacher.cellPhone", is("(360) 333-4444")))
+                .andExpect(jsonPath("$.teacher.teacher.grade1", is(1)))
+                .andExpect(jsonPath("$.teacher.teacher.grade2", is(2)))
+                .andExpect(jsonPath("$.teacher.teacher._links.self[0].href", is(TEACHER_URI.toString())))
+                .andExpect(jsonPath("$.teacher.comment", is(COMMENT)))
+                .andExpect(jsonPath("$.mentor", notNullValue()))
+                .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
+                .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
+                .andExpect(jsonPath("$.mentor.mentor.email", is("mark@mentor.com")))
+                .andExpect(jsonPath("$.mentor.mentor.workPhone", is("(360) 222-3333")))
+                .andExpect(jsonPath("$.mentor.mentor.cellPhone", is("(360) 444-5555")))
+                .andExpect(jsonPath("$.mentor.mentor._links.self[0].href", is(MENTOR_URI.toString())))
+                .andExpect(jsonPath("$.mentor.startDate", notNullValue()))
+                .andExpect(jsonPath("$.mentor.time", is("Tuesdays")));
+    }
+
     @Test
     void testReadStudent() throws Exception {
         // setup the fixture
@@ -676,6 +749,11 @@ public class StudentControllerIntegrationTest {
         teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
         teacherModel.put("comment", "We need to talk");
 
+        Map<String, Object> mentorModel = new HashMap<>();
+        mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        mentorModel.put("startDate", "2020-12-01");
+        mentorModel.put("time", "Whenever");
+
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
         Set<String> interests = Set.of("Cats", "Dogs");
         Set<String> leadershipSkills = Set.of("Decision Making", "Planning");
@@ -696,6 +774,73 @@ public class StudentControllerIntegrationTest {
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("allergyInfo", "ketchup");
         studentModel.put("teacher", teacherModel);
+        studentModel.put("mentor", mentorModel);
+        studentModel.put("behaviors", behaviors);
+        studentModel.put("interests", interests);
+        studentModel.put("leadershipSkills", leadershipSkills);
+        studentModel.put("leadershipTraits", leadershipTraits);
+        studentModel.put("contacts", Arrays.asList(contact1));
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is("NEW FIRST NAME")))
+                .andExpect(jsonPath("$.lastName", is("NEW LAST NAME")))
+                .andExpect(jsonPath("$.grade", is(3)))
+                .andExpect(jsonPath("$.preferredTime", is("10:00am")))
+                .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
+                .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
+                .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
+                .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
+                .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
+                .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
+                .andExpect(jsonPath("$.mentor.startDate", notNullValue()))
+                .andExpect(jsonPath("$.mentor.time", is("Whenever")))
+                .andExpect(jsonPath("$.behaviors.size()", is(2)))
+                .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
+                .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
+                .andExpect(jsonPath("$.leadershipSkills", hasItems("Decision Making", "Planning")))
+                .andExpect(jsonPath("$.leadershipTraits", hasItems("Humility", "Responsibility")))
+                .andExpect(jsonPath("$.contacts[0].type", is("PARENT_GUARDIAN")))
+                .andExpect(jsonPath("$.contacts[0].firstName", is("Peter")))
+                .andExpect(jsonPath("$.contacts[0].lastName", is("Parent")))
+                .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
+    }
+
+    @Test
+    void testUpdateStudent_toNullMentor() throws Exception {
+        // setup the fixture
+        Map<String, Object> teacherModel = new HashMap<>();
+        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        teacherModel.put("comment", "We need to talk");
+
+        Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
+        Set<String> interests = Set.of("Cats", "Dogs");
+        Set<String> leadershipSkills = Set.of("Decision Making", "Planning");
+        Set<String> leadershipTraits = Set.of("Humility", "Responsibility");
+
+        Map<String, Object> contact1 = new HashMap<>();
+        contact1.put("type", "PARENT_GUARDIAN");
+        contact1.put("firstName", "Peter");
+        contact1.put("lastName", "Parent");
+        contact1.put("isEmergencyContact", true);
+
+        Map<String, Object> studentModel = new HashMap<>();
+        studentModel.put("firstName", "NEW FIRST NAME");
+        studentModel.put("lastName", "NEW LAST NAME");
+        studentModel.put("grade", 3);
+        studentModel.put("preferredTime", "10:00am");
+        studentModel.put("location", "OFFLINE");
+        studentModel.put("mediaReleaseSigned", false);
+        studentModel.put("allergyInfo", "ketchup");
+        studentModel.put("teacher", teacherModel);
+        studentModel.put("mentor", null);
         studentModel.put("behaviors", behaviors);
         studentModel.put("interests", interests);
         studentModel.put("leadershipSkills", leadershipSkills);
@@ -730,6 +875,76 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
     }
 
+    @Test
+    void testUpdateStudent_fromNullMentor() throws Exception {
+        // setup the fixture
+        Map<String, Object> teacherModel = new HashMap<>();
+        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        teacherModel.put("comment", "We need to talk");
+
+        Map<String, Object> mentorModel = new HashMap<>();
+        mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        mentorModel.put("startDate", "2020-12-01");
+        mentorModel.put("time", "Whenever");
+
+        Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
+        Set<String> interests = Set.of("Cats", "Dogs");
+        Set<String> leadershipSkills = Set.of("Decision Making", "Planning");
+        Set<String> leadershipTraits = Set.of("Humility", "Responsibility");
+
+        Map<String, Object> contact1 = new HashMap<>();
+        contact1.put("type", "PARENT_GUARDIAN");
+        contact1.put("firstName", "Peter");
+        contact1.put("lastName", "Parent");
+        contact1.put("isEmergencyContact", true);
+
+        Map<String, Object> studentModel = new HashMap<>();
+        studentModel.put("firstName", "NEW FIRST NAME");
+        studentModel.put("lastName", "NEW LAST NAME");
+        studentModel.put("grade", 3);
+        studentModel.put("preferredTime", "10:00am");
+        studentModel.put("location", "OFFLINE");
+        studentModel.put("mediaReleaseSigned", false);
+        studentModel.put("allergyInfo", "ketchup");
+        studentModel.put("teacher", teacherModel);
+        studentModel.put("mentor", mentorModel);
+        studentModel.put("behaviors", behaviors);
+        studentModel.put("interests", interests);
+        studentModel.put("leadershipSkills", leadershipSkills);
+        studentModel.put("leadershipTraits", leadershipTraits);
+        studentModel.put("contacts", Arrays.asList(contact1));
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/f0c08c26-954b-4d05-8536-522403f9e54e")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is("NEW FIRST NAME")))
+                .andExpect(jsonPath("$.lastName", is("NEW LAST NAME")))
+                .andExpect(jsonPath("$.grade", is(3)))
+                .andExpect(jsonPath("$.preferredTime", is("10:00am")))
+                .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
+                .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
+                .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
+                .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
+                .andExpect(jsonPath("$.mentor.startDate", notNullValue()))
+                .andExpect(jsonPath("$.mentor.time", is("Whenever")))
+                .andExpect(jsonPath("$.behaviors.size()", is(2)))
+                .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
+                .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
+                .andExpect(jsonPath("$.leadershipSkills", hasItems("Decision Making", "Planning")))
+                .andExpect(jsonPath("$.leadershipTraits", hasItems("Humility", "Responsibility")))
+                .andExpect(jsonPath("$.contacts[0].type", is("PARENT_GUARDIAN")))
+                .andExpect(jsonPath("$.contacts[0].firstName", is("Peter")))
+                .andExpect(jsonPath("$.contacts[0].lastName", is("Parent")))
+                .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
+    }
+
+    @Test
     void testDeactivateStudent() throws Exception {
         // setup the fixture
         // See SQL file

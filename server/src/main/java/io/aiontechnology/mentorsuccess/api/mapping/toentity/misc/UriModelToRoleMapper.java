@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 @RequiredArgsConstructor
 public class UriModelToRoleMapper implements OneWayMapper<URI, SchoolPersonRole> {
 
-    private final Pattern TEACHER_PATTERN =
-            Pattern.compile("https?://.*/api/v1/schools/(.*)/teachers/(.*)");
+    private final Pattern PATTERN =
+            Pattern.compile("https?://.*/api/v1/schools/(.*)/(?:teachers|mentors)/(.*)");
 
     private final RoleService roleService;
 
@@ -47,7 +47,7 @@ public class UriModelToRoleMapper implements OneWayMapper<URI, SchoolPersonRole>
                 flatMap(u -> {
                     UUID roleUUID = null;
 
-                    Matcher matcher2 = TEACHER_PATTERN.matcher(uri.toString());
+                    Matcher matcher2 = PATTERN.matcher(uri.toString());
                     if (matcher2.find()) {
                         roleUUID = UUID.fromString(matcher2.group(2));
                     }

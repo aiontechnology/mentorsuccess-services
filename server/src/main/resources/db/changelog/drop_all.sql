@@ -38,4 +38,5 @@ drop table if exists student_interest cascade;
 drop table if exists student_leadershipskill cascade;
 drop table if exists student_leadershiptrait cascade;
 drop table if exists student_person_role cascade;
-drop table if exists student_staff cascade;
+drop table if exists student_teacher cascade;
+drop table if exists student_mentor cascade;
