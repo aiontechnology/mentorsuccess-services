@@ -44,7 +44,7 @@ public class InboundProgramAdmin {
     String lastName;
 
     /** The program admin's email address. */
-    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{programAdmin.email.invalid}")
+    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{programAdmin.email.invalid}")
     String email;
 
     /** The program admin's work phone number. */
