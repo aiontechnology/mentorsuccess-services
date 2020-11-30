@@ -17,7 +17,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @Relation(collectionRelation = "bookModelList")
-public class OutboundBook extends OutboundResource<OutboundBook> {
+public class OutboundBook extends OutboundResource<OutboundBook> implements LocationHolder {
 
     /** The book's id. */
     UUID id;
