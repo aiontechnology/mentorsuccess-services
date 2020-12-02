@@ -43,6 +43,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -125,7 +126,13 @@ public class Student {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
-    private StudentStaff teacher = new StudentStaff();
+    private StudentTeacher teacher = new StudentTeacher();
+
+    /** The student's mentor. */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private StudentMentor mentor = new StudentMentor();
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -209,9 +216,16 @@ public class Student {
         this.studentPersonRoles = studentPersonRoleSyncHelper.sync(this.studentPersonRoles, newCollection);
     }
 
-    public void setTeacher(StudentStaff teacher) {
-        teacher.setStudent(this);
+    public void setTeacher(StudentTeacher teacher) {
+        Optional.ofNullable(teacher)
+                .ifPresent(t -> t.setStudent(this));
         this.teacher = teacher;
+    }
+
+    public void setMentor(StudentMentor mentor) {
+        Optional.ofNullable(mentor)
+                .ifPresent(m -> m.setStudent(this));
+        this.mentor = mentor;
     }
 
 }

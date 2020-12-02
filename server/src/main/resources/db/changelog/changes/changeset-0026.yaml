@@ -1,0 +1,87 @@
+# Copyright 2020 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 26
+      author: whitney
+      changes:
+        - dropPrimaryKey:
+            tableName: student_staff
+            constraintName: pk_student_staff
+            dropIndex: true
+        - dropForeignKeyConstraint:
+            baseTableName: student_staff
+            constraintName: fk_studentstaff_student
+        - dropForeignKeyConstraint:
+            baseTableName: student_staff
+            constraintName: fk_studentstaff_studentpersonrole
+        - renameTable:
+            oldTableName: student_staff
+            newTableName: student_teacher
+        - renameColumn:
+            tableName: student_teacher
+            oldColumnName: staff_id
+            newColumnName: role_id
+        - addPrimaryKey:
+            tableName: student_teacher
+            columnNames: student_id, role_id
+            constraintName: pk_student_teacher
+        - addForeignKeyConstraint:
+            baseTableName: student_teacher
+            baseColumnNames: student_id
+            referencedTableName: student
+            referencedColumnNames: id
+            constraintName: fk_studentteacher_student
+        - addForeignKeyConstraint:
+            baseTableName: student_teacher
+            baseColumnNames: role_id
+            referencedTableName: school_person_role
+            referencedColumnNames: id
+            constraintName: fk_studentteacher_studentpersonrole
+        - createTable:
+            tableName: student_mentor
+            columns:
+              - column:
+                  name: student_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: date
+              - column:
+                  name: time
+                  type: varchar(20)
+        - addPrimaryKey:
+            tableName: student_mentor
+            columnNames: student_id, role_id
+            constraintName: pk_student_mentor
+        - addForeignKeyConstraint:
+            baseTableName: student_mentor
+            baseColumnNames: student_id
+            referencedTableName: student
+            referencedColumnNames: id
+            constraintName: fk_studentmentor_student
+        - addForeignKeyConstraint:
+            baseTableName: student_mentor
+            baseColumnNames: role_id
+            referencedTableName: school_person_role
+            referencedColumnNames: id
+            constraintName: fk_studentmentor_studentpersonrole

@@ -46,7 +46,7 @@ public class InboundTeacher {
     String lastName;
 
     /** The teacher's email address. */
-    @Pattern(regexp = "(\\w*@\\w*.\\w{3}){1,50}", message = "{teacher.email.invalid}")
+    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{teacher.email.invalid}")
     String email;
 
     /** The teacher's work phone number. */

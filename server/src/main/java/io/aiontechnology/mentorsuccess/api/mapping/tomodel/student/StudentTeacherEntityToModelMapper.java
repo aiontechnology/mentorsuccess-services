@@ -18,7 +18,7 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.student;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
-import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.StudentTeacher;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentTeacher;
 import lombok.RequiredArgsConstructor;
@@ -33,16 +33,16 @@ import java.util.Optional;
  */
 @Component
 @RequiredArgsConstructor
-public class StudentTeacherEntityToModelMapper implements OneWayMapper<StudentStaff, OutboundStudentTeacher> {
+public class StudentTeacherEntityToModelMapper implements OneWayMapper<StudentTeacher, OutboundStudentTeacher> {
 
     @Qualifier("teacherAssemblerMapperAdaptor")
     private final OneWayMapper<SchoolPersonRole, OutboundTeacher> teacherEntityToModelMapper;
 
     @Override
-    public Optional<OutboundStudentTeacher> map(StudentStaff studentStaff) {
-        return Optional.ofNullable(studentStaff)
+    public Optional<OutboundStudentTeacher> map(StudentTeacher studentTeacher) {
+        return Optional.ofNullable(studentTeacher)
                 .map(s -> OutboundStudentTeacher.builder()
-                        .withTeacher(teacherEntityToModelMapper.map(s.getTeacher()).orElse(null))
+                        .withTeacher(teacherEntityToModelMapper.map(s.getRole()).orElse(null))
                         .withComment(s.getComment())
                         .build());
     }

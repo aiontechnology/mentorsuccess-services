@@ -25,14 +25,16 @@ import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
+import io.aiontechnology.mentorsuccess.entity.StudentMentor;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
-import io.aiontechnology.mentorsuccess.entity.StudentStaff;
+import io.aiontechnology.mentorsuccess.entity.StudentTeacher;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentMentor;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -59,7 +61,9 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
 
     private final OneWayCollectionUpdateMapper<InboundContact, StudentPersonRole> studentPersonModelToEntityMapper;
 
-    private final OneWayUpdateMapper<InboundStudentTeacher, StudentStaff> studentTeacherModelToEntityMapper;
+    private final OneWayUpdateMapper<InboundStudentTeacher, StudentTeacher> studentTeacherModelToEntityMapper;
+
+    private final OneWayUpdateMapper<InboundStudentMentor, StudentMentor> studentMentorModelToEntityMapper;
 
     /**
      * Map the set of behavior strings in the {@link InboundStudent} into a new
@@ -134,7 +138,15 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
                                             .map(inboundStudentBehaviorModel, student.getStudentLeadershipTraits())));
                     student.setStudentPersonRoles(studentPersonModelToEntityMapper
                             .map(s.getContacts(), student.getStudentPersonRoles()));
+                    if(student.getTeacher() == null) {
+                        student.setTeacher(new StudentTeacher());
+                    }
                     student.setTeacher(studentTeacherModelToEntityMapper.map(s.getTeacher(), student.getTeacher())
+                            .orElse(null));
+                    if(student.getMentor() == null) {
+                        student.setMentor(new StudentMentor());
+                    }
+                    student.setMentor(studentMentorModelToEntityMapper.map(s.getMentor(), student.getMentor())
                             .orElse(null));
                     return student;
                 });
