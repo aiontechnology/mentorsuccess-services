@@ -43,6 +43,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -99,6 +100,9 @@ public class Student {
 
     @Column
     private String preferredTime;
+
+    @Column
+    private Date startDate;
 
     /** The location of the resource */
     @Column

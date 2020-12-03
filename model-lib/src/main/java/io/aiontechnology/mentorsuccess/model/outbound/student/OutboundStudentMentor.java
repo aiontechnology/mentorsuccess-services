@@ -20,8 +20,6 @@ import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
 import lombok.Builder;
 import lombok.Value;
 
-import java.util.Date;
-
 /**
  * @author Whitney Hunter
  * @since 0.6.0
@@ -31,8 +29,6 @@ import java.util.Date;
 public class OutboundStudentMentor {
 
     OutboundMentor mentor;
-
-    Date startDate;
 
     String time;
 

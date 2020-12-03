@@ -27,6 +27,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 /**
@@ -57,6 +58,8 @@ public class InboundStudent {
 
     @Size(max = 10, message = "{student.preferredTime.size}")
     String preferredTime;
+
+    Date startDate;
 
     @NotNull(message = "{student.location.notNull}")
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{student.location.invalid}")

@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import java.net.URI;
-import java.util.Date;
 
 /**
  * @author Whitney Hunter
@@ -31,8 +30,6 @@ import java.util.Date;
 public class InboundStudentMentor {
 
     URI uri;
-
-    Date startDate;
 
     String time;
 
