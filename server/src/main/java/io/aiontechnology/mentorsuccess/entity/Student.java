@@ -112,9 +112,6 @@ public class Student {
     @Column
     private Boolean isMediaReleaseSigned;
 
-    @Column
-    private String allergyInfo;
-
     /** Is the student active? */
     @Column
     private Boolean isActive;

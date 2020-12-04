@@ -44,8 +44,6 @@ public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
     Integer grade;
 
-    String allergyInfo;
-
     String preferredTime;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")

@@ -53,9 +53,6 @@ public class InboundStudent {
     @Max(value = 5, message = "{student.grade.invalid}")
     Integer grade;
 
-    @Size(max = 255, message = "{student.alergyInfo.size}")
-    String allergyInfo;
-
     @Size(max = 10, message = "{student.preferredTime.size}")
     String preferredTime;
 

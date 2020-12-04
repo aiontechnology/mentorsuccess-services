@@ -76,7 +76,6 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
                         .withFirstName(s.getFirstName())
                         .withLastName(s.getLastName())
                         .withGrade(s.getGrade())
-                        .withAllergyInfo(s.getAllergyInfo())
                         .withLocation(s.getLocation())
                         .withPreferredTime(s.getPreferredTime())
                         .withStartDate(s.getStartDate())
