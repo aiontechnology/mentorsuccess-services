@@ -35,6 +35,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -248,12 +249,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withBehaviors(new HashSet(Arrays.asList("Perfectionism", "Bullying / Tattling")))
@@ -286,12 +289,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withBehaviors(new HashSet<String>(Arrays.asList("INVALID")))
@@ -327,12 +332,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withInterests(new HashSet(Arrays.asList("Cats", "Dogs")))
@@ -366,12 +373,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withInterests(new HashSet(Arrays.asList("INVALID")))
@@ -407,12 +416,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipSkills(new HashSet(Arrays.asList("Decision Making", "Planning")))
@@ -445,12 +456,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipSkills(new HashSet(Arrays.asList("INVALID")))
@@ -486,12 +499,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipTraits(new HashSet(Arrays.asList("Humility", "Responsibility")))
@@ -524,12 +539,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipTraits(new HashSet(Arrays.asList("INVALID")))
@@ -578,12 +595,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withContacts(new HashSet(Arrays.asList(inboundContact)))
@@ -625,12 +644,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withContacts(new HashSet(Arrays.asList(inboundContact)))
@@ -665,10 +686,8 @@ public class StudentControllerIntegrationTest {
                 .withUri(TEACHER_URI)
                 .withComment(COMMENT)
                 .build();
-        Date startDate = new Date();
         InboundStudentMentor inboundStudentMentor = InboundStudentMentor.builder()
                 .withUri(MENTOR_URI)
-                .withStartDate(startDate)
                 .withTime("Tuesdays")
                 .build();
 
@@ -676,12 +695,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withStartDate(startDate)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withMentor(inboundStudentMentor)
@@ -699,6 +720,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.grade", is(GRADE)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.startDate", is(new SimpleDateFormat("yyyy-MM-dd").format(startDate))))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$.teacher", notNullValue()))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
@@ -751,7 +773,6 @@ public class StudentControllerIntegrationTest {
 
         Map<String, Object> mentorModel = new HashMap<>();
         mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
-        mentorModel.put("startDate", "2020-12-01");
         mentorModel.put("time", "Whenever");
 
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
@@ -770,6 +791,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("lastName", "NEW LAST NAME");
         studentModel.put("grade", 3);
         studentModel.put("preferredTime", "10:00am");
+        studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("allergyInfo", "ketchup");
@@ -792,6 +814,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.firstName", is("NEW FIRST NAME")))
                 .andExpect(jsonPath("$.lastName", is("NEW LAST NAME")))
                 .andExpect(jsonPath("$.grade", is(3)))
+                .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
@@ -800,7 +823,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
                 .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
-                .andExpect(jsonPath("$.mentor.startDate", notNullValue()))
                 .andExpect(jsonPath("$.mentor.time", is("Whenever")))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
@@ -884,7 +906,6 @@ public class StudentControllerIntegrationTest {
 
         Map<String, Object> mentorModel = new HashMap<>();
         mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
-        mentorModel.put("startDate", "2020-12-01");
         mentorModel.put("time", "Whenever");
 
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
@@ -903,6 +924,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("lastName", "NEW LAST NAME");
         studentModel.put("grade", 3);
         studentModel.put("preferredTime", "10:00am");
+        studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("allergyInfo", "ketchup");
@@ -926,12 +948,12 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.lastName", is("NEW LAST NAME")))
                 .andExpect(jsonPath("$.grade", is(3)))
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
+                .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
                 .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
                 .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
-                .andExpect(jsonPath("$.mentor.startDate", notNullValue()))
                 .andExpect(jsonPath("$.mentor.time", is("Whenever")))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))

@@ -30,7 +30,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -49,9 +48,6 @@ public class StudentMentor {
     @EmbeddedId
     @EqualsAndHashCode.Include
     private StudentMentorPK studentMentorPK = new StudentMentorPK();
-
-    @Column
-    private Date startDate;
 
     @Column
     private String time;

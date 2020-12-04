@@ -44,7 +44,6 @@ public class StudentMentorModelToEntityUpdateMapper implements OneWayUpdateMappe
                 .map(studentMentorModel -> {
                     studentMentor.setRole(mentorModelToEntityMapper.map(studentMentorModel.getUri())
                             .orElseThrow(() -> new NotFoundException("Unable to find specified mentor")));
-                    studentMentor.setStartDate(studentMentorModel.getStartDate());
                     studentMentor.setTime(studentMentorModel.getTime());
                     return studentMentor;
                 });

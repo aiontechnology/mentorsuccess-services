@@ -79,6 +79,7 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
                         .withAllergyInfo(s.getAllergyInfo())
                         .withLocation(s.getLocation())
                         .withPreferredTime(s.getPreferredTime())
+                        .withStartDate(s.getStartDate())
                         .withMediaReleaseSigned(s.getIsMediaReleaseSigned())
                         .withInterests(getInterestModelToEntityMapper().map(s.getInterests()))
                         .withBehaviors(getStudentBehaviorEntityToModelMapper().map(s.getStudentBehaviors()))
