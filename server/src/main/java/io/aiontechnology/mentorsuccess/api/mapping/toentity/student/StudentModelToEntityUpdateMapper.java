@@ -115,7 +115,6 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
                     student.setFirstName(s.getFirstName());
                     student.setLastName(s.getLastName());
                     student.setGrade(s.getGrade());
-                    student.setAllergyInfo(s.getAllergyInfo());
                     student.setPreferredTime(s.getPreferredTime());
                     student.setStartDate(s.getStartDate());
                     student.setLocation(s.getLocation());
@@ -139,12 +138,12 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
                                             .map(inboundStudentBehaviorModel, student.getStudentLeadershipTraits())));
                     student.setStudentPersonRoles(studentPersonModelToEntityMapper
                             .map(s.getContacts(), student.getStudentPersonRoles()));
-                    if(student.getTeacher() == null) {
+                    if (student.getTeacher() == null) {
                         student.setTeacher(new StudentTeacher());
                     }
                     student.setTeacher(studentTeacherModelToEntityMapper.map(s.getTeacher(), student.getTeacher())
                             .orElse(null));
-                    if(student.getMentor() == null) {
+                    if (student.getMentor() == null) {
                         student.setMentor(new StudentMentor());
                     }
                     student.setMentor(studentMentorModelToEntityMapper.map(s.getMentor(), student.getMentor())

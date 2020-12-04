@@ -760,8 +760,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade", is(2)))
                 .andExpect(jsonPath("$.preferredTime", is("2:00pm")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
-                .andExpect(jsonPath("$.mediaReleaseSigned", is(true)))
-                .andExpect(jsonPath("$.allergyInfo", is("peanuts")));
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(true)));
     }
 
     @Test
@@ -794,7 +793,6 @@ public class StudentControllerIntegrationTest {
         studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
-        studentModel.put("allergyInfo", "ketchup");
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", mentorModel);
         studentModel.put("behaviors", behaviors);
@@ -818,7 +816,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
-                .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
@@ -860,7 +857,6 @@ public class StudentControllerIntegrationTest {
         studentModel.put("preferredTime", "10:00am");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
-        studentModel.put("allergyInfo", "ketchup");
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", null);
         studentModel.put("behaviors", behaviors);
@@ -883,7 +879,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
-                .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
@@ -927,7 +922,6 @@ public class StudentControllerIntegrationTest {
         studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
-        studentModel.put("allergyInfo", "ketchup");
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", mentorModel);
         studentModel.put("behaviors", behaviors);
@@ -951,7 +945,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
-                .andExpect(jsonPath("$.allergyInfo", is("ketchup")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
                 .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
                 .andExpect(jsonPath("$.mentor.time", is("Whenever")))
