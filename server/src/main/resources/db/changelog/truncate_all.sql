@@ -37,5 +37,6 @@ truncate student_behavior cascade;
 truncate student_interest cascade;
 truncate student_leadershipskill cascade;
 truncate student_leadershiptrait cascade;
+truncate student_mentor cascade;
 truncate student_person_role cascade;
-truncate student_staff cascade;
+truncate student_teacher cascade;
