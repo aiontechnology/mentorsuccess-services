@@ -17,7 +17,7 @@ import java.util.UUID;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 @Relation(collectionRelation = "gameModelList")
-public class OutboundGame extends OutboundResource<OutboundGame> {
+public class OutboundGame extends OutboundResource<OutboundGame> implements LocationHolder {
 
     /** The game's id. */
     UUID id;

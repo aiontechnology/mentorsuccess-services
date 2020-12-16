@@ -1,3 +1,5 @@
+# Copyright 2020 Aion Technology LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -10,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-atlasVersion=0.1.2
-jfrogArtifactoryVersion=4.18.0
-jfrogBintrayVersion=1.8.5
-springBootVersion=2.3.6.RELEASE
-springCloudVersion=Hoxton.SR9
-springDependencyManagementVersion=1.0.10.RELEASE
-version=0.7.0
+databaseChangeLog:
+  - changeSet:
+      id: 28
+      author: whitney
+      changes:
+        - dropColumn:
+            tableName: student
+            columnName: allergy_info

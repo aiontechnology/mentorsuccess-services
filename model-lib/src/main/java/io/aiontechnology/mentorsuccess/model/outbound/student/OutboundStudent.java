@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -23,6 +24,7 @@ import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -42,9 +44,10 @@ public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
     Integer grade;
 
-    String allergyInfo;
-
     String preferredTime;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    Date startDate;
 
     ResourceLocation location;
 

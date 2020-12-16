@@ -14,22 +14,16 @@
  *  limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.model.outbound.student;
+package io.aiontechnology.mentorsuccess.model.outbound;
 
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
-import lombok.Builder;
-import lombok.Value;
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 
 /**
  * @author Whitney Hunter
- * @since 0.6.0
+ * @since 0.1.0
  */
-@Value
-@Builder(setterPrefix = "with")
-public class OutboundStudentMentor {
+public interface LocationHolder {
 
-    OutboundMentor mentor;
-
-    String time;
+    ResourceLocation getLocation();
 
 }
