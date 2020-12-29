@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.model.inbound.student;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ContactMethod;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
+import io.aiontechnology.mentorsuccess.model.validation.Contact;
 import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import lombok.Builder;
 import lombok.Value;
@@ -34,6 +35,7 @@ import javax.validation.constraints.Size;
  */
 @Value
 @Builder(setterPrefix = "with")
+@Contact
 public class InboundContact {
 
     @NotNull(message = "{contact.type.notNull}")

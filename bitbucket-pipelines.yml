@@ -10,71 +10,107 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+image: gradle:6.7.1-jdk15-hotspot
+
 pipelines:
   branches:
+    '{MS-*,feature/*,bugfix/*}':
+      - step:
+          name: Build and test
+          deployment: Test
+          script:
+            - gradle build
+          artifacts:
+            - server/build/**
+          after-script:
+            - pipe: atlassian/checkstyle-report:0.2.1
+              variables:
+                CHECKSTYLE_RESULT_PATTERN: '.*/checkstyle.xml$'
+      - step:
+          name: Deploy to jfrog
+          caches:
+            - gradle
+          script:
+            - gradle artifactoryPublish
+      - step:
+          name: Deploy
+          image: amazon/aws-cli
+          services:
+            - docker
+          script:
+            - cd server
+            - IMAGE="661143960593.dkr.ecr.us-west-2.amazonaws.com/mentorsuccess-server"
+            - BRANCH=$(echo $BITBUCKET_BRANCH | sed "s/[^a-zA-Z0-9]/_/g")
+            - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
+            - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
+            - docker build -t services:$TAG .
+            - docker tag services:$TAG $IMAGE:latest
+            - docker tag services:$TAG $IMAGE:$TAG
+            - docker push $IMAGE:latest
+            - docker push $IMAGE:$TAG
     develop:
       - step:
           name: Build and test
-          image: adoptopenjdk:14-jdk-hotspot
           deployment: Test
-          caches:
-            - gradle
           script:
-            - bash ./gradlew build
+            - gradle build
           artifacts:
             - server/build/**
+          after-script:
+            - pipe: atlassian/checkstyle-report:0.2.1
+              variables:
+                CHECKSTYLE_RESULT_PATTERN: '.*/checkstyle.xml$'
       - step:
           name: Deploy to jfrog
-          image: adoptopenjdk:14-jdk-hotspot
           caches:
             - gradle
           script:
-            - bash ./gradlew artifactoryPublish
+            - gradle artifactoryPublish
       - step:
           name: Deploy
-          image: python:3.7.4-alpine3.10
+          image: amazon/aws-cli
           services:
             - docker
-          caches:
-            - pip
           script:
             - cd server
-            - pip3 install awscli
             - IMAGE="661143960593.dkr.ecr.us-west-2.amazonaws.com/mentorsuccess-server"
-            - TAG="latest"
-            - eval $(aws ecr get-login --no-include-email --region us-west-2 | sed 's;https://;;g')
-            - docker build -t $IMAGE:$TAG .
+            - BRANCH=$(echo $BITBUCKET_BRANCH | sed "s/[^a-zA-Z0-9]/_/g")
+            - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
+            - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
+            - docker build -t services:$TAG .
+            - docker tag services:$TAG $IMAGE:latest
+            - docker tag services:$TAG $IMAGE:$TAG
+            - docker push $IMAGE:latest
             - docker push $IMAGE:$TAG
     master:
       - step:
           name: Build and test
-          image: adoptopenjdk/openjdk14:centos
           deployment: Production
           caches:
             - gradle
           script:
-            - bash ./gradlew build
+            - gradle build
           artifacts:
             - server/build/**
       - step:
           name: Deploy to jcenter
-          image: adoptopenjdk:14-jdk-hotspot
           caches:
             - gradle
           script:
-            - bash ./gradlew bintrayUpload
+            - gradle bintrayUpload
       - step:
           name: Deploy
-          image: python:3.7.4-alpine3.10
+          image: amazon/aws-cli
           services:
             - docker
-          caches:
-            - pip
           script:
             - cd server
-            - pip3 install awscli
             - IMAGE="661143960593.dkr.ecr.us-west-2.amazonaws.com/mentorsuccess-server"
-            - TAG="prod"
-            - eval $(aws ecr get-login --no-include-email --region us-west-2 | sed 's;https://;;g')
-            - docker build -t $IMAGE:$TAG .
+            - BRANCH=$(echo $BITBUCKET_BRANCH | sed "s/[^a-zA-Z0-9]/_/g")
+            - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
+            - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
+            - docker build -t services:$TAG .
+            - docker tag services:$TAG $IMAGE:prod
+            - docker tag services:$TAG $IMAGE:$TAG
+            - docker push $IMAGE:prop
             - docker push $IMAGE:$TAG

@@ -582,12 +582,14 @@ public class StudentControllerIntegrationTest {
         String CONTACT_FIRST_NAME = "CONTACT_FIRST_NAME";
         String CONTACT_LAST_NAME = "CONTACT_LAST_NAME";
         Boolean IS_EMERGENCY_CONTACT = false;
+        String workPhone = "(123) 456-7890";
         ContactMethod CONTACT_METHOD = ContactMethod.WORKPHONE;
         InboundContact inboundContact = InboundContact.builder()
                 .withType(ROLE_TYPE)
                 .withFirstName(CONTACT_FIRST_NAME)
                 .withLastName(CONTACT_LAST_NAME)
                 .withIsEmergencyContact(IS_EMERGENCY_CONTACT)
+                .withWorkPhone(workPhone)
                 .withPreferredContactMethod(CONTACT_METHOD)
                 .build();
 
@@ -619,6 +621,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.contacts[0].firstName", is(CONTACT_FIRST_NAME)))
                 .andExpect(jsonPath("$.contacts[0].lastName", is(CONTACT_LAST_NAME)))
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(IS_EMERGENCY_CONTACT)))
+                .andExpect(jsonPath("$.contacts[0].workPhone", is(workPhone)))
                 .andExpect(jsonPath("$.contacts[0].preferredContactMethod", is(CONTACT_METHOD.toString())));
     }
 
@@ -666,7 +669,8 @@ public class StudentControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(4)))
+                .andExpect(jsonPath("$.error.length()", is(5)))
+                .andExpect(jsonPath("$.error.['contacts[0]']", is("A contact must have at least on contact method.")))
                 .andExpect(jsonPath("$.error.['contacts[0].firstName']", is("A contact must have a first name")))
                 .andExpect(jsonPath("$.error.['contacts[0].lastName']", is("A contact must have a last name")))
                 .andExpect(jsonPath("$.error.['contacts[0].type']", is("A contact must have a valid type")))
@@ -784,6 +788,7 @@ public class StudentControllerIntegrationTest {
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
+        contact1.put("cellPhone", "(123) 456-7890");
 
         Map<String, Object> studentModel = new HashMap<>();
         studentModel.put("firstName", "NEW FIRST NAME");
@@ -849,6 +854,7 @@ public class StudentControllerIntegrationTest {
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
+        contact1.put("cellPhone", "(123) 456-7890");
 
         Map<String, Object> studentModel = new HashMap<>();
         studentModel.put("firstName", "NEW FIRST NAME");
@@ -913,6 +919,7 @@ public class StudentControllerIntegrationTest {
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
+        contact1.put("cellPhone", "(123) 456-7890");
 
         Map<String, Object> studentModel = new HashMap<>();
         studentModel.put("firstName", "NEW FIRST NAME");
