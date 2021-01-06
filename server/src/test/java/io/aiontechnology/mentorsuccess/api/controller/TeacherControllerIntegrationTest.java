@@ -172,7 +172,7 @@ public class TeacherControllerIntegrationTest {
                 .withWorkPhone("12345678901")
                 .withCellPhone("12345678901")
                 .withGrade1(-1)
-                .withGrade2(7)
+                .withGrade2(6)
                 .build();
 
         // execute the SUT
@@ -190,8 +190,8 @@ public class TeacherControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.email", is("The provided teacher's email is invalid or longer that 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided teacher's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided teacher's work phone must be exactly 14 digits")))
-                .andExpect(jsonPath("$.error.grade1", is("A teacher's grade must be between 1st and 6th")))
-                .andExpect(jsonPath("$.error.grade2", is("A teacher's grade must be between 1st and 6th")))
+                .andExpect(jsonPath("$.error.grade1", is("A teacher's grade must be between kindergarten and 5th")))
+                .andExpect(jsonPath("$.error.grade2", is("A teacher's grade must be between kindergarten and 5th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")));
     }
@@ -281,7 +281,7 @@ public class TeacherControllerIntegrationTest {
         teacherModel.put("workPhone", "(360) 765-4321");
         teacherModel.put("cellPhone", "(360) 765-4322");
         teacherModel.put("grade1", "5");
-        teacherModel.put("grade2", "6");
+        teacherModel.put("grade2", "4");
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05")
@@ -297,7 +297,7 @@ public class TeacherControllerIntegrationTest {
                 .andExpect(jsonPath("$.workPhone", is("(360) 765-4321")))
                 .andExpect(jsonPath("$.cellPhone", is("(360) 765-4322")))
                 .andExpect(jsonPath("$.grade1", is(5)))
-                .andExpect(jsonPath("$.grade2", is(6)))
+                .andExpect(jsonPath("$.grade2", is(4)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));

@@ -58,13 +58,13 @@ public class InboundTeacher {
     String cellPhone;
 
     /** First grade taught by teacher. */
-    @Min(value = 1, message = "{teacher.grade1.invalid}")
-    @Max(value = 6, message = "{teacher.grade1.invalid}")
+    @Min(value = 0, message = "{teacher.grade1.invalid}")
+    @Max(value = 5, message = "{teacher.grade1.invalid}")
     Integer grade1;
 
     /** Second grade taught by teacher. Null if there is only one grade. */
-    @Min(value = 1, message = "{teacher.grade1.invalid}")
-    @Max(value = 6, message = "{teacher.grade1.invalid}")
+    @Min(value = 0, message = "{teacher.grade1.invalid}")
+    @Max(value = 5, message = "{teacher.grade1.invalid}")
     Integer grade2;
 
 }
