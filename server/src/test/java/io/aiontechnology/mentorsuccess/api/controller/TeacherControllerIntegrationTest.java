@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -35,6 +36,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -84,6 +86,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -117,6 +120,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -148,6 +152,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -177,6 +182,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -211,6 +217,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -230,6 +237,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teachers:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -243,6 +251,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -265,6 +274,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/Teachers/ca238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -285,6 +295,7 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teacherModel)));
 
@@ -308,7 +319,8 @@ public class TeacherControllerIntegrationTest {
         // setup the fixture
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ca238442-ce51-450d-a474-2e36872abe05"));
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ca238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:delete"))));
 
         // validation
         result.andExpect(status().isNoContent());

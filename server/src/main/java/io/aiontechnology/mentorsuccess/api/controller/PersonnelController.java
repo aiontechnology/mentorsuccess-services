@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -94,6 +95,7 @@ public class PersonnelController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('personnel:create')")
     public OutboundPersonnel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid InboundPersonnel inboundPersonnel) {
         log.debug("Creating personnel: {}", inboundPersonnel);
         return schoolService.getSchoolById(schoolId)
@@ -113,6 +115,7 @@ public class PersonnelController {
      * @return A collection of all personnel for the school.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('personnels:read')")
     public CollectionModel<OutboundPersonnel> getAllPersonnel(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all personnel for school {}", schoolId);
         return schoolService.getSchoolById(schoolId)
@@ -135,6 +138,7 @@ public class PersonnelController {
      * @return The personnel if it could be found.
      */
     @GetMapping("/{personnelId}")
+    @PreAuthorize("hasAuthority('personnel:read')")
     public OutboundPersonnel getPersonnel(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("personnelId") UUID personnelId) {
         return roleService.findRoleById(personnelId)
@@ -151,6 +155,7 @@ public class PersonnelController {
      * @return A model that represents the personnel that has been updated.
      */
     @PutMapping("/{personnelId}")
+    @PreAuthorize("hasAuthority('personnel:update')")
     public OutboundPersonnel updateSchool(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("personnelId") UUID personnelId,
             @RequestBody @Valid InboundPersonnel inboundPersonnel) {
@@ -169,6 +174,7 @@ public class PersonnelController {
      */
     @DeleteMapping("/{personnelId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('personnel:delete')")
     public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("personnelId") UUID personnelId) {
         log.debug("Deactivating personnel");

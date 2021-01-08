@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,6 +98,7 @@ public class MentorController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('mentor:create')")
     public OutboundMentor createMentor(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundMentor mentorModel) {
         log.debug("Creating mentor: {}", mentorModel);
@@ -117,6 +119,7 @@ public class MentorController {
      * @return A collection of {@link OutboundMentor} instances for the requested school.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('mentors:read')")
     public CollectionModel<OutboundMentor> getMentors(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all mentors for school {}", schoolId);
         var session = entityManager.unwrap(Session.class);
@@ -137,6 +140,7 @@ public class MentorController {
      * @return The personnel if it could be found.
      */
     @GetMapping("/{mentorId}")
+    @PreAuthorize("hasAuthority('mentor:read')")
     public OutboundMentor getTeacher(@PathVariable("schoolId") UUID schoolId, @PathVariable("mentorId") UUID mentorId) {
         return roleService.findRoleById(mentorId)
                 .map(role -> mentorModelAssembler.toModel(role, linkProvider))
@@ -152,6 +156,7 @@ public class MentorController {
      * @return A model that represents the teacher that has been updated.
      */
     @PutMapping("/{mentorId}")
+    @PreAuthorize("hasAuthority('mentor:update')")
     public OutboundMentor updateMentor(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("mentorId") UUID mentorId,
             @RequestBody @Valid InboundMentor mentorModel) {
@@ -170,6 +175,7 @@ public class MentorController {
      */
     @DeleteMapping("/{mentorId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('mentor:delete')")
     public void deactivateMentor(@PathVariable("schoolId") UUID studentId, @PathVariable("mentorId") UUID mentorId) {
         log.debug("Deactivating mentor");
         roleService.findRoleById(mentorId)

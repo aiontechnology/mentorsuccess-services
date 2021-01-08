@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -38,6 +39,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -81,6 +83,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -107,6 +110,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -133,6 +137,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -161,6 +166,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -188,6 +194,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(game)));
 
@@ -211,6 +218,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/games")
+                .with(jwt().authorities(new SimpleGrantedAuthority("games:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -226,6 +234,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -249,6 +258,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/games/d53af381-d524-40f7-8df9-3e808c9ad46b")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -268,6 +278,7 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedGame)));
 
@@ -290,7 +301,8 @@ public class GameControllerIntegrationTest {
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b"));
+        ResultActions result = mvc.perform(delete("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
+                .with(jwt().authorities(new SimpleGrantedAuthority("game:delete"))));
 
         // validation
         result.andExpect(status().isNoContent());
