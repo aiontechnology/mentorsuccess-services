@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
 import lombok.Builder;
 import lombok.Value;
@@ -31,5 +32,9 @@ public class OutboundStudentMentor {
     OutboundMentor mentor;
 
     String time;
+
+    ResourceLocation location;
+
+    Boolean mediaReleaseSigned;
 
 }
