@@ -46,8 +46,8 @@ pipelines:
             - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
-            - docker tag lpg:$TAG $IMAGE:latest
-            - docker tag lpg:$TAG $IMAGE:$TAG
+            - docker tag services:$TAG $IMAGE:latest
+            - docker tag services:$TAG $IMAGE:$TAG
             - docker push $IMAGE:latest
             - docker push $IMAGE:$TAG
     develop:
@@ -80,9 +80,9 @@ pipelines:
             - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
-            - docker tag lpg:$TAG $IMAGE:latest
-            - docker tag lpg:$TAG $IMAGE:test
-            - docker tag lpg:$TAG $IMAGE:$TAG
+            - docker tag services:$TAG $IMAGE:latest
+            - docker tag services:$TAG $IMAGE:test
+            - docker tag services:$TAG $IMAGE:$TAG
             - docker push $IMAGE:latest
             - docker push $IMAGE:test
             - docker push $IMAGE:$TAG
@@ -114,9 +114,9 @@ pipelines:
             - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
-            - docker tag lpg:$TAG $IMAGE:latest
-            - docker tag lpg:$TAG $IMAGE:prod
-            - docker tag lpg:$TAG $IMAGE:$TAG
+            - docker tag services:$TAG $IMAGE:latest
+            - docker tag services:$TAG $IMAGE:prod
+            - docker tag services:$TAG $IMAGE:$TAG
             - docker push $IMAGE:latest
             - docker push $IMAGE:prod
             - docker push $IMAGE:$TAG
