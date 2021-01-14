@@ -109,7 +109,7 @@ public class StudentController {
      * @return A collection of {@link OutboundStudent} instances for the given school.
      */
     @GetMapping
-    @PreAuthorize("hasAuthority('student:read')")
+    @PreAuthorize("hasAuthority('students:read')")
     public CollectionModel<OutboundStudent> getAllStudentsForSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all students for school: {}", schoolId);
         Collection<Student> students = schoolService.getSchoolById(schoolId)

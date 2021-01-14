@@ -191,7 +191,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         private List<String> getResourceAuthorities() {
-            List<String> authorities = Arrays.asList("resources:read");
+            List<String> authorities = Arrays.asList("resource:read");
             return authorities;
         }
 
@@ -208,7 +208,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
             List<String> authorities = new ArrayList<>();
             authorities.addAll(Arrays.asList("student:read", "student:update"));
             if (isAdmin) {
-                authorities.addAll(Arrays.asList("student:create", "student:read", "student:delete"));
+                authorities.addAll(Arrays.asList("student:create", "students:read", "student:delete"));
             }
             return authorities;
         }
