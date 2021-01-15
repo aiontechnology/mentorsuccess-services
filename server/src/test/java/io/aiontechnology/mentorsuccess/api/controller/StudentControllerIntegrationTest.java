@@ -765,6 +765,56 @@ public class StudentControllerIntegrationTest {
     }
 
     @Test
+    void testCreateStudent_withInvalidMentor() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        final URI MENTOR_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+        InboundStudentMentor inboundStudentMentor = InboundStudentMentor.builder()
+                .withUri(MENTOR_URI)
+                .withTime("1234567890123456789012345678901")
+                .build();
+
+        String FIRST_NAME = "FIRST_NAME";
+        String LAST_NAME = "LAST_NAME";
+        int GRADE = 1;
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withLocation(LOCATION)
+                .withStartDate(startDate)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withTeacher(inboundStudentTeacher)
+                .withMentor(inboundStudentMentor)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.timestamp", notNullValue()))
+                .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
+                .andExpect(jsonPath("$.error.length()", is(1)))
+                .andExpect(jsonPath("$.error.['mentor.time']", is("The meeting time can not be longer than 30 characters")))
+                .andExpect(jsonPath("$.message", is("Validation failed")))
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
+    }
+
+    @Test
     void testReadStudent() throws Exception {
         // setup the fixture
 
