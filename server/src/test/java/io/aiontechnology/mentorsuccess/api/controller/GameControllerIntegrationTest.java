@@ -158,7 +158,7 @@ public class GameControllerIntegrationTest {
     void testCreateGame_fieldsInvalid() throws Exception {
         // setup the fixture
         InboundGame inboundGame = InboundGame.builder()
-                .withName("12345678901234567890123456789012345678901")
+                .withName("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
                 .withGrade1(7)
                 .withGrade2(7)
                 .withLocation(OFFLINE)
@@ -175,7 +175,7 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(3)))
-                .andExpect(jsonPath("$.error.name", is("The name of a game can not be longer than 40 characters")))
+                .andExpect(jsonPath("$.error.name", is("The name of a game can not be longer than 100 characters")))
                 .andExpect(jsonPath("$.error.grade1", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.error.grade2", is("A grade level must be between 1st and 6th")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
