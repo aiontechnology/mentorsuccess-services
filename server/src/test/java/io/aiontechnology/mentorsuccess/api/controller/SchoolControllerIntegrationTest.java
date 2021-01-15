@@ -246,7 +246,7 @@ public class SchoolControllerIntegrationTest {
                 .withZip("1234567890")
                 .build();
         InboundSchool inboundSchool = InboundSchool.builder()
-                .withName("123456789012345678901234567890123456789012345678901")
+                .withName("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
                 .withAddress(inboundAddress)
                 .withPhone("12345678901")
                 .withDistrict("123456789012345678901234567890123456789012345678901")
@@ -264,7 +264,7 @@ public class SchoolControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(8)))
-                .andExpect(jsonPath("$.error.name", is("The school's name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.name", is("The school's name can not be longer than 100 characters")))
                 .andExpect(jsonPath("$.error['address.street1']", is("An address's street1 can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.street2']", is("An address's street2 can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.city']", is("An address's city can not be longer than 50 characters")))
