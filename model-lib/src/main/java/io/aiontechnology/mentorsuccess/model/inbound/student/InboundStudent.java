@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class InboundStudent {
     @Max(value = 5, message = "{student.grade.invalid}")
     Integer grade;
 
-    @Size(max = 10, message = "{student.preferredTime.size}")
+    @Size(max = 30, message = "{student.preferredTime.size}")
     String preferredTime;
 
     Date startDate;
