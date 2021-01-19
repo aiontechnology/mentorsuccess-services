@@ -165,6 +165,53 @@ public class StudentControllerIntegrationTest {
     }
 
     @Test
+    void testCreateStudent_fieldsTooLong() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        final URI MENTOR_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+
+        String FIRST_NAME = "123456789012345678901234567890123456789012345678901";
+        String LAST_NAME = "123456789012345678901234567890123456789012345678901";
+        int GRADE = 1;
+        String PREFERRED_TIME = "1234567890123456789012345678901";
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withPreferredTime(PREFERRED_TIME)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withTeacher(inboundStudentTeacher)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.timestamp", notNullValue()))
+                .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
+                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.firstName", is("A student's first name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.lastName", is("A student's last name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.preferredTime", is("A student's preferred time can not be longer than 30 characters")))
+                .andExpect(jsonPath("$.message", is("Validation failed")))
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
+    }
+
+    @Test
     void testCreateStudent_nullTeacherValues() throws Exception {
         // setup the fixture
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
