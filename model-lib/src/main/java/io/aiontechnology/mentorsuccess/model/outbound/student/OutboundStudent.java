@@ -51,11 +51,15 @@ public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
     ResourceLocation location;
 
+    Boolean mediaReleaseSigned;
+
+    Integer preBehavioralAssessment;
+
+    Integer postBehavioralAssessment;
+
     OutboundStudentTeacher teacher;
 
     OutboundStudentMentor mentor;
-
-    Boolean mediaReleaseSigned;
 
     Collection<String> interests;
 

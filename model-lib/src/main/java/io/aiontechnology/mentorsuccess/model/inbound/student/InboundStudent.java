@@ -62,15 +62,19 @@ public class InboundStudent {
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{student.location.invalid}")
     ResourceLocation location;
 
+    @NotNull(message = "{student.mediaRelease.notNull}")
+    Boolean mediaReleaseSigned;
+
+    Integer preBehavioralAssessment;
+
+    Integer postBehavioralAssessment;
+
     @NotNull(message = "{student.teacher.notNull}")
     @Valid
     InboundStudentTeacher teacher;
 
     @Valid
     InboundStudentMentor mentor;
-
-    @NotNull(message = "{student.mediaRelease.notNull}")
-    Boolean mediaReleaseSigned;
 
     Set<String> behaviors;
 
