@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020 - 2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,9 +64,9 @@ public class StudentBehavior {
     @ToString.Include
     private Behavior behavior = new Behavior();
 
-    /** The associated {@link Person}. */
+    /** The associated {@link SchoolPersonRole}. */
     @MapsId("role_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     @EqualsAndHashCode.Include
     private SchoolPersonRole role;
