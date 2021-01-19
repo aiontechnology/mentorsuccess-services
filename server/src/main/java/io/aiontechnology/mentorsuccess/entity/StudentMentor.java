@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.entity;
 
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,6 +27,8 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
@@ -51,6 +54,13 @@ public class StudentMentor {
 
     @Column
     private String time;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
+
+    @Column
+    private Boolean isMediaReleaseSigned;
 
     /** The associated {@link Student}. */
     @MapsId("student_id")

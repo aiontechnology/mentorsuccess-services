@@ -855,8 +855,10 @@ public class StudentControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(1)))
+                .andExpect(jsonPath("$.error.length()", is(3)))
                 .andExpect(jsonPath("$.error.['mentor.time']", is("The meeting time can not be longer than 30 characters")))
+                .andExpect(jsonPath("$.error.['mentor.location']", is("A location is required for a mentor")))
+                .andExpect(jsonPath("$.error.['mentor.mediaReleaseSigned']", is("A media release specification is required for a mentor")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }
@@ -892,6 +894,8 @@ public class StudentControllerIntegrationTest {
         Map<String, Object> mentorModel = new HashMap<>();
         mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
         mentorModel.put("time", "Whenever");
+        mentorModel.put("location", "ONLINE");
+        mentorModel.put("mediaReleaseSigned", true);
 
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
         Set<String> interests = Set.of("Cats", "Dogs");
@@ -1022,10 +1026,6 @@ public class StudentControllerIntegrationTest {
         teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
         teacherModel.put("comment", "We need to talk");
 
-        Map<String, Object> mentorModel = new HashMap<>();
-        mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
-        mentorModel.put("time", "Whenever");
-
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
         Set<String> interests = Set.of("Cats", "Dogs");
         Set<String> leadershipSkills = Set.of("Decision Making", "Planning");
@@ -1047,7 +1047,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("teacher", teacherModel);
-        studentModel.put("mentor", mentorModel);
+        studentModel.put("mentor", null);
         studentModel.put("behaviors", behaviors);
         studentModel.put("interests", interests);
         studentModel.put("leadershipSkills", leadershipSkills);
@@ -1070,9 +1070,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
-                .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
-                .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
-                .andExpect(jsonPath("$.mentor.time", is("Whenever")))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
                 .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))

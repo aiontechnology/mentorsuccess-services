@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -44,6 +44,8 @@ public class StudentMentorEntityToModelMapper implements OneWayMapper<StudentMen
                 .map(s -> OutboundStudentMentor.builder()
                         .withMentor(mentorEntityToModelMapper.map(s.getRole()).orElse(null))
                         .withTime(s.getTime())
+                        .withLocation(s.getLocation())
+                        .withMediaReleaseSigned(s.getIsMediaReleaseSigned())
                         .build());
     }
 
