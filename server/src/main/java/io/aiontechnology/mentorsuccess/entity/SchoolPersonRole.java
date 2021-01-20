@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,6 +77,10 @@ public class SchoolPersonRole {
     /** Availability. (for mentors) */
     @Column
     private String availability;
+
+    /** Has a background check been completed. (for mentors) */
+    @Column
+    private Boolean isBackgroundCheckCompleted;
 
     /** Is the role active? */
     @Column

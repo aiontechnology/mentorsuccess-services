@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,5 +58,9 @@ public class InboundMentor {
     /** The mentor's availability */
     @Size(max = 100, message = "{mentor.availability.size}")
     String availability;
+
+    /** Has the mentor had a bockground check completed? */
+    @NotNull(message = "{mentor.backgroundCheckCompleted.notNull}")
+    Boolean backgroundCheckCompleted;
 
 }
