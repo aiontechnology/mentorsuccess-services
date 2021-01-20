@@ -56,6 +56,8 @@ public class MentorModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbou
 
                     role.setPerson(person);
                     role.setAvailability(m.getAvailability());
+                    role.setLocation(m.getLocation());
+                    role.setIsMediaReleaseSigned(m.getMediaReleaseSigned());
                     role.setIsBackgroundCheckCompleted(m.getBackgroundCheckCompleted());
                     role.setIsActive(true);
                     role.setType(MENTOR);

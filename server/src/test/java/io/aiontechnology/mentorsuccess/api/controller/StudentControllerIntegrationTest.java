@@ -904,10 +904,8 @@ public class StudentControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.length()", is(1)))
                 .andExpect(jsonPath("$.error.['mentor.time']", is("The meeting time can not be longer than 30 characters")))
-                .andExpect(jsonPath("$.error.['mentor.location']", is("A location is required for a mentor")))
-                .andExpect(jsonPath("$.error.['mentor.mediaReleaseSigned']", is("A media release specification is required for a mentor")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }

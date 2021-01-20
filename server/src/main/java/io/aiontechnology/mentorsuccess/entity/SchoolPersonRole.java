@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.entity;
 
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -77,6 +78,15 @@ public class SchoolPersonRole {
     /** Availability. (for mentors) */
     @Column
     private String availability;
+
+    /** Location. (for mentors) */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
+
+    /** Media release. (for mentors) */
+    @Column
+    private Boolean isMediaReleaseSigned;
 
     /** Has a background check been completed. (for mentors) */
     @Column

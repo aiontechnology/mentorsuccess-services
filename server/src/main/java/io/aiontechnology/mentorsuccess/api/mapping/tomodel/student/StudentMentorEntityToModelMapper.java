@@ -44,8 +44,6 @@ public class StudentMentorEntityToModelMapper implements OneWayMapper<StudentMen
                 .map(s -> OutboundStudentMentor.builder()
                         .withMentor(mentorEntityToModelMapper.map(s.getRole()).orElse(null))
                         .withTime(s.getTime())
-                        .withLocation(s.getLocation())
-                        .withMediaReleaseSigned(s.getIsMediaReleaseSigned())
                         .build());
     }
 

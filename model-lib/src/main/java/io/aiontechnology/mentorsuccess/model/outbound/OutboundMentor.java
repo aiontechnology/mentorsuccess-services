@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound;
 
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
@@ -49,6 +50,12 @@ public class OutboundMentor extends RepresentationModel<OutboundMentor> {
 
     /** The mentor's availability */
     String availability;
+
+    /** The mentor's location (online, offline or both) */
+    ResourceLocation location;
+
+    /** Has the mentor signed the media release? */
+    Boolean mediaReleaseSigned;
 
     /** Has the mentor had a bockground check completed? */
     Boolean backgroundCheckCompleted;

@@ -50,6 +50,8 @@ public class MentorEntityToModelMapper implements OneWayMapper<SchoolPersonRole,
                         .withWorkPhone(phoneService.format(m.getPerson().getWorkPhone()))
                         .withCellPhone(phoneService.format(m.getPerson().getCellPhone()))
                         .withAvailability(role.getAvailability())
+                        .withLocation(role.getLocation())
+                        .withMediaReleaseSigned(role.getIsMediaReleaseSigned())
                         .withBackgroundCheckCompleted(role.getIsBackgroundCheckCompleted())
                         .build());
     }
