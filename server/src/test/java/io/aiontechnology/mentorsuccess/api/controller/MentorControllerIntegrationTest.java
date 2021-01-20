@@ -64,6 +64,7 @@ public class MentorControllerIntegrationTest {
     private static final String WORK_PHONE = "(360) 111-2222";
     private static final String CELL_PHONE = "(360) 333-4444";
     private static final String AVAILABILITY = "AVAILABILITY";
+    private static final boolean BACKGROUND_CHECK_COMPLETED = true;
 
     @Inject
     private MockMvc mvc;
@@ -81,6 +82,7 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
                 .withAvailability(AVAILABILITY)
+                .withBackgroundCheckCompleted(BACKGROUND_CHECK_COMPLETED)
                 .build();
 
         // execute the SUT
@@ -113,6 +115,7 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(null)
                 .withCellPhone(null)
                 .withAvailability(null)
+                .withBackgroundCheckCompleted(true)
                 .build();
 
         // execute the SUT
@@ -157,9 +160,10 @@ public class MentorControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(2)))
+                .andExpect(jsonPath("$.error.length()", is(3)))
                 .andExpect(jsonPath("$.error.firstName", is("A mentor must have a first name")))
                 .andExpect(jsonPath("$.error.lastName", is("A mentor must have a last name")))
+                .andExpect(jsonPath("$.error.backgroundCheckCompleted", is("A mentor must have a background check specified")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")));
     }
@@ -174,6 +178,7 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone("12345678901")
                 .withCellPhone("12345678901")
                 .withAvailability("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
+                .withBackgroundCheckCompleted(true)
                 .build();
 
         // execute the SUT
@@ -207,6 +212,7 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
                 .withAvailability(AVAILABILITY)
+                .withBackgroundCheckCompleted(true)
                 .build();
 
         // execute the SUT
@@ -286,6 +292,7 @@ public class MentorControllerIntegrationTest {
         mentorModel.put("workPhone", "(360) 765-4321");
         mentorModel.put("cellPhone", "(360) 765-4322");
         mentorModel.put("availability", "never");
+        mentorModel.put("backgroundCheckCompleted", false);
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ba238442-ce51-450d-a474-2e36872abe05")
@@ -302,6 +309,7 @@ public class MentorControllerIntegrationTest {
                 .andExpect(jsonPath("$.workPhone", is("(360) 765-4321")))
                 .andExpect(jsonPath("$.cellPhone", is("(360) 765-4322")))
                 .andExpect(jsonPath("$.availability", is("never")))
+                .andExpect(jsonPath("$.backgroundCheckCompleted", is(false)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
