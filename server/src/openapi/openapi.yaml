@@ -3176,6 +3176,10 @@ paths:
       responses:
         204:
           description: The personnel record was deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -3644,6 +3648,10 @@ paths:
       responses:
         204:
           description: The program admin record was deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
         400:
           $ref: '#/components/responses/BadRequest'
         401:
