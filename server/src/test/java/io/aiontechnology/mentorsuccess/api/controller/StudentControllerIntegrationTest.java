@@ -78,6 +78,55 @@ public class StudentControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
+    void testCreateStudent() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+
+        String FIRST_NAME = "FIRST_NAME";
+        String LAST_NAME = "LAST_NAME";
+        int GRADE = 1;
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        int preBehavioralAssessment = 1;
+        int postBehavioralAssessment = 5;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withLocation(LOCATION)
+                .withStartDate(startDate)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withPreBehavioralAssessment(preBehavioralAssessment)
+                .withPostBehavioralAssessment(postBehavioralAssessment)
+                .withTeacher(inboundStudentTeacher)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.grade", is(GRADE)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
+                .andExpect(jsonPath("$.preBehavioralAssessment", is(preBehavioralAssessment)))
+                .andExpect(jsonPath("$.postBehavioralAssessment", is(postBehavioralAssessment)));
+    }
+
+    @Test
     void testCreateStudentRequiredOnly() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
@@ -881,6 +930,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade", is(2)))
                 .andExpect(jsonPath("$.preferredTime", is("2:00pm")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.preBehavioralAssessment", is(1)))
+                .andExpect(jsonPath("$.postBehavioralAssessment", is(5)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(true)));
     }
 
@@ -917,6 +968,8 @@ public class StudentControllerIntegrationTest {
         studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
+        studentModel.put("preBehavioralAssessment", 2);
+        studentModel.put("postBehavioralAssessment", 6);
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", mentorModel);
         studentModel.put("behaviors", behaviors);
@@ -941,6 +994,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
+                .andExpect(jsonPath("$.preBehavioralAssessment", is(2)))
+                .andExpect(jsonPath("$.postBehavioralAssessment", is(6)))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))

@@ -112,6 +112,12 @@ public class Student {
     @Column
     private Boolean isMediaReleaseSigned;
 
+    @Column
+    private Integer preBehavioralAssessment;
+
+    @Column
+    private Integer postBehavioralAssessment;
+
     /** Is the student active? */
     @Column
     private Boolean isActive;
