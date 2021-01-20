@@ -16,12 +16,9 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound.student;
 
-import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import lombok.Builder;
 import lombok.Value;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.net.URI;
 
@@ -37,12 +34,5 @@ public class InboundStudentMentor {
 
     @Size(max = 30, message = "{studentmentor.meetingTime.size}")
     String time;
-
-    @NotNull(message = "{studentmentor.location.notNull}")
-    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{studentmentor.location.invalid}")
-    ResourceLocation location;
-
-    @NotNull(message = "{studentmentor.mediaRelease.notNull}")
-    Boolean mediaReleaseSigned;
 
 }

@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound;
 
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
+import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import lombok.Builder;
 import lombok.Value;
 
@@ -58,6 +60,13 @@ public class InboundMentor {
     /** The mentor's availability */
     @Size(max = 100, message = "{mentor.availability.size}")
     String availability;
+
+    @NotNull(message = "{mentor.location.notNull}")
+    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{studentmentor.location.invalid}")
+    ResourceLocation location;
+
+    @NotNull(message = "{mentor.mediaRelease.notNull}")
+    Boolean mediaReleaseSigned;
 
     /** Has the mentor had a bockground check completed? */
     @NotNull(message = "{mentor.backgroundCheckCompleted.notNull}")

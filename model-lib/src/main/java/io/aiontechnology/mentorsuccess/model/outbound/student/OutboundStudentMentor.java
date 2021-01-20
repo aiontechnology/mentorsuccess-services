@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
-import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
 import lombok.Builder;
 import lombok.Value;
@@ -32,9 +31,5 @@ public class OutboundStudentMentor {
     OutboundMentor mentor;
 
     String time;
-
-    ResourceLocation location;
-
-    Boolean mediaReleaseSigned;
 
 }

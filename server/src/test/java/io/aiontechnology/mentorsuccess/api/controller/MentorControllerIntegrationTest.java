@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundMentor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,6 +32,7 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation.OFFLINE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -64,6 +66,8 @@ public class MentorControllerIntegrationTest {
     private static final String WORK_PHONE = "(360) 111-2222";
     private static final String CELL_PHONE = "(360) 333-4444";
     private static final String AVAILABILITY = "AVAILABILITY";
+    private static final ResourceLocation LOCATION = OFFLINE;
+    private static final boolean MEDIA_RELEASE_SIGNED = true;
     private static final boolean BACKGROUND_CHECK_COMPLETED = true;
 
     @Inject
@@ -82,6 +86,8 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
                 .withAvailability(AVAILABILITY)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
                 .withBackgroundCheckCompleted(BACKGROUND_CHECK_COMPLETED)
                 .build();
 
@@ -100,6 +106,8 @@ public class MentorControllerIntegrationTest {
                 .andExpect(jsonPath("$.workPhone", is(WORK_PHONE)))
                 .andExpect(jsonPath("$.cellPhone", is(CELL_PHONE)))
                 .andExpect(jsonPath("$.availability", is(AVAILABILITY)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
@@ -115,6 +123,8 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(null)
                 .withCellPhone(null)
                 .withAvailability(null)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
                 .withBackgroundCheckCompleted(true)
                 .build();
 
@@ -160,9 +170,11 @@ public class MentorControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.length()", is(5)))
                 .andExpect(jsonPath("$.error.firstName", is("A mentor must have a first name")))
                 .andExpect(jsonPath("$.error.lastName", is("A mentor must have a last name")))
+                .andExpect(jsonPath("$.error.location", is("A location is required for a mentor")))
+                .andExpect(jsonPath("$.error.mediaReleaseSigned", is("A media release specification is required for a mentor")))
                 .andExpect(jsonPath("$.error.backgroundCheckCompleted", is("A mentor must have a background check specified")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")));
@@ -178,6 +190,8 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone("12345678901")
                 .withCellPhone("12345678901")
                 .withAvailability("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
                 .withBackgroundCheckCompleted(true)
                 .build();
 
@@ -212,6 +226,8 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
                 .withAvailability(AVAILABILITY)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
                 .withBackgroundCheckCompleted(true)
                 .build();
 
@@ -292,6 +308,8 @@ public class MentorControllerIntegrationTest {
         mentorModel.put("workPhone", "(360) 765-4321");
         mentorModel.put("cellPhone", "(360) 765-4322");
         mentorModel.put("availability", "never");
+        mentorModel.put("location", "ONLINE");
+        mentorModel.put("mediaReleaseSigned", false);
         mentorModel.put("backgroundCheckCompleted", false);
 
         // execute the SUT
@@ -309,6 +327,8 @@ public class MentorControllerIntegrationTest {
                 .andExpect(jsonPath("$.workPhone", is("(360) 765-4321")))
                 .andExpect(jsonPath("$.cellPhone", is("(360) 765-4322")))
                 .andExpect(jsonPath("$.availability", is("never")))
+                .andExpect(jsonPath("$.location", is("ONLINE")))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
                 .andExpect(jsonPath("$.backgroundCheckCompleted", is(false)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
