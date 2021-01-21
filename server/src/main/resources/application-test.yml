@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Aion Technology LLC
+# Copyright 2021 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,10 +23,8 @@ spring:
   datasource:
     driverClassName: org.postgresql.Driver
     username: postgres
-  jpa:
-    show-sql: true
   security:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: https://cognito-idp.us-west-2.amazonaws.com/us-west-2_EBQBuK2yn/.well-known/jwks.json
+          jwk-set-uri: https://cognito-idp.us-west-2.amazonaws.com/us-west-2_VAuayT5Ck/.well-known/jwks.json

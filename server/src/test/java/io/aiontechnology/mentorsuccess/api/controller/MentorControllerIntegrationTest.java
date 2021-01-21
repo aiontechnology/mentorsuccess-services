@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,12 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundMentor;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -30,11 +32,13 @@ import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation.OFFLINE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -62,6 +66,9 @@ public class MentorControllerIntegrationTest {
     private static final String WORK_PHONE = "(360) 111-2222";
     private static final String CELL_PHONE = "(360) 333-4444";
     private static final String AVAILABILITY = "AVAILABILITY";
+    private static final ResourceLocation LOCATION = OFFLINE;
+    private static final boolean MEDIA_RELEASE_SIGNED = true;
+    private static final boolean BACKGROUND_CHECK_COMPLETED = true;
 
     @Inject
     private MockMvc mvc;
@@ -79,10 +86,14 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
                 .withAvailability(AVAILABILITY)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
+                .withBackgroundCheckCompleted(BACKGROUND_CHECK_COMPLETED)
                 .build();
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
@@ -95,6 +106,8 @@ public class MentorControllerIntegrationTest {
                 .andExpect(jsonPath("$.workPhone", is(WORK_PHONE)))
                 .andExpect(jsonPath("$.cellPhone", is(CELL_PHONE)))
                 .andExpect(jsonPath("$.availability", is(AVAILABILITY)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
@@ -110,10 +123,14 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(null)
                 .withCellPhone(null)
                 .withAvailability(null)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
+                .withBackgroundCheckCompleted(true)
                 .build();
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
@@ -145,6 +162,7 @@ public class MentorControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
@@ -152,9 +170,12 @@ public class MentorControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(2)))
+                .andExpect(jsonPath("$.error.length()", is(5)))
                 .andExpect(jsonPath("$.error.firstName", is("A mentor must have a first name")))
                 .andExpect(jsonPath("$.error.lastName", is("A mentor must have a last name")))
+                .andExpect(jsonPath("$.error.location", is("A location is required for a mentor")))
+                .andExpect(jsonPath("$.error.mediaReleaseSigned", is("A media release specification is required for a mentor")))
+                .andExpect(jsonPath("$.error.backgroundCheckCompleted", is("A mentor must have a background check specified")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")));
     }
@@ -169,10 +190,14 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone("12345678901")
                 .withCellPhone("12345678901")
                 .withAvailability("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
+                .withBackgroundCheckCompleted(true)
                 .build();
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
@@ -201,10 +226,14 @@ public class MentorControllerIntegrationTest {
                 .withWorkPhone(WORK_PHONE)
                 .withCellPhone(CELL_PHONE)
                 .withAvailability(AVAILABILITY)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(MEDIA_RELEASE_SIGNED)
+                .withBackgroundCheckCompleted(true)
                 .build();
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
@@ -224,6 +253,7 @@ public class MentorControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentors:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -237,6 +267,7 @@ public class MentorControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ba238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -260,6 +291,7 @@ public class MentorControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ca238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -276,9 +308,13 @@ public class MentorControllerIntegrationTest {
         mentorModel.put("workPhone", "(360) 765-4321");
         mentorModel.put("cellPhone", "(360) 765-4322");
         mentorModel.put("availability", "never");
+        mentorModel.put("location", "ONLINE");
+        mentorModel.put("mediaReleaseSigned", false);
+        mentorModel.put("backgroundCheckCompleted", false);
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ba238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mentorModel)));
 
@@ -291,6 +327,9 @@ public class MentorControllerIntegrationTest {
                 .andExpect(jsonPath("$.workPhone", is("(360) 765-4321")))
                 .andExpect(jsonPath("$.cellPhone", is("(360) 765-4322")))
                 .andExpect(jsonPath("$.availability", is("never")))
+                .andExpect(jsonPath("$.location", is("ONLINE")))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
+                .andExpect(jsonPath("$.backgroundCheckCompleted", is(false)))
                 .andExpect(jsonPath("$._links.length()", is(2)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/")))
                 .andExpect(jsonPath("$._links.school[0].href", is("http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
@@ -301,7 +340,8 @@ public class MentorControllerIntegrationTest {
         // setup the fixture
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ca238442-ce51-450d-a474-2e36872abe05"));
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/ca238442-ce51-450d-a474-2e36872abe05")
+                .with(jwt().authorities(new SimpleGrantedAuthority("mentor:delete"))));
 
         // validation
         result.andExpect(status().isNoContent());

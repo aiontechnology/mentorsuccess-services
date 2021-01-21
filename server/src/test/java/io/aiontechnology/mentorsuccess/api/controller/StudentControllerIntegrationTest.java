@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -49,6 +50,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -74,6 +76,55 @@ public class StudentControllerIntegrationTest {
 
     @Inject
     private ObjectMapper objectMapper;
+
+    @Test
+    void testCreateStudent() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+
+        String FIRST_NAME = "FIRST_NAME";
+        String LAST_NAME = "LAST_NAME";
+        int GRADE = 1;
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        int preBehavioralAssessment = 1;
+        int postBehavioralAssessment = 5;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withLocation(LOCATION)
+                .withStartDate(startDate)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withPreBehavioralAssessment(preBehavioralAssessment)
+                .withPostBehavioralAssessment(postBehavioralAssessment)
+                .withTeacher(inboundStudentTeacher)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isCreated())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
+                .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
+                .andExpect(jsonPath("$.grade", is(GRADE)))
+                .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
+                .andExpect(jsonPath("$.preBehavioralAssessment", is(preBehavioralAssessment)))
+                .andExpect(jsonPath("$.postBehavioralAssessment", is(postBehavioralAssessment)));
+    }
 
     @Test
     void testCreateStudentRequiredOnly() throws Exception {
@@ -104,6 +155,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -142,6 +194,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -156,6 +209,53 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.location", is("A location is required for a student")))
                 .andExpect(jsonPath("$.error.mediaReleaseSigned", is("A media release specification is required for a student")))
                 .andExpect(jsonPath("$.error.teacher", is("A student's teacher must be provided")))
+                .andExpect(jsonPath("$.message", is("Validation failed")))
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
+    }
+
+    @Test
+    void testCreateStudent_fieldsTooLong() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        final URI MENTOR_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+
+        String FIRST_NAME = "123456789012345678901234567890123456789012345678901";
+        String LAST_NAME = "123456789012345678901234567890123456789012345678901";
+        int GRADE = 1;
+        String PREFERRED_TIME = "1234567890123456789012345678901";
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withPreferredTime(PREFERRED_TIME)
+                .withLocation(LOCATION)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withTeacher(inboundStudentTeacher)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.timestamp", notNullValue()))
+                .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
+                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.firstName", is("A student's first name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.lastName", is("A student's last name can not be longer than 50 characters")))
+                .andExpect(jsonPath("$.error.preferredTime", is("A student's preferred time can not be longer than 30 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }
@@ -183,6 +283,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -221,6 +322,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -264,6 +366,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -304,6 +407,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -347,6 +451,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -388,6 +493,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -431,6 +537,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -471,6 +578,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -514,6 +622,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -554,6 +663,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -612,6 +722,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -662,6 +773,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -714,6 +826,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -748,11 +861,62 @@ public class StudentControllerIntegrationTest {
     }
 
     @Test
+    void testCreateStudent_withInvalidMentor() throws Exception {
+        // setup the fixture
+        final URI TEACHER_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        final URI MENTOR_URI = URI.create(
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        String COMMENT = "COMMENT";
+        InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
+                .withUri(TEACHER_URI)
+                .withComment(COMMENT)
+                .build();
+        InboundStudentMentor inboundStudentMentor = InboundStudentMentor.builder()
+                .withUri(MENTOR_URI)
+                .withTime("1234567890123456789012345678901")
+                .build();
+
+        String FIRST_NAME = "FIRST_NAME";
+        String LAST_NAME = "LAST_NAME";
+        int GRADE = 1;
+        ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Date startDate = new Date();
+        Boolean IS_MEDIA_RELEASE_SIGNED = true;
+        InboundStudent studentModel = InboundStudent.builder()
+                .withFirstName(FIRST_NAME)
+                .withLastName(LAST_NAME)
+                .withGrade(GRADE)
+                .withLocation(LOCATION)
+                .withStartDate(startDate)
+                .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
+                .withTeacher(inboundStudentTeacher)
+                .withMentor(inboundStudentMentor)
+                .build();
+
+        // execute the SUT
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:create")))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(studentModel)));
+
+        // validation
+        result.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.timestamp", notNullValue()))
+                .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
+                .andExpect(jsonPath("$.error.length()", is(1)))
+                .andExpect(jsonPath("$.error.['mentor.time']", is("The meeting time can not be longer than 30 characters")))
+                .andExpect(jsonPath("$.message", is("Validation failed")))
+                .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
+    }
+
+    @Test
     void testReadStudent() throws Exception {
         // setup the fixture
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:read")))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -764,6 +928,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade", is(2)))
                 .andExpect(jsonPath("$.preferredTime", is("2:00pm")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.preBehavioralAssessment", is(1)))
+                .andExpect(jsonPath("$.postBehavioralAssessment", is(5)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(true)));
     }
 
@@ -777,6 +943,8 @@ public class StudentControllerIntegrationTest {
         Map<String, Object> mentorModel = new HashMap<>();
         mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
         mentorModel.put("time", "Whenever");
+        mentorModel.put("location", "ONLINE");
+        mentorModel.put("mediaReleaseSigned", true);
 
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
         Set<String> interests = Set.of("Cats", "Dogs");
@@ -798,6 +966,8 @@ public class StudentControllerIntegrationTest {
         studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
+        studentModel.put("preBehavioralAssessment", 2);
+        studentModel.put("postBehavioralAssessment", 6);
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", mentorModel);
         studentModel.put("behaviors", behaviors);
@@ -808,6 +978,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -821,6 +992,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
+                .andExpect(jsonPath("$.preBehavioralAssessment", is(2)))
+                .andExpect(jsonPath("$.postBehavioralAssessment", is(6)))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
@@ -873,6 +1046,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -905,10 +1079,6 @@ public class StudentControllerIntegrationTest {
         teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
         teacherModel.put("comment", "We need to talk");
 
-        Map<String, Object> mentorModel = new HashMap<>();
-        mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
-        mentorModel.put("time", "Whenever");
-
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
         Set<String> interests = Set.of("Cats", "Dogs");
         Set<String> leadershipSkills = Set.of("Decision Making", "Planning");
@@ -930,7 +1100,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("location", "OFFLINE");
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("teacher", teacherModel);
-        studentModel.put("mentor", mentorModel);
+        studentModel.put("mentor", null);
         studentModel.put("behaviors", behaviors);
         studentModel.put("interests", interests);
         studentModel.put("leadershipSkills", leadershipSkills);
@@ -939,6 +1109,7 @@ public class StudentControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/f0c08c26-954b-4d05-8536-522403f9e54e")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:update")))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentModel)));
 
@@ -952,9 +1123,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
-                .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
-                .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
-                .andExpect(jsonPath("$.mentor.time", is("Whenever")))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
                 .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
@@ -972,7 +1140,8 @@ public class StudentControllerIntegrationTest {
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2"));
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+                .with(jwt().authorities(new SimpleGrantedAuthority("student:delete"))));
 
         // validation
         result.andExpect(status().isNoContent());

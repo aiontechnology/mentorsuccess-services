@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public class InboundSchool {
 
     /** The name of the school */
     @NotNull(message = "{school.name.notNull}")
-    @Size(max = 50, message = "{school.name.size}")
+    @Size(max = 100, message = "{school.name.size}")
     String name;
 
     /** The school's address */

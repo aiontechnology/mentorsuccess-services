@@ -1,3 +1,5 @@
+# Copyright 2020-2021 Aion Technology LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,7 +19,7 @@ pipelines:
     '{MS-*,feature/*,bugfix/*}':
       - step:
           name: Build and test
-          deployment: Test
+#          deployment: Test
           script:
             - gradle build
           artifacts:
@@ -45,8 +47,10 @@ pipelines:
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
             - docker tag services:$TAG $IMAGE:latest
+#            - docker tag services:$TAG $IMAGE:test
             - docker tag services:$TAG $IMAGE:$TAG
             - docker push $IMAGE:latest
+#            - docker push $IMAGE:test
             - docker push $IMAGE:$TAG
     develop:
       - step:
@@ -79,8 +83,10 @@ pipelines:
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
             - docker tag services:$TAG $IMAGE:latest
+            - docker tag services:$TAG $IMAGE:test
             - docker tag services:$TAG $IMAGE:$TAG
             - docker push $IMAGE:latest
+            - docker push $IMAGE:test
             - docker push $IMAGE:$TAG
     master:
       - step:
@@ -110,7 +116,9 @@ pipelines:
             - TAG="$BRANCH-build.$BITBUCKET_BUILD_NUMBER"
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
+            - docker tag services:$TAG $IMAGE:latest
             - docker tag services:$TAG $IMAGE:prod
             - docker tag services:$TAG $IMAGE:$TAG
+            - docker push $IMAGE:latest
             - docker push $IMAGE:prod
             - docker push $IMAGE:$TAG

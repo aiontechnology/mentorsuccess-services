@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,9 +77,11 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
                         .withLastName(s.getLastName())
                         .withGrade(s.getGrade())
                         .withLocation(s.getLocation())
+                        .withMediaReleaseSigned(s.getIsMediaReleaseSigned())
+                        .withPreBehavioralAssessment(s.getPreBehavioralAssessment())
+                        .withPostBehavioralAssessment(s.getPostBehavioralAssessment())
                         .withPreferredTime(s.getPreferredTime())
                         .withStartDate(s.getStartDate())
-                        .withMediaReleaseSigned(s.getIsMediaReleaseSigned())
                         .withInterests(getInterestModelToEntityMapper().map(s.getInterests()))
                         .withBehaviors(getStudentBehaviorEntityToModelMapper().map(s.getStudentBehaviors()))
                         .withLeadershipSkills(getStudentLeadershipSkillEntityToModelMapper().map(s.getStudentLeadershipSkills()))

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.entity;
 
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -77,6 +78,19 @@ public class SchoolPersonRole {
     /** Availability. (for mentors) */
     @Column
     private String availability;
+
+    /** Location. (for mentors) */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
+
+    /** Media release. (for mentors) */
+    @Column
+    private Boolean isMediaReleaseSigned;
+
+    /** Has a background check been completed. (for mentors) */
+    @Column
+    private Boolean isBackgroundCheckCompleted;
 
     /** Is the role active? */
     @Column

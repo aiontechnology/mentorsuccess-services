@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -119,6 +119,8 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
                     student.setStartDate(s.getStartDate());
                     student.setLocation(s.getLocation());
                     student.setIsMediaReleaseSigned(s.getMediaReleaseSigned());
+                    student.setPreBehavioralAssessment(s.getPreBehavioralAssessment());
+                    student.setPostBehavioralAssessment(s.getPostBehavioralAssessment());
                     student.setIsActive(true);
                     student.setInterests(interestModelToEntityMapper.map(s.getInterests()));
                     studentBehaviorModelMapper

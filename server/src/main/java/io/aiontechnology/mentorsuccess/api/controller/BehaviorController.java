@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.aiontechnology.mentorsuccess.service.BehaviorService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +54,7 @@ public class BehaviorController {
      * @return A collection of models that represents the interests in the system.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('resource:read')")
     public CollectionModel<String> getBehaviors() {
         var behaviorModels = StreamSupport.stream(behaviorService.getAllBehaviors().spliterator(), false)
                 .map(behaviorModelAssembler::toModel)

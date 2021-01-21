@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -87,6 +88,7 @@ public class SchoolController {
      */
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('school:create')")
     public OutboundSchool createSchool(@RequestBody @Valid InboundSchool inboundSchool) {
         log.debug("Creating school: {}", inboundSchool);
         return Optional.ofNullable(inboundSchool)
@@ -102,6 +104,7 @@ public class SchoolController {
      * @return A collection of {@link InboundSchool} instances for all schools.
      */
     @GetMapping
+    @PreAuthorize("hasAuthority('schools:read')")
     public CollectionModel<OutboundSchool> getAllSchools() {
         log.debug("Getting all schools");
         var schools = StreamSupport.stream(schoolService.getAllSchools().spliterator(), false)
@@ -117,6 +120,7 @@ public class SchoolController {
      * @return The school if it is found.
      */
     @GetMapping("/{schoolId}")
+    @PreAuthorize("hasAuthority('school:read')")
     public OutboundSchool getSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting school with id {}", schoolId);
         return schoolService.getSchoolById(schoolId)
@@ -132,6 +136,7 @@ public class SchoolController {
      * @return A model that represents the school that has been updated.
      */
     @PutMapping("/{schoolId}")
+    @PreAuthorize("hasAuthority('school:update')")
     public OutboundSchool updateSchool(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundSchool inboundSchool) {
         log.debug("Updating school {} with {}", schoolId, inboundSchool);
@@ -149,6 +154,7 @@ public class SchoolController {
      */
     @DeleteMapping("/{schoolId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('school:delete')")
     public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Deactivating school: {}", schoolId);
         schoolService.getSchoolById(schoolId)

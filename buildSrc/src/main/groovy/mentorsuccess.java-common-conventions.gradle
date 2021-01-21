@@ -1,3 +1,5 @@
+// Copyright 2020-2021 Aion Technology LLC
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -22,8 +24,12 @@ version = "${version}"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(14)
+        languageVersion = JavaLanguageVersion.of(15)
     }
+}
+
+jacoco {
+    toolVersion = "0.8.7-SNAPSHOT"
 }
 
 javadoc.options.addStringOption('Xdoclint:none', '-quiet')
@@ -39,6 +45,9 @@ repositories {
     jcenter()
     maven {
         url 'https://oss.jfrog.org/oss-snapshot-local'
+    }
+    maven {
+        url 'https://oss.sonatype.org/content/repositories/snapshots'
     }
 }
 

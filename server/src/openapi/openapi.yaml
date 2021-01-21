@@ -1,4 +1,4 @@
-# Copyright 2020 Aion Technology LLC
+# Copyright 2020-2021 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-openapi: 3.0.1
+openapi: 3.0.3
 info:
   title: Mentor Success API
   description: API for the Mentor Success application
@@ -21,13 +21,10 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: "0.3.0"
+  version: "0.3.1"
 
 servers:
-  - url: "https://ve17iw2h0g.execute-api.us-west-2.amazonaws.com/{basePath}"
-    variables:
-      basePath:
-        default: "/test"
+  - url: "https://lj6z99n04d.execute-api.us-west-2.amazonaws.com/mentorsuccess-test-service-deployment"
 
 tags:
   - name: person
@@ -51,6 +48,11 @@ paths:
 
   # /api/v1/activityfocuses --------------------------------------------------------
   /api/v1/activityfocuses:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/activityfocuses
     options:
@@ -73,6 +75,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -94,7 +98,7 @@ paths:
         - resource
       operationId: getActivityFocuses
       responses:
-        "200":
+        200:
           description: Returned all activity focuses
           headers:
             Access-Control-Allow-Origin:
@@ -104,14 +108,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ActivityFocusModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/activityfocuses"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -122,6 +159,11 @@ paths:
 
   # /api/v1/behaviors --------------------------------------------------------------
   /api/v1/behaviors:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/behaviors
     options:
@@ -144,6 +186,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -165,7 +209,7 @@ paths:
         - resource
       operationId: getBehaviors
       responses:
-        "200":
+        200:
           description: Returned all behaviors
           headers:
             Access-Control-Allow-Origin:
@@ -175,14 +219,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BehaviorModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/behaviors"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -193,6 +270,11 @@ paths:
 
   # /api/v1/books ------------------------------------------------------------------
   /api/v1/books:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/books
     options:
@@ -215,6 +297,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -260,14 +344,47 @@ paths:
               description: >
                 The `id` value returned in the response can be used as the
                 `bookId` parameter in `GET /books/{bookId}`.
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/books"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -284,7 +401,7 @@ paths:
         - resource
       operationId: getAllBooks
       responses:
-        "200":
+        200:
           description: A collection of all books
           headers:
             Access-Control-Allow-Origin:
@@ -294,14 +411,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/books"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -313,6 +463,10 @@ paths:
   # /api/v1/books/{bookId} ---------------------------------------------------------
   /api/v1/books/{bookId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: bookId
         schema:
@@ -342,6 +496,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -363,14 +519,49 @@ paths:
         - resource
       operationId: getBook
       responses:
-        "200":
+        200:
           description: Found the requested book
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/books"
         responses:
-          default:
+          200:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -394,7 +585,7 @@ paths:
             schema:
               $ref: '#/components/schemas/BookModel'
       responses:
-        "200":
+        200:
           description: The book was updated
           headers:
             Access-Control-Allow-Origin:
@@ -404,14 +595,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BookResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/books/{bookId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -429,20 +653,53 @@ paths:
         - resource
       operationId: deactivateBook
       responses:
-        "204":
+        204:
           description: The book record was deactivated
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/books/{bookId}"
         responses:
-          default:
+          204:
             statusCode: "204"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.bookId: "method.request.path.bookId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -454,6 +711,11 @@ paths:
 
   # /api/v1/games ------------------------------------------------------------------
   /api/v1/games:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/games
     options:
@@ -476,6 +738,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -521,14 +785,47 @@ paths:
               description: >
                 The `id` value returned in the response can be used as the
                 `gameId` parameter in `GET /games/{gameId}`.
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/games"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -545,7 +842,7 @@ paths:
         - resource
       operationId: getAllGames
       responses:
-        "200":
+        200:
           description: A collection of all games
           headers:
             Access-Control-Allow-Origin:
@@ -555,14 +852,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/games"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -574,6 +904,10 @@ paths:
   # /api/v1/games/{gameId} ---------------------------------------------------------
   /api/v1/games/{gameId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: gameId
         schema:
@@ -603,6 +937,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -624,14 +960,49 @@ paths:
         - resource
       operationId: getGame
       responses:
-        "200":
+        200:
           description: Found the requested game
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/games"
         responses:
-          default:
+          200:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -655,7 +1026,7 @@ paths:
             schema:
               $ref: '#/components/schemas/GameModel'
       responses:
-        "200":
+        200:
           description: The game was updated
           headers:
             Access-Control-Allow-Origin:
@@ -665,14 +1036,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/games/{gameId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -690,20 +1094,53 @@ paths:
         - resource
       operationId: deactivateGame
       responses:
-        "204":
+        204:
           description: The book record was deactivated
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/games/{gameId}"
         responses:
-          default:
+          204:
             statusCode: "204"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.gameId: "method.request.path.gameId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -715,6 +1152,11 @@ paths:
 
   # /api/v1/interests --------------------------------------------------------------
   /api/v1/interests:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/interests
     options:
@@ -737,6 +1179,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -758,7 +1202,7 @@ paths:
         - resource
       operationId: getInterests
       responses:
-        "200":
+        200:
           description: Returned all interests
           headers:
             Access-Control-Allow-Origin:
@@ -768,14 +1212,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InterestModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/interests"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -786,6 +1263,11 @@ paths:
 
   # /api/v1/leadership_skills ------------------------------------------------------
   /api/v1/leadership_skills:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/leadership_skills
     options:
@@ -808,6 +1290,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -829,7 +1313,7 @@ paths:
         - resource
       operationId: getLeaderhipSkills
       responses:
-        "200":
+        200:
           description: Returned all leadership skills
           headers:
             Access-Control-Allow-Origin:
@@ -839,14 +1323,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LeadershipSkillModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/leadership_skills"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -857,6 +1374,11 @@ paths:
 
   # /api/v1/leadership_traits ------------------------------------------------------
   /api/v1/leadership_traits:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/leadership_traits
     options:
@@ -879,6 +1401,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -900,7 +1424,7 @@ paths:
         - resource
       operationId: getLeadershipTraits
       responses:
-        "200":
+        200:
           description: Returned all leadership traits
           headers:
             Access-Control-Allow-Origin:
@@ -910,14 +1434,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LeadershipTraitModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/leadership_traits"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -928,6 +1485,11 @@ paths:
 
   # /api/v1/people -----------------------------------------------------------------
   /api/v1/people:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/people
     options:
@@ -950,6 +1512,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -996,19 +1560,46 @@ paths:
                 The `id` value returned in the response can be used as the
                 `personId` parameter in `GET /people/{personId}`.
         400:
-          description: There was an error while creating the person
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestModel'
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/people"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -1020,6 +1611,10 @@ paths:
   #  /api/v1/people/{personId} -----------------------------------------------------
   /api/v1/people/{personId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: personId
         schema:
@@ -1049,6 +1644,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1076,14 +1673,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
         404:
-          description: Unable to find the requested person
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/people"
         responses:
-          default:
+          200:
             statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -1094,6 +1724,11 @@ paths:
 
   # /api/v1/phonograms -------------------------------------------------------------
   /api/v1/phonograms:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/phonograms
     options:
@@ -1116,9 +1751,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
-          default:
+          "200":
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
@@ -1137,7 +1774,7 @@ paths:
         - resource
       operationId: getPhonograms
       responses:
-        "200":
+        200:
           description: Returned all phonograms
           headers:
             Access-Control-Allow-Origin:
@@ -1147,14 +1784,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PhonogramModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/phonograms"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -1165,6 +1835,11 @@ paths:
 
   # /api/v1/schools ----------------------------------------------------------------
   /api/v1/schools:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
 
     # OPTIONS for /api/v1/schools
     options:
@@ -1187,6 +1862,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1208,7 +1885,7 @@ paths:
         - school
       operationId: createSchool
       responses:
-        "201":
+        201:
           description: A new school was created
           headers:
             Access-Control-Allow-Origin:
@@ -1218,14 +1895,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SchoolResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            description: Unable to process request
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -1242,7 +1947,7 @@ paths:
         - school
       operationId: getAllSchools
       responses:
-        "200":
+        200:
           description: A collection of all schools
           headers:
             Access-Control-Allow-Origin:
@@ -1252,14 +1957,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SchoolResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
@@ -1271,6 +2007,10 @@ paths:
   # /api/v1/schools/{schoolId} -----------------------------------------------------
   /api/v1/schools/{schoolId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -1300,6 +2040,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1321,22 +2063,53 @@ paths:
         - school
       operationId: getSchool
       responses:
-        "200":
+        200:
           description: The school was found
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
-        "400":
-          description: The school could not be found
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1354,20 +2127,53 @@ paths:
         - school
       operationId: removeSchool
       responses:
-        "204":
+        204:
           description: The school was deleted
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}"
         responses:
-          default:
+          204:
             statusCode: "204"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1399,7 +2205,7 @@ paths:
             schema:
               $ref: '#/components/schemas/SchoolModel'
       responses:
-        "200":
+        200:
           description: The school was updated
           headers:
             Access-Control-Allow-Origin:
@@ -1409,14 +2215,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SchoolModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1429,6 +2268,10 @@ paths:
   # /api/v1/schools/{schoolId}/mentors ---------------------------------------------
   /api/v1/schools/{schoolId}/mentors:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -1459,6 +2302,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1487,7 +2332,7 @@ paths:
             schema:
               $ref: '#/components/schemas/MentorModel'
       responses:
-        "201":
+        201:
           description: The mentor is created
           headers:
             Access-Control-Allow-Origin:
@@ -1497,14 +2342,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MentorResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/mentors"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1523,7 +2401,7 @@ paths:
         - mentor
       operationId: getMentors
       responses:
-        "200":
+        200:
           description: All mentors for a school
           headers:
             Access-Control-Allow-Origin:
@@ -1533,14 +2411,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MentorResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/mentors"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1553,6 +2464,10 @@ paths:
   # /api/v1/schools/{schoolId}/mentors/{mentorId} ----------------------------------
   /api/v1/schools/{schoolId}/mentors/{mentorId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -1590,6 +2505,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1612,7 +2529,7 @@ paths:
         - mentor
       operationId: getMentor
       responses:
-        "200":
+        200:
           description: The mentor was returned
           headers:
             Access-Control-Allow-Origin:
@@ -1633,14 +2550,47 @@ paths:
                 to the current URL
             school:
               $ref: '#/components/links/school'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/mentors/{mentorId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.mentorId: "method.request.path.mentorId"
@@ -1666,7 +2616,7 @@ paths:
             schema:
               $ref: '#/components/schemas/MentorModel'
       responses:
-        "200":
+        200:
           description: The mentor was updated
           headers:
             Access-Control-Allow-Origin:
@@ -1676,14 +2626,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MentorResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/mentors/{mentorId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.mentorId: "method.request.path.mentorId"
@@ -1703,20 +2686,53 @@ paths:
         - mentor
       operationId: deactivateMentor
       responses:
-        "204":
+        204:
           description: The mentor has been deactivated
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/mentors/{mentorId}"
         responses:
-          default:
+          204:
             statusCode: "204"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.mentorId: "method.request.path.mentorId"
@@ -1730,6 +2746,10 @@ paths:
   # /api/v1/schools/{schoolId}/personnel -------------------------------------------
   /api/v1/schools/{schoolId}/personnel:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -1760,6 +2780,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1809,21 +2831,46 @@ paths:
             school:
               operationId: getSchool
         400:
-          description: There was an error while creating the personnel
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BadRequestModel'
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
         404:
-          description: The Requested school was not found
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "http://api.mentorsuccess.com/api/v1/schools/{schoolId}/personnel"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1842,7 +2889,7 @@ paths:
         - school
       operationId: getAllPersonnel
       responses:
-        "200":
+        200:
           description: A collection of personnel for the school
           headers:
             Access-Control-Allow-Origin:
@@ -1852,16 +2899,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonnelResultModelCollection'
-        "400":
-          description: The Requested school was not found
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/personnel"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -1874,6 +2952,10 @@ paths:
   # /api/v1/schools/{schoolId}/personnel/{personnelId} -----------------------------
   /api/v1/schools/{schoolId}/personnel/{personnelId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -1911,6 +2993,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -1933,7 +3017,7 @@ paths:
         - school
       operationId: getPersonnel
       responses:
-        "200":
+        200:
           description: The personnel was returned
           headers:
             Access-Control-Allow-Origin:
@@ -1954,14 +3038,47 @@ paths:
                 to the current URL
             school:
               $ref: '#/components/links/school'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/personnel/{personnelId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.personnelId: "method.request.path.personnelId"
@@ -1987,7 +3104,7 @@ paths:
             schema:
               $ref: '#/components/schemas/PersonnelModel'
       responses:
-        "200":
+        200:
           description: The personnel was updated
           headers:
             Access-Control-Allow-Origin:
@@ -1997,14 +3114,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonnelModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/personnel/{personnelId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.personnelId: "method.request.path.personnelId"
@@ -2024,14 +3174,53 @@ paths:
         - school
       operationId: deactivatePersonnel
       responses:
-        "204":
+        204:
           description: The personnel record was deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/personnel/{personnelId}"
         responses:
-          default:
+          204:
             statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.personnelId: "method.request.path.personnelId"
@@ -2045,6 +3234,10 @@ paths:
   # /api/v1/schools/{schoolId}/programAdmins ---------------------------------------
   /api/v1/schools/{schoolId}/programAdmins:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -2075,6 +3268,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -2097,7 +3292,7 @@ paths:
         - school
       operationId: createProgramAdmin
       responses:
-        "201":
+        201:
           description: The program administrator was created
           headers:
             Access-Control-Allow-Origin:
@@ -2107,16 +3302,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProgramAdminResultModel'
-        "400":
-          description: The Requested school was not found
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -2135,7 +3361,7 @@ paths:
         - school
       operationId: getProgramAdmins
       responses:
-        "200":
+        200:
           description: A collection of program administrators for a school
           headers:
             Access-Control-Allow-Origin:
@@ -2145,14 +3371,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProgramAdminResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -2165,6 +3424,10 @@ paths:
   # /api/v1/schools/{schoolId}/programAdmins/{programAdminId} ----------------------
   /api/v1/schools/{schoolId}/programAdmins/{programAdminId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -2202,6 +3465,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -2224,7 +3489,7 @@ paths:
         - school
       operationId: getProgramAdmin
       responses:
-        "200":
+        200:
           description: The program admin was returned
           headers:
             Access-Control-Allow-Origin:
@@ -2245,14 +3510,47 @@ paths:
                 to the current URL
             school:
               $ref: '#/components/links/school'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.programAdminId: "method.request.path.programAdminId"
@@ -2278,7 +3576,7 @@ paths:
             schema:
               $ref: '#/components/schemas/ProgramAdminModel'
       responses:
-        "200":
+        200:
           description: The program admin was updated
           headers:
             Access-Control-Allow-Origin:
@@ -2288,14 +3586,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProgramAdminModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.programAdminId: "method.request.path.programAdminId"
@@ -2315,14 +3646,53 @@ paths:
         - school
       operationId: deactivateProgramAdmin
       responses:
-        "204":
+        204:
           description: The program admin record was deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/programAdmins/{programAdminId}"
         responses:
-          default:
+          204:
             statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.programAdminId: "method.request.path.programAdminId"
@@ -2336,6 +3706,10 @@ paths:
   # /api/v1/schools/{schoolId}/students --------------------------------------------
   /api/v1/schools/{schoolId}/students:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -2366,6 +3740,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -2388,7 +3764,7 @@ paths:
         - student
       operationId: getStudents
       responses:
-        "200":
+        200:
           description: All students for a school
           headers:
             Access-Control-Allow-Origin:
@@ -2398,14 +3774,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/students"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -2430,7 +3839,7 @@ paths:
             schema:
               $ref: '#/components/schemas/StudentModel'
       responses:
-        "201":
+        201:
           description: The student is created
           headers:
             Access-Control-Allow-Origin:
@@ -2440,14 +3849,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/students"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -2460,6 +3902,10 @@ paths:
   # /api/v1/schools/{schoolId}/students/{studentId} --------------------------------
   /api/v1/schools/{schoolId}/students/{studentId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -2497,6 +3943,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -2525,7 +3973,7 @@ paths:
             schema:
               $ref: '#/components/schemas/StudentModel'
       responses:
-        "200":
+        200:
           description: The student was updated
           headers:
             Access-Control-Allow-Origin:
@@ -2535,14 +3983,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/StudentResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/students/{studentId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.studentId: "method.request.path.studentId"
@@ -2562,20 +4043,53 @@ paths:
         - student
       operationId: deactivateStudent
       responses:
-        "204":
+        204:
           description: The student has been deactivated
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/students/{studentId}"
         responses:
-          default:
+          204:
             statusCode: "204"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.studentId: "method.request.path.studentId"
@@ -2589,6 +4103,10 @@ paths:
   # /api/v1/schools/{schoolId}/teachers --------------------------------------------
   /api/v1/schools/{schoolId}/teachers:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -2619,6 +4137,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -2647,7 +4167,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TeacherResultModel'
       responses:
-        "201":
+        201:
           description: The teacher is created
           headers:
             Access-Control-Allow-Origin:
@@ -2657,14 +4177,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TeacherResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/teachers"
         responses:
-          default:
+          201:
             statusCode: "201"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -2683,7 +4236,7 @@ paths:
         - teacher
       operationId: getTeachers
       responses:
-        "200":
+        200:
           description: All teachers for a school
           headers:
             Access-Control-Allow-Origin:
@@ -2693,14 +4246,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TeacherResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/teachers"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
@@ -2713,6 +4299,10 @@ paths:
   # /api/v1/schools/{schoolId}/teachers/{teacherId} --------------------------------
   /api/v1/schools/{schoolId}/teachers/{teacherId}:
     parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
       - in: path
         name: schoolId
         schema:
@@ -2750,6 +4340,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         responses:
           default:
@@ -2772,7 +4364,7 @@ paths:
         - school
       operationId: getTeacher
       responses:
-        "200":
+        200:
           description: The teacher was returned
           headers:
             Access-Control-Allow-Origin:
@@ -2793,14 +4385,47 @@ paths:
                 to the current URL
             school:
               $ref: '#/components/links/school'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/teachers/{teacherId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.teacherId: "method.request.path.teacherId"
@@ -2826,7 +4451,7 @@ paths:
             schema:
               $ref: '#/components/schemas/TeacherModel'
       responses:
-        "200":
+        200:
           description: The teacher was updated
           headers:
             Access-Control-Allow-Origin:
@@ -2836,14 +4461,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TeacherModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/teachers/{teacherId}"
         responses:
-          default:
+          200:
             statusCode: "200"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.teacherId: "method.request.path.teacherId"
@@ -2863,20 +4521,53 @@ paths:
         - teacher
       operationId: deactivateTeacher
       responses:
-        "204":
+        204:
           description: The teacher has been deactivated
           headers:
             Access-Control-Allow-Origin:
               schema:
                 type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}/teachers/{teacherId}"
         responses:
-          default:
+          204:
             statusCode: "204"
             responseParameters:
               method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
         requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.teacherId: "method.request.path.teacherId"
@@ -2892,6 +4583,41 @@ paths:
 # ==================================================================================
 
 components:
+  responses:
+    BadRequest:
+      description: There was an error while creating the person
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestModel'
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+    Error:
+      description: Encountered a server error
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+    NotAuthenticated:
+      description: Access token is missing or invalid
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+    NotAuthorized:
+      description: User does not have permissions for operation
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
+    NotFound:
+      description: Requested resource could not be found
+      headers:
+        Access-Control-Allow-Origin:
+          schema:
+            type: string
   links:
     school:
       operationId: getSchool
