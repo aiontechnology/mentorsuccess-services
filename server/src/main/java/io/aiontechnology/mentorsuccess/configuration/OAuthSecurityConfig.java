@@ -183,7 +183,7 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
 
         private List<String> getProgramAdminAuthorities(boolean isAdmin) {
             List<String> authorities = new ArrayList<>();
-            authorities.addAll(Arrays.asList("program-admin:read", "personnel:update"));
+            authorities.addAll(Arrays.asList("program-admin:read", "program-admin:update"));
             if (isAdmin) {
                 authorities.addAll(Arrays.asList("program-admin:create", "program-admins:read", "program-admin:delete"));
             }
