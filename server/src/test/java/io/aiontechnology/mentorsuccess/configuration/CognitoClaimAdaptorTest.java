@@ -46,7 +46,7 @@ public class CognitoClaimAdaptorTest {
         // validation
         List<String> authorities = (List) result.get("authorities");
         assertThat(authorities).isNotNull();
-        assertThat(authorities.size()).isEqualTo(43);
+        assertThat(authorities.size()).isEqualTo(44);
         assertThat(authorities.contains("book:read"));
         assertThat(authorities.contains("book:update"));
         assertThat(authorities.contains("game:read"));
@@ -58,6 +58,7 @@ public class CognitoClaimAdaptorTest {
         assertThat(authorities.contains("program-admin:read"));
         assertThat(authorities.contains("program-admin:update"));
         assertThat(authorities.contains("resources:read"));
+        assertThat(authorities.contains("resources:update"));
         assertThat(authorities.contains("school:read"));
         assertThat(authorities.contains("school:update"));
         assertThat(authorities.contains("student:read"));
