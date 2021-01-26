@@ -24,9 +24,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -56,10 +59,30 @@ public class InterestController {
     @GetMapping
     @PreAuthorize("hasAuthority('resource:read')")
     public CollectionModel<String> getInterests() {
-        var interestModels = StreamSupport.stream(interestService.getAllInterests().spliterator(), false)
+        var interestModels = StreamSupport
+                .stream(interestService.getAllInterests().spliterator(), false)
                 .map(interestModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(interestModels);
+    }
+
+    /**
+     * The new values are provided as a map from new value to old value. "CREATE_ME" is a special value that means that
+     * the new value should be created.
+     * {
+     * "a": "b"         // b -> a
+     * "c": "CREATE_ME" // null -> c
+     * }
+     *
+     * @param updatedInterests
+     * @return
+     */
+    @PutMapping
+    @PreAuthorize("hasAuthority('resources:update')")
+    public CollectionModel<String> setInterests(@RequestBody Map<String, String> updatedInterests) {
+        log.debug("Updating updatedInterests: {}", updatedInterests);
+        interestService.updateInterests(updatedInterests);
+        return getInterests();
     }
 
 }
