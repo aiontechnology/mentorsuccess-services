@@ -55,7 +55,7 @@ public class StudentPersonEntityToModelMapper implements OneWayMapper<StudentPer
                         .withWorkPhone(phoneService.format(s.getPerson().getWorkPhone()))
                         .withCellPhone(phoneService.format(s.getPerson().getCellPhone()))
                         .withEmail(s.getPerson().getEmail())
-                        .withType(s.getPersonType())
+                        .withLabel(s.getLabel())
                         .withIsEmergencyContact(s.getIsEmergencyContact())
                         .withPreferredContactMethod(s.getPreferredContactMethod())
                         .withComment(s.getComment())

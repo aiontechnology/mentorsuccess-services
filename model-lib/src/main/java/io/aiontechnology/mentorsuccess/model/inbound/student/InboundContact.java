@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,9 +38,8 @@ import javax.validation.constraints.Size;
 @Contact
 public class InboundContact {
 
-    @NotNull(message = "{contact.type.notNull}")
-    @EnumNamePattern(regexp = "PARENT_GUARDIAN|GRANDPARENT", message = "{contact.type.invalid}")
-    RoleType type;
+    @Size(max = 50, message = "{contact.label.size}")
+    String label;
 
     /** The contact's first name. */
     @NotNull(message = "{contact.firstName.notNull}")
