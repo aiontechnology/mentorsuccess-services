@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PRINCIPAL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
@@ -49,9 +48,10 @@ public class StudentPersonRoleEntityToModelMapperTest {
         OneWayMapper<Person, OutboundPerson> personEntityToModelMapper = mock(OneWayMapper.class);
         when(personEntityToModelMapper.map(person)).thenReturn(Optional.of(outboundPerson));
 
+        String label = "Parent";
         StudentPersonRole studentPersonRole = new StudentPersonRole();
         studentPersonRole.setPerson(person);
-        studentPersonRole.setPersonType(PRINCIPAL);
+        studentPersonRole.setLabel(label);
 
         StudentPersonEntityToModelMapper studentPersonEntityToModelMapper =
                 new StudentPersonEntityToModelMapper(personEntityToModelMapper, new PhoneService());
@@ -66,7 +66,7 @@ public class StudentPersonRoleEntityToModelMapperTest {
         assertThat(result.get().getWorkPhone()).isEqualTo(outboundPerson.getWorkPhone());
         assertThat(result.get().getCellPhone()).isEqualTo(outboundPerson.getCellPhone());
         assertThat(result.get().getEmail()).isEqualTo(outboundPerson.getEmail());
-        assertThat(result.get().getType()).isEqualTo(PRINCIPAL);
+        assertThat(result.get().getLabel()).isEqualTo(label);
     }
 
     @Test

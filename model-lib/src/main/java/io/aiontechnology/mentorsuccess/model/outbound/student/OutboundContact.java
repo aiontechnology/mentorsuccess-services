@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ContactMethod;
-import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.Builder;
 import lombok.Value;
 
@@ -31,7 +30,7 @@ import lombok.Value;
 @Builder(setterPrefix = "with")
 public class OutboundContact {
 
-    RoleType type;
+    String label;
 
     /** The contact's first name. */
     String firstName;
