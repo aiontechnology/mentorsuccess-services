@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.CONTACT;
+
 /**
  * @author Whitney Hunter
  * @since 0.3.0
@@ -43,7 +45,6 @@ public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMappe
     public Optional<StudentPersonRole> map(InboundContact inboundContact, StudentPersonRole studentPersonRole) {
         return Optional.ofNullable(inboundContact)
                 .map(contactModel -> {
-                    studentPersonRole.setPersonType(contactModel.getType());
                     InboundPerson inboundPerson = InboundPerson.builder()
                             .withFirstName(contactModel.getFirstName())
                             .withLastName(contactModel.getLastName())
@@ -51,10 +52,12 @@ public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMappe
                             .withCellPhone(phoneService.normalize(contactModel.getCellPhone()))
                             .withEmail(contactModel.getEmail())
                             .build();
+                    studentPersonRole.setPersonType(CONTACT);
                     studentPersonRole.setPerson(personModelToEntityMapper.map(inboundPerson, studentPersonRole.getPerson())
                             .orElse(null));
                     studentPersonRole.setIsEmergencyContact(contactModel.getIsEmergencyContact());
                     studentPersonRole.setPreferredContactMethod(contactModel.getPreferredContactMethod());
+                    studentPersonRole.setLabel(inboundContact.getLabel());
                     studentPersonRole.setComment(contactModel.getComment());
                     return studentPersonRole;
                 });

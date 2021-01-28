@@ -688,14 +688,14 @@ public class StudentControllerIntegrationTest {
                 .withComment(COMMENT)
                 .build();
 
-        RoleType ROLE_TYPE = RoleType.PARENT_GUARDIAN;
+        String LABEL = "Parent";
         String CONTACT_FIRST_NAME = "CONTACT_FIRST_NAME";
         String CONTACT_LAST_NAME = "CONTACT_LAST_NAME";
         Boolean IS_EMERGENCY_CONTACT = false;
         String workPhone = "(123) 456-7890";
         ContactMethod CONTACT_METHOD = ContactMethod.WORKPHONE;
         InboundContact inboundContact = InboundContact.builder()
-                .withType(ROLE_TYPE)
+                .withLabel(LABEL)
                 .withFirstName(CONTACT_FIRST_NAME)
                 .withLastName(CONTACT_LAST_NAME)
                 .withIsEmergencyContact(IS_EMERGENCY_CONTACT)
@@ -728,7 +728,7 @@ public class StudentControllerIntegrationTest {
 
         // validation
         result.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.contacts[0].type", is(ROLE_TYPE.toString())))
+                .andExpect(jsonPath("$.contacts[0].label", is(LABEL)))
                 .andExpect(jsonPath("$.contacts[0].firstName", is(CONTACT_FIRST_NAME)))
                 .andExpect(jsonPath("$.contacts[0].lastName", is(CONTACT_LAST_NAME)))
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(IS_EMERGENCY_CONTACT)))
@@ -748,7 +748,6 @@ public class StudentControllerIntegrationTest {
                 .build();
 
         InboundContact inboundContact = InboundContact.builder()
-                .withType(null)
                 .withFirstName(null)
                 .withLastName(null)
                 .withIsEmergencyContact(null)
@@ -781,11 +780,10 @@ public class StudentControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(5)))
+                .andExpect(jsonPath("$.error.length()", is(4)))
                 .andExpect(jsonPath("$.error.['contacts[0]']", is("A contact must have at least on contact method.")))
                 .andExpect(jsonPath("$.error.['contacts[0].firstName']", is("A contact must have a first name")))
                 .andExpect(jsonPath("$.error.['contacts[0].lastName']", is("A contact must have a last name")))
-                .andExpect(jsonPath("$.error.['contacts[0].type']", is("A contact must have a valid type")))
                 .andExpect(jsonPath("$.error.['contacts[0].isEmergencyContact']", is("The contact must be specified as an emergency contact or not")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
@@ -952,7 +950,7 @@ public class StudentControllerIntegrationTest {
         Set<String> leadershipTraits = Set.of("Humility", "Responsibility");
 
         Map<String, Object> contact1 = new HashMap<>();
-        contact1.put("type", "PARENT_GUARDIAN");
+        contact1.put("label", "Parent");
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
@@ -1004,7 +1002,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
                 .andExpect(jsonPath("$.leadershipSkills", hasItems("Decision Making", "Planning")))
                 .andExpect(jsonPath("$.leadershipTraits", hasItems("Humility", "Responsibility")))
-                .andExpect(jsonPath("$.contacts[0].type", is("PARENT_GUARDIAN")))
+                .andExpect(jsonPath("$.contacts[0].label", is("Parent")))
                 .andExpect(jsonPath("$.contacts[0].firstName", is("Peter")))
                 .andExpect(jsonPath("$.contacts[0].lastName", is("Parent")))
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
@@ -1023,7 +1021,7 @@ public class StudentControllerIntegrationTest {
         Set<String> leadershipTraits = Set.of("Humility", "Responsibility");
 
         Map<String, Object> contact1 = new HashMap<>();
-        contact1.put("type", "PARENT_GUARDIAN");
+        contact1.put("label", "Parent");
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
@@ -1066,7 +1064,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
                 .andExpect(jsonPath("$.leadershipSkills", hasItems("Decision Making", "Planning")))
                 .andExpect(jsonPath("$.leadershipTraits", hasItems("Humility", "Responsibility")))
-                .andExpect(jsonPath("$.contacts[0].type", is("PARENT_GUARDIAN")))
+                .andExpect(jsonPath("$.contacts[0].label", is("Parent")))
                 .andExpect(jsonPath("$.contacts[0].firstName", is("Peter")))
                 .andExpect(jsonPath("$.contacts[0].lastName", is("Parent")))
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
@@ -1085,7 +1083,7 @@ public class StudentControllerIntegrationTest {
         Set<String> leadershipTraits = Set.of("Humility", "Responsibility");
 
         Map<String, Object> contact1 = new HashMap<>();
-        contact1.put("type", "PARENT_GUARDIAN");
+        contact1.put("label", "Parent");
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
@@ -1128,7 +1126,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))
                 .andExpect(jsonPath("$.leadershipSkills", hasItems("Decision Making", "Planning")))
                 .andExpect(jsonPath("$.leadershipTraits", hasItems("Humility", "Responsibility")))
-                .andExpect(jsonPath("$.contacts[0].type", is("PARENT_GUARDIAN")))
+                .andExpect(jsonPath("$.contacts[0].label", is("Parent")))
                 .andExpect(jsonPath("$.contacts[0].firstName", is("Peter")))
                 .andExpect(jsonPath("$.contacts[0].lastName", is("Parent")))
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(true)));
