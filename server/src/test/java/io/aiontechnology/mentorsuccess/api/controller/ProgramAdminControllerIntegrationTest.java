@@ -16,11 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -69,6 +71,9 @@ public class ProgramAdminControllerIntegrationTest {
     @Inject
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private AWSCognitoIdentityProvider awsCognitoIdentityProvider;
+
     @Test
     void testCreateProgramAdmin() throws Exception {
         // setup the fixture
@@ -105,7 +110,7 @@ public class ProgramAdminControllerIntegrationTest {
         InboundProgramAdmin inboundProgramAdmin = InboundProgramAdmin.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
-                .withEmail(null)
+                .withEmail(EMAIL)
                 .withWorkPhone(null)
                 .withCellPhone(null)
                 .build();
@@ -121,7 +126,7 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
-                .andExpect(jsonPath("$.email", nullValue()))
+                .andExpect(jsonPath("$.email", is(EMAIL)))
                 .andExpect(jsonPath("$.workPhone", nullValue()))
                 .andExpect(jsonPath("$.cellPhone", nullValue()))
                 .andExpect(jsonPath("$._links.length()", is(2)))

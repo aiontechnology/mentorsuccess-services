@@ -12,7 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-logging:
+aws:
+  cognito:
+    clientId: clientId
+    clientSecret: clientSecret
+    region: us-west-2
+    userPoolId: us-west-2_EBQBuK2yn
+
+addUserToGroupResultlogging:
   level:
     io.aiontechnology.mentorsuccess: debug
     org.hibernate.SQL: debug
