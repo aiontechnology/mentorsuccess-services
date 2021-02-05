@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+aws:
+  cognito:
+    region: us-west-2
+    userPoolId: us-west-2_EBQBuK2yn
+
 spring:
   datasource:
     driverClassName: org.h2.Driver

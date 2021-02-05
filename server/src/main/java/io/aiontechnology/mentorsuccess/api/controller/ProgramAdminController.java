@@ -25,6 +25,7 @@ import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundProgramAdmin;
+import io.aiontechnology.mentorsuccess.service.AwsService;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +66,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class ProgramAdminController {
 
+    private final AwsService awsService;
+
     /** The JPA entity manager */
     private final EntityManager entityManager;
 
@@ -103,6 +106,7 @@ public class ProgramAdminController {
         log.debug("Creating program administrator: {}", inboundProgramAdmin);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(inboundProgramAdmin)
+                        .map(pa -> awsService.addAwsUser(schoolId, pa))
                         .flatMap(programAdminMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)

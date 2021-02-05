@@ -19,6 +19,11 @@ logging:
     org.hibernate.type.descriptor.sql: debug
     org.springframework.security: debug
 
+aws:
+  cognito:
+    region: us-west-2
+    userPoolId: us-west-2_EBQBuK2yn
+
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
