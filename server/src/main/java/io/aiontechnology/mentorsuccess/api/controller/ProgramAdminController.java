@@ -106,7 +106,7 @@ public class ProgramAdminController {
         log.debug("Creating program administrator: {}", inboundProgramAdmin);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(inboundProgramAdmin)
-                        .map(pa -> awsService.addAwsUser(schoolId, pa))
+                        .map(pa -> awsService.createAwsUser(schoolId, pa))
                         .flatMap(programAdminMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
@@ -165,6 +165,7 @@ public class ProgramAdminController {
     public OutboundProgramAdmin updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("programAdminId") UUID programAdminId,
             @RequestBody @Valid InboundProgramAdmin inboundProgramAdmin) {
+        awsService.updateAwsUser(inboundProgramAdmin);
         return roleService.findRoleById(programAdminId)
                 .flatMap(role -> programAdminUpdateMapper.map(inboundProgramAdmin, role))
                 .map(roleService::updateRole)
@@ -184,6 +185,7 @@ public class ProgramAdminController {
     public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("programAdminId") UUID programAdminId) {
         log.debug("Deactivating personnel");
         roleService.findRoleById(programAdminId)
+                .map(awsService::removeAwsUser)
                 .ifPresent(roleService::deactivateRole);
     }
 

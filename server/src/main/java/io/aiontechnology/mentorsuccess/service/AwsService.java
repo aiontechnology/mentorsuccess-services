@@ -21,7 +21,12 @@ import com.amazonaws.services.cognitoidp.model.AdminAddUserToGroupRequest;
 import com.amazonaws.services.cognitoidp.model.AdminAddUserToGroupResult;
 import com.amazonaws.services.cognitoidp.model.AdminCreateUserRequest;
 import com.amazonaws.services.cognitoidp.model.AdminCreateUserResult;
+import com.amazonaws.services.cognitoidp.model.AdminDeleteUserRequest;
+import com.amazonaws.services.cognitoidp.model.AdminDeleteUserResult;
+import com.amazonaws.services.cognitoidp.model.AdminUpdateUserAttributesRequest;
+import com.amazonaws.services.cognitoidp.model.AdminUpdateUserAttributesResult;
 import com.amazonaws.services.cognitoidp.model.AttributeType;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,54 +47,96 @@ import static java.lang.Boolean.FALSE;
 @RequiredArgsConstructor
 public class AwsService {
 
+    private static final String PROGRAM_ADMIN_GROUP = "PROGRAM_ADMIN";
+    private static final String EMAIL_KEY = "email";
+    private static final String FIRST_NAME_KEY = "given_name";
+    private static final String LAST_NAME_KEY = "family_name";
+    private static final String VERIFIED_EMAIL_KEY = "email_verified";
+    private static final String SCHOOL_UUID_KEY = "custom:school_uuid";
+
     @Value("${aws.cognito.userPoolId}")
     private String userPoolId;
 
     private final AWSCognitoIdentityProvider awsCognitoIdentityProvider;
 
-    public InboundProgramAdmin addAwsUser(UUID schoolId, InboundProgramAdmin programAdmin) {
+    public InboundProgramAdmin createAwsUser(UUID schoolId, InboundProgramAdmin programAdmin) {
 
-        AdminCreateUserResult addUserResult = createAwsUser(schoolId, programAdmin);
+        AdminCreateUserResult addUserResult = doCreateAwsUser(schoolId, programAdmin);
         log.debug("Sent add user request. Result: {}", addUserResult);
 
-        AdminAddUserToGroupResult addUserToGroupResult = addAwsUserToGroup(programAdmin);
+        AdminAddUserToGroupResult addUserToGroupResult = doAddAwsUserToGroup(programAdmin);
         log.debug("Sent add user to group request. Result: {}", addUserToGroupResult);
 
         return programAdmin;
     }
 
-    private AdminCreateUserResult createAwsUser(UUID schoolId, InboundProgramAdmin programAdmin) {
+    public InboundProgramAdmin updateAwsUser(InboundProgramAdmin programAdmin) {
+        AdminUpdateUserAttributesResult updateUserAttributesResult = doUpdateAwsUser(programAdmin);
+        log.debug("Sent update user attributes request. Result: {}", updateUserAttributesResult);
+        return programAdmin;
+    }
+
+    public SchoolPersonRole removeAwsUser(SchoolPersonRole role) {
+        AdminDeleteUserResult deleteUserResult = deleteAwsUser(role);
+        log.debug("Sent delete user request. Result: {}", deleteUserResult);
+        return role;
+    }
+
+    private AdminCreateUserResult doCreateAwsUser(UUID schoolId, InboundProgramAdmin programAdmin) {
         log.debug("Adding a program admin to AWS");
         AdminCreateUserRequest cognitoRequest = new AdminCreateUserRequest()
                 .withUserPoolId(userPoolId)
                 .withUsername(programAdmin.getEmail())
                 .withUserAttributes(
                         new AttributeType()
-                                .withName("email")
+                                .withName(EMAIL_KEY)
                                 .withValue(programAdmin.getEmail()),
                         new AttributeType()
-                                .withName("given_name")
+                                .withName(FIRST_NAME_KEY)
                                 .withValue(programAdmin.getFirstName()),
                         new AttributeType()
-                                .withName("family_name")
+                                .withName(LAST_NAME_KEY)
                                 .withValue(programAdmin.getLastName()),
                         new AttributeType()
-                                .withName("email_verified")
+                                .withName(VERIFIED_EMAIL_KEY)
                                 .withValue("true"),
                         new AttributeType()
-                                .withName("custom:school_uuid")
+                                .withName(SCHOOL_UUID_KEY)
                                 .withValue(schoolId.toString()))
                 .withDesiredDeliveryMediums(EMAIL)
                 .withForceAliasCreation(FALSE);
         return awsCognitoIdentityProvider.adminCreateUser(cognitoRequest);
     }
 
-    private AdminAddUserToGroupResult addAwsUserToGroup(InboundProgramAdmin programAdmin) {
+    private AdminAddUserToGroupResult doAddAwsUserToGroup(InboundProgramAdmin programAdmin) {
         AdminAddUserToGroupRequest cognitoRequest = new AdminAddUserToGroupRequest()
                 .withUsername(programAdmin.getEmail())
                 .withUserPoolId(userPoolId)
-                .withGroupName("PROGRAM_ADMIN");
+                .withGroupName(PROGRAM_ADMIN_GROUP);
         return awsCognitoIdentityProvider.adminAddUserToGroup(cognitoRequest);
+    }
+
+    private AdminUpdateUserAttributesResult doUpdateAwsUser(InboundProgramAdmin programAdmin) {
+        AdminUpdateUserAttributesRequest cognitoRequest = new AdminUpdateUserAttributesRequest()
+                .withUsername(programAdmin.getEmail())
+                .withUserPoolId(userPoolId)
+                .withUserAttributes(
+                        new AttributeType()
+                                .withName(FIRST_NAME_KEY)
+                                .withValue(programAdmin.getFirstName()),
+                        new AttributeType()
+                                .withName(LAST_NAME_KEY)
+                                .withValue(programAdmin.getLastName())
+
+                );
+        return awsCognitoIdentityProvider.adminUpdateUserAttributes(cognitoRequest);
+    }
+
+    private AdminDeleteUserResult deleteAwsUser(SchoolPersonRole role) {
+        AdminDeleteUserRequest cognitoRequest = new AdminDeleteUserRequest()
+                .withUsername(role.getPerson().getEmail())
+                .withUserPoolId(userPoolId);
+        return awsCognitoIdentityProvider.adminDeleteUser(cognitoRequest);
     }
 
 }
