@@ -30,6 +30,4 @@ public class OutboundStudentMentor {
 
     OutboundMentor mentor;
 
-    String time;
-
 }
