@@ -18,10 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
+import io.aiontechnology.mentorsuccess.security.SystemAdminAuthoritySetter;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -86,7 +87,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -120,7 +124,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -152,7 +159,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -182,7 +192,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -217,7 +230,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundTeacher)));
 
@@ -237,7 +253,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teachers:read")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -251,7 +270,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:read")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -274,7 +296,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/Teachers/ca238442-ce51-450d-a474-2e36872abe05")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:read")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -295,7 +320,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:update")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(teacherModel)));
 
@@ -320,7 +348,10 @@ public class TeacherControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ca238442-ce51-450d-a474-2e36872abe05")
-                .with(jwt().authorities(new SimpleGrantedAuthority("teacher:delete"))));
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build())));
 
         // validation
         result.andExpect(status().isNoContent());

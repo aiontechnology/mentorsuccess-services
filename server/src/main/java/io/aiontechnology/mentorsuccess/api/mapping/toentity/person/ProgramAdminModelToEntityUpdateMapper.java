@@ -22,10 +22,12 @@ import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM_ADMIN;
 
@@ -35,7 +37,8 @@ import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM
  */
 @Component
 @RequiredArgsConstructor
-public class ProgramAdminModelToEntityUpdateMapper implements OneWayUpdateMapper<InboundProgramAdmin, SchoolPersonRole> {
+public class ProgramAdminModelToEntityUpdateMapper implements
+        OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> {
 
     /** Phone number formatting service */
     private final PhoneService phoneService;
@@ -43,14 +46,15 @@ public class ProgramAdminModelToEntityUpdateMapper implements OneWayUpdateMapper
     /**
      * Map the given {@link InboundProgramAdmin} ot the given {@link SchoolPersonRole}.
      *
-     * @param inboundProgramAdmin The {@link InboundProgramAdmin} to map.
+     * @param inputPair A pair containing an {@link InboundProgramAdmin} to map and the UUID of the user in the IDP.
      * @param role The {@link SchoolPersonRole} to map to.
      * @return The resulting {@link SchoolPersonRole}.
      */
     @Override
-    public Optional<SchoolPersonRole> map(InboundProgramAdmin inboundProgramAdmin, SchoolPersonRole role) {
+    public Optional<SchoolPersonRole> map(Pair<InboundProgramAdmin, UUID> inputPair,
+            SchoolPersonRole role) {
         Objects.requireNonNull(role);
-        return Optional.ofNullable(inboundProgramAdmin)
+        return Optional.ofNullable(inputPair.getLeft())
                 .map(p -> {
                     Person person = role.getPerson() != null ? role.getPerson() : new Person();
                     person.setFirstName(p.getFirstName());
@@ -59,6 +63,7 @@ public class ProgramAdminModelToEntityUpdateMapper implements OneWayUpdateMapper
                     person.setWorkPhone(phoneService.normalize(p.getWorkPhone()));
                     person.setCellPhone(phoneService.normalize(p.getCellPhone()));
 
+                    role.setIdpUserId(inputPair.getRight());
                     role.setPerson(person);
                     role.setIsActive(true);
                     role.setType(PROGRAM_ADMIN);

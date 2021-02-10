@@ -16,34 +16,29 @@
 
 package io.aiontechnology.mentorsuccess.security;
 
-import lombok.extern.slf4j.Slf4j;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.service.RoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author Whitney Hunter
- * @since 0.8.0
+ * @since 0.12.0
  */
 @Component
-@Slf4j
-public class CongitoGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
+@RequiredArgsConstructor
+public class UserClaimConverter implements Converter<Object, Optional<SchoolPersonRole>> {
 
-    private static final String COGNITO_GROUPS = "cognito:groups";
-    private static final String SPRING_AUTHORITIES = "authorities";
+    private final RoleService roleService;
 
     @Override
-    public Collection<GrantedAuthority> convert(Jwt jwt) {
-        log.info("--> MADE IT");
-        if (jwt.getClaims().containsKey(COGNITO_GROUPS)) {
-            log.info("--> CLAIMS FOUND");
-            jwt.getClaims().put(SPRING_AUTHORITIES, jwt.getClaims().get(COGNITO_GROUPS));
-        }
-        return Collections.emptyList();
+    public Optional<SchoolPersonRole> convert(Object username) {
+        UUID idpUserId = UUID.fromString((String) username);
+        return roleService.findRoleByIdpUserId(idpUserId);
     }
 
 }
