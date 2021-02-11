@@ -20,6 +20,7 @@ import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.util.SchoolUUIDMatcher;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
@@ -85,7 +86,7 @@ public class ProgramAdminAuthoritySetter implements BiFunction<Optional<SchoolPe
                     }
                     return authorities;
                 })
-                .orElseThrow(() -> new IllegalStateException("User in token does not match user in database"));
+                .orElseThrow(() -> new DisabledException("User in token does not match user in database"));
     }
 
 }
