@@ -27,6 +27,8 @@ dependencies {
 
     implementation 'com.amazonaws:aws-java-sdk-cognitoidp:1.11.943'
 
+    implementation 'org.apache.commons:commons-lang3'
+
 //    implementation 'org.flowable:flowable-spring-boot-starter:6.5.0'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-cache'

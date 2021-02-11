@@ -30,6 +30,7 @@ import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +60,7 @@ public class AwsService {
 
     private final AWSCognitoIdentityProvider awsCognitoIdentityProvider;
 
-    public InboundProgramAdmin createAwsUser(UUID schoolId, InboundProgramAdmin programAdmin) {
+    public Pair<InboundProgramAdmin, UUID> createAwsUser(UUID schoolId, InboundProgramAdmin programAdmin) {
 
         AdminCreateUserResult addUserResult = doCreateAwsUser(schoolId, programAdmin);
         log.debug("Sent add user request. Result: {}", addUserResult);
@@ -67,7 +68,7 @@ public class AwsService {
         AdminAddUserToGroupResult addUserToGroupResult = doAddAwsUserToGroup(programAdmin);
         log.debug("Sent add user to group request. Result: {}", addUserToGroupResult);
 
-        return programAdmin;
+        return Pair.of(programAdmin, UUID.fromString(addUserResult.getUser().getUsername()));
     }
 
     public InboundProgramAdmin updateAwsUser(InboundProgramAdmin programAdmin) {

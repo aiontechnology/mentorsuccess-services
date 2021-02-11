@@ -20,6 +20,7 @@ import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -30,4 +31,7 @@ import java.util.UUID;
  */
 @Repository
 public interface SchoolPersonRoleRepository extends CrudRepository<SchoolPersonRole, UUID> {
+
+    Optional<SchoolPersonRole> findByIdpUserId(UUID idpUserId);
+
 }

@@ -96,4 +96,7 @@ public class SchoolPersonRole {
     @Column
     private Boolean isActive;
 
+    @Column
+    private UUID idpUserId;
+
 }

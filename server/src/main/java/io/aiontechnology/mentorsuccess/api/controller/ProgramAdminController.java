@@ -30,6 +30,7 @@ import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -72,10 +73,10 @@ public class ProgramAdminController {
     private final EntityManager entityManager;
 
     /** A mapper between {@link InboundProgramAdmin ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
-    private final OneWayMapper<InboundProgramAdmin, SchoolPersonRole> programAdminMapper;
+    private final OneWayMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminMapper;
 
     /** An update mapper between {@link InboundProgramAdmin ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
-    private final OneWayUpdateMapper<InboundProgramAdmin, SchoolPersonRole> programAdminUpdateMapper;
+    private final OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminUpdateMapper;
 
     /** A HATEOAS assembler for {@link InboundProgramAdmin ProgramAdminModels}. */
     private final ProgramAdminModelAssembler programAdminModelAssembler;
@@ -167,7 +168,7 @@ public class ProgramAdminController {
             @RequestBody @Valid InboundProgramAdmin inboundProgramAdmin) {
         awsService.updateAwsUser(inboundProgramAdmin);
         return roleService.findRoleById(programAdminId)
-                .flatMap(role -> programAdminUpdateMapper.map(inboundProgramAdmin, role))
+                .flatMap(role -> programAdminUpdateMapper.map(Pair.of(inboundProgramAdmin, role.getIdpUserId()), role))
                 .map(roleService::updateRole)
                 .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
