@@ -18,7 +18,9 @@ package io.aiontechnology.mentorsuccess.security;
 
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
@@ -49,19 +51,31 @@ public class AuthoritiesGrantingFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         URI uri = URI.create(httpServletRequest.getRequestURI());
 
-        JwtAuthenticationToken auth = (JwtAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
-        Optional<SchoolPersonRole> roleSupplier = auth.getToken().getClaim("username");
-        BiFunction<Optional<SchoolPersonRole>, URI, List<GrantedAuthority>> authSetter =
-                auth.getToken().getClaim("cognito:groups");
-        List<GrantedAuthority> authorities = authSetter != null
-                ? authSetter.apply(roleSupplier, uri)
-                : Collections.emptyList();
-        log.debug("==> Set authorities: {}", authorities);
+        getJwtAuthenticationToken().ifPresent(auth -> {
+            Optional<SchoolPersonRole> roleSupplier = auth.getToken().getClaim("username");
+            BiFunction<Optional<SchoolPersonRole>, URI, List<GrantedAuthority>> authSetter =
+                    auth.getToken().getClaim("cognito:groups");
+            List<GrantedAuthority> authorities = authSetter != null
+                    ? authSetter.apply(roleSupplier, uri)
+                    : Collections.emptyList();
+            log.debug("==> Set authorities: {}", authorities);
 
-        JwtAuthenticationToken newAuth = new JwtAuthenticationToken(auth.getToken(), authorities, auth.getName());
-        SecurityContextHolder.getContext().setAuthentication(newAuth);
+            JwtAuthenticationToken newAuth = new JwtAuthenticationToken(auth.getToken(), authorities, auth.getName());
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+        });
 
         chain.doFilter(request, response);
+    }
+
+    private Optional<JwtAuthenticationToken> getJwtAuthenticationToken() {
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext != null) {
+            Authentication authentication = securityContext.getAuthentication();
+            if (authentication != null && authentication.getClass().isAssignableFrom(JwtAuthenticationToken.class)) {
+                return Optional.of((JwtAuthenticationToken) authentication);
+            }
+        }
+        return Optional.empty();
     }
 
 }

@@ -28,8 +28,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 /**
@@ -44,8 +42,6 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @Slf4j
 @RequiredArgsConstructor
 public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private static final String SPRING_AUTHORITIES = "authorities";
 
     private final CognitoClaimConverterService cognitoClaimConverterService;
 
