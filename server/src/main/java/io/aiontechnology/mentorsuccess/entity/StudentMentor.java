@@ -52,9 +52,6 @@ public class StudentMentor {
     @EqualsAndHashCode.Include
     private StudentMentorPK studentMentorPK = new StudentMentorPK();
 
-    @Column
-    private String time;
-
     /** The associated {@link Student}. */
     @MapsId("student_id")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})

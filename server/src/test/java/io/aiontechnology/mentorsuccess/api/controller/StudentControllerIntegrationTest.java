@@ -95,6 +95,8 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        String preferredTime = "PREFERRED";
+        String actualTime = "ACTUAL";
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         int preBehavioralAssessment = 1;
         int postBehavioralAssessment = 5;
@@ -104,6 +106,8 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withPreferredTime(preferredTime)
+                .withActualTime(actualTime)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withPreBehavioralAssessment(preBehavioralAssessment)
                 .withPostBehavioralAssessment(postBehavioralAssessment)
@@ -126,6 +130,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.grade", is(GRADE)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.preferredTime", is(preferredTime)))
+                .andExpect(jsonPath("$.actualTime", is(actualTime)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$.preBehavioralAssessment", is(preBehavioralAssessment)))
                 .andExpect(jsonPath("$.postBehavioralAssessment", is(postBehavioralAssessment)));
@@ -853,7 +859,6 @@ public class StudentControllerIntegrationTest {
                 .build();
         InboundStudentMentor inboundStudentMentor = InboundStudentMentor.builder()
                 .withUri(MENTOR_URI)
-                .withTime("Tuesdays")
                 .build();
 
         String FIRST_NAME = "FIRST_NAME";
@@ -907,8 +912,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.mentor.mentor.email", is("mark@mentor.com")))
                 .andExpect(jsonPath("$.mentor.mentor.workPhone", is("(360) 222-3333")))
                 .andExpect(jsonPath("$.mentor.mentor.cellPhone", is("(360) 444-5555")))
-                .andExpect(jsonPath("$.mentor.mentor._links.self[0].href", is(MENTOR_URI.toString())))
-                .andExpect(jsonPath("$.mentor.time", is("Tuesdays")));
+                .andExpect(jsonPath("$.mentor.mentor._links.self[0].href", is(MENTOR_URI.toString())));
     }
 
     @Test
@@ -917,7 +921,7 @@ public class StudentControllerIntegrationTest {
         final URI TEACHER_URI = URI.create(
                 "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
         final URI MENTOR_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a9");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -925,7 +929,6 @@ public class StudentControllerIntegrationTest {
                 .build();
         InboundStudentMentor inboundStudentMentor = InboundStudentMentor.builder()
                 .withUri(MENTOR_URI)
-                .withTime("1234567890123456789012345678901")
                 .build();
 
         String FIRST_NAME = "FIRST_NAME";
@@ -955,12 +958,12 @@ public class StudentControllerIntegrationTest {
                 .content(objectMapper.writeValueAsString(studentModel)));
 
         // validation
-        result.andExpect(status().isBadRequest())
+        result.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(1)))
-                .andExpect(jsonPath("$.error.['mentor.time']", is("The meeting time can not be longer than 30 characters")))
-                .andExpect(jsonPath("$.message", is("Validation failed")))
+                .andExpect(jsonPath("$.error.['Not found']", is("Unable to find specified mentor")))
+                .andExpect(jsonPath("$.message", is("Not found")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }
 
@@ -1058,7 +1061,6 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.mentor.mentor.firstName", is("Mark")))
                 .andExpect(jsonPath("$.mentor.mentor.lastName", is("Mentor")))
-                .andExpect(jsonPath("$.mentor.time", is("Whenever")))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
                 .andExpect(jsonPath("$.interests", hasItems("Cats", "Dogs")))

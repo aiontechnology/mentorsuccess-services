@@ -81,6 +81,7 @@ public class StudentEntityToModelMapper implements OneWayMapper<Student, Outboun
                         .withPreBehavioralAssessment(s.getPreBehavioralAssessment())
                         .withPostBehavioralAssessment(s.getPostBehavioralAssessment())
                         .withPreferredTime(s.getPreferredTime())
+                        .withActualTime(s.getActualTime())
                         .withStartDate(s.getStartDate())
                         .withInterests(getInterestModelToEntityMapper().map(s.getInterests()))
                         .withBehaviors(getStudentBehaviorEntityToModelMapper().map(s.getStudentBehaviors()))

@@ -56,6 +56,9 @@ public class InboundStudent {
     @Size(max = 30, message = "{student.preferredTime.size}")
     String preferredTime;
 
+    @Size(max = 30, message = "{student.actualTime.size}")
+    String actualTime;
+
     Date startDate;
 
     @NotNull(message = "{student.location.notNull}")

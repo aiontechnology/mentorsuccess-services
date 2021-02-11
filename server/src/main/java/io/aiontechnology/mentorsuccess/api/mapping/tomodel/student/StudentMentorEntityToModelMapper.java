@@ -43,7 +43,6 @@ public class StudentMentorEntityToModelMapper implements OneWayMapper<StudentMen
         return Optional.ofNullable(studentMentor)
                 .map(s -> OutboundStudentMentor.builder()
                         .withMentor(mentorEntityToModelMapper.map(s.getRole()).orElse(null))
-                        .withTime(s.getTime())
                         .build());
     }
 

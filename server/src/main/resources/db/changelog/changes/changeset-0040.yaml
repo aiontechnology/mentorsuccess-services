@@ -1,0 +1,33 @@
+# Copyright 2021 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 40
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: student
+            columns:
+              - column:
+                  name: actual_time
+                  type: varchar(30)
+        - sql:
+            dbms: '!h2'
+            sql: update student set actual_time = m.time from student_mentor m where student.id = m.student_id
+        - dropColumn:
+            tableName: student_mentor
+            columns:
+              - column:
+                  name: time
