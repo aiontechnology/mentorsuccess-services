@@ -22,6 +22,7 @@ import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.assembler.MentorModelAssembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole.FirstNameComparitor;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundMentor;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
 import io.aiontechnology.mentorsuccess.service.RoleService;
@@ -126,6 +127,7 @@ public class MentorController {
         session.enableFilter("roleType").setParameter("type", MENTOR.toString());
         return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
+                        .sorted(new FirstNameComparitor())
                         .map(role -> mentorModelAssembler.toModel(role, linkProvider))
                         .collect(Collectors.toList()))
                 .map(CollectionModel::of)
