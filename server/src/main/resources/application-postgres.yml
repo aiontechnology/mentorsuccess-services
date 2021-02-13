@@ -24,6 +24,15 @@ aws:
     region: us-west-2
     userPoolId: us-west-2_EBQBuK2yn
 
+flowable:
+  mail:
+    server:
+      host: email-smtp.us-west-2.amazonaws.com
+      port: 587
+      use-tls: true
+      username: AKIAZT32AHQI7UGKIW52
+      password: BC5bl/onDl8uX+MtWJt/uisPOcPWWcU9tvDpzTFMwoei
+
 spring:
   datasource:
     driverClassName: org.postgresql.Driver

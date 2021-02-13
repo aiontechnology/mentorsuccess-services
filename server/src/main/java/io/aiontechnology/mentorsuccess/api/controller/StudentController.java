@@ -24,11 +24,14 @@ import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudent;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import io.aiontechnology.mentorsuccess.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.flowable.engine.RuntimeService;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,11 +50,14 @@ import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.http.HttpStatus.CREATED;
 
 /**
  * Controller that vends a REST interface for dealing with students.
@@ -78,6 +84,7 @@ public class StudentController {
 
     /** Service with business logic for students */
     private final StudentService studentService;
+
     /** {@link LinkProvider} implementation for schools. */
     private final LinkProvider<OutboundStudent, Student> linkProvider = (studentModel, student) ->
             Arrays.asList(
@@ -85,7 +92,7 @@ public class StudentController {
             );
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @Transactional
     @PreAuthorize("hasAuthority('student:create')")
     public OutboundStudent createStudent(@PathVariable("schoolId") UUID schoolId,
