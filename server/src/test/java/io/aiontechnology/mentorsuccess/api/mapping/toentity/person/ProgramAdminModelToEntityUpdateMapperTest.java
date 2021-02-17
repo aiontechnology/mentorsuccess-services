@@ -19,9 +19,11 @@ package io.aiontechnology.mentorsuccess.api.mapping.toentity.person;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,7 +58,8 @@ public class ProgramAdminModelToEntityUpdateMapperTest {
                 new ProgramAdminModelToEntityUpdateMapper(new PhoneService());
 
         // execute the SUT
-        Optional<SchoolPersonRole> result = programAdminModelToEntityUpdateMapper.map(inboundProgramAdmin, schoolPersonRole);
+        Optional<SchoolPersonRole> result = programAdminModelToEntityUpdateMapper
+                .map(Pair.of(inboundProgramAdmin, UUID.randomUUID()), schoolPersonRole);
 
         // validation
         assertThat(result).isNotEmpty();
@@ -66,21 +69,6 @@ public class ProgramAdminModelToEntityUpdateMapperTest {
         assertThat(result.get().getPerson().getWorkPhone()).isEqualTo(workPhone);
         assertThat(result.get().getPerson().getCellPhone()).isEqualTo(cellPhone);
         assertThat(result.get().getPerson().getEmail()).isEqualTo(email);
-    }
-
-    @Test
-    void testNull() throws Exception {
-        // setup the fixture
-        SchoolPersonRole schoolPersonRole = new SchoolPersonRole();
-
-        ProgramAdminModelToEntityUpdateMapper programAdminModelToEntityUpdateMapper =
-                new ProgramAdminModelToEntityUpdateMapper(new PhoneService());
-
-        // execute the SUT
-        Optional<SchoolPersonRole> result = programAdminModelToEntityUpdateMapper.map(null, schoolPersonRole);
-
-        // validation
-        assertThat(result).isEmpty();
     }
 
 }

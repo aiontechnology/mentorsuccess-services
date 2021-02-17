@@ -31,6 +31,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -106,7 +107,7 @@ public class School {
     /** The collection of {@link Student Students} associated with the school. */
     @ToString.Exclude
     @OneToMany(mappedBy = "school", cascade = ALL)
-    @Where(clause = "is_active = true")
+    @OrderBy("lastName")
     private Collection<Student> students;
 
     /**

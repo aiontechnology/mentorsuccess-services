@@ -68,11 +68,13 @@ import io.aiontechnology.mentorsuccess.service.InterestService;
 import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
 import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import io.aiontechnology.mentorsuccess.service.PhonogramService;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -281,7 +283,8 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public OneWayMapper<InboundProgramAdmin, SchoolPersonRole> programAdminModelToEntityMapper(OneWayUpdateMapper<InboundProgramAdmin, SchoolPersonRole> mapper) {
+    public OneWayMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminModelToEntityMapper(
+            OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
     }
 

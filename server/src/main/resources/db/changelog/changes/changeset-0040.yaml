@@ -12,21 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-aws:
-  cognito:
-    clientId: clientId
-    clientSecret: clientSecret
-    region: us-west-2
-    userPoolId: us-west-2_EBQBuK2yn
-
-addUserToGroupResultlogging:
-  level:
-    io.aiontechnology.mentorsuccess: debug
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: debug
-    org.springframework.security: debug
-
-spring:
-  datasource:
-    driverClassName: org.postgresql.Driver
-    username: postgres
+databaseChangeLog:
+  - changeSet:
+      id: 40
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: student
+            columns:
+              - column:
+                  name: actual_time
+                  type: varchar(30)
+        - sql:
+            dbms: '!h2'
+            sql: update student set actual_time = m.time from student_mentor m where student.id = m.student_id
+        - dropColumn:
+            tableName: student_mentor
+            columns:
+              - column:
+                  name: time

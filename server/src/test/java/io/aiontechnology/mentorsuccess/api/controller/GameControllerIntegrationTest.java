@@ -19,10 +19,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
+import io.aiontechnology.mentorsuccess.security.SystemAdminAuthoritySetter;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -83,7 +84,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -110,7 +114,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -137,7 +144,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -166,7 +176,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(inboundGame)));
 
@@ -194,7 +207,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:create")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(game)));
 
@@ -218,7 +234,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/games")
-                .with(jwt().authorities(new SimpleGrantedAuthority("games:read")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -234,7 +253,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:read")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -258,7 +280,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(get("/api/v1/games/d53af381-d524-40f7-8df9-3e808c9ad46b")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:read")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON));
 
         // validation
@@ -278,7 +303,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:update")))
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedGame)));
 
@@ -302,7 +330,10 @@ public class GameControllerIntegrationTest {
 
         // execute the SUT
         ResultActions result = mvc.perform(delete("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
-                .with(jwt().authorities(new SimpleGrantedAuthority("game:delete"))));
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build())));
 
         // validation
         result.andExpect(status().isNoContent());

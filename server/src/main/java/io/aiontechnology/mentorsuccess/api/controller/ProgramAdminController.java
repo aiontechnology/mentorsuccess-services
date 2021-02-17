@@ -25,10 +25,12 @@ import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundProgramAdmin;
+import io.aiontechnology.mentorsuccess.service.AwsService;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.hibernate.Session;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
@@ -65,14 +67,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class ProgramAdminController {
 
+    private final AwsService awsService;
+
     /** The JPA entity manager */
     private final EntityManager entityManager;
 
     /** A mapper between {@link InboundProgramAdmin ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
-    private final OneWayMapper<InboundProgramAdmin, SchoolPersonRole> programAdminMapper;
+    private final OneWayMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminMapper;
 
     /** An update mapper between {@link InboundProgramAdmin ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
-    private final OneWayUpdateMapper<InboundProgramAdmin, SchoolPersonRole> programAdminUpdateMapper;
+    private final OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminUpdateMapper;
 
     /** A HATEOAS assembler for {@link InboundProgramAdmin ProgramAdminModels}. */
     private final ProgramAdminModelAssembler programAdminModelAssembler;
@@ -103,6 +107,7 @@ public class ProgramAdminController {
         log.debug("Creating program administrator: {}", inboundProgramAdmin);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(inboundProgramAdmin)
+                        .map(pa -> awsService.createAwsUser(schoolId, pa))
                         .flatMap(programAdminMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
@@ -161,8 +166,9 @@ public class ProgramAdminController {
     public OutboundProgramAdmin updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("programAdminId") UUID programAdminId,
             @RequestBody @Valid InboundProgramAdmin inboundProgramAdmin) {
+        awsService.updateAwsUser(inboundProgramAdmin);
         return roleService.findRoleById(programAdminId)
-                .flatMap(role -> programAdminUpdateMapper.map(inboundProgramAdmin, role))
+                .flatMap(role -> programAdminUpdateMapper.map(Pair.of(inboundProgramAdmin, role.getIdpUserId()), role))
                 .map(roleService::updateRole)
                 .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
@@ -180,6 +186,7 @@ public class ProgramAdminController {
     public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("programAdminId") UUID programAdminId) {
         log.debug("Deactivating personnel");
         roleService.findRoleById(programAdminId)
+                .map(awsService::removeAwsUser)
                 .ifPresent(roleService::deactivateRole);
     }
 

@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Aion Technology LLC
+# Copyright 2021 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-aws:
-  cognito:
-    clientId: clientId
-    clientSecret: clientSecret
-    region: us-west-2
-    userPoolId: us-west-2_EBQBuK2yn
-
-logging:
-  level:
-    io.aiontechnology.mentorsuccess: DEBUG
-
-spring:
-  datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-  jpa:
-    show-sql: true
+databaseChangeLog:
+  - changeSet:
+      id: 41
+      author: whitney
+      changes:
+        - createIndex:
+            indexName: idx_active_school_student
+            clustered: false
+            unique: false
+            tableName: student
+            columns:
+              - column:
+                  descending: true
+                  name: school_id
+              - column:
+                  descending: false
+                  name: is_active

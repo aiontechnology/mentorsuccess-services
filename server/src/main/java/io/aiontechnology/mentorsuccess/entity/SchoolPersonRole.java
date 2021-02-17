@@ -32,6 +32,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.util.Comparator;
 import java.util.UUID;
 
 /**
@@ -95,5 +96,17 @@ public class SchoolPersonRole {
     /** Is the role active? */
     @Column
     private Boolean isActive;
+
+    @Column
+    private UUID idpUserId;
+
+    public static class FirstNameComparitor implements Comparator<SchoolPersonRole> {
+
+        @Override
+        public int compare(SchoolPersonRole role1, SchoolPersonRole role2) {
+            return role1.getPerson().getFirstName().compareTo(role2.getPerson().getFirstName());
+        }
+
+    }
 
 }

@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Aion Technology LLC
+# Copyright 2021 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-aws:
-  cognito:
-    clientId: clientId
-    clientSecret: clientSecret
-    region: us-west-2
-    userPoolId: us-west-2_EBQBuK2yn
-
-logging:
-  level:
-    io.aiontechnology.mentorsuccess: DEBUG
-
-spring:
-  datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:testdb
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-  jpa:
-    show-sql: true
+databaseChangeLog:
+  - changeSet:
+      id: 39
+      author: whitney
+      changes:
+        - sql:
+            sql: update school_person_role set location = 'OFFLINE' where type = 'MENTOR' and location is null

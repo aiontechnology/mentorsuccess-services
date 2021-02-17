@@ -72,6 +72,10 @@ public class RoleService {
         return schoolPersonRoleRepository.findById(id);
     }
 
+    public Optional<SchoolPersonRole> findRoleByIdpUserId(UUID idpUserId) {
+        return schoolPersonRoleRepository.findByIdpUserId(idpUserId);
+    }
+
     /**
      * Update the given {@link SchoolPersonRole} in the database.
      *

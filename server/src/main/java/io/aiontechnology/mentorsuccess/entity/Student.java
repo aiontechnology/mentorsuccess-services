@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,6 +100,9 @@ public class Student {
 
     @Column
     private String preferredTime;
+
+    @Column
+    private String actualTime;
 
     @Column
     private Date startDate;

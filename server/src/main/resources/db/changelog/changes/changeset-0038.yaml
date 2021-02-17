@@ -12,21 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-aws:
-  cognito:
-    clientId: clientId
-    clientSecret: clientSecret
-    region: us-west-2
-    userPoolId: us-west-2_EBQBuK2yn
-
-addUserToGroupResultlogging:
-  level:
-    io.aiontechnology.mentorsuccess: debug
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: debug
-    org.springframework.security: debug
-
-spring:
-  datasource:
-    driverClassName: org.postgresql.Driver
-    username: postgres
+databaseChangeLog:
+  - changeSet:
+      id: 38
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: school_person_role
+            columns:
+              - column:
+                  name: idp_user_id
+                  type: uuid
+        - createIndex:
+            indexName: idx_idp_user_id
+            clustered: false
+            unique: true
+            tableName: school_person_role
+            columns:
+              - column:
+                  descending: true
+                  name: idp_user_id

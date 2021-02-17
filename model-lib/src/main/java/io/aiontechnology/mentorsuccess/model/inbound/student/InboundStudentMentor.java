@@ -19,7 +19,6 @@ package io.aiontechnology.mentorsuccess.model.inbound.student;
 import lombok.Builder;
 import lombok.Value;
 
-import javax.validation.constraints.Size;
 import java.net.URI;
 
 /**
@@ -31,8 +30,5 @@ import java.net.URI;
 public class InboundStudentMentor {
 
     URI uri;
-
-    @Size(max = 30, message = "{studentmentor.meetingTime.size}")
-    String time;
 
 }

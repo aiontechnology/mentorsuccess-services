@@ -116,6 +116,7 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
                     student.setLastName(s.getLastName());
                     student.setGrade(s.getGrade());
                     student.setPreferredTime(s.getPreferredTime());
+                    student.setActualTime(s.getActualTime());
                     student.setStartDate(s.getStartDate());
                     student.setLocation(s.getLocation());
                     student.setIsMediaReleaseSigned(s.getMediaReleaseSigned());
