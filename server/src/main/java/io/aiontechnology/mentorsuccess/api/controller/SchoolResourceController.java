@@ -1,0 +1,93 @@
+/*
+ * Copyright 2021 Aion Technology LLC
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+package io.aiontechnology.mentorsuccess.api.controller;
+
+import io.aiontechnology.atlas.mapping.OneWayMapper;
+import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
+import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
+import io.aiontechnology.mentorsuccess.service.BookService;
+import io.aiontechnology.mentorsuccess.service.SchoolResourceService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
+/**
+ * @author Whitney Hunter
+ * @since 1.1.0
+ */
+@RestController
+@RequestMapping("/api/v1/schools/{schoolId}")
+@RequiredArgsConstructor
+@Slf4j
+public class SchoolResourceController {
+
+    private final BookModelAssembler bookModelAssembler;
+
+    private final BookService bookService;
+
+    /** Service with business logic for school resources */
+    private final SchoolResourceService schoolResourceService;
+
+    @GetMapping("/books")
+    public CollectionModel<OutboundBook> getSchoolBooks(@PathVariable("schoolId") UUID schoolId) {
+        var books = StreamSupport.stream(schoolResourceService.getBooksForSchool(schoolId).spliterator(), false)
+                .map(s -> bookModelAssembler.toModel(s, bookLinkProvider))
+                .collect(Collectors.toList());
+        return CollectionModel.of(books);
+    }
+
+    @PutMapping("/books")
+    public CollectionModel<OutboundBook> setSchoolBooks(@PathVariable("schoolId") UUID schoolId,
+            @RequestBody Collection<UUID> bookUUIDs) {
+        List<Book> books = bookUUIDs.stream()
+                .map(bookService::findBookById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        List<OutboundBook> outboundBooks =
+                StreamSupport.stream(schoolResourceService.setBooksForSchool(schoolId, books).spliterator(), false)
+                        .map(bookModelAssembler::toModel)
+                        .collect(Collectors.toList());
+        return CollectionModel.of(outboundBooks);
+    }
+
+    /** {@link LinkProvider} implementation for books. */
+    private final LinkProvider<OutboundBook, Book> bookLinkProvider = (bookModel, book) ->
+            Arrays.asList(
+                    linkTo(BookController.class).slash(book.getId()).withSelfRel()
+            );
+
+}

@@ -72,6 +72,7 @@ public class SchoolController {
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
+
     /** {@link LinkProvider} implementation for schools. */
     private final LinkProvider<OutboundSchool, School> linkProvider = (schoolModel, school) ->
             Arrays.asList(

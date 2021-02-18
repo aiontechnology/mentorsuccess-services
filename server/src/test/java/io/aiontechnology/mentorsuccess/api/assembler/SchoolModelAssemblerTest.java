@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,8 @@ public class SchoolModelAssemblerTest {
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
-        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive,
+                Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         SchoolModelAssembler assembler = new SchoolModelAssembler(
                 new SchoolEntityToModelMapper(new AddressEntityToModelMapper(), new PhoneService()), new LinkHelper<>());
@@ -89,7 +90,8 @@ public class SchoolModelAssemblerTest {
         String district = "DISTRICT";
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
-        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+        School school = new School(id, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive,
+                Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         LinkProvider<OutboundSchool, School> linkProvider = (schoolModel, s) ->
                 Arrays.asList(
