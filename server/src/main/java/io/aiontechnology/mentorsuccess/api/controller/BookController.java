@@ -73,6 +73,7 @@ public class BookController {
 
     /** A HATEOAS assembler for {@link OutboundBook BookModels}. */
     private final BookModelAssembler bookModelAssembler;
+
     /** {@link LinkProvider} implementation for books. */
     private final LinkProvider<OutboundBook, Book> linkProvider = (bookModel, book) ->
             Arrays.asList(

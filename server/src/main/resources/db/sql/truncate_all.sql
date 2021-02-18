@@ -1,4 +1,4 @@
--- Copyright 2020 Aion Technology LLC
+-- Copyright 2020-2021 Aion Technology LLC
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ truncate book_interest cascade;
 truncate book_leadershipskill cascade;
 truncate book_leadershiptrait cascade;
 truncate book_phonogram cascade;
-truncate databasechangelog cascade;
-truncate databasechangeloglock cascade;
+-- truncate databasechangelog cascade;
+-- truncate databasechangeloglock cascade;
 truncate game cascade;
 truncate game_activityfocus cascade;
 truncate game_leadershipskill cascade;
@@ -31,6 +31,7 @@ truncate leadership_trait cascade;
 truncate person cascade;
 truncate phonogram cascade;
 truncate school cascade;
+truncate school_book cascade;
 truncate school_person_role cascade;
 truncate student cascade;
 truncate student_behavior cascade;

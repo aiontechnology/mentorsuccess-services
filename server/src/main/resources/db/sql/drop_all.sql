@@ -1,4 +1,4 @@
--- Copyright 2020 Aion Technology LLC
+-- Copyright 2020-2021 Aion Technology LLC
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@ drop table if exists leadership_trait cascade;
 drop table if exists person cascade;
 drop table if exists phonogram cascade;
 drop table if exists school cascade;
+drop table if exists school_book cascade;
 drop table if exists school_person_role cascade;
 drop table if exists student cascade;
 drop table if exists student_behavior cascade;
