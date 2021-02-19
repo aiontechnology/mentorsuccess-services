@@ -39,13 +39,13 @@ public class SchoolResourceService {
     /** The repository used to interact with the database */
     private final SchoolRepository schoolRepository;
 
-    @Transactional
     public Iterable<Book> getBooksForSchool(UUID schoolId) {
         return schoolRepository.findById(schoolId)
                 .map(School::getBooks)
                 .orElse(Collections.emptyList());
     }
 
+    @Transactional
     public Iterable<Book> setBooksForSchool(UUID schoolId, Collection<Book> books) {
         return schoolRepository.findById(schoolId)
                 .map(school -> {
