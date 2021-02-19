@@ -16,13 +16,15 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
-import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.entity.Book;
-import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
+import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
 import io.aiontechnology.mentorsuccess.service.BookService;
+import io.aiontechnology.mentorsuccess.service.GameService;
 import io.aiontechnology.mentorsuccess.service.SchoolResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +60,10 @@ public class SchoolResourceController {
 
     private final BookService bookService;
 
+    private final GameModelAssembler gameModelAssembler;
+
+    private final GameService gameService;
+
     /** Service with business logic for school resources */
     private final SchoolResourceService schoolResourceService;
 
@@ -84,10 +90,39 @@ public class SchoolResourceController {
         return CollectionModel.of(outboundBooks);
     }
 
+    @GetMapping("/games")
+    public CollectionModel<OutboundGame> getSchoolGames(@PathVariable("schoolId") UUID schoolId) {
+        var games = StreamSupport.stream(schoolResourceService.getGamesForSchool(schoolId).spliterator(), false)
+                .map(s -> gameModelAssembler.toModel(s, gameLinkProvider))
+                .collect(Collectors.toList());
+        return CollectionModel.of(games);
+    }
+
+    @PutMapping("/games")
+    public CollectionModel<OutboundGame> setSchoolGames(@PathVariable("schoolId") UUID schoolId,
+            @RequestBody Collection<UUID> gameUUIDs) {
+        List<Game> games = gameUUIDs.stream()
+                .map(gameService::findGameById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+        List<OutboundGame> outboundGames =
+                StreamSupport.stream(schoolResourceService.setGamessForSchool(schoolId, games).spliterator(), false)
+                        .map(gameModelAssembler::toModel)
+                        .collect(Collectors.toList());
+        return CollectionModel.of(outboundGames);
+    }
+
     /** {@link LinkProvider} implementation for books. */
     private final LinkProvider<OutboundBook, Book> bookLinkProvider = (bookModel, book) ->
             Arrays.asList(
                     linkTo(BookController.class).slash(book.getId()).withSelfRel()
+            );
+
+    /** {@link LinkProvider} implementation for games. */
+    private final LinkProvider<OutboundGame, Game> gameLinkProvider = (gameModel, game) ->
+            Arrays.asList(
+                    linkTo(GameController.class).slash(game.getId()).withSelfRel()
             );
 
 }
