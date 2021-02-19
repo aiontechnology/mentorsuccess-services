@@ -101,4 +101,48 @@ public class SchoolResourceControllerIntegrationTest {
                         hasItems("TITLE1", "TITLE2")));
     }
 
+    @Test
+    void testGetSchoolGames() throws Exception {
+        // setup the fixture
+
+        // execute the SUT
+        ResultActions result = mvc.perform(get("/api/v1/schools/b61cbdc4-b37e-429d-b33a-108f9753a073/games")
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build())));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
+                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                        hasItems("GAME1", "GAME2")));
+    }
+
+    @Test
+    void testSetSchoolGames() throws Exception {
+        // setup the fixture
+        List<String> gameUUIDs = Arrays.asList("81b4fd55-0f1d-45d9-9625-9bc3a367fe04",
+                "98866d5e-8dd8-433d-bdb5-dbd7fe8dce81");
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/games")
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(gameUUIDs)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
+                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                        hasItems("GAME1", "GAME2")));
+    }
+
 }

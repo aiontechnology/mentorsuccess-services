@@ -124,6 +124,16 @@ public class School {
     )
     private Collection<Book> books;
 
+    /** The collection of {@link Game games} associated with the school */
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "school_game",
+            joinColumns = {@JoinColumn(name = "school_id")},
+            inverseJoinColumns = {@JoinColumn(name = "game_id")}
+    )
+    private Collection<Game> games;
+
     /**
      * Add a {@link SchoolPersonRole} to the school.
      *

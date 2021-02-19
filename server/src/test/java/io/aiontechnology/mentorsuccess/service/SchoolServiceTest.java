@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.Student;
@@ -50,6 +51,7 @@ public class SchoolServiceTest {
     private static final Collection<SchoolPersonRole> ROLES = Collections.EMPTY_LIST;
     private static final Collection<Student> STUDENTS = Collections.EMPTY_LIST;
     private static final Collection<Book> BOOKS = Collections.EMPTY_LIST;
+    private static final Collection<Game> GAMES = Collections.EMPTY_LIST;
 
     @Test
     void shouldCreateASchool() {
@@ -161,7 +163,7 @@ public class SchoolServiceTest {
 
     private School generateSchool(UUID id) {
         return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, IS_ACTIVE,
-                ROLES, STUDENTS, BOOKS);
+                ROLES, STUDENTS, BOOKS, GAMES);
     }
 
 }

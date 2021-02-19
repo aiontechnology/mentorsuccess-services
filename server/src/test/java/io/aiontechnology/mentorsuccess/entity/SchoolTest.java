@@ -44,7 +44,7 @@ public class SchoolTest {
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
         School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive,
-                Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+                Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
 
         // execute the SUT
         entityManager.persist(school);

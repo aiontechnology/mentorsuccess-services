@@ -20,3 +20,9 @@ INSERT INTO book (id, title, author, grade_level, is_active, location) VALUES ('
 
 INSERT INTO school_book(school_id, book_id) VALUES ('b61cbdc4-b37e-429d-b33a-108f9753a073', 'f53af381-d524-40f7-8df9-3e808c9ad46b');
 INSERT INTO school_book(school_id, book_id) VALUES ('b61cbdc4-b37e-429d-b33a-108f9753a073', '6e4da9bd-5387-45dc-9714-fb96387da770');
+
+INSERT INTO game (id, name, grade1, grade2, is_active, location) VALUES ('81b4fd55-0f1d-45d9-9625-9bc3a367fe04', 'GAME1', 1, 2, true, 'OFFLINE');
+INSERT INTO game (id, name, grade1, grade2, is_active, location) VALUES ('98866d5e-8dd8-433d-bdb5-dbd7fe8dce81', 'GAME2', 1, 2, true, 'OFFLINE');
+
+INSERT INTO school_game(school_id, game_id) VALUES ('b61cbdc4-b37e-429d-b33a-108f9753a073', '81b4fd55-0f1d-45d9-9625-9bc3a367fe04');
+INSERT INTO school_game(school_id, game_id) VALUES ('b61cbdc4-b37e-429d-b33a-108f9753a073', '98866d5e-8dd8-433d-bdb5-dbd7fe8dce81');

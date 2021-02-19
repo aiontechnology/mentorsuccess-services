@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,12 +46,28 @@ public class SchoolResourceService {
                 .orElse(Collections.emptyList());
     }
 
+    public Iterable<Game> getGamesForSchool(UUID schoolId) {
+        return schoolRepository.findById(schoolId)
+                .map(School::getGames)
+                .orElse(Collections.emptyList());
+    }
+
     @Transactional
     public Iterable<Book> setBooksForSchool(UUID schoolId, Collection<Book> books) {
         return schoolRepository.findById(schoolId)
                 .map(school -> {
                     school.setBooks(books);
                     return school.getBooks();
+                })
+                .orElseThrow(() -> new NotFoundException("Unable to find school with id: " + schoolId));
+    }
+
+    @Transactional
+    public Iterable<Game> setGamessForSchool(UUID schoolId, Collection<Game> games) {
+        return schoolRepository.findById(schoolId)
+                .map(school -> {
+                    school.setGames(games);
+                    return school.getGames();
                 })
                 .orElseThrow(() -> new NotFoundException("Unable to find school with id: " + schoolId));
     }
