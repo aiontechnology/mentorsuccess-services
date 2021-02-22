@@ -29,6 +29,7 @@ import io.aiontechnology.mentorsuccess.service.SchoolResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -68,6 +69,7 @@ public class SchoolResourceController {
     private final SchoolResourceService schoolResourceService;
 
     @GetMapping("/books")
+    @PreAuthorize("hasAuthority('school:read')")
     public CollectionModel<OutboundBook> getSchoolBooks(@PathVariable("schoolId") UUID schoolId) {
         var books = StreamSupport.stream(schoolResourceService.getBooksForSchool(schoolId).spliterator(), false)
                 .map(s -> bookModelAssembler.toModel(s, bookLinkProvider))
@@ -76,6 +78,7 @@ public class SchoolResourceController {
     }
 
     @PutMapping("/books")
+    @PreAuthorize("hasAuthority('school:update')")
     public CollectionModel<OutboundBook> setSchoolBooks(@PathVariable("schoolId") UUID schoolId,
             @RequestBody Collection<UUID> bookUUIDs) {
         List<Book> books = bookUUIDs.stream()
@@ -91,6 +94,7 @@ public class SchoolResourceController {
     }
 
     @GetMapping("/games")
+    @PreAuthorize("hasAuthority('school:read')")
     public CollectionModel<OutboundGame> getSchoolGames(@PathVariable("schoolId") UUID schoolId) {
         var games = StreamSupport.stream(schoolResourceService.getGamesForSchool(schoolId).spliterator(), false)
                 .map(s -> gameModelAssembler.toModel(s, gameLinkProvider))
@@ -99,6 +103,7 @@ public class SchoolResourceController {
     }
 
     @PutMapping("/games")
+    @PreAuthorize("hasAuthority('school:update')")
     public CollectionModel<OutboundGame> setSchoolGames(@PathVariable("schoolId") UUID schoolId,
             @RequestBody Collection<UUID> gameUUIDs) {
         List<Game> games = gameUUIDs.stream()
