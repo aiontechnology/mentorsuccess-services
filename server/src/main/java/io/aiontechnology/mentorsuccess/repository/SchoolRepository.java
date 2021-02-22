@@ -30,4 +30,12 @@ import java.util.UUID;
  */
 @Repository
 public interface SchoolRepository extends CrudRepository<School, UUID> {
+
+    /**
+     * Find all {@link School Schools} in ascending order by name.
+     *
+     * @return The {@link School Schools}.
+     */
+    Iterable<School> findAllByOrderByNameAsc();
+
 }

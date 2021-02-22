@@ -115,7 +115,7 @@ public class SchoolServiceTest {
         School school2 = generateSchool(UUID.randomUUID());
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
-        when(schoolRepository.findAll()).thenReturn(Arrays.asList(school1, school2));
+        when(schoolRepository.findAllByOrderByNameAsc()).thenReturn(Arrays.asList(school1, school2));
 
         SchoolService schoolService = new SchoolService(schoolRepository);
 

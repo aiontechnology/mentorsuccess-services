@@ -78,7 +78,7 @@ public class SchoolService {
      * @return An iterable of all {@link School Schools}.
      */
     public Iterable<School> getAllSchools() {
-        return schoolRepository.findAll();
+        return schoolRepository.findAllByOrderByNameAsc();
     }
 
     /**
