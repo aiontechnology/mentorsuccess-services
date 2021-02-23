@@ -41,9 +41,6 @@ public class OutboundContact {
     /** The contact's email. */
     String email;
 
-    /** The contact's work phone number. */
-    String workPhone;
-
     /** The contact's cell phone number. */
     String cellPhone;
 

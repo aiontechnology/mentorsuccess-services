@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public class ContactValidator implements ConstraintValidator<Contact, InboundCon
 
     @Override
     public boolean isValid(InboundContact contact, ConstraintValidatorContext context) {
-        return contact.getEmail() != null || contact.getCellPhone() != null || contact.getWorkPhone() != null;
+        return contact.getEmail() != null || contact.getCellPhone() != null;
     }
 
 }

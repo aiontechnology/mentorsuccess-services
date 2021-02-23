@@ -55,10 +55,6 @@ public class InboundContact {
     @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{contact.email.invalid}")
     String email;
 
-    /** The contact's work phone number. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.workPhone.invalid}")
-    String workPhone;
-
     /** The contact's cell phone number. */
     @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.cellPhone.invalid}")
     String cellPhone;
