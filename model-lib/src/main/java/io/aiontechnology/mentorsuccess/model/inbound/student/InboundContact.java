@@ -55,14 +55,14 @@ public class InboundContact {
     @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{contact.email.invalid}")
     String email;
 
-    /** The contact's cell phone number. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.cellPhone.invalid}")
-    String cellPhone;
+    /** The contact's phone. */
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.phone.invalid}")
+    String phone;
 
     @NotNull(message = "{contact.isEmergencyContact.notNull}")
     Boolean isEmergencyContact;
 
-    @EnumNamePattern(regexp = "CELLPHONE|WORKPHONE|EMAIL", message = "{contact.preferredContactMethod.invalid}")
+    @EnumNamePattern(regexp = "EITHER|EMAIL|PHONE", message = "{contact.preferredContactMethod.invalid}")
     ContactMethod preferredContactMethod;
 
     @Size(max = 255, message = "{contact.comment.size}")

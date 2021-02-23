@@ -48,7 +48,7 @@ public class StudentPersonModelToEntityUpdateMapper implements OneWayUpdateMappe
                     InboundPerson inboundPerson = InboundPerson.builder()
                             .withFirstName(contactModel.getFirstName())
                             .withLastName(contactModel.getLastName())
-                            .withCellPhone(phoneService.normalize(contactModel.getCellPhone()))
+                            .withCellPhone(phoneService.normalize(contactModel.getPhone()))
                             .withEmail(contactModel.getEmail())
                             .build();
                     studentPersonRole.setPersonType(CONTACT);

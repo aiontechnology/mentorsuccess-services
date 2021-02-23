@@ -41,8 +41,8 @@ public class OutboundContact {
     /** The contact's email. */
     String email;
 
-    /** The contact's cell phone number. */
-    String cellPhone;
+    /** The contact's phone number. */
+    String phone;
 
     Boolean isEmergencyContact;
 

@@ -52,7 +52,7 @@ public class StudentPersonEntityToModelMapper implements OneWayMapper<StudentPer
                 .map(s -> OutboundContact.builder()
                         .withFirstName(s.getPerson().getFirstName())
                         .withLastName(s.getPerson().getLastName())
-                        .withCellPhone(phoneService.format(s.getPerson().getCellPhone()))
+                        .withPhone(phoneService.format(s.getPerson().getCellPhone()))
                         .withEmail(s.getPerson().getEmail())
                         .withLabel(s.getLabel())
                         .withIsEmergencyContact(s.getIsEmergencyContact())
