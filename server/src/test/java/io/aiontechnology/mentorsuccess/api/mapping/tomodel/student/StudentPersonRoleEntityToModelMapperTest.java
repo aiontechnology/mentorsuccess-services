@@ -63,7 +63,6 @@ public class StudentPersonRoleEntityToModelMapperTest {
         assertThat(result).isNotEmpty();
         assertThat(result.get().getFirstName()).isEqualTo(outboundPerson.getFirstName());
         assertThat(result.get().getLastName()).isEqualTo(outboundPerson.getLastName());
-        assertThat(result.get().getWorkPhone()).isEqualTo(outboundPerson.getWorkPhone());
         assertThat(result.get().getCellPhone()).isEqualTo(outboundPerson.getCellPhone());
         assertThat(result.get().getEmail()).isEqualTo(outboundPerson.getEmail());
         assertThat(result.get().getLabel()).isEqualTo(label);
