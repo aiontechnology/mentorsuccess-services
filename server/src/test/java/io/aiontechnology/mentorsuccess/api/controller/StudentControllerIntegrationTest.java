@@ -742,14 +742,14 @@ public class StudentControllerIntegrationTest {
         String CONTACT_FIRST_NAME = "CONTACT_FIRST_NAME";
         String CONTACT_LAST_NAME = "CONTACT_LAST_NAME";
         Boolean IS_EMERGENCY_CONTACT = false;
-        String cellPhone = "(123) 456-7890";
-        ContactMethod CONTACT_METHOD = ContactMethod.WORKPHONE;
+        String phone = "(123) 456-7890";
+        ContactMethod CONTACT_METHOD = ContactMethod.PHONE;
         InboundContact inboundContact = InboundContact.builder()
                 .withLabel(LABEL)
                 .withFirstName(CONTACT_FIRST_NAME)
                 .withLastName(CONTACT_LAST_NAME)
                 .withIsEmergencyContact(IS_EMERGENCY_CONTACT)
-                .withCellPhone(cellPhone)
+                .withPhone(phone)
                 .withPreferredContactMethod(CONTACT_METHOD)
                 .build();
 
@@ -785,7 +785,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.contacts[0].firstName", is(CONTACT_FIRST_NAME)))
                 .andExpect(jsonPath("$.contacts[0].lastName", is(CONTACT_LAST_NAME)))
                 .andExpect(jsonPath("$.contacts[0].isEmergencyContact", is(IS_EMERGENCY_CONTACT)))
-                .andExpect(jsonPath("$.contacts[0].cellPhone", is(cellPhone)))
+                .andExpect(jsonPath("$.contacts[0].phone", is(phone)))
                 .andExpect(jsonPath("$.contacts[0].preferredContactMethod", is(CONTACT_METHOD.toString())));
     }
 
@@ -1016,7 +1016,7 @@ public class StudentControllerIntegrationTest {
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
-        contact1.put("cellPhone", "(123) 456-7890");
+        contact1.put("phone", "(123) 456-7890");
 
         Map<String, Object> studentModel = new HashMap<>();
         studentModel.put("firstName", "NEW FIRST NAME");
@@ -1089,7 +1089,7 @@ public class StudentControllerIntegrationTest {
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
-        contact1.put("cellPhone", "(123) 456-7890");
+        contact1.put("phone", "(123) 456-7890");
 
         Map<String, Object> studentModel = new HashMap<>();
         studentModel.put("firstName", "NEW FIRST NAME");
@@ -1154,7 +1154,7 @@ public class StudentControllerIntegrationTest {
         contact1.put("firstName", "Peter");
         contact1.put("lastName", "Parent");
         contact1.put("isEmergencyContact", true);
-        contact1.put("cellPhone", "(123) 456-7890");
+        contact1.put("phone", "(123) 456-7890");
 
         Map<String, Object> studentModel = new HashMap<>();
         studentModel.put("firstName", "NEW FIRST NAME");

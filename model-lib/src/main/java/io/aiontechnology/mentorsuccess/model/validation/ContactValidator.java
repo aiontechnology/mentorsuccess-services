@@ -31,7 +31,7 @@ public class ContactValidator implements ConstraintValidator<Contact, InboundCon
 
     @Override
     public boolean isValid(InboundContact contact, ConstraintValidatorContext context) {
-        return contact.getEmail() != null || contact.getCellPhone() != null;
+        return contact.getEmail() != null || contact.getPhone() != null;
     }
 
 }
