@@ -19,6 +19,7 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
+import io.aiontechnology.mentorsuccess.api.mapping.toentity.misc.UriModelToBookMapper;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
@@ -37,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -59,11 +61,11 @@ public class SchoolResourceController {
 
     private final BookModelAssembler bookModelAssembler;
 
-    private final BookService bookService;
-
     private final GameModelAssembler gameModelAssembler;
 
     private final GameService gameService;
+
+    private final UriModelToBookMapper uriModelToBookMapper;
 
     /** Service with business logic for school resources */
     private final SchoolResourceService schoolResourceService;
@@ -80,9 +82,9 @@ public class SchoolResourceController {
     @PutMapping("/books")
     @PreAuthorize("hasAuthority('school:update')")
     public CollectionModel<OutboundBook> setSchoolBooks(@PathVariable("schoolId") UUID schoolId,
-            @RequestBody Collection<UUID> bookUUIDs) {
-        List<Book> books = bookUUIDs.stream()
-                .map(bookService::findBookById)
+            @RequestBody Collection<URI> bookURIs) {
+        List<Book> books = bookURIs.stream()
+                .map(u -> uriModelToBookMapper.map(u))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());

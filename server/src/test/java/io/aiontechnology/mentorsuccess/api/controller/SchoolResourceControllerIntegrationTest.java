@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -80,8 +81,9 @@ public class SchoolResourceControllerIntegrationTest {
     @Test
     void testSetSchoolBooks() throws Exception {
         // setup the fixture
-        List<String> bookUUIDs = Arrays.asList("f53af381-d524-40f7-8df9-3e808c9ad46b",
-                "6e4da9bd-5387-45dc-9714-fb96387da770");
+        List<URI> bookURIs = Arrays.asList(
+                URI.create("http://localhost:8080/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b"),
+                URI.create("http://localhost:8080/api/v1/books/6e4da9bd-5387-45dc-9714-fb96387da770"));
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/books")
@@ -90,7 +92,7 @@ public class SchoolResourceControllerIntegrationTest {
                         .header("test", "value")
                         .build()))
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(bookUUIDs)));
+                .content(objectMapper.writeValueAsString(bookURIs)));
 
         // validation
         result.andExpect(status().isOk())
