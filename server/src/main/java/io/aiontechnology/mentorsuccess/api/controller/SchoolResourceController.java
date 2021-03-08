@@ -20,12 +20,11 @@ import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
 import io.aiontechnology.mentorsuccess.api.mapping.toentity.misc.UriModelToBookMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.toentity.misc.UriModelToGameMapper;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
-import io.aiontechnology.mentorsuccess.service.BookService;
-import io.aiontechnology.mentorsuccess.service.GameService;
 import io.aiontechnology.mentorsuccess.service.SchoolResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -63,9 +62,9 @@ public class SchoolResourceController {
 
     private final GameModelAssembler gameModelAssembler;
 
-    private final GameService gameService;
-
     private final UriModelToBookMapper uriModelToBookMapper;
+
+    private final UriModelToGameMapper uriModelToGameMapper;
 
     /** Service with business logic for school resources */
     private final SchoolResourceService schoolResourceService;
@@ -107,9 +106,9 @@ public class SchoolResourceController {
     @PutMapping("/games")
     @PreAuthorize("hasAuthority('school:update')")
     public CollectionModel<OutboundGame> setSchoolGames(@PathVariable("schoolId") UUID schoolId,
-            @RequestBody Collection<UUID> gameUUIDs) {
-        List<Game> games = gameUUIDs.stream()
-                .map(gameService::findGameById)
+            @RequestBody Collection<URI> gameURIs) {
+        List<Game> games = gameURIs.stream()
+                .map(uriModelToGameMapper::map)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
