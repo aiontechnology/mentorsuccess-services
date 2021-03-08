@@ -32,6 +32,7 @@ drop table if exists person cascade;
 drop table if exists phonogram cascade;
 drop table if exists school cascade;
 drop table if exists school_book cascade;
+drop table if exists school_game cascade;
 drop table if exists school_person_role cascade;
 drop table if exists student cascade;
 drop table if exists student_behavior cascade;

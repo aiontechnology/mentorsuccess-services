@@ -32,6 +32,7 @@ truncate person cascade;
 truncate phonogram cascade;
 truncate school cascade;
 truncate school_book cascade;
+truncate school_game cascade;
 truncate school_person_role cascade;
 truncate student cascade;
 truncate student_behavior cascade;
