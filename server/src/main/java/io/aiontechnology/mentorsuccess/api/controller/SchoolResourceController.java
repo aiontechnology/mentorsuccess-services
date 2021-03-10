@@ -89,7 +89,7 @@ public class SchoolResourceController {
                 .collect(Collectors.toList());
         List<OutboundBook> outboundBooks =
                 StreamSupport.stream(schoolResourceService.setBooksForSchool(schoolId, books).spliterator(), false)
-                        .map(bookModelAssembler::toModel)
+                        .map(b -> bookModelAssembler.toModel(b, bookLinkProvider))
                         .collect(Collectors.toList());
         return CollectionModel.of(outboundBooks);
     }
@@ -114,7 +114,7 @@ public class SchoolResourceController {
                 .collect(Collectors.toList());
         List<OutboundGame> outboundGames =
                 StreamSupport.stream(schoolResourceService.setGamessForSchool(schoolId, games).spliterator(), false)
-                        .map(gameModelAssembler::toModel)
+                        .map(g -> gameModelAssembler.toModel(g, gameLinkProvider))
                         .collect(Collectors.toList());
         return CollectionModel.of(outboundGames);
     }
