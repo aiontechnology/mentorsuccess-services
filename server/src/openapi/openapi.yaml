@@ -21,7 +21,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: "0.3.1"
+  version: 1.1.0
 
 servers:
   - url: "https://lj6z99n04d.execute-api.us-west-2.amazonaws.com/mentorsuccess-test-service-deployment"
@@ -2302,6 +2302,404 @@ paths:
         type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/schools/{schoolId}"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "PUT"
+        type: "http"
+
+  # /api/v1/schools/{schoolId}/books -----------------------------------------------
+  /api/v1/schools/{schoolId}/books:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/books
+    options:
+      tags:
+        - school
+        - resources
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/books
+    get:
+      summary: Get all books for a school
+      description: Get a collection of all books for a school
+      tags:
+        - resource
+        - school
+      operationId: getAllBooksForSchool
+      responses:
+        200:
+          description: A collection of all books
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/books"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}/books
+    put:
+      summary: Update the set of books for a school
+      description: Update the books for a school with the given data
+      tags:
+        - school
+        - resource
+      operationId: updateSchoolBooks
+      requestBody:
+        description: The updated the books for a school
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: The new set of books
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/books"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "PUT"
+        type: "http"
+
+    # /api/v1/schools/{schoolId}/games -----------------------------------------------
+  /api/v1/schools/{schoolId}/games:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/games
+    options:
+      tags:
+        - school
+        - resources
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/games
+    get:
+      summary: Get all games for a school
+      description: Get a collection of all games for a school
+      tags:
+        - resource
+        - school
+      operationId: getAllGamesForSchool
+      responses:
+        200:
+          description: A collection of all games
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/games"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}/games
+    put:
+      summary: Update the set of games for a school
+      description: Update the games for a school with the given data
+      tags:
+        - school
+        - resource
+      operationId: updateSchoolGames
+      requestBody:
+        description: The updated the games for a school
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: The new set of games
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResultModelCollection'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/games"
         responses:
           200:
             statusCode: "200"

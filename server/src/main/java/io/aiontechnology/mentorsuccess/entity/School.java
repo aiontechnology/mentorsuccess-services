@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,10 +26,14 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.Where;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import java.util.Collection;
@@ -109,6 +113,26 @@ public class School {
     @OneToMany(mappedBy = "school", cascade = ALL)
     @OrderBy("lastName")
     private Collection<Student> students;
+
+    /** The collection of {@link Book books} associated with the school */
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "school_book",
+            joinColumns = {@JoinColumn(name = "school_id")},
+            inverseJoinColumns = {@JoinColumn(name = "book_id")}
+    )
+    private Collection<Book> books;
+
+    /** The collection of {@link Game games} associated with the school */
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "school_game",
+            joinColumns = {@JoinColumn(name = "school_id")},
+            inverseJoinColumns = {@JoinColumn(name = "game_id")}
+    )
+    private Collection<Game> games;
 
     /**
      * Add a {@link SchoolPersonRole} to the school.

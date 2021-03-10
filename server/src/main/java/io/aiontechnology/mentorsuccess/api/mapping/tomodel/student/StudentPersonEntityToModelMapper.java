@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,8 +52,7 @@ public class StudentPersonEntityToModelMapper implements OneWayMapper<StudentPer
                 .map(s -> OutboundContact.builder()
                         .withFirstName(s.getPerson().getFirstName())
                         .withLastName(s.getPerson().getLastName())
-                        .withWorkPhone(phoneService.format(s.getPerson().getWorkPhone()))
-                        .withCellPhone(phoneService.format(s.getPerson().getCellPhone()))
+                        .withPhone(phoneService.format(s.getPerson().getCellPhone()))
                         .withEmail(s.getPerson().getEmail())
                         .withLabel(s.getLabel())
                         .withIsEmergencyContact(s.getIsEmergencyContact())

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
+import io.aiontechnology.mentorsuccess.entity.Book;
+import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.Student;
@@ -48,6 +50,8 @@ public class SchoolServiceTest {
     private static final Boolean IS_ACTIVE = Boolean.TRUE;
     private static final Collection<SchoolPersonRole> ROLES = Collections.EMPTY_LIST;
     private static final Collection<Student> STUDENTS = Collections.EMPTY_LIST;
+    private static final Collection<Book> BOOKS = Collections.EMPTY_LIST;
+    private static final Collection<Game> GAMES = Collections.EMPTY_LIST;
 
     @Test
     void shouldCreateASchool() {
@@ -111,7 +115,7 @@ public class SchoolServiceTest {
         School school2 = generateSchool(UUID.randomUUID());
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
-        when(schoolRepository.findAll()).thenReturn(Arrays.asList(school1, school2));
+        when(schoolRepository.findAllByOrderByNameAsc()).thenReturn(Arrays.asList(school1, school2));
 
         SchoolService schoolService = new SchoolService(schoolRepository);
 
@@ -158,7 +162,8 @@ public class SchoolServiceTest {
     }
 
     private School generateSchool(UUID id) {
-        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, IS_ACTIVE, ROLES, STUDENTS);
+        return new School(id, NAME, STREET1, STREET2, CITY, STATE, ZIP, PHONE, DISTRICT, IS_PRIVATE, IS_ACTIVE,
+                ROLES, STUDENTS, BOOKS, GAMES);
     }
 
 }

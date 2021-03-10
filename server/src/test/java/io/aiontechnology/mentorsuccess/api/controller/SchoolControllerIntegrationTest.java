@@ -307,8 +307,9 @@ public class SchoolControllerIntegrationTest {
 
         // validation
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.schoolModelList.length()", is(1)))
-                .andExpect(jsonPath("$._embedded.schoolModelList[0].id", is("fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
+                .andExpect(jsonPath("$._embedded.schoolModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.schoolModelList[0].id", is("e96a7158-da3f-48ef-b37a-f2833957bcbd")))
+                .andExpect(jsonPath("$._embedded.schoolModelList[1].id", is("fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
     }
 
     @Test
@@ -327,7 +328,7 @@ public class SchoolControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is("fd03c21f-cd39-4c05-b3f1-6d49618b6b10")))
-                .andExpect(jsonPath("$.name", is("NAME")))
+                .andExpect(jsonPath("$.name", is("NAME2")))
                 .andExpect(jsonPath("$.address.street1", is("STREET1")))
                 .andExpect(jsonPath("$.address.street2", is("STREET2")))
                 .andExpect(jsonPath("$.address.city", is("CITY")))

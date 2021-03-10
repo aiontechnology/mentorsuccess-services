@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound.student;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.net.URI;
 
 /**
@@ -32,9 +31,10 @@ import java.net.URI;
 @Builder(setterPrefix = "with")
 public class InboundStudentTeacher {
 
-    @NotNull(message = "{teacher.uri.notNull}")
+    @NotNull(message = "{studentteacher.uri.notNull}")
     URI uri;
 
+    @Size(max = 500, message = "{studentteacher.comment.size}")
     String comment;
 
 }
