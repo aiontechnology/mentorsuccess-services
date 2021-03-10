@@ -32,6 +32,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -100,7 +101,10 @@ public class SchoolResourceControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.bookModelList").isArray())
                 .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
                 .andExpect(jsonPath("$._embedded.bookModelList[*].title",
-                        hasItems("TITLE1", "TITLE2")));
+                        hasItems("TITLE1", "TITLE2")))
+                .andExpect(jsonPath("$._embedded.bookModelList[*]._links.self[0].href",
+                        hasItems("http://localhost/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b",
+                                "http://localhost/api/v1/books/6e4da9bd-5387-45dc-9714-fb96387da770")));
     }
 
     @Test
@@ -145,7 +149,10 @@ public class SchoolResourceControllerIntegrationTest {
                 .andExpect(jsonPath("$._embedded.gameModelList").isArray())
                 .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
                 .andExpect(jsonPath("$._embedded.gameModelList[*].name",
-                        hasItems("GAME1", "GAME2")));
+                        hasItems("GAME1", "GAME2")))
+                .andExpect(jsonPath("$._embedded.gameModelList[*]._links.self[0].href",
+                        hasItems("http://localhost/api/v1/games/81b4fd55-0f1d-45d9-9625-9bc3a367fe04",
+                                "http://localhost/api/v1/games/98866d5e-8dd8-433d-bdb5-dbd7fe8dce81")));
     }
 
 }
