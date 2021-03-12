@@ -204,6 +204,7 @@ public class GameControllerIntegrationTest {
         game.put("grade2", GRADE2);
         game.put("location", LOCATION);
         game.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
+        game.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT1"));
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/games")
@@ -223,6 +224,8 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0]", is("LEADERSHIP_SKILL1")))
+                .andExpect(jsonPath("$.leadershipTraits.length()", is(1)))
+                .andExpect(jsonPath("$.leadershipTraits[0]", is("LEADERSHIP_TRAIT1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }
@@ -300,6 +303,7 @@ public class GameControllerIntegrationTest {
         updatedGame.put("location", ONLINE.toString());
         updatedGame.put("interests", Arrays.asList("INTEREST2"));
         updatedGame.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL2"));
+        updatedGame.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT2"));
 
         // execute the SUT
         ResultActions result = mvc.perform(put("/api/v1/games/f53af381-d524-40f7-8df9-3e808c9ad46b")
@@ -319,6 +323,7 @@ public class GameControllerIntegrationTest {
                 .andExpect(jsonPath("$.location", is(ONLINE.toString())))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0]", is("LEADERSHIP_SKILL2")))
+                .andExpect(jsonPath("$.leadershipTraits[0]", is("LEADERSHIP_TRAIT2")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/games/")));
     }

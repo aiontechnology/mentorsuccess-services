@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import io.aiontechnology.atlas.mapping.OneWayCollectionMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import org.junit.jupiter.api.Test;
@@ -67,9 +68,11 @@ public class GameModelToEntityUpdateMapperTest {
                 (b -> Arrays.asList(new ActivityFocus()));
         OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
                 (l -> Arrays.asList(new LeadershipSkill()));
+        OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
+                (l -> Arrays.asList(new LeadershipTrait()));
 
         GameModelToEntityUpdateMapper gameModelToEntityUpdateMapper = new GameModelToEntityUpdateMapper(
-                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper);
+                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper, leadershipTraitModelToEntityMapper);
 
         // execute the SUT
         Optional<Game> result = gameModelToEntityUpdateMapper.map(inboundGame, game);
@@ -94,9 +97,11 @@ public class GameModelToEntityUpdateMapperTest {
                 (b -> Arrays.asList(new ActivityFocus()));
         OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
                 (l -> Arrays.asList(new LeadershipSkill()));
+        OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
+                (l -> Arrays.asList(new LeadershipTrait()));
 
         GameModelToEntityUpdateMapper gameModelToEntityUpdateMapper = new GameModelToEntityUpdateMapper(
-                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper);
+                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper, leadershipTraitModelToEntityMapper);
 
         // execute the SUT
         Optional<Game> result = gameModelToEntityUpdateMapper.map(null, game);

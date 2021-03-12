@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,9 @@ public class GameModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
     /** Mapper between a leadership skill string and {@link LeadershipSkill}. */
     private final OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper;
 
+    /** Mapper between a leadership trait string and {@link LeadershipTrait}. */
+    private final OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper;
+
     /**
      * Update the given {@link Game} with the given {@link InboundGame}.
      *
@@ -63,6 +67,7 @@ public class GameModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
                     game.setIsActive(true); // TODO Is this correct?
                     game.setActivityFocuses(activityFocusModelToEntityMapper.map(g.getActivityFocuses()));
                     game.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(g.getLeadershipSkills()));
+                    game.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(g.getLeadershipTraits()));
                     return game;
                 });
     }
