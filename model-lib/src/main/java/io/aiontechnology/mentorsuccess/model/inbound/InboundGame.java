@@ -68,7 +68,10 @@ public class InboundGame implements GradeRangeHolder {
     /** The activity focus associated with the game. */
     Collection<String> activityFocuses;
 
-    /** The leadership skills associated with the book. */
+    /** The leadership skills associated with the game. */
     Collection<String> leadershipSkills;
+
+    /** The leadership traits associated with the game. */
+    Collection<String> leadershipTraits;
 
 }

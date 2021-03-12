@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
 import lombok.RequiredArgsConstructor;
@@ -44,6 +45,9 @@ public class GameEntityToModelMapper implements OneWayMapper<Game, OutboundGame>
     /** Mapper between {@link LeadershipSkill} and a leadership skill string. */
     private final OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelMapper;
 
+    /** Mapper between {@link LeadershipTrait} and leadership trait string. */
+    private final OneWayCollectionMapper<LeadershipTrait, String> leadershipTraitEntityToModelMapper;
+
     /**
      * Map the given {@link Game} to a {@link OutboundGame}.
      *
@@ -54,13 +58,14 @@ public class GameEntityToModelMapper implements OneWayMapper<Game, OutboundGame>
     public Optional<OutboundGame> map(Game game) {
         return Optional.ofNullable(game)
                 .map(g -> OutboundGame.builder()
-                        .withId(game.getId())
-                        .withName(game.getName())
-                        .withGrade1(game.getGrade1())
-                        .withGrade2(game.getGrade2())
-                        .withLocation(game.getLocation())
-                        .withActivityFocuses(activityFocusEntityToModelMapper.map(game.getActivityFocuses()))
-                        .withLeadershipSkills(leadershipSkillEntityToModelMapper.map(game.getLeadershipSkills()))
+                        .withId(g.getId())
+                        .withName(g.getName())
+                        .withGrade1(g.getGrade1())
+                        .withGrade2(g.getGrade2())
+                        .withLocation(g.getLocation())
+                        .withActivityFocuses(activityFocusEntityToModelMapper.map(g.getActivityFocuses()))
+                        .withLeadershipSkills(leadershipSkillEntityToModelMapper.map(g.getLeadershipSkills()))
+                        .withLeadershipTraits(leadershipTraitEntityToModelMapper.map(g.getLeadershipTraits()))
                         .build());
     }
 

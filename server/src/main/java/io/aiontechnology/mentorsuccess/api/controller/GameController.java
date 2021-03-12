@@ -72,6 +72,7 @@ public class GameController {
 
     /** A HATEOAS assembler for {@link InboundGame GameModels}. */
     private final GameModelAssembler gameModelAssembler;
+
     /** {@link LinkProvider} implementation for games. */
     private final LinkProvider<OutboundGame, Game> linkProvider = (gameModel, game) ->
             Arrays.asList(
