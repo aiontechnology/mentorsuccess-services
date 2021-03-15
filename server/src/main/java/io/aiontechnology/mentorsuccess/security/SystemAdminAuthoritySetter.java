@@ -50,6 +50,7 @@ public class SystemAdminAuthoritySetter implements BiFunction<Optional<SchoolPer
             authorities.addAll(AuthoritiesBuilder.instance("resource").withRead().build());
             authorities.addAll(AuthoritiesBuilder.instance("resources").withUpdate().build());
             authorities.addAll(AuthoritiesBuilder.instance("school").withAll().build());
+            authorities.addAll(AuthoritiesBuilder.instance("schoolresources").withAll().build());
             authorities.addAll(AuthoritiesBuilder.instance("student").withAll().build());
             authorities.addAll(AuthoritiesBuilder.instance("teacher").withAll().build());
         }

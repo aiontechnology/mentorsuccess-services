@@ -17,7 +17,11 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.security.ProgramAdminAuthoritySetter;
 import io.aiontechnology.mentorsuccess.security.SystemAdminAuthoritySetter;
+import io.aiontechnology.mentorsuccess.util.SchoolUUIDMatcher;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,10 +35,13 @@ import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,7 +67,7 @@ public class SchoolResourceControllerIntegrationTest {
     private ObjectMapper objectMapper;
 
     @Test
-    void testGetSchoolBooks() throws Exception {
+    void testGetSchoolBooks_SystemAdmin() throws Exception {
         // setup the fixture
 
         // execute the SUT
@@ -80,7 +87,33 @@ public class SchoolResourceControllerIntegrationTest {
     }
 
     @Test
-    void testSetSchoolBooks() throws Exception {
+    void testGetSchoolBooks_ProgramAdmin() throws Exception {
+        // setup the fixture
+        UUID schoolId = UUID.fromString("b61cbdc4-b37e-429d-b33a-108f9753a073");
+        School school = mock(School.class);
+        when(school.getId()).thenReturn(schoolId);
+        SchoolPersonRole schoolPersonRole = mock(SchoolPersonRole.class);
+        when(schoolPersonRole.getSchool()).thenReturn(school);
+
+        // execute the SUT
+        ResultActions result = mvc.perform(get("/api/v1/schools/b61cbdc4-b37e-429d-b33a-108f9753a073/books")
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("username", Optional.of(schoolPersonRole))
+                        .claim("cognito:groups", new ProgramAdminAuthoritySetter(new SchoolUUIDMatcher()))
+                        .header("test", "value")
+                        .build())));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$._embedded.bookModelList").isArray())
+                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.bookModelList[*].title",
+                        hasItems("TITLE1", "TITLE2")));
+    }
+
+    @Test
+    void testSetSchoolBooks_SystemAdmin() throws Exception {
         // setup the fixture
         List<URI> bookURIs = Arrays.asList(
                 URI.create("http://localhost:8080/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b"),
@@ -108,7 +141,42 @@ public class SchoolResourceControllerIntegrationTest {
     }
 
     @Test
-    void testGetSchoolGames() throws Exception {
+    void testSetSchoolBooks_ProgramAdmin() throws Exception {
+        // setup the fixture
+        UUID schoolId = UUID.fromString("fd03c21f-cd39-4c05-b3f1-6d49618b6b10");
+        School school = mock(School.class);
+        when(school.getId()).thenReturn(schoolId);
+        SchoolPersonRole schoolPersonRole = mock(SchoolPersonRole.class);
+        when(schoolPersonRole.getSchool()).thenReturn(school);
+
+        List<URI> bookURIs = Arrays.asList(
+                URI.create("http://localhost:8080/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b"),
+                URI.create("http://localhost:8080/api/v1/books/6e4da9bd-5387-45dc-9714-fb96387da770"));
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/books")
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("username", Optional.of(schoolPersonRole))
+                        .claim("cognito:groups", new ProgramAdminAuthoritySetter(new SchoolUUIDMatcher()))
+                        .header("test", "value")
+                        .build()))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(bookURIs)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$._embedded.bookModelList").isArray())
+                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.bookModelList[*].title",
+                        hasItems("TITLE1", "TITLE2")))
+                .andExpect(jsonPath("$._embedded.bookModelList[*]._links.self[0].href",
+                        hasItems("http://localhost/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b",
+                                "http://localhost/api/v1/books/6e4da9bd-5387-45dc-9714-fb96387da770")));
+    }
+
+    @Test
+    void testGetSchoolGames_SystemAdmin() throws Exception {
         // setup the fixture
 
         // execute the SUT
@@ -128,7 +196,33 @@ public class SchoolResourceControllerIntegrationTest {
     }
 
     @Test
-    void testSetSchoolGames() throws Exception {
+    void testGetSchoolGames_ProgramAdmin() throws Exception {
+        // setup the fixture
+        UUID schoolId = UUID.fromString("b61cbdc4-b37e-429d-b33a-108f9753a073");
+        School school = mock(School.class);
+        when(school.getId()).thenReturn(schoolId);
+        SchoolPersonRole schoolPersonRole = mock(SchoolPersonRole.class);
+        when(schoolPersonRole.getSchool()).thenReturn(school);
+
+        // execute the SUT
+        ResultActions result = mvc.perform(get("/api/v1/schools/b61cbdc4-b37e-429d-b33a-108f9753a073/games")
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("username", Optional.of(schoolPersonRole))
+                        .claim("cognito:groups", new ProgramAdminAuthoritySetter(new SchoolUUIDMatcher()))
+                        .header("test", "value")
+                        .build())));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
+                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                        hasItems("GAME1", "GAME2")));
+    }
+
+    @Test
+    void testSetSchoolGames_SystemAdmin() throws Exception {
         // setup the fixture
         List<URI> gameUUIDs = Arrays.asList(
                 URI.create("http://localhost:8080/api/v1/games/81b4fd55-0f1d-45d9-9625-9bc3a367fe04"),
@@ -138,6 +232,41 @@ public class SchoolResourceControllerIntegrationTest {
         ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/games")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
+                        .header("test", "value")
+                        .build()))
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(gameUUIDs)));
+
+        // validation
+        result.andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
+                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                        hasItems("GAME1", "GAME2")))
+                .andExpect(jsonPath("$._embedded.gameModelList[*]._links.self[0].href",
+                        hasItems("http://localhost/api/v1/games/81b4fd55-0f1d-45d9-9625-9bc3a367fe04",
+                                "http://localhost/api/v1/games/98866d5e-8dd8-433d-bdb5-dbd7fe8dce81")));
+    }
+
+    @Test
+    void testSetSchoolGames_ProgramAdmin() throws Exception {
+        // setup the fixture
+        UUID schoolId = UUID.fromString("fd03c21f-cd39-4c05-b3f1-6d49618b6b10");
+        School school = mock(School.class);
+        when(school.getId()).thenReturn(schoolId);
+        SchoolPersonRole schoolPersonRole = mock(SchoolPersonRole.class);
+        when(schoolPersonRole.getSchool()).thenReturn(school);
+
+        List<URI> gameUUIDs = Arrays.asList(
+                URI.create("http://localhost:8080/api/v1/games/81b4fd55-0f1d-45d9-9625-9bc3a367fe04"),
+                URI.create("http://localhost:8080/api/v1/games/98866d5e-8dd8-433d-bdb5-dbd7fe8dce81"));
+
+        // execute the SUT
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/games")
+                .with(jwt().jwt(Jwt.withTokenValue("1234")
+                        .claim("username", Optional.of(schoolPersonRole))
+                        .claim("cognito:groups", new ProgramAdminAuthoritySetter(new SchoolUUIDMatcher()))
                         .header("test", "value")
                         .build()))
                 .contentType(APPLICATION_JSON)
