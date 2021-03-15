@@ -15,3 +15,7 @@
 flowable:
   idm:
     password-encoder: spring_delegating
+
+spring:
+  liquibase:
+    enabled: true
