@@ -37,6 +37,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -85,34 +86,34 @@ public class Book {
     @JoinTable(name = "book_interest",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
-    private Collection<Interest> interests;
+    private Collection<Interest> interests = new ArrayList<>();
 
     /** A collection leadership skills for the book. */
     @ManyToMany
     @JoinTable(name = "book_leadershipskill",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
-    private Collection<LeadershipSkill> leadershipSkills;
+    private Collection<LeadershipSkill> leadershipSkills = new ArrayList<>();
 
     /** A collection leadership traits for the book. */
     @ManyToMany
     @JoinTable(name = "book_leadershiptrait",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
-    private Collection<LeadershipTrait> leadershipTraits;
+    private Collection<LeadershipTrait> leadershipTraits = new ArrayList<>();
 
     /** A collection phonograms for the book. */
     @ManyToMany
     @JoinTable(name = "book_phonogram",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "phonogram_id"))
-    private Collection<Phonogram> phonograms;
+    private Collection<Phonogram> phonograms = new ArrayList<>();
 
     /** A collection behaviors for the book. */
     @ManyToMany
     @JoinTable(name = "book_behavior",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "behavior_id"))
-    private Collection<Behavior> behaviors;
+    private Collection<Behavior> behaviors = new ArrayList<>();
 
 }
