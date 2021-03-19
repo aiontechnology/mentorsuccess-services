@@ -22,6 +22,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Value;
 import org.springframework.hateoas.RepresentationModel;
 
+import java.util.UUID;
+
 /**
  * Model object representing a mentor to be returned to a client.
  *
@@ -32,6 +34,9 @@ import org.springframework.hateoas.RepresentationModel;
 @EqualsAndHashCode(callSuper = true)
 @Builder(setterPrefix = "with")
 public class OutboundMentor extends RepresentationModel<OutboundMentor> {
+
+    /** The mentor's id. */
+    UUID id;
 
     /** The first name of the mentor. */
     String firstName;

@@ -44,6 +44,7 @@ public class MentorEntityToModelMapper implements OneWayMapper<SchoolPersonRole,
     public Optional<OutboundMentor> map(SchoolPersonRole role) {
         return Optional.ofNullable(role)
                 .map(m -> OutboundMentor.builder()
+                        .withId(m.getId())
                         .withFirstName(m.getPerson().getFirstName())
                         .withLastName(m.getPerson().getLastName())
                         .withEmail(m.getPerson().getEmail())

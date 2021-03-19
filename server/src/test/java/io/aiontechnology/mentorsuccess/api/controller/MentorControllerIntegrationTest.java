@@ -294,6 +294,7 @@ public class MentorControllerIntegrationTest {
 
         // validation
         result.andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is("ba238442-ce51-450d-a474-2e36872abe05")))
                 .andExpect(jsonPath("$.firstName", is("Fred")))
                 .andExpect(jsonPath("$.lastName", is("Rogers")))
                 .andExpect(jsonPath("$.email", is("fred@rogers.com")))
