@@ -59,7 +59,7 @@ public class StudentMentor {
     private Student student;
 
     /** The associated {@link SchoolPersonRole}. */
-    @MapsId("role_Id")
+    @MapsId("role_id")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
     @JoinColumn(name = "role_id", referencedColumnName = "id")
     private SchoolPersonRole role;
@@ -71,7 +71,7 @@ public class StudentMentor {
     public static class StudentMentorPK implements Serializable {
 
         private UUID student_id;
-        private UUID role_Id;
+        private UUID role_id;
 
     }
 
