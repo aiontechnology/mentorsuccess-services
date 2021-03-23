@@ -42,9 +42,17 @@ public class StudentMentorModelToEntityUpdateMapper implements OneWayUpdateMappe
     public Optional<StudentMentor> map(InboundStudentMentor inboundStudentMentor, StudentMentor studentMentor) {
         return Optional.ofNullable(inboundStudentMentor)
                 .map(studentMentorModel -> {
-                    studentMentor.setRole(mentorModelToEntityMapper.map(studentMentorModel.getUri())
+                    Optional<SchoolPersonRole> requestedRole =
+                            mentorModelToEntityMapper.map(studentMentorModel.getUri());
+
+                    boolean matches = requestedRole
+                            .map(role -> role.equals(studentMentor.getRole()))
+                            .orElse(false);
+
+                    StudentMentor newStudentMentor = matches ? studentMentor : new StudentMentor();
+                    newStudentMentor.setRole(requestedRole
                             .orElseThrow(() -> new NotFoundException("Unable to find specified mentor")));
-                    return studentMentor;
+                    return newStudentMentor;
                 });
     }
 

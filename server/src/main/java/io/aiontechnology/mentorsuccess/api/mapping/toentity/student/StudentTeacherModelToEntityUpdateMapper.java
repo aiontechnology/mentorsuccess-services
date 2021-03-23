@@ -42,10 +42,18 @@ public class StudentTeacherModelToEntityUpdateMapper implements OneWayUpdateMapp
     public Optional<StudentTeacher> map(InboundStudentTeacher inboundStudentTeacher, StudentTeacher studentTeacher) {
         return Optional.ofNullable(inboundStudentTeacher)
                 .map(studentTeacherModel -> {
-                    studentTeacher.setRole(teacherModelToEntityMapper.map(studentTeacherModel.getUri())
+                    Optional<SchoolPersonRole> requestedRole =
+                            teacherModelToEntityMapper.map(studentTeacherModel.getUri());
+
+                    boolean matches = requestedRole
+                            .map(role -> role.equals(studentTeacher.getRole()))
+                            .orElse(false);
+
+                    StudentTeacher newStudentTeacher = matches ? studentTeacher : new StudentTeacher();
+                    newStudentTeacher.setRole(requestedRole
                             .orElseThrow(() -> new NotFoundException("Unable to find specified teacher")));
-                    studentTeacher.setComment(studentTeacherModel.getComment());
-                    return studentTeacher;
+                    newStudentTeacher.setComment(studentTeacherModel.getComment());
+                    return newStudentTeacher;
                 });
     }
 
