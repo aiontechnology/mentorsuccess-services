@@ -42,6 +42,7 @@ configurations {
 
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
     maven {
         url 'https://oss.jfrog.org/oss-snapshot-local'

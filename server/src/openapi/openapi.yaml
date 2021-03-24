@@ -14,7 +14,7 @@
 
 openapi: 3.0.3
 info:
-  title: Mentor Success API
+#  title: Mentor Success API
   description: API for the Mentor Success application
   contact:
     email: whitney@aiontechnology.io
@@ -521,6 +521,10 @@ paths:
       responses:
         200:
           description: Found the requested book
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -962,6 +966,10 @@ paths:
       responses:
         200:
           description: Found the requested game
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -4428,6 +4436,76 @@ paths:
           application/json: "{\"statusCode\": 200}"
         passthroughBehavior: "when_no_match"
         type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/students/{studentId}
+    get:
+      summary: Get a student for a school
+      description: Get a student for a school
+      tags:
+        - school
+        - student
+      operationId: getStudent
+      responses:
+        200:
+          description: A student for a school
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StudentResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/students/{studentId}"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.studentId: "method.request.path.studentId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
 
     # PUT for /api/v1/schools/{schoolId}/students/{studentId}
     put:

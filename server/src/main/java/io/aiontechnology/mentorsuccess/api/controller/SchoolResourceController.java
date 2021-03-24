@@ -70,7 +70,7 @@ public class SchoolResourceController {
     private final SchoolResourceService schoolResourceService;
 
     @GetMapping("/books")
-    @PreAuthorize("hasAuthority('school:read')")
+    @PreAuthorize("hasAuthority('schoolresources:read')")
     public CollectionModel<OutboundBook> getSchoolBooks(@PathVariable("schoolId") UUID schoolId) {
         var books = StreamSupport.stream(schoolResourceService.getBooksForSchool(schoolId).spliterator(), false)
                 .map(s -> bookModelAssembler.toModel(s, bookLinkProvider))
@@ -79,7 +79,7 @@ public class SchoolResourceController {
     }
 
     @PutMapping("/books")
-    @PreAuthorize("hasAuthority('school:update')")
+    @PreAuthorize("hasAuthority('schoolresources:update')")
     public CollectionModel<OutboundBook> setSchoolBooks(@PathVariable("schoolId") UUID schoolId,
             @RequestBody Collection<URI> bookURIs) {
         List<Book> books = bookURIs.stream()
@@ -89,13 +89,13 @@ public class SchoolResourceController {
                 .collect(Collectors.toList());
         List<OutboundBook> outboundBooks =
                 StreamSupport.stream(schoolResourceService.setBooksForSchool(schoolId, books).spliterator(), false)
-                        .map(bookModelAssembler::toModel)
+                        .map(b -> bookModelAssembler.toModel(b, bookLinkProvider))
                         .collect(Collectors.toList());
         return CollectionModel.of(outboundBooks);
     }
 
     @GetMapping("/games")
-    @PreAuthorize("hasAuthority('school:read')")
+    @PreAuthorize("hasAuthority('schoolresources:read')")
     public CollectionModel<OutboundGame> getSchoolGames(@PathVariable("schoolId") UUID schoolId) {
         var games = StreamSupport.stream(schoolResourceService.getGamesForSchool(schoolId).spliterator(), false)
                 .map(s -> gameModelAssembler.toModel(s, gameLinkProvider))
@@ -104,7 +104,7 @@ public class SchoolResourceController {
     }
 
     @PutMapping("/games")
-    @PreAuthorize("hasAuthority('school:update')")
+    @PreAuthorize("hasAuthority('schoolresources:update')")
     public CollectionModel<OutboundGame> setSchoolGames(@PathVariable("schoolId") UUID schoolId,
             @RequestBody Collection<URI> gameURIs) {
         List<Game> games = gameURIs.stream()
@@ -114,7 +114,7 @@ public class SchoolResourceController {
                 .collect(Collectors.toList());
         List<OutboundGame> outboundGames =
                 StreamSupport.stream(schoolResourceService.setGamessForSchool(schoolId, games).spliterator(), false)
-                        .map(gameModelAssembler::toModel)
+                        .map(g -> gameModelAssembler.toModel(g, gameLinkProvider))
                         .collect(Collectors.toList());
         return CollectionModel.of(outboundGames);
     }

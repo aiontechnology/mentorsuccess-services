@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import io.aiontechnology.atlas.mapping.OneWayCollectionMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
 import org.junit.jupiter.api.Test;
@@ -64,9 +65,11 @@ public class GameEntityToModelMapperTest {
                 (b -> Arrays.asList("ACTIVITY_FOCUS"));
         OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelMapper =
                 (l -> Arrays.asList("LEADERSHIP_SKILL"));
+        OneWayCollectionMapper<LeadershipTrait, String> leadershipTraitEntityToModelMapper =
+                (l -> Arrays.asList("LEADERSHIP_TRAIT"));
 
         GameEntityToModelMapper gameEntityToModelMapper = new GameEntityToModelMapper(activityFocusEntityToModelMapper,
-                leadershipSkillEntityToModelMapper);
+                leadershipSkillEntityToModelMapper, leadershipTraitEntityToModelMapper);
 
         // execute the SUT
         Optional<OutboundGame> result = gameEntityToModelMapper.map(game);
@@ -79,6 +82,7 @@ public class GameEntityToModelMapperTest {
         assertThat(result.get().getLocation()).isEqualTo(location);
         assertThat(result.get().getActivityFocuses().size()).isEqualTo(1);
         assertThat(result.get().getLeadershipSkills().size()).isEqualTo(1);
+        assertThat(result.get().getLeadershipTraits().size()).isEqualTo(1);
     }
 
     @Test
@@ -88,9 +92,11 @@ public class GameEntityToModelMapperTest {
                 (b -> Arrays.asList("ACTIVITY FOCUS"));
         OneWayCollectionMapper<LeadershipSkill, String> leadershipSkillEntityToModelMapper =
                 (l -> Arrays.asList("LEADERSHIP_SKILL"));
+        OneWayCollectionMapper<LeadershipTrait, String> leadershipTraitEntityToModelMapper =
+                (l -> Arrays.asList("LEADERSHIP_TRAIT"));
 
         GameEntityToModelMapper gameEntityToModelMapper = new GameEntityToModelMapper(activityFocusEntityToModelMapper,
-                leadershipSkillEntityToModelMapper);
+                leadershipSkillEntityToModelMapper, leadershipTraitEntityToModelMapper);
 
         // execute the SUT
         Optional<OutboundGame> result = gameEntityToModelMapper.map(null);

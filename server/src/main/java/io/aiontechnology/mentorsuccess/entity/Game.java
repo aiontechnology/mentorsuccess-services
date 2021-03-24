@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 package io.aiontechnology.mentorsuccess.entity;
 
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
+import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +35,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -83,13 +85,20 @@ public class Game {
     @JoinTable(name = "game_activityfocus",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "activityfocus_id"))
-    private Collection<ActivityFocus> activityFocuses;
+    private Collection<ActivityFocus> activityFocuses = new ArrayList<>();
 
-    /** A collection leadershpi skills for the game. */
+    /** A collection leadership skills for the game. */
     @ManyToMany
     @JoinTable(name = "game_leadershipskill",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
-    private Collection<LeadershipSkill> leadershipSkills;
+    private Collection<LeadershipSkill> leadershipSkills = new ArrayList<>();
+
+    /** A collection leadership traits for the game. */
+    @ManyToMany
+    @JoinTable(name = "game_leadershiptrait",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
+    private Collection<LeadershipTrait> leadershipTraits = new ArrayList<>();
 
 }
