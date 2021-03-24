@@ -521,6 +521,10 @@ paths:
       responses:
         200:
           description: Found the requested book
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -962,6 +966,10 @@ paths:
       responses:
         200:
           description: Found the requested game
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
         400:
           $ref: '#/components/responses/BadRequest'
         401:
