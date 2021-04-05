@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -196,6 +197,7 @@ public class BookControllerIntegrationTest {
         book.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
         book.put("phonograms", Arrays.asList("PH1"));
         book.put("behaviors", Arrays.asList("BEHAVIOR1"));
+        book.put("tags", Arrays.asList("TAG1"));
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/books")
@@ -222,6 +224,8 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.phonograms[0]", is("PH1")))
                 .andExpect(jsonPath("$.behaviors.length()", is(1)))
                 .andExpect(jsonPath("$.behaviors[0]", is("BEHAVIOR1")))
+                .andExpect(jsonPath("$.tags.length()", is(1)))
+                .andExpect(jsonPath("$.tags[0]", is("TAG1")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
     }
@@ -271,7 +275,12 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.leadershipTraits[0]", is("LEADERSHIP_TRAIT1")))
                 .andExpect(jsonPath("$.leadershipSkills.length()", is(1)))
                 .andExpect(jsonPath("$.leadershipSkills[0]", is("LEADERSHIP_SKILL1")))
-                .andExpect(jsonPath("$._links.length()", is(1)))
+                .andExpect(jsonPath("$.phonograms.length()", is(2)))
+                .andExpect(jsonPath("$.phonograms", hasItems("PH1", "PH1")))
+                .andExpect(jsonPath("$.behaviors.length()", is(2)))
+                .andExpect(jsonPath("$.behaviors", hasItems("BEHAVIOR1", "BEHAVIOR2")))
+                .andExpect(jsonPath("$.tags.length()", is(2)))
+                .andExpect(jsonPath("$.tags", hasItems("TAG1", "TAG2")))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
     }
 

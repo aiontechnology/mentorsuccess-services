@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.reference.Tag;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
 import lombok.RequiredArgsConstructor;
@@ -56,6 +57,8 @@ public class BookEntityToModelMapper implements OneWayMapper<Book, OutboundBook>
     /** Mapper between {@link Phonogram} and a phonogram string. */
     private final OneWayCollectionMapper<Phonogram, String> phonogramEntityToModelMapper;
 
+    private final OneWayCollectionMapper<Tag, String> tagEntityToModelMapper;
+
     /**
      * Map the given {@link Book} to a {@link InboundBook}.
      *
@@ -66,16 +69,17 @@ public class BookEntityToModelMapper implements OneWayMapper<Book, OutboundBook>
     public Optional<OutboundBook> map(Book book) {
         return Optional.ofNullable(book)
                 .map(b -> OutboundBook.builder()
-                        .withId(book.getId())
-                        .withTitle(book.getTitle())
-                        .withAuthor(book.getAuthor())
-                        .withGradeLevel(book.getGradeLevel())
-                        .withLocation(book.getLocation())
-                        .withBehaviors(toBehaviorModelMapper.map(book.getBehaviors()))
-                        .withInterests(interestEntityToModelMapper.map(book.getInterests()))
-                        .withLeadershipSkills(leadershipSkillEntityToModelMapper.map(book.getLeadershipSkills()))
-                        .withLeadershipTraits(leadershipTraitEntityToModelMapper.map(book.getLeadershipTraits()))
-                        .withPhonograms(phonogramEntityToModelMapper.map(book.getPhonograms()))
+                        .withId(b.getId())
+                        .withTitle(b.getTitle())
+                        .withAuthor(b.getAuthor())
+                        .withGradeLevel(b.getGradeLevel())
+                        .withLocation(b.getLocation())
+                        .withBehaviors(toBehaviorModelMapper.map(b.getBehaviors()))
+                        .withInterests(interestEntityToModelMapper.map(b.getInterests()))
+                        .withLeadershipSkills(leadershipSkillEntityToModelMapper.map(b.getLeadershipSkills()))
+                        .withLeadershipTraits(leadershipTraitEntityToModelMapper.map(b.getLeadershipTraits()))
+                        .withPhonograms(phonogramEntityToModelMapper.map(b.getPhonograms()))
+                        .withTags(tagEntityToModelMapper.map(b.getTags()))
                         .build());
     }
 

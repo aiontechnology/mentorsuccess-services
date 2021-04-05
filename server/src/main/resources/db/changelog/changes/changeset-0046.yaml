@@ -14,7 +14,7 @@
 
 databaseChangeLog:
   - changeSet:
-      id: 45
+      id: 46
       author: whitney
       changes:
         - createTable:

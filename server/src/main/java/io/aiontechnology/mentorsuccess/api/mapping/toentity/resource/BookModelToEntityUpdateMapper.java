@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.reference.Tag;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,9 @@ public class BookModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
     /** Mapper between a phonogram and {@link Phonogram}. */
     private final OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper;
 
+    /** Mapper between a tag and {@link Tag}. */
+    private final OneWayCollectionMapper<String, Tag> tagModelToEntityMapper;
+
     /**
      * Update the given {@link Book} with the given {@link InboundBook}.
      *
@@ -78,6 +82,7 @@ public class BookModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
                     book.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(b.getLeadershipSkills()));
                     book.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(b.getLeadershipTraits()));
                     book.setPhonograms(phonogramModelToEntityMapper.map(b.getPhonograms()));
+                    book.setTags(tagModelToEntityMapper.map(b.getTags()));
                     return book;
                 });
     }
