@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.reference.Tag;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
 import org.junit.jupiter.api.Test;
@@ -80,10 +81,12 @@ public class BookEntityToModelMapperTest {
                 (l -> Arrays.asList("LEADERSHIP_TRAIT"));
         OneWayCollectionMapper<Phonogram, String> phonogramEntityToModelMapper =
                 (p -> Arrays.asList("PHONOGRAM"));
+        OneWayCollectionMapper<Tag, String> tagEntityToModelMapper =
+                (p -> Arrays.asList("TAG"));
 
         BookEntityToModelMapper bookEntityToModelMapper = new BookEntityToModelMapper(behaviorEntityToModelMapper,
                 interestEntityToModelMapper, leadershipSkillEntityToModelMapper, leadershipTraitEntityToModelMapper,
-                phonogramEntityToModelMapper);
+                phonogramEntityToModelMapper, tagEntityToModelMapper);
 
         // execute the SUT
         Optional<OutboundBook> result = bookEntityToModelMapper.map(book);
@@ -114,10 +117,12 @@ public class BookEntityToModelMapperTest {
                 (l -> Arrays.asList("LEADERSHIP_TRAIT"));
         OneWayCollectionMapper<Phonogram, String> phonogramEntityToModelMapper =
                 (p -> Arrays.asList("PHONOGRAM"));
+        OneWayCollectionMapper<Tag, String> tagEntityToModelMapper =
+                (p -> Arrays.asList("TAG"));
 
         BookEntityToModelMapper bookEntityToModelMapper = new BookEntityToModelMapper(behaviorEntityToModelMapper,
                 interestEntityToModelMapper, leadershipSkillEntityToModelMapper, leadershipTraitEntityToModelMapper,
-                phonogramEntityToModelMapper);
+                phonogramEntityToModelMapper, tagEntityToModelMapper);
 
         // execute the SUT
         Optional<OutboundBook> result = bookEntityToModelMapper.map(null);
