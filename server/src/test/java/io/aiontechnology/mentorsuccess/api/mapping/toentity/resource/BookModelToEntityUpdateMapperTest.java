@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.reference.Tag;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import org.junit.jupiter.api.Test;
@@ -82,10 +83,12 @@ public class BookModelToEntityUpdateMapperTest {
                 (l -> Arrays.asList(new LeadershipTrait()));
         OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper =
                 (p -> Arrays.asList(new Phonogram()));
+        OneWayCollectionMapper<String, Tag> tagModelToEntityMapper =
+                (p -> Arrays.asList(new Tag()));
 
         BookModelToEntityUpdateMapper bookModelToEntityUpdateMapper = new BookModelToEntityUpdateMapper(
                 behaviorModelToEntityMapper, interestModelToEntityMapper, leadershipSkillModelToEntityMapper,
-                leadershipTraitModelToEntityMapper, phonogramModelToEntityMapper);
+                leadershipTraitModelToEntityMapper, phonogramModelToEntityMapper, tagModelToEntityMapper);
 
         // execute the SUT
         Optional<Book> result = bookModelToEntityUpdateMapper.map(inboundBook, book);
@@ -124,10 +127,12 @@ public class BookModelToEntityUpdateMapperTest {
         Phonogram phonogram = new Phonogram();
         OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper =
                 (p -> Arrays.asList(phonogram));
+        OneWayCollectionMapper<String, Tag> tagModelToEntityMapper =
+                (p -> Arrays.asList(new Tag()));
 
         BookModelToEntityUpdateMapper bookModelToEntityUpdateMapper = new BookModelToEntityUpdateMapper(
                 behaviorModelToEntityMapper, interestModelToEntityMapper, leadershipSkillModelToEntityMapper,
-                leadershipTraitModelToEntityMapper, phonogramModelToEntityMapper);
+                leadershipTraitModelToEntityMapper, phonogramModelToEntityMapper, tagModelToEntityMapper);
 
         // execute the SUT
         Optional<Book> result = bookModelToEntityUpdateMapper.map(null, book);

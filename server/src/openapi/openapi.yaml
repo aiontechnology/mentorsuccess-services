@@ -538,7 +538,7 @@ paths:
       x-amazon-apigateway-auth:
         type: None
       x-amazon-apigateway-integration:
-        uri: "${lb_url}/api/v1/books"
+        uri: "${lb_url}/api/v1/books/{bookId}"
         responses:
           200:
             statusCode: "200"
@@ -983,7 +983,7 @@ paths:
       x-amazon-apigateway-auth:
         type: None
       x-amazon-apigateway-integration:
-        uri: "${lb_url}/api/v1/games"
+        uri: "${lb_url}/api/v1/games/{gameId}"
         responses:
           200:
             statusCode: "200"

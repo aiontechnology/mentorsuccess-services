@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,6 +47,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
+import io.aiontechnology.mentorsuccess.entity.reference.Tag;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundMentor;
@@ -68,6 +69,7 @@ import io.aiontechnology.mentorsuccess.service.InterestService;
 import io.aiontechnology.mentorsuccess.service.LeadershipSkillService;
 import io.aiontechnology.mentorsuccess.service.LeadershipTraitService;
 import io.aiontechnology.mentorsuccess.service.PhonogramService;
+import io.aiontechnology.mentorsuccess.service.TagService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -362,6 +364,27 @@ public class MapperConfiguration {
     public OneWayMapper<InboundStudentTeacher, StudentTeacher> studentTeacherModelToEntityMapper(
             OneWayUpdateMapper<InboundStudentTeacher, StudentTeacher> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, StudentTeacher.class);
+    }
+
+    /*
+     * Tag
+     */
+
+    @Bean
+    public Function<String, Optional<Tag>> findTagFunction(TagService tagService) {
+        return tagService::findTagByName;
+    }
+
+    @Bean
+    public OneWayCollectionMapper<String, Tag> tagModelToEntityOneWayCollectionMapper(
+            OneWayMapper<String, Tag> mapper) {
+        return new SimpleOneWayCollectionMapper<>(mapper);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<Tag, String> tagEntityToModelOneWayCollectionMapper(
+            OneWayMapper<Tag, String> mapper) {
+        return new SimpleOneWayCollectionMapper<>(mapper);
     }
 
     /*

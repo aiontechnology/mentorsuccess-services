@@ -1,0 +1,89 @@
+# Copyright 2021 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 47
+      author: whitney
+      changes:
+        - createTable:
+            tableName: tag
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: book_tag
+            columns:
+              - column:
+                  name: book_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tag_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            tableName: book_tag
+            columnNames: book_id, tag_id
+            constraintName: pk_book_tag
+        - addForeignKeyConstraint:
+            baseTableName: book_tag
+            baseColumnNames: book_id
+            referencedTableName: book
+            referencedColumnNames: id
+            constraintName: fk_booktag_book
+        - addForeignKeyConstraint:
+            baseTableName: book_tag
+            baseColumnNames: tag_id
+            referencedTableName: tag
+            referencedColumnNames: id
+            constraintName: fk_booktag_tag
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id
+                  value: 3435f423-019d-4047-b36e-c5371ca0a8ca
+              - column:
+                  name: name
+                  value: pre-school
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id
+                  value: 96d41f39-374f-447f-8066-b24569dd9f74
+              - column:
+                  name: name
+                  value: emementary
+        - insert:
+            tableName: tag
+            columns:
+              - column:
+                  name: id
+                  value: ef453ffc-abdc-429f-9e31-ca0657653c5a
+              - column:
+                  name: name
+                  value: upper-elementary
