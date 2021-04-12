@@ -29,6 +29,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -82,7 +83,7 @@ public class BookModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
                     book.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(b.getLeadershipSkills()));
                     book.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(b.getLeadershipTraits()));
                     book.setPhonograms(phonogramModelToEntityMapper.map(b.getPhonograms()));
-                    book.setTags(tagModelToEntityMapper.map(b.getTags()));
+                    book.setTags(tagModelToEntityMapper.map(Arrays.asList(b.getTag())));
                     return book;
                 });
     }

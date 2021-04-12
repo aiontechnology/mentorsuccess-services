@@ -197,7 +197,7 @@ public class BookControllerIntegrationTest {
         book.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
         book.put("phonograms", Arrays.asList("PH1"));
         book.put("behaviors", Arrays.asList("BEHAVIOR1"));
-        book.put("tags", Arrays.asList("TAG1"));
+        book.put("tag", "TAG");
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/books")
@@ -224,8 +224,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.phonograms[0]", is("PH1")))
                 .andExpect(jsonPath("$.behaviors.length()", is(1)))
                 .andExpect(jsonPath("$.behaviors[0]", is("BEHAVIOR1")))
-                .andExpect(jsonPath("$.tags.length()", is(1)))
-                .andExpect(jsonPath("$.tags[0]", is("TAG1")))
+                .andExpect(jsonPath("$.tag", is("TAG")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
     }
@@ -279,8 +278,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.phonograms", hasItems("PH1", "PH1")))
                 .andExpect(jsonPath("$.behaviors.length()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("BEHAVIOR1", "BEHAVIOR2")))
-                .andExpect(jsonPath("$.tags.length()", is(2)))
-                .andExpect(jsonPath("$.tags", hasItems("TAG1", "TAG2")))
+                .andExpect(jsonPath("$.tag", is("TAG")))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
     }
 
