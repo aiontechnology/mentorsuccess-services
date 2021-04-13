@@ -65,7 +65,7 @@ public class OutboundBook extends OutboundResource<OutboundBook> implements Loca
     /** The behaviors associated with the book. */
     Collection<String> behaviors;
 
-    /** The tags associated with the book. */
-    Collection<String> tags;
+    /** The tag associated with the book. */
+    String tag;
 
 }
