@@ -52,7 +52,7 @@ public class LeadershipTraitService {
      * @return All {@link LeadershipTrait LeadershipTraits}.
      */
     public Iterable<LeadershipTrait> getAllLeadershipTraits() {
-        return leadershipTraitRepository.findAll();
+        return leadershipTraitRepository.findAllByOrderByNameAsc();
     }
 
 }
