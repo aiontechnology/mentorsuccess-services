@@ -27,8 +27,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -69,7 +70,8 @@ public class BehaviorControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$._embedded.stringList").isArray())
                 .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("BEHAVIOR1", "BEHAVIOR2")));
+                .andExpect(jsonPath("$._embedded.stringList[*]",
+                        equalTo(Arrays.asList("BEHAVIOR1", "BEHAVIOR2"))));
     }
 
 }
