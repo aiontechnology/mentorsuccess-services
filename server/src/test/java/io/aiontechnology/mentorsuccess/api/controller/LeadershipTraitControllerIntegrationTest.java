@@ -20,7 +20,6 @@ import io.aiontechnology.mentorsuccess.security.SystemAdminAuthoritySetter;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,7 +28,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
-import static org.hamcrest.CoreMatchers.hasItems;
+import java.util.Arrays;
+
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -70,7 +71,8 @@ public class LeadershipTraitControllerIntegrationTest {
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$._embedded.stringList").isArray())
                 .andExpect(jsonPath("$._embedded.stringList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.stringList[*]", hasItems("LEADERSHIP_TRAIT1", "LEADERSHIP_TRAIT2")));
+                .andExpect(jsonPath("$._embedded.stringList[*]",
+                        equalTo(Arrays.asList("LEADERSHIP_TRAIT1", "LEADERSHIP_TRAIT2"))));
     }
 
 }
