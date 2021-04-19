@@ -13,5 +13,5 @@
 -- limitations under the License.
 
 DELETE FROM behavior;
-INSERT INTO behavior (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'BEHAVIOR1');
-INSERT INTO behavior (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'BEHAVIOR2');
+INSERT INTO behavior (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'BEHAVIOR2');
+INSERT INTO behavior (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'BEHAVIOR1');

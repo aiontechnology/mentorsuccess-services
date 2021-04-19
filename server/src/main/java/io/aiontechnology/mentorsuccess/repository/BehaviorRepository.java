@@ -33,6 +33,13 @@ import java.util.UUID;
 public interface BehaviorRepository extends CrudRepository<Behavior, UUID> {
 
     /**
+     * Find all behaviors and sort them by name.
+     *
+     * @return The sorted list of behaviors.
+     */
+    Iterable<Behavior> findAllByOrderByNameAsc();
+
+    /**
      * Find an {@link Behavior} by its name.
      *
      * @param name The name of the desired {@link Behavior}.
