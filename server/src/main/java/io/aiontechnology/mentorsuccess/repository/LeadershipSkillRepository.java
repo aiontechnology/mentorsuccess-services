@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,6 +31,13 @@ import java.util.UUID;
  */
 @Repository
 public interface LeadershipSkillRepository extends CrudRepository<LeadershipSkill, UUID> {
+
+    /**
+     * Find all leadership skills and sort them by name.
+     *
+     * @return The sorted list of leadership skills.
+     */
+    Iterable<LeadershipSkill> findAllByOrderByNameAsc();
 
     /**
      * Find an {@link LeadershipSkill} by its name.
