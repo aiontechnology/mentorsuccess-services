@@ -1,4 +1,4 @@
--- Copyright 2020 Aion Technology LLC
+-- Copyright 2020-2021 Aion Technology LLC
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -13,5 +13,5 @@
 -- limitations under the License.
 
 DELETE FROM leadership_skill;
-INSERT INTO leadership_skill (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'LEADERSHIP_SKILL1');
-INSERT INTO leadership_skill (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'LEADERSHIP_SKILL2');
+INSERT INTO leadership_skill (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'LEADERSHIP_SKILL2');
+INSERT INTO leadership_skill (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'LEADERSHIP_SKILL1');

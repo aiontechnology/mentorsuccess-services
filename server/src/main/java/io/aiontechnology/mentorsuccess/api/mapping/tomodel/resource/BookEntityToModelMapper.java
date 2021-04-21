@@ -79,7 +79,7 @@ public class BookEntityToModelMapper implements OneWayMapper<Book, OutboundBook>
                         .withLeadershipSkills(leadershipSkillEntityToModelMapper.map(b.getLeadershipSkills()))
                         .withLeadershipTraits(leadershipTraitEntityToModelMapper.map(b.getLeadershipTraits()))
                         .withPhonograms(phonogramEntityToModelMapper.map(b.getPhonograms()))
-                        .withTags(tagEntityToModelMapper.map(b.getTags()))
+                        .withTag(tagEntityToModelMapper.map(b.getTags()).stream().findFirst().orElse(null))
                         .build());
     }
 

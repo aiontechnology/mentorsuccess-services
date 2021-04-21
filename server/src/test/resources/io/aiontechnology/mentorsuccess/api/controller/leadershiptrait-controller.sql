@@ -13,5 +13,5 @@
 -- limitations under the License.
 
 DELETE FROM leadership_trait;
-INSERT INTO leadership_trait (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'LEADERSHIP_TRAIT1');
-INSERT INTO leadership_trait (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'LEADERSHIP_TRAIT2');
+INSERT INTO leadership_trait (id, name) VALUES ('548fe589-2765-4b5f-8552-fa40c0722216', 'LEADERSHIP_TRAIT2');
+INSERT INTO leadership_trait (id, name) VALUES ('c2a542fa-cf79-485c-bf88-25d3302ab170', 'LEADERSHIP_TRAIT1');

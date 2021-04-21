@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2021 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,11 @@
 package io.aiontechnology.mentorsuccess.client.feign;
 
 import io.aiontechnology.mentorsuccess.model.inbound.InboundSchool;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundSchool;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,5 +54,11 @@ public interface SchoolApiClient {
      */
     @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}")
     OutboundSchool getSchool(@PathVariable("schoolId") UUID shoolId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}/books")
+    CollectionModel<OutboundBook> getBooksForSchool(@PathVariable("schoolId") UUID schoolId);
+
+    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}/games")
+    CollectionModel<OutboundGame> getGamesForSchool(@PathVariable("schoolId") UUID schoolId);
 
 }
