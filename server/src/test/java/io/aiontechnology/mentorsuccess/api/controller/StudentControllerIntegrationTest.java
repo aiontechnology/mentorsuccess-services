@@ -90,6 +90,7 @@ public class StudentControllerIntegrationTest {
                 .withComment(COMMENT)
                 .build();
 
+        String STUDENT_ID = "STUDENT_ID";
         String FIRST_NAME = "FIRST_NAME";
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
@@ -101,6 +102,7 @@ public class StudentControllerIntegrationTest {
         int preBehavioralAssessment = 1;
         int postBehavioralAssessment = 5;
         InboundStudent studentModel = InboundStudent.builder()
+                .withStudentId(STUDENT_ID)
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
@@ -126,6 +128,7 @@ public class StudentControllerIntegrationTest {
         // validation
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
+                .andExpect(jsonPath("$.studentId", is(STUDENT_ID)))
                 .andExpect(jsonPath("$.firstName", is(FIRST_NAME)))
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.grade", is(GRADE)))
@@ -243,6 +246,7 @@ public class StudentControllerIntegrationTest {
                 .withComment(COMMENT)
                 .build();
 
+        String STUDENT_ID = "123456789012345678901";
         String FIRST_NAME = "123456789012345678901234567890123456789012345678901";
         String LAST_NAME = "123456789012345678901234567890123456789012345678901";
         int GRADE = 1;
@@ -250,6 +254,7 @@ public class StudentControllerIntegrationTest {
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
+                .withStudentId(STUDENT_ID)
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
@@ -272,7 +277,8 @@ public class StudentControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.length()", is(4)))
+                .andExpect(jsonPath("$.error.studentId", is("A student's id can not be longer than 20 characters")))
                 .andExpect(jsonPath("$.error.firstName", is("A student's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A student's last name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.preferredTime", is("A student's preferred time can not be longer than 30 characters")))
