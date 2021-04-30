@@ -40,6 +40,9 @@ import java.util.Set;
 @Builder(setterPrefix = "with")
 public class InboundStudent {
 
+    @Size(max = 20, message = "{student.id.size}")
+    String studentId;
+
     @NotNull(message = "{student.firstname.notNull}")
     @Size(max = 50, message = "{student.firstname.size}")
     String firstName;
