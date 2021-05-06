@@ -1,4 +1,4 @@
-// Copyright 2020 Aion Technology LLC
+// Copyright 2020-2021 Aion Technology LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,40 +13,60 @@
 // limitations under the License.
 
 plugins {
-    id 'maven-publish'
-    id 'com.jfrog.artifactory'
-    id 'com.jfrog.bintray'
+    id 'maven'
+//    id 'signing'
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            groupId 'io.aiontechnology.mentorsuccess'
-            artifact sourcesJar
-            artifact javadocJar
-            versionMapping {
-                usage('java-api') {
-                    fromResolutionOf('runtimeClasspath')
+//signing {
+//    sign configurations.archives
+//}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            // Sign POM
+//            beforeDeployment {
+//                MavenDeployment deployment -> signing.signPom(deployment)
+//            }
+
+            // Destination
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: System.getenv('ossrhUsername'), password: System.getenv('ossrhPassword'))
+            }
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: System.getenv('ossrhUsername'), password: System.getenv('ossrhPassword'))
+            }
+
+            // Add required metadata to POM
+            pom.project {
+                name 'MentorSuccess'
+                packaging 'jar'
+                description 'MentorSuccess services project'
+                url 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services'
+
+                scm {
+                    connection 'scm:git:git://bitbucket.org:hisheartfoundation/mentorsuccess-services.git'
+                    developerConnection 'scm:git:ssh://bitbucket.org:hisheartfoundation/mentorsuccess-services.git'
+                    url 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services/src/master'
                 }
-                usage('java-runtime') {
-                    fromResolutionResult()
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'whitney'
+                        name 'Whitney Hunter'
+                        email 'whitney@aiontechnology.io'
+                        organization 'aiontechnology'
+                        organizationUrl 'http://aiontechnology.io'
+                    }
                 }
             }
-        }
-    }
-}
-
-artifactory {
-    publish {
-        contextUrl = 'https://oss.jfrog.org'
-        repository {
-            repoKey = 'oss-snapshot-local'
-            username = System.getenv('BINTRAY_USER')
-            password = System.getenv('BINTRAY_KEY')
-        }
-        defaults {
-            publications('mavenJava')
         }
     }
 }

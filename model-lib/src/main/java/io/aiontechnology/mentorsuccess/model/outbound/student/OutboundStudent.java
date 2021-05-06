@@ -38,6 +38,8 @@ public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
     UUID id;
 
+    String studentId;
+
     String firstName;
 
     String lastName;

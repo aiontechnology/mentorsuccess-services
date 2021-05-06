@@ -112,6 +112,7 @@ public class StudentModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbo
     public Optional<Student> map(InboundStudent inboundStudent, Student student) {
         return Optional.ofNullable(inboundStudent)
                 .map(s -> {
+                    student.setStudentId(s.getStudentId());
                     student.setFirstName(s.getFirstName());
                     student.setLastName(s.getLastName());
                     student.setGrade(s.getGrade());

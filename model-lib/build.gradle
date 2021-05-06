@@ -27,23 +27,3 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 }
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    pkg {
-        repo = 'MentorSuccess'
-        name = 'io.aiontechnology.mentorsuccess'
-        desc = 'Model library for the MentorSuccess server'
-        userOrg = 'aiontechnology'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services'
-        publish = true
-        publicDownloadNumbers = true
-        override = true
-        version {
-            released = new Date()
-        }
-    }
-    publications = ['mavenJava']
-}

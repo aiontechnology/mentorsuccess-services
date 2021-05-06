@@ -1,3 +1,5 @@
+// Copyright 2020-2021 Aion Technology LLC
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -32,24 +34,4 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-hateoas'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-}
-
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    pkg {
-        repo = 'MentorSuccess'
-        name = 'io.aiontechnology.mentorsuccess'
-        desc = 'Client library for the MentorSuccess server'
-        userOrg = 'aiontechnology'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services'
-        publish = true
-        publicDownloadNumbers = true
-        override = true
-        version {
-            released = new Date()
-        }
-    }
-    publications = ['mavenJava']
 }

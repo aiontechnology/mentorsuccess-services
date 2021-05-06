@@ -29,11 +29,11 @@ pipelines:
               variables:
                 CHECKSTYLE_RESULT_PATTERN: '.*/checkstyle.xml$'
       - step:
-          name: Deploy to jfrog
+          name: Deploy to Maven Central
           caches:
             - gradle
           script:
-            - gradle artifactoryPublish
+            - gradle uploadArchive
       - step:
           name: Deploy
           image: amazon/aws-cli
@@ -65,11 +65,11 @@ pipelines:
               variables:
                 CHECKSTYLE_RESULT_PATTERN: '.*/checkstyle.xml$'
       - step:
-          name: Deploy to jfrog
+          name: Deploy to Maven Central
           caches:
             - gradle
           script:
-            - gradle artifactoryPublish
+            - gradle uploadArchive
       - step:
           name: Deploy
           image: amazon/aws-cli
@@ -99,11 +99,11 @@ pipelines:
           artifacts:
             - server/build/**
       - step:
-          name: Deploy to jcenter
+          name: Deploy to Maven Central
           caches:
             - gradle
           script:
-            - gradle bintrayUpload
+            - gradle uploadArchive
       - step:
           name: Deploy
           image: amazon/aws-cli
