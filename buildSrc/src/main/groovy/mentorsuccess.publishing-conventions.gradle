@@ -14,20 +14,20 @@
 
 plugins {
     id 'maven'
-//    id 'signing'
+    id 'signing'
 }
 
-//signing {
-//    sign configurations.archives
-//}
+signing {
+    sign configurations.archives
+}
 
 uploadArchives {
     repositories {
         mavenDeployer {
             // Sign POM
-//            beforeDeployment {
-//                MavenDeployment deployment -> signing.signPom(deployment)
-//            }
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment)
+            }
 
             // Destination
             repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
