@@ -29,7 +29,7 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.7-SNAPSHOT"
+    toolVersion = "0.8.7"
 }
 
 javadoc.options.addStringOption('Xdoclint:none', '-quiet')
