@@ -27,6 +27,7 @@ publishing {
             pom {
                 name = 'MentorSuccess'
                 description = 'MentorSuccess services project'
+                url = 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services'
                 versionMapping {
                     usage('java-runtime') {
                         fromResolutionResult()
