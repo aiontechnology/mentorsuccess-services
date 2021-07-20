@@ -12,61 +12,64 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.artifacts.repositories.PasswordCredentials
+
 plugins {
-    id 'maven'
+    id 'maven-publish'
     id 'signing'
 }
 
-signing {
-    sign configurations.archives
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            // Sign POM
-            beforeDeployment {
-                MavenDeployment deployment -> signing.signPom(deployment)
-            }
-
-            // Destination
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: System.getenv('ossrhUsername'), password: System.getenv('ossrhPassword'))
-            }
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: System.getenv('ossrhUsername'), password: System.getenv('ossrhPassword'))
-            }
-
-            // Add required metadata to POM
-            pom.project {
-                name 'MentorSuccess'
-                packaging 'jar'
-                description 'MentorSuccess services project'
-                url 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services'
-
-                scm {
-                    connection 'scm:git:git://bitbucket.org:hisheartfoundation/mentorsuccess-services.git'
-                    developerConnection 'scm:git:ssh://bitbucket.org:hisheartfoundation/mentorsuccess-services.git'
-                    url 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services/src/master'
+publishing {
+    publications {
+        mentorsuccess(MavenPublication) {
+            from components.java
+            pom {
+                name = 'MentorSuccess'
+                description = 'MentorSuccess services project'
+                versionMapping {
+                    usage('java-runtime') {
+                        fromResolutionResult()
+                    }
                 }
-
                 licenses {
                     license {
-                        name 'The Apache License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     }
                 }
-
                 developers {
                     developer {
-                        id 'whitney'
-                        name 'Whitney Hunter'
-                        email 'whitney@aiontechnology.io'
-                        organization 'aiontechnology'
-                        organizationUrl 'http://aiontechnology.io'
+                        id = 'whitney'
+                        name = 'Whitney Hunter'
+                        email = 'whitney@aiontechnology.io'
+                        organization = 'aiontechnology'
+                        organizationUrl = 'http://aiontechnology.io'
                     }
+                }
+                scm {
+                    connection = 'scm:git:git://bitbucket.org:hisheartfoundation/mentorsuccess-services.git'
+                    developerConnection = 'scm:git:ssh://bitbucket.org:hisheartfoundation/mentorsuccess-services.git'
+                    url = 'https://bitbucket.org/hisheartfoundation/mentorsuccess-services/src/master'
                 }
             }
         }
     }
+    repositories {
+        maven {
+            credentials(PasswordCredentials) {
+                username = System.getenv('ossrhUsername')
+                password = System.getenv('ossrhPassword')
+            }
+            if (version.endsWith('SNAPSHOT')) {
+                url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
+            } else {
+                url = 'https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/'
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mentorsuccess
 }
