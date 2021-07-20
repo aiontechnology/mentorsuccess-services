@@ -12,16 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-image: gradle:6.7.1-jdk15-hotspot
+image: gradle:7.0.2-jdk16-hotspot
 
 pipelines:
   branches:
     '{MS-*,feature/*,bugfix/*}':
       - step:
           name: Build and test
-#          deployment: Test
+          #          deployment: Test
           script:
-            - gradle build
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in secring.gpg.enc -out /home/gradle/secring.gpg -d -md sha256
+            - gradle -Psigning.keyId=$GPG_KEY -Psigning.password=$GPG_PWD -Psigning.secretKeyRingFile=/home/gradle/secring.gpg build
           artifacts:
             - server/build/**
           after-script:
@@ -33,7 +34,8 @@ pipelines:
           caches:
             - gradle
           script:
-            - gradle uploadArchive
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in secring.gpg.enc -out /home/gradle/secring.gpg -d -md sha256
+            - gradle -Psigning.keyId=$GPG_KEY -Psigning.password=$GPG_PWD -Psigning.secretKeyRingFile=/home/gradle/secring.gpg publish
       - step:
           name: Deploy
           image: amazon/aws-cli
@@ -47,17 +49,18 @@ pipelines:
             - aws ecr get-login-password | docker login --username AWS --password-stdin 661143960593.dkr.ecr.us-west-2.amazonaws.com
             - docker build -t services:$TAG .
             - docker tag services:$TAG $IMAGE:latest
-#            - docker tag services:$TAG $IMAGE:test
+            #            - docker tag services:$TAG $IMAGE:test
             - docker tag services:$TAG $IMAGE:$TAG
             - docker push $IMAGE:latest
-#            - docker push $IMAGE:test
+            #            - docker push $IMAGE:test
             - docker push $IMAGE:$TAG
     develop:
       - step:
           name: Build and test
           deployment: Test
           script:
-            - gradle build
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in secring.gpg.enc -out /home/gradle/secring.gpg -d -md sha256
+            - gradle -Psigning.keyId=$GPG_KEY -Psigning.password=$GPG_PWD -Psigning.secretKeyRingFile=/home/gradle/secring.gpg build
           artifacts:
             - server/build/**
           after-script:
@@ -69,7 +72,8 @@ pipelines:
           caches:
             - gradle
           script:
-            - gradle uploadArchive
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in secring.gpg.enc -out /home/gradle/secring.gpg -d -md sha256
+            - gradle -Psigning.keyId=$GPG_KEY -Psigning.password=$GPG_PWD -Psigning.secretKeyRingFile=/home/gradle/secring.gpg publish
       - step:
           name: Deploy
           image: amazon/aws-cli
@@ -95,7 +99,8 @@ pipelines:
           caches:
             - gradle
           script:
-            - gradle build
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in secring.gpg.enc -out /home/gradle/secring.gpg -d -md sha256
+            - gradle -Psigning.keyId=$GPG_KEY -Psigning.password=$GPG_PWD -Psigning.secretKeyRingFile=/home/gradle/secring.gpg build
           artifacts:
             - server/build/**
       - step:
@@ -103,7 +108,8 @@ pipelines:
           caches:
             - gradle
           script:
-            - gradle uploadArchive
+            - openssl aes-256-cbc -pass pass:$OPENSSL_PWD -in secring.gpg.enc -out /home/gradle/secring.gpg -d -md sha256
+            - gradle -Psigning.keyId=$GPG_KEY -Psigning.password=$GPG_PWD -Psigning.secretKeyRingFile=/home/gradle/secring.gpg publish
       - step:
           name: Deploy
           image: amazon/aws-cli
