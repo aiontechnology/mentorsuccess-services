@@ -60,7 +60,7 @@ dependencies {
 }
 
 task copyJar(type: Copy) {
-    from jar
+    from bootJar
     into "$buildDir/docker"
 }
 
