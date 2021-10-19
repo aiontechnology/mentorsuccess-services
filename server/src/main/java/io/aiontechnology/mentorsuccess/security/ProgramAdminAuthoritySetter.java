@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Aion Technology LLC
+ * Copyright 2021-2022 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ProgramAdminAuthoritySetter implements BiFunction<Optional<SchoolPersonRole>, URI, List<GrantedAuthority>> {
+public class ProgramAdminAuthoritySetter implements BiFunction<Optional<SchoolPersonRole>, URI,
+        List<GrantedAuthority>> {
 
     private final Pattern SCHOOL_PATTERN1 =
             Pattern.compile("/api/v1/schools/(.*)/");
@@ -82,6 +83,8 @@ public class ProgramAdminAuthoritySetter implements BiFunction<Optional<SchoolPe
                         authorities.addAll(AuthoritiesBuilder.instance("personnel").withAll().build());
                         authorities.addAll(AuthoritiesBuilder.instance("school").withRead().build());
                         authorities.addAll(AuthoritiesBuilder.instance("schoolresources").withAll().build());
+                        authorities.addAll(AuthoritiesBuilder.instance("schoolsession").withAll().build());
+                        authorities.addAll(AuthoritiesBuilder.instance("schoolsessionstudents").withAll().build());
                         authorities.addAll(AuthoritiesBuilder.instance("student").withAll().build());
                         authorities.addAll(AuthoritiesBuilder.instance("teacher").withAll().build());
                     }

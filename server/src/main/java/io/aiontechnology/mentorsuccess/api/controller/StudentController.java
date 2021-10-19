@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,20 +18,21 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.StudentModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
-import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudent;
+import io.aiontechnology.mentorsuccess.resource.StudentResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
+import io.aiontechnology.mentorsuccess.service.SchoolSessionService;
+import io.aiontechnology.mentorsuccess.service.StudentSchoolSessionService;
 import io.aiontechnology.mentorsuccess.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.flowable.engine.RuntimeService;
-import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,21 +43,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static java.util.Objects.requireNonNull;
 import static org.springframework.http.HttpStatus.CREATED;
 
 /**
@@ -71,91 +71,152 @@ import static org.springframework.http.HttpStatus.CREATED;
 @Slf4j
 public class StudentController {
 
-    /** Assembler for creating {@link OutboundStudent} instances */
-    private final StudentModelAssembler studentModelAssembler;
+    // Assemblers
+    private final Assembler<Student, StudentResource> studentAssembler;
 
-    /** Mapper for converting {@link OutboundStudent} instances to {@link Student} */
+    // Mappers
     private final OneWayMapper<InboundStudent, Student> studentModelToEntityMapper;
-
     private final OneWayUpdateMapper<InboundStudent, Student> studentModelToEntityUpdateMapper;
+    private final OneWayMapper<InboundStudent, StudentSchoolSession> studentSessionModelToEntityMapper;
+    private final OneWayUpdateMapper<InboundStudent, StudentSchoolSession> studentSessionModelToEntityUpdateMapper;
 
-    /** Service with business logic for schools */
+    // Services
     private final SchoolService schoolService;
-
-    /** Service with business logic for students */
+    private final SchoolSessionService schoolSessionService;
+    private final StudentSchoolSessionService studentSchoolSessionService;
     private final StudentService studentService;
 
-    /** {@link LinkProvider} implementation for schools. */
-    private final LinkProvider<OutboundStudent, Student> linkProvider = (studentModel, student) ->
-            Arrays.asList(
-                    linkTo(StudentController.class, student.getSchool().getId()).slash(student.getId()).withSelfRel()
-            );
-
+    /**
+     * Create a new student. The student is attached to the school's current session. It is not possible to create
+     * a student for a historic session.
+     *
+     * @param schoolId The ID of the school to which the student should belong
+     * @param inboundStudent The data that will be used to create the new student.
+     * @return The newly created student
+     */
     @PostMapping
     @ResponseStatus(CREATED)
     @Transactional
     @PreAuthorize("hasAuthority('student:create')")
-    public OutboundStudent createStudent(@PathVariable("schoolId") UUID schoolId,
+    public StudentResource createStudent(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundStudent inboundStudent) {
         log.debug("Creating student {}, for school {}", inboundStudent, schoolId);
         School school = schoolService.getSchoolById(schoolId)
                 .orElseThrow(() -> new NotFoundException("School was not found"));
 
-        return Optional.ofNullable(inboundStudent)
-                .flatMap(studentModelToEntityMapper::map)
-                .map(school::addStudent)
-                .map(studentService::updateStudent)
-                .map(s -> studentModelAssembler.toModel(s, linkProvider))
-                .orElseThrow(() -> new IllegalArgumentException(("Unable to create student")));
+        SchoolSession currentSession = school.getCurrentSession();
+        requireNonNull(currentSession, "Current session is not set");
+
+        Student student = studentModelToEntityMapper.map(inboundStudent)
+                .orElseThrow(() -> new NotFoundException("Student was not found"));
+
+        StudentSchoolSession studentSchoolSession = studentSessionModelToEntityMapper.map(inboundStudent)
+                .map(ss -> ss.setSession(currentSession))
+                .orElseThrow(() -> new IllegalStateException("Mapping of student session failed"));
+
+        student.addStudentSession(studentSchoolSession);
+        school.addStudent(student);
+        studentService.updateStudent(student);
+        return studentAssembler.map(student).orElse(null);
     }
 
     /**
-     * A REST endpoint for retrieving all students for a school.
+     * Deactivate the given student.
+     *
+     * @param schoolId The school that owns the student that is being deacivated.
+     * @param studentId The ID of the student to be deleted.
+     */
+    @DeleteMapping("/{studentId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('student:delete')")
+    public void deactivateStudent(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("studentId") UUID studentId) {
+        School school = schoolService.getSchoolById(schoolId)
+                .orElseThrow(() -> new NotFoundException("School was not found"));
+
+        SchoolSession currentSession = school.getCurrentSession();
+        requireNonNull(currentSession, "Current session is not set");
+
+        studentService.getStudentById(studentId, currentSession)
+                .map(student -> student.findCurrentSessionForStudent(currentSession))
+                .ifPresent(studentSchoolSessionService::deactivateStudent);
+    }
+
+    /**
+     * Retrieving all students for a school.
      *
      * @param schoolId The id of the school.
      * @return A collection of {@link OutboundStudent} instances for the given school.
      */
     @GetMapping
     @PreAuthorize("hasAuthority('students:read')")
-    public CollectionModel<OutboundStudent> getAllStudentsForSchool(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Getting all students for school: {}", schoolId);
-        Collection<Student> students = schoolService.getSchoolById(schoolId)
-                .map(School::getStudents)
-                .orElse(Collections.EMPTY_LIST);
-        Collection<OutboundStudent> studentModels = students.stream()
-                .map(s -> studentModelAssembler.toModel(s, linkProvider))
-                .collect(Collectors.toList());
+    public CollectionModel<StudentResource> getAllStudentsForSchool(@PathVariable("schoolId") UUID schoolId,
+            @RequestParam("session") Optional<UUID> sessionId) {
+        log.debug("Getting all students for school: {}, session: {}", schoolId, sessionId
+                .map(UUID::toString).orElse("Not provided"));
+
+        School school = schoolService.getSchoolById(schoolId)
+                .orElseThrow(() -> new NotFoundException("School was not found"));
+
+        SchoolSession session = sessionId
+                .flatMap(schoolSessionService::getSchoolSessionById)
+                .orElse(school.getCurrentSession());
+        requireNonNull(session, "No session");
+        Map<String, Object> data = Map.of("session", session);
+
+        Collection<StudentResource> studentModels =
+                StreamSupport.stream(studentService.getAllStudents(school, session).spliterator(), false)
+                        .map(student -> studentAssembler.mapWithData(student, data))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .collect(Collectors.toList());
         return CollectionModel.of(studentModels);
     }
 
+    /**
+     * Get a particular student.
+     *
+     * @param schoolId The ID of the school that owns the student.
+     * @param studentId The ID of the desired student.
+     * @param sessionId The ID of the desired session.
+     * @return The student if it could be found.
+     */
     @GetMapping("/{studentId}")
     @PreAuthorize("hasAuthority('student:read')")
-    public OutboundStudent getStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId) {
-        return studentService.getStudentById(studentId)
-                .map(s -> studentModelAssembler.toModel(s, linkProvider))
+    public StudentResource getStudent(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("studentId") UUID studentId, @RequestParam("session") Optional<UUID> sessionId) {
+        School school = schoolService.getSchoolById(schoolId)
+                .orElseThrow(() -> new NotFoundException("School was not found"));
+
+        SchoolSession session = sessionId
+                .flatMap(schoolSessionService::getSchoolSessionById)
+                .orElse(school.getCurrentSession());
+        requireNonNull(session, "No session");
+        Map<String, Object> data = Map.of("session", session);
+
+        return studentService.getStudentById(studentId, session)
+                .flatMap(student -> studentAssembler.mapWithData(student, data))
                 .orElseThrow(() -> new NotFoundException("Student was not found"));
     }
 
     @PutMapping("/{studentId}")
     @PreAuthorize("hasAuthority('student:update')")
-    public OutboundStudent updateStudent(@PathVariable("schoolId") UUID schoolId,
+    public StudentResource updateStudent(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("studentId") UUID studentId, @RequestBody @Valid InboundStudent inboundStudent) {
-        Student student = studentService.getStudentById(studentId)
+        School school = schoolService.getSchoolById(schoolId)
+                .orElseThrow(() -> new NotFoundException("School was not found"));
+
+        SchoolSession currentSession = school.getCurrentSession();
+        requireNonNull(currentSession, "Current session is not set");
+
+        Student student = studentService.getStudentById(studentId, currentSession)
                 .orElseThrow(() -> new NotFoundException("Student was not found"));
 
-        return Optional.ofNullable(inboundStudent)
-                .flatMap(inbound -> studentModelToEntityUpdateMapper.map(inbound, student))
-                .map(studentService::updateStudent)
-                .map(s -> studentModelAssembler.toModel(s, linkProvider))
-                .orElseThrow(() -> new IllegalArgumentException(("Unable to update student")));
-    }
-
-    @DeleteMapping("/{studentId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('student:delete')")
-    public void deactivateStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId) {
-        studentService.getStudentById(studentId)
-                .ifPresent(studentService::deactivateStudent);
+        StudentSchoolSession currentStudentSession = student.findCurrentSessionForStudent(currentSession);
+        studentModelToEntityUpdateMapper.map(inboundStudent, student);
+        studentSessionModelToEntityUpdateMapper.map(inboundStudent, currentStudentSession);
+        studentService.updateStudent(student);
+        return studentAssembler.map(student).orElse(null);
     }
 
 }

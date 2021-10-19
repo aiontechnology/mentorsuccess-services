@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,9 +20,11 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
 
@@ -35,8 +37,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -46,12 +50,14 @@ import java.util.UUID;
  * @since 0.1.0
  */
 @Entity
+@Table(name = "game")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = false)
+@Getter
+@Setter
+@ToString
 @Where(clause = "is_active = true")
-public class Game {
+public class Game implements Identifiable<UUID> {
 
     /** The ID of the game. */
     @Id
@@ -85,6 +91,7 @@ public class Game {
     @JoinTable(name = "game_activityfocus",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "activityfocus_id"))
+    @ToString.Exclude
     private Collection<ActivityFocus> activityFocuses = new ArrayList<>();
 
     /** A collection leadership skills for the game. */
@@ -92,6 +99,7 @@ public class Game {
     @JoinTable(name = "game_leadershipskill",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
+    @ToString.Exclude
     private Collection<LeadershipSkill> leadershipSkills = new ArrayList<>();
 
     /** A collection leadership traits for the game. */
@@ -99,6 +107,20 @@ public class Game {
     @JoinTable(name = "game_leadershiptrait",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
+    @ToString.Exclude
     private Collection<LeadershipTrait> leadershipTraits = new ArrayList<>();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Game game = (Game) o;
+        return id != null && Objects.equals(id, game.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 
 }

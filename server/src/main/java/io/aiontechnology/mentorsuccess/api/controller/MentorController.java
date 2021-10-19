@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.MentorModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
-import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole.FirstNameComparitor;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole.FirstNameComparator;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundMentor;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
+import io.aiontechnology.mentorsuccess.resource.MentorResource;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -45,13 +45,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.MENTOR;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with mentors.
@@ -75,20 +73,13 @@ public class MentorController {
     private final OneWayUpdateMapper<InboundMentor, SchoolPersonRole> mentorUpdateMapper;
 
     /** Assembler for creating {@link OutboundMentor} instances */
-    private final MentorModelAssembler mentorModelAssembler;
+    private final Assembler<SchoolPersonRole, MentorResource> mentorAssembler;
 
     /** Service with business logic for teachers */
     private final RoleService roleService;
 
     /** Service with business logic for schools */
     private final SchoolService schoolService;
-
-    /** {@link LinkProvider} implementation for mentors. */
-    private final LinkProvider<OutboundMentor, SchoolPersonRole> linkProvider = (mentorModel, role) ->
-            Arrays.asList(
-                    linkTo(MentorController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
-                    linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")
-            );
 
     /**
      * A REST endpoint for creating a mentor for a particular school.
@@ -100,7 +91,7 @@ public class MentorController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('mentor:create')")
-    public OutboundMentor createMentor(@PathVariable("schoolId") UUID schoolId,
+    public MentorResource createMentor(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundMentor mentorModel) {
         log.debug("Creating mentor: {}", mentorModel);
         return schoolService.getSchoolById(schoolId)
@@ -108,7 +99,7 @@ public class MentorController {
                         .flatMap(mentorMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
-                        .map(role -> mentorModelAssembler.toModel(role, linkProvider))
+                        .flatMap(mentorAssembler::map)
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create mentor")))
                 .orElseThrow(() -> new NotFoundException("School not found"));
     }
@@ -121,14 +112,16 @@ public class MentorController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('mentors:read')")
-    public CollectionModel<OutboundMentor> getMentors(@PathVariable("schoolId") UUID schoolId) {
+    public CollectionModel<MentorResource> getMentors(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all mentors for school {}", schoolId);
         var session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", MENTOR.toString());
         return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
-                        .sorted(new FirstNameComparitor())
-                        .map(role -> mentorModelAssembler.toModel(role, linkProvider))
+                        .sorted(new FirstNameComparator())
+                        .map(mentorAssembler::map)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList()))
                 .map(CollectionModel::of)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
@@ -143,9 +136,9 @@ public class MentorController {
      */
     @GetMapping("/{mentorId}")
     @PreAuthorize("hasAuthority('mentor:read')")
-    public OutboundMentor getTeacher(@PathVariable("schoolId") UUID schoolId, @PathVariable("mentorId") UUID mentorId) {
+    public MentorResource getMentor(@PathVariable("schoolId") UUID schoolId, @PathVariable("mentorId") UUID mentorId) {
         return roleService.findRoleById(mentorId)
-                .map(role -> mentorModelAssembler.toModel(role, linkProvider))
+                .flatMap(mentorAssembler::map)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
@@ -159,13 +152,13 @@ public class MentorController {
      */
     @PutMapping("/{mentorId}")
     @PreAuthorize("hasAuthority('mentor:update')")
-    public OutboundMentor updateMentor(@PathVariable("schoolId") UUID schoolId,
+    public MentorResource updateMentor(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("mentorId") UUID mentorId,
             @RequestBody @Valid InboundMentor mentorModel) {
         return roleService.findRoleById(mentorId)
                 .flatMap(role -> mentorUpdateMapper.map(mentorModel, role))
                 .map(roleService::updateRole)
-                .map(role -> mentorModelAssembler.toModel(role, linkProvider))
+                .flatMap(mentorAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update mentor"));
     }
 

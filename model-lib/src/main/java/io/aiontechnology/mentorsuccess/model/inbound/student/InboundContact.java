@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,7 +52,8 @@ public class InboundContact {
     String lastName;
 
     /** The contact's email. */
-    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{contact.email.invalid}")
+    @Size(max = 50, message = "{contact.email.size}")
+    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$)", message = "{contact.email.invalid}")
     String email;
 
     /** The contact's phone. */

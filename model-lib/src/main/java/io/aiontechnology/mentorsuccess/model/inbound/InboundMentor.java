@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,6 @@ public class InboundMentor {
     String availability;
 
     @NotNull(message = "{mentor.location.notNull}")
-    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{studentmentor.location.invalid}")
     ResourceLocation location;
 
     @NotNull(message = "{mentor.mediaRelease.notNull}")

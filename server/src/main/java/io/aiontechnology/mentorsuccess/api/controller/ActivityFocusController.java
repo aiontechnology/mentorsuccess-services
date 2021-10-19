@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
-import io.aiontechnology.mentorsuccess.api.assembler.ActivityFocusModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.NameableToStringModelMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ import java.util.stream.StreamSupport;
 public class ActivityFocusController {
 
     /** A HATEOAS assembler for an activity focus string. */
-    private final ActivityFocusModelAssembler activityFocusModelAssembler;
+    private final NameableToStringModelMapper<ActivityFocus> activityFocusModelAssembler;
 
     /** Service for interacting with {@link ActivityFocus IActivityFocuss}. */
     private final ActivityFocusService activityFocusService;

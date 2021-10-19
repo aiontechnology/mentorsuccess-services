@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,7 +30,5 @@ import javax.persistence.Entity;
  */
 @Entity
 @NoArgsConstructor
-@Data
-@EqualsAndHashCode(callSuper = true)
 public class LeadershipSkill extends AbstractReference {
 }

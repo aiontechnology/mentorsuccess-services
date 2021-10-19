@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,6 +21,7 @@ import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundPerson;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
+import io.aiontechnology.mentorsuccess.resource.PersonResource;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +44,7 @@ public class StudentPersonRoleEntityToModelMapperTest {
     void testMapping() throws Exception {
         // setup the fixture
         Person person = new Person();
-        OutboundPerson outboundPerson = OutboundPerson.builder().build();
+        PersonResource outboundPerson = new PersonResource();
 
         OneWayMapper<Person, OutboundPerson> personEntityToModelMapper = mock(OneWayMapper.class);
         when(personEntityToModelMapper.map(person)).thenReturn(Optional.of(outboundPerson));
@@ -54,7 +55,7 @@ public class StudentPersonRoleEntityToModelMapperTest {
         studentPersonRole.setLabel(label);
 
         StudentPersonEntityToModelMapper studentPersonEntityToModelMapper =
-                new StudentPersonEntityToModelMapper(personEntityToModelMapper, new PhoneService());
+                new StudentPersonEntityToModelMapper(new PhoneService());
 
         // execute the SUT
         Optional<OutboundContact> result = studentPersonEntityToModelMapper.map(studentPersonRole);
@@ -75,7 +76,7 @@ public class StudentPersonRoleEntityToModelMapperTest {
         when(personEntityToModelMapper.map(any())).thenReturn(Optional.empty());
 
         StudentPersonEntityToModelMapper studentPersonEntityToModelMapper =
-                new StudentPersonEntityToModelMapper(personEntityToModelMapper, new PhoneService());
+                new StudentPersonEntityToModelMapper(new PhoneService());
 
         // execute the SUT
         Optional<OutboundContact> result = studentPersonEntityToModelMapper.map(null);

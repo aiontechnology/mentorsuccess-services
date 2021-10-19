@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -65,14 +65,15 @@ public class GameModelToEntityUpdateMapperTest {
         Game game = new Game();
 
         OneWayCollectionMapper<String, ActivityFocus> activityFocusModelToEntityMapper =
-                (b -> Arrays.asList(new ActivityFocus()));
+                (b -> Optional.of(Arrays.asList(new ActivityFocus())));
         OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
-                (l -> Arrays.asList(new LeadershipSkill()));
+                (l -> Optional.of(Arrays.asList(new LeadershipSkill())));
         OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
-                (l -> Arrays.asList(new LeadershipTrait()));
+                (l -> Optional.of(Arrays.asList(new LeadershipTrait())));
 
         GameModelToEntityUpdateMapper gameModelToEntityUpdateMapper = new GameModelToEntityUpdateMapper(
-                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper, leadershipTraitModelToEntityMapper);
+                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper,
+                leadershipTraitModelToEntityMapper);
 
         // execute the SUT
         Optional<Game> result = gameModelToEntityUpdateMapper.map(inboundGame, game);
@@ -94,14 +95,15 @@ public class GameModelToEntityUpdateMapperTest {
         Game game = new Game();
 
         OneWayCollectionMapper<String, ActivityFocus> activityFocusModelToEntityMapper =
-                (b -> Arrays.asList(new ActivityFocus()));
+                (b -> Optional.of(Arrays.asList(new ActivityFocus())));
         OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
-                (l -> Arrays.asList(new LeadershipSkill()));
+                (l -> Optional.of(Arrays.asList(new LeadershipSkill())));
         OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
-                (l -> Arrays.asList(new LeadershipTrait()));
+                (l -> Optional.of(Arrays.asList(new LeadershipTrait())));
 
         GameModelToEntityUpdateMapper gameModelToEntityUpdateMapper = new GameModelToEntityUpdateMapper(
-                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper, leadershipTraitModelToEntityMapper);
+                activityFocusModelToEntityMapper, leadershipSkillModelToEntityMapper,
+                leadershipTraitModelToEntityMapper);
 
         // execute the SUT
         Optional<Game> result = gameModelToEntityUpdateMapper.map(null, game);

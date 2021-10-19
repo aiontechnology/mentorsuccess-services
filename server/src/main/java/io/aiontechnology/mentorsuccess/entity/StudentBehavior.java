@@ -1,11 +1,11 @@
 /*
- * Copyright 2020 - 2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,8 +20,11 @@ import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -30,7 +33,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -40,21 +45,13 @@ import java.util.UUID;
  * @since 0.3.0
  */
 @Entity
+@Table(name = "student_behavior")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class StudentBehavior {
-
-    @EmbeddedId
-    private StudentBehaviorPK studentBehaviorPK = new StudentBehaviorPK();
-
-    /** The associated {@link Student}. */
-    @MapsId("student_id")
-    @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
-    private Student student;
 
     /** The associated {@link Behavior}. */
     @MapsId("behavior_id")
@@ -71,15 +68,43 @@ public class StudentBehavior {
     @EqualsAndHashCode.Include
     private SchoolPersonRole role;
 
+    @EmbeddedId
+    private StudentBehaviorPK studentBehaviorPK = new StudentBehaviorPK();
+
+    /** The associated {@link StudentSchoolSession}. */
+    @MapsId("studentsession_id")
+    @ManyToOne
+    @JoinColumn(name = "studentsession_id", referencedColumnName = "id")
+    private StudentSchoolSession studentSchoolSession;
+
+    public StudentBehavior(StudentBehavior from) {
+        behavior = from.behavior;
+        role = from.role;
+        studentSchoolSession = from.studentSchoolSession;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        StudentBehavior that = (StudentBehavior) o;
+        return studentBehaviorPK != null && Objects.equals(studentBehaviorPK, that.studentBehaviorPK);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentBehaviorPK);
+    }
+
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
     public static class StudentBehaviorPK implements Serializable {
 
-        private UUID student_id;
         private UUID behavior_id;
         private UUID role_id;
+        private UUID studentsession_id;
 
     }
 

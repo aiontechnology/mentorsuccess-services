@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
+import io.aiontechnology.mentorsuccess.resource.GameResource;
 import io.aiontechnology.mentorsuccess.service.GameService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,13 +40,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with games.
@@ -71,13 +67,7 @@ public class GameController {
     private final OneWayUpdateMapper<InboundGame, Game> gameUpdateMapper;
 
     /** A HATEOAS assembler for {@link InboundGame GameModels}. */
-    private final GameModelAssembler gameModelAssembler;
-
-    /** {@link LinkProvider} implementation for games. */
-    private final LinkProvider<OutboundGame, Game> linkProvider = (gameModel, game) ->
-            Arrays.asList(
-                    linkTo(GameController.class).slash(game.getId()).withSelfRel()
-            );
+    private final Assembler<Game, GameResource> gameAssembler;
 
     /**
      * A REST endpoint for creating new games.
@@ -88,12 +78,12 @@ public class GameController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('game:create')")
-    public OutboundGame createGame(@RequestBody @Valid InboundGame inboundGame) {
+    public GameResource createGame(@RequestBody @Valid InboundGame inboundGame) {
         log.debug("Game: {}", inboundGame);
         return Optional.ofNullable(inboundGame)
                 .flatMap(gameMapper::map)
                 .map(gameService::createGame)
-                .map(b -> gameModelAssembler.toModel(b, linkProvider))
+                .flatMap(gameAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
     }
 
@@ -104,10 +94,12 @@ public class GameController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('games:read')")
-    public CollectionModel<OutboundGame> getAllGames() {
+    public CollectionModel<GameResource> getAllGames() {
         log.debug("Getting all games");
         var games = StreamSupport.stream(gameService.getAllGames().spliterator(), false)
-                .map(s -> gameModelAssembler.toModel(s, linkProvider))
+                .map(gameAssembler::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
         return CollectionModel.of(games);
     }
@@ -120,9 +112,9 @@ public class GameController {
      */
     @GetMapping("/{gameId}")
     @PreAuthorize("hasAuthority('game:read')")
-    public OutboundGame getGame(@PathVariable("gameId") UUID gameId) {
+    public GameResource getGame(@PathVariable("gameId") UUID gameId) {
         return gameService.findGameById(gameId)
-                .map(game -> gameModelAssembler.toModel(game, linkProvider))
+                .flatMap(gameAssembler::map)
                 .orElseThrow(() -> new NotFoundException("Game was not found"));
     }
 
@@ -135,12 +127,12 @@ public class GameController {
      */
     @PutMapping("/{gameId}")
     @PreAuthorize("hasAuthority('game:update')")
-    public OutboundGame updateGame(@PathVariable("gameId") UUID gameId, @RequestBody @Valid InboundGame inboundGame) {
+    public GameResource updateGame(@PathVariable("gameId") UUID gameId, @RequestBody @Valid InboundGame inboundGame) {
         log.debug("Updating book {} with {}", gameId, inboundGame);
         return gameService.findGameById(gameId)
                 .flatMap(game -> gameUpdateMapper.map(inboundGame, game))
                 .map(gameService::updateGame)
-                .map(game -> gameModelAssembler.toModel(game, linkProvider))
+                .flatMap(gameAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update game"));
     }
 

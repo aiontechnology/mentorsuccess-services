@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -33,6 +33,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation.ONLINE;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -77,6 +78,7 @@ public class BookControllerIntegrationTest {
                 .withTitle(TITLE)
                 .withAuthor(AUTHOR)
                 .withGradeLevel(GRADE_LEVEL)
+                .withLocation(ONLINE)
                 .build();
 
         // execute the SUT
@@ -105,6 +107,7 @@ public class BookControllerIntegrationTest {
                 .withTitle(TITLE)
                 .withAuthor(null)
                 .withGradeLevel(GRADE_LEVEL)
+                .withLocation(ONLINE)
                 .build();
 
         // execute the SUT
@@ -148,9 +151,10 @@ public class BookControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(2)))
+                .andExpect(jsonPath("$.error.length()", is(3)))
                 .andExpect(jsonPath("$.error.title", is("A title is required for a book")))
                 .andExpect(jsonPath("$.error.gradeLevel", is("A grade level is required for a book")))
+                .andExpect(jsonPath("$.error.location", is("A location is required for a book")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/books")));
     }
@@ -159,7 +163,8 @@ public class BookControllerIntegrationTest {
     void testCreateBook_fieldsInvalid() throws Exception {
         // setup the fixture
         InboundBook inboundBook = InboundBook.builder()
-                .withTitle("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
+                .withTitle(
+                        "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901")
                 .withAuthor("1234567890123456789012345678901")
                 .withGradeLevel(7)
                 .build();
@@ -177,10 +182,11 @@ public class BookControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(3)))
+                .andExpect(jsonPath("$.error.length()", is(4)))
                 .andExpect(jsonPath("$.error.title", is("The title of a book can not be longer than 100 characters")))
                 .andExpect(jsonPath("$.error.author", is("The book's author can not be longer than 30 characters")))
                 .andExpect(jsonPath("$.error.gradeLevel", is("A grade level must be between 1st and 6th")))
+                .andExpect(jsonPath("$.error.location", is("A location is required for a book")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/books")));
     }
@@ -192,12 +198,13 @@ public class BookControllerIntegrationTest {
         book.put("title", TITLE);
         book.put("author", AUTHOR);
         book.put("gradeLevel", GRADE_LEVEL);
+        book.put("location", ONLINE);
         book.put("interests", Arrays.asList("INTEREST1"));
         book.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT1"));
         book.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL1"));
         book.put("phonograms", Arrays.asList("PH1"));
         book.put("behaviors", Arrays.asList("BEHAVIOR1"));
-        book.put("tag", "TAG");
+        book.put("tags", Arrays.asList("TAG"));
 
         // execute the SUT
         ResultActions result = mvc.perform(post("/api/v1/books")
@@ -224,7 +231,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.phonograms[0]", is("PH1")))
                 .andExpect(jsonPath("$.behaviors.length()", is(1)))
                 .andExpect(jsonPath("$.behaviors[0]", is("BEHAVIOR1")))
-                .andExpect(jsonPath("$.tag", is("TAG")))
+                .andExpect(jsonPath("$.tags[0]", is("TAG")))
                 .andExpect(jsonPath("$._links.length()", is(1)))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
     }
@@ -244,8 +251,8 @@ public class BookControllerIntegrationTest {
 
         // validation
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(1)))
-                .andExpect(jsonPath("$._embedded.bookModelList[0].id", is("f53af381-d524-40f7-8df9-3e808c9ad46b")));
+                .andExpect(jsonPath("$._embedded.bookList.length()", is(1)))
+                .andExpect(jsonPath("$._embedded.bookList[0].id", is("f53af381-d524-40f7-8df9-3e808c9ad46b")));
     }
 
     @Test
@@ -278,7 +285,7 @@ public class BookControllerIntegrationTest {
                 .andExpect(jsonPath("$.phonograms", hasItems("PH1", "PH1")))
                 .andExpect(jsonPath("$.behaviors.length()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("BEHAVIOR1", "BEHAVIOR2")))
-                .andExpect(jsonPath("$.tag", is("TAG")))
+                .andExpect(jsonPath("$.tags[0]", is("TAG")))
                 .andExpect(jsonPath("$._links.self[0].href", startsWith("http://localhost/api/v1/books/")));
     }
 
@@ -306,6 +313,7 @@ public class BookControllerIntegrationTest {
         updatedBook.put("title", "NEW_TITLE");
         updatedBook.put("author", "NEW_AUTHOR");
         updatedBook.put("gradeLevel", 2);
+        updatedBook.put("location", ONLINE);
         updatedBook.put("interests", Arrays.asList("INTEREST2"));
         updatedBook.put("leadershipTraits", Arrays.asList("LEADERSHIP_TRAIT2"));
         updatedBook.put("leadershipSkills", Arrays.asList("LEADERSHIP_SKILL2"));

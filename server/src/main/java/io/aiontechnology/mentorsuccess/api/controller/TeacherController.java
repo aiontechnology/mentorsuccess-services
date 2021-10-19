@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
+import io.aiontechnology.mentorsuccess.resource.TeacherResource;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -44,13 +43,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.TEACHER;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with teachers.
@@ -64,29 +61,19 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class TeacherController {
 
-    /** The JPA entity manager */
-    private final EntityManager entityManager;
+    // Assemblers
+    private final Assembler<SchoolPersonRole, TeacherResource> teacherAssembler;
 
-    /** A mapper for converting {@link InboundTeacher} instances to {@link SchoolPersonRole Roles}. */
+    // Mappers
     private final OneWayMapper<InboundTeacher, SchoolPersonRole> teacherMapper;
-
-    /** An update mapper for converting {@link InboundTeacher} instances to {@link SchoolPersonRole Roles}. */
     private final OneWayUpdateMapper<InboundTeacher, SchoolPersonRole> teacherUpdateMapper;
 
-    /** Service with business logic for schools */
+    // Services
+    private final RoleService roleService;
     private final SchoolService schoolService;
 
-    /** Assembler for creating {@link InboundTeacher} instances */
-    private final TeacherModelAssembler teacherModelAssembler;
-
-    /** Service with business logic for teachers */
-    private final RoleService roleService;
-    /** {@link LinkProvider} implementation for teachers. */
-    private final LinkProvider<OutboundTeacher, SchoolPersonRole> linkProvider = (teacherModel, role) ->
-            Arrays.asList(
-                    linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
-                    linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")
-            );
+    //Other
+    private final EntityManager entityManager;
 
     /**
      * A REST endpoint for creating a teacher for a particular school.
@@ -98,14 +85,15 @@ public class TeacherController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('teacher:create')")
-    public OutboundTeacher createTeacher(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid InboundTeacher inboundTeacher) {
+    public TeacherResource createTeacher(@PathVariable("schoolId") UUID schoolId,
+            @RequestBody @Valid InboundTeacher inboundTeacher) {
         log.debug("Creating teacher: {}", inboundTeacher);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(inboundTeacher)
                         .flatMap(teacherMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
-                        .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                        .flatMap(teacherAssembler::map)
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create teacher")))
                 .orElseThrow(() -> new NotFoundException("School not found"));
     }
@@ -118,13 +106,15 @@ public class TeacherController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('teachers:read')")
-    public CollectionModel<OutboundTeacher> getTeachers(@PathVariable("schoolId") UUID schoolId) {
+    public CollectionModel<TeacherResource> getTeachers(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all teachers for school {}", schoolId);
         var session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", TEACHER.toString());
         return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
-                        .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                        .map(teacherAssembler::map)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList()))
                 .map(CollectionModel::of)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
@@ -139,10 +129,10 @@ public class TeacherController {
      */
     @GetMapping("/{teacherId}")
     @PreAuthorize("hasAuthority('teacher:read')")
-    public OutboundTeacher getTeacher(@PathVariable("schoolId") UUID schoolId,
+    public TeacherResource getTeacher(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("teacherId") UUID teacherId) {
         return roleService.findRoleById(teacherId)
-                .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                .flatMap(teacherAssembler::map)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
@@ -156,13 +146,13 @@ public class TeacherController {
      */
     @PutMapping("/{teacherId}")
     @PreAuthorize("hasAuthority('teacher:update')")
-    public OutboundTeacher updateTeacher(@PathVariable("schoolId") UUID schoolId,
+    public TeacherResource updateTeacher(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("teacherId") UUID teacherId,
             @RequestBody @Valid InboundTeacher inboundTeacher) {
         return roleService.findRoleById(teacherId)
                 .flatMap(role -> teacherUpdateMapper.map(inboundTeacher, role))
                 .map(roleService::updateRole)
-                .map(role -> teacherModelAssembler.toModel(role, linkProvider))
+                .flatMap(teacherAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,13 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.ProgramAdminModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
-import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundProgramAdmin;
+import io.aiontechnology.mentorsuccess.resource.ProgramAdminResource;
 import io.aiontechnology.mentorsuccess.service.AwsService;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -47,13 +45,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM_ADMIN;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with program admins.
@@ -67,31 +63,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class ProgramAdminController {
 
-    private final AwsService awsService;
+    // Assemblers
+    private final Assembler<SchoolPersonRole, ProgramAdminResource> programAdminAssembler;
 
-    /** The JPA entity manager */
-    private final EntityManager entityManager;
-
-    /** A mapper between {@link InboundProgramAdmin ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
+    // Mappers
     private final OneWayMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminMapper;
-
-    /** An update mapper between {@link InboundProgramAdmin ProgramAdminModels} and {@link SchoolPersonRole Roles}. */
     private final OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminUpdateMapper;
 
-    /** A HATEOAS assembler for {@link InboundProgramAdmin ProgramAdminModels}. */
-    private final ProgramAdminModelAssembler programAdminModelAssembler;
-
-    /** Service for interacting with {@link SchoolPersonRole Roles}. */
+    // Services
     private final RoleService roleService;
-
-    /** Service for interacting with {@link School Schools}. */
     private final SchoolService schoolService;
-    /** {@link LinkProvider} implementation for program admins. */
-    private final LinkProvider<OutboundProgramAdmin, SchoolPersonRole> linkProvider = (programAdminModel, role) ->
-            Arrays.asList(
-                    linkTo(ProgramAdminController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
-                    linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")
-            );
+
+    // Other
+    private final AwsService awsService;
+    private final EntityManager entityManager;
 
     /**
      * A REST endpoint for creating new program admins.
@@ -103,7 +88,8 @@ public class ProgramAdminController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('program-admin:create')")
-    public OutboundProgramAdmin createProgramAdmin(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid InboundProgramAdmin inboundProgramAdmin) {
+    public ProgramAdminResource createProgramAdmin(@PathVariable("schoolId") UUID schoolId,
+            @RequestBody @Valid InboundProgramAdmin inboundProgramAdmin) {
         log.debug("Creating program administrator: {}", inboundProgramAdmin);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(inboundProgramAdmin)
@@ -111,7 +97,7 @@ public class ProgramAdminController {
                         .flatMap(programAdminMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
-                        .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
+                        .flatMap(programAdminAssembler::map)
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create program administrator"))
                 )
                 .orElseThrow(() -> new NotFoundException("School not found"));
@@ -126,13 +112,15 @@ public class ProgramAdminController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('program-admins:read')")
-    public CollectionModel<OutboundProgramAdmin> getProgramAdmins(@PathVariable("schoolId") UUID schoolId) {
+    public CollectionModel<ProgramAdminResource> getProgramAdmins(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all program admins for school {}", schoolId);
         Session session = entityManager.unwrap(Session.class);
         session.enableFilter("roleType").setParameter("type", PROGRAM_ADMIN.toString());
         return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
-                        .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
+                        .map(programAdminAssembler::map)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList()))
                 .map(programAdmins -> CollectionModel.of(programAdmins))
                 .orElseThrow(() -> new IllegalArgumentException("Requested school not found"));
@@ -147,9 +135,10 @@ public class ProgramAdminController {
      */
     @GetMapping("/{programAdminId}")
     @PreAuthorize("hasAuthority('program-admin:read')")
-    public OutboundProgramAdmin getPersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("programAdminId") UUID programAdminId) {
+    public ProgramAdminResource getPersonnel(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("programAdminId") UUID programAdminId) {
         return roleService.findRoleById(programAdminId)
-                .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
+                .flatMap(programAdminAssembler::map)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
@@ -163,14 +152,14 @@ public class ProgramAdminController {
      */
     @PutMapping("/{programAdminId}")
     @PreAuthorize("hasAuthority('program-admin:update')")
-    public OutboundProgramAdmin updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
+    public ProgramAdminResource updateProgramAdmin(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("programAdminId") UUID programAdminId,
             @RequestBody @Valid InboundProgramAdmin inboundProgramAdmin) {
         awsService.updateAwsUser(inboundProgramAdmin);
         return roleService.findRoleById(programAdminId)
                 .flatMap(role -> programAdminUpdateMapper.map(Pair.of(inboundProgramAdmin, role.getIdpUserId()), role))
                 .map(roleService::updateRole)
-                .map(role -> programAdminModelAssembler.toModel(role, linkProvider))
+                .flatMap(programAdminAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
     }
 
@@ -183,7 +172,8 @@ public class ProgramAdminController {
     @DeleteMapping("/{programAdminId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('program-admin:delete')")
-    public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId, @PathVariable("programAdminId") UUID programAdminId) {
+    public void deactivatePersonnel(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("programAdminId") UUID programAdminId) {
         log.debug("Deactivating personnel");
         roleService.findRoleById(programAdminId)
                 .map(awsService::removeAwsUser)

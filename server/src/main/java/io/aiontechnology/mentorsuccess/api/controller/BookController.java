@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
+import io.aiontechnology.mentorsuccess.resource.BookResource;
 import io.aiontechnology.mentorsuccess.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,14 +40,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.security.Principal;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with books.
@@ -62,23 +57,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class BookController {
 
-    /** Service for interacting with {@link Book Books}. */
-    private final BookService bookService;
+    // Assemblers
+    private final Assembler<Book, BookResource> bookAssembler;
 
-    /** A mapper between {@link InboundBook BookModels} and {@link Book Books}. */
+    // Mappers
     private final OneWayMapper<InboundBook, Book> bookMapper;
-
-    /** An update mapper between {@link InboundBook BookModels} and {@link Book Books}. */
     private final OneWayUpdateMapper<InboundBook, Book> bookUpdateMapper;
 
-    /** A HATEOAS assembler for {@link OutboundBook BookModels}. */
-    private final BookModelAssembler bookModelAssembler;
-
-    /** {@link LinkProvider} implementation for books. */
-    private final LinkProvider<OutboundBook, Book> linkProvider = (bookModel, book) ->
-            Arrays.asList(
-                    linkTo(BookController.class).slash(book.getId()).withSelfRel()
-            );
+    // Services
+    private final BookService bookService;
 
     /**
      * A REST endpoint for creating new books.
@@ -89,12 +76,12 @@ public class BookController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('book:create')")
-    public OutboundBook createBook(@RequestBody @Valid InboundBook inboundBook) {
+    public BookResource createBook(@RequestBody @Valid InboundBook inboundBook) {
         log.debug("Book: {}", inboundBook);
         return Optional.ofNullable(inboundBook)
                 .flatMap(bookMapper::map)
                 .map(bookService::createBook)
-                .map(b -> bookModelAssembler.toModel(b, linkProvider))
+                .flatMap(bookAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create a book"));
     }
 
@@ -105,10 +92,12 @@ public class BookController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('books:read')")
-    public CollectionModel<OutboundBook> getAllBooks() {
+    public CollectionModel<BookResource> getAllBooks() {
         log.debug("Getting all books");
         var books = StreamSupport.stream(bookService.getAllBooks().spliterator(), false)
-                .map(s -> bookModelAssembler.toModel(s, linkProvider))
+                .map(bookAssembler::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
         return CollectionModel.of(books);
     }
@@ -121,9 +110,9 @@ public class BookController {
      */
     @GetMapping("/{bookId}")
     @PreAuthorize("hasAuthority('book:read')")
-    public OutboundBook getBook(@PathVariable("bookId") UUID bookId) {
+    public BookResource getBook(@PathVariable("bookId") UUID bookId) {
         return bookService.findBookById(bookId)
-                .map(book -> bookModelAssembler.toModel(book, linkProvider))
+                .flatMap(bookAssembler::map)
                 .orElseThrow(() -> new NotFoundException("Book was not found"));
     }
 
@@ -136,12 +125,12 @@ public class BookController {
      */
     @PutMapping("/{bookId}")
     @PreAuthorize("hasAuthority('book:update')")
-    public OutboundBook updateBook(@PathVariable("bookId") UUID bookId, @RequestBody @Valid InboundBook inboundBook) {
+    public BookResource updateBook(@PathVariable("bookId") UUID bookId, @RequestBody @Valid InboundBook inboundBook) {
         log.debug("Updating book {} with {}", bookId, inboundBook);
         return bookService.findBookById(bookId)
                 .flatMap(book -> bookUpdateMapper.map(inboundBook, book))
                 .map(bookService::updateBook)
-                .map(book -> bookModelAssembler.toModel(book, linkProvider))
+                .flatMap(bookAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update book"));
     }
 
