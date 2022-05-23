@@ -24,12 +24,12 @@ version = "${version}"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(18)
     }
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.8"
 }
 
 javadoc.options.addStringOption('Xdoclint:none', '-quiet')
