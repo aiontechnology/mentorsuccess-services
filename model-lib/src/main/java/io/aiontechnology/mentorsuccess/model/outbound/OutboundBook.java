@@ -1,26 +1,26 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.aiontechnology.mentorsuccess.model.outbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
-import org.springframework.hateoas.server.core.Relation;
+import lombok.NoArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -29,11 +29,14 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.4.0
  */
-@Value
+@Data
 @EqualsAndHashCode(callSuper = true)
-@Builder(setterPrefix = "with")
-@Relation(collectionRelation = "bookModelList")
-public class OutboundBook extends OutboundResource<OutboundBook> implements LocationHolder {
+@NoArgsConstructor
+public class OutboundBook<T> extends EntityModel<T> implements LocationHolder {
+
+    public OutboundBook(T content) {
+        super(content);
+    }
 
     /** The book's id. */
     UUID id;
@@ -65,7 +68,7 @@ public class OutboundBook extends OutboundResource<OutboundBook> implements Loca
     /** The behaviors associated with the book. */
     Collection<String> behaviors;
 
-    /** The tag associated with the book. */
-    String tag;
+    /** The tags associated with the book. */
+    Collection<String> tags;
 
 }

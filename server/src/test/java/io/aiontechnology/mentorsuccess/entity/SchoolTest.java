@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,8 @@ public class SchoolTest {
         Boolean isPrivate = Boolean.TRUE;
         Boolean isActive = Boolean.TRUE;
         School school = new School(null, name, street1, street2, city, state, zip, phone, district, isPrivate, isActive,
-                Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST, Collections.EMPTY_LIST);
+                Collections.EMPTY_LIST, Collections.EMPTY_LIST, null, Collections.EMPTY_LIST, Collections.EMPTY_LIST,
+                Collections.EMPTY_LIST);
 
         // execute the SUT
         entityManager.persist(school);

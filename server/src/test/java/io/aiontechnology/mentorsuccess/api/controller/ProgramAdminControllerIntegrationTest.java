@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -123,7 +123,7 @@ public class ProgramAdminControllerIntegrationTest {
                 .build();
 
         // execute the SUT
-        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins/")
+        ResultActions result = mvc.perform(post("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
                         .header("test", "value")
@@ -181,7 +181,7 @@ public class ProgramAdminControllerIntegrationTest {
         InboundProgramAdmin inboundProgramAdmin = InboundProgramAdmin.builder()
                 .withFirstName("123456789012345678901234567890123456789012345678901")
                 .withLastName("123456789012345678901234567890123456789012345678901")
-                .withEmail("123456789012345678901234567890123456789012345678901")
+                .withEmail("1234@56789012345678901234567890123456789012345678901.com")
                 .withWorkPhone("12345678901")
                 .withCellPhone("12345678901")
                 .build();
@@ -202,7 +202,7 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.length()", is(5)))
                 .andExpect(jsonPath("$.error.firstName", is("A program admin's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A program admin's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is longer that 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided program admin's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided program admin's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
@@ -234,7 +234,7 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(1)))
-                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is invalid")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/programAdmins")));
     }

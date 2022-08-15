@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentBehavior;
+import io.aiontechnology.mentorsuccess.resource.TeacherResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -35,6 +36,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,11 +57,11 @@ public class StudentBehaviorEntityCollectionToModelCollectionMapper implements
 
     private final OneWayCollectionMapper<Behavior, String> behaviorEntityToModelCollectionMapper;
 
-    @Qualifier("teacherAssemblerMapperAdaptor")
-    private final OneWayMapper<SchoolPersonRole, OutboundTeacher> teacherEntityToModelMapper;
+//    @Qualifier("teacherAssemblerMapperAdaptor")
+    private final OneWayMapper<SchoolPersonRole, TeacherResource> teacherEntityToModelMapper;
 
     @Override
-    public Collection<String> map(Collection<StudentBehavior> studentBehaviors) {
+    public Optional<Collection<String>> map(Collection<StudentBehavior> studentBehaviors) {
         Collection<OutboundStudentBehavior> outboundStudentBehaviors =
                 byRoleListClassifier.classify(studentBehaviors).entrySet().stream()
                         .flatMap(e -> {
@@ -67,9 +69,9 @@ public class StudentBehaviorEntityCollectionToModelCollectionMapper implements
                             return transformRoleTypeMap(e.getKey(), roleTypeMap).stream();
                         })
                         .collect(Collectors.toCollection(ArrayList::new));
-        return outboundStudentBehaviors.stream().findFirst()
+        return Optional.of(outboundStudentBehaviors.stream().findFirst()
                 .map(OutboundStudentBehavior::getBehaviors)
-                .orElse(Collections.emptyList());
+                .orElse(Collections.emptyList()));
     }
 
     private Collection<OutboundStudentBehavior> transformRoleTypeMap(SchoolPersonRole teacher,
@@ -80,7 +82,7 @@ public class StudentBehaviorEntityCollectionToModelCollectionMapper implements
                             .map(StudentBehavior::getBehavior)
                             .collect(Collectors.toSet());
                     return OutboundStudentBehavior.builder()
-                            .withBehaviors(behaviorEntityToModelCollectionMapper.map(behaviors))
+                            .withBehaviors(behaviorEntityToModelCollectionMapper.map(behaviors).orElse(Collections.emptyList()))
                             .withTeacher(teacherEntityToModelMapper.map(teacher).orElse(null))
                             .build();
                 })

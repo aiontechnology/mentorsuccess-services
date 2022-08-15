@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -65,9 +66,9 @@ public class GameModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
                     game.setGrade2(g.getGrade2());
                     game.setLocation(g.getLocation());
                     game.setIsActive(true); // TODO Is this correct?
-                    game.setActivityFocuses(activityFocusModelToEntityMapper.map(g.getActivityFocuses()));
-                    game.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(g.getLeadershipSkills()));
-                    game.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(g.getLeadershipTraits()));
+                    game.setActivityFocuses(activityFocusModelToEntityMapper.map(g.getActivityFocuses()).orElse(Collections.emptyList()));
+                    game.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(g.getLeadershipSkills()).orElse(Collections.emptyList()));
+                    game.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(g.getLeadershipTraits()).orElse(Collections.emptyList()));
                     return game;
                 });
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import lombok.Value;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
@@ -47,7 +48,7 @@ public class InboundSchool {
     InboundAddress address;
 
     /** The school's phone number */
-    @Size(min = 14, max = 14, message = "{school.phone.size}")
+    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{school.phone.invalid}")
     String phone;
 
     /** The school district that the school is in */

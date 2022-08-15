@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,23 +18,29 @@ package io.aiontechnology.mentorsuccess.model.outbound.student;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
-import org.springframework.hateoas.RepresentationModel;
+import lombok.NoArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.UUID;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
 /**
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@Value
+@Data
 @EqualsAndHashCode(callSuper = true)
-@Builder(setterPrefix = "with")
-public class OutboundStudent extends RepresentationModel<OutboundStudent> {
+@NoArgsConstructor
+public class OutboundStudent<T> extends EntityModel<T> {
+
+    public OutboundStudent(T content) {
+        super(content);
+    }
 
     UUID id;
 
@@ -50,7 +56,7 @@ public class OutboundStudent extends RepresentationModel<OutboundStudent> {
 
     String actualTime;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     Date startDate;
 
     ResourceLocation location;

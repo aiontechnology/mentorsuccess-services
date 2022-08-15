@@ -1,17 +1,17 @@
 /*
- * Copyright 2021 Aion Technology LLC
+ * Copyright 2021-2022 Aion Technology LLC
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.aiontechnology.mentorsuccess.api.controller;
@@ -80,9 +80,9 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.bookModelList").isArray())
-                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.bookModelList[*].title",
+                .andExpect(jsonPath("$._embedded.bookList").isArray())
+                .andExpect(jsonPath("$._embedded.bookList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.bookList[*].title",
                         hasItems("TITLE1", "TITLE2")));
     }
 
@@ -106,9 +106,9 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.bookModelList").isArray())
-                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.bookModelList[*].title",
+                .andExpect(jsonPath("$._embedded.bookList").isArray())
+                .andExpect(jsonPath("$._embedded.bookList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.bookList[*].title",
                         hasItems("TITLE1", "TITLE2")));
     }
 
@@ -131,11 +131,11 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.bookModelList").isArray())
-                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.bookModelList[*].title",
+                .andExpect(jsonPath("$._embedded.bookList").isArray())
+                .andExpect(jsonPath("$._embedded.bookList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.bookList[*].title",
                         hasItems("TITLE1", "TITLE2")))
-                .andExpect(jsonPath("$._embedded.bookModelList[*]._links.self[0].href",
+                .andExpect(jsonPath("$._embedded.bookList[*]._links.self[0].href",
                         hasItems("http://localhost/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b",
                                 "http://localhost/api/v1/books/6e4da9bd-5387-45dc-9714-fb96387da770")));
     }
@@ -166,11 +166,11 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.bookModelList").isArray())
-                .andExpect(jsonPath("$._embedded.bookModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.bookModelList[*].title",
+                .andExpect(jsonPath("$._embedded.bookList").isArray())
+                .andExpect(jsonPath("$._embedded.bookList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.bookList[*].title",
                         hasItems("TITLE1", "TITLE2")))
-                .andExpect(jsonPath("$._embedded.bookModelList[*]._links.self[0].href",
+                .andExpect(jsonPath("$._embedded.bookList[*]._links.self[0].href",
                         hasItems("http://localhost/api/v1/books/f53af381-d524-40f7-8df9-3e808c9ad46b",
                                 "http://localhost/api/v1/books/6e4da9bd-5387-45dc-9714-fb96387da770")));
     }
@@ -189,9 +189,9 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
-                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                .andExpect(jsonPath("$._embedded.gameList").isArray())
+                .andExpect(jsonPath("$._embedded.gameList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameList[*].name",
                         hasItems("GAME1", "GAME2")));
     }
 
@@ -215,9 +215,9 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
-                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                .andExpect(jsonPath("$._embedded.gameList").isArray())
+                .andExpect(jsonPath("$._embedded.gameList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameList[*].name",
                         hasItems("GAME1", "GAME2")));
     }
 
@@ -240,11 +240,11 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
-                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                .andExpect(jsonPath("$._embedded.gameList").isArray())
+                .andExpect(jsonPath("$._embedded.gameList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameList[*].name",
                         hasItems("GAME1", "GAME2")))
-                .andExpect(jsonPath("$._embedded.gameModelList[*]._links.self[0].href",
+                .andExpect(jsonPath("$._embedded.gameList[*]._links.self[0].href",
                         hasItems("http://localhost/api/v1/games/81b4fd55-0f1d-45d9-9625-9bc3a367fe04",
                                 "http://localhost/api/v1/games/98866d5e-8dd8-433d-bdb5-dbd7fe8dce81")));
     }
@@ -275,11 +275,11 @@ public class SchoolResourceControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$._embedded.gameModelList").isArray())
-                .andExpect(jsonPath("$._embedded.gameModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.gameModelList[*].name",
+                .andExpect(jsonPath("$._embedded.gameList").isArray())
+                .andExpect(jsonPath("$._embedded.gameList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.gameList[*].name",
                         hasItems("GAME1", "GAME2")))
-                .andExpect(jsonPath("$._embedded.gameModelList[*]._links.self[0].href",
+                .andExpect(jsonPath("$._embedded.gameList[*]._links.self[0].href",
                         hasItems("http://localhost/api/v1/games/81b4fd55-0f1d-45d9-9625-9bc3a367fe04",
                                 "http://localhost/api/v1/games/98866d5e-8dd8-433d-bdb5-dbd7fe8dce81")));
     }

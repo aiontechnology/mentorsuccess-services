@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Aion Technology LLC
+ * Copyright 2021-2022 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,15 +16,13 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
-import io.aiontechnology.mentorsuccess.api.assembler.BookModelAssembler;
-import io.aiontechnology.mentorsuccess.api.assembler.GameModelAssembler;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.mapping.toentity.misc.UriModelToBookMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.toentity.misc.UriModelToGameMapper;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
+import io.aiontechnology.mentorsuccess.resource.BookResource;
+import io.aiontechnology.mentorsuccess.resource.GameResource;
 import io.aiontechnology.mentorsuccess.service.SchoolResourceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +36,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -58,9 +55,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class SchoolResourceController {
 
-    private final BookModelAssembler bookModelAssembler;
+    private final Assembler<Book, BookResource> bookAssembler;
 
-    private final GameModelAssembler gameModelAssembler;
+    private final Assembler<Game, GameResource> gameAssembler;
 
     private final UriModelToBookMapper uriModelToBookMapper;
 
@@ -71,64 +68,75 @@ public class SchoolResourceController {
 
     @GetMapping("/books")
     @PreAuthorize("hasAuthority('schoolresources:read')")
-    public CollectionModel<OutboundBook> getSchoolBooks(@PathVariable("schoolId") UUID schoolId) {
+    public CollectionModel<BookResource> getSchoolBooks(@PathVariable("schoolId") UUID schoolId) {
         var books = StreamSupport.stream(schoolResourceService.getBooksForSchool(schoolId).spliterator(), false)
-                .map(s -> bookModelAssembler.toModel(s, bookLinkProvider))
+                .map(bookAssembler::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
         return CollectionModel.of(books);
     }
 
+    @GetMapping("/games")
+    @PreAuthorize("hasAuthority('schoolresources:read')")
+    public CollectionModel<GameResource> getSchoolGames(@PathVariable("schoolId") UUID schoolId) {
+        var games = StreamSupport.stream(schoolResourceService.getGamesForSchool(schoolId).spliterator(), false)
+                .map(gameAssembler::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(this::addLinks)
+                .collect(Collectors.toList());
+        return CollectionModel.of(games);
+    }
+
     @PutMapping("/books")
     @PreAuthorize("hasAuthority('schoolresources:update')")
-    public CollectionModel<OutboundBook> setSchoolBooks(@PathVariable("schoolId") UUID schoolId,
+    public CollectionModel<BookResource> setSchoolBooks(@PathVariable("schoolId") UUID schoolId,
             @RequestBody Collection<URI> bookURIs) {
         List<Book> books = bookURIs.stream()
                 .map(u -> uriModelToBookMapper.map(u))
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        List<OutboundBook> outboundBooks =
+        List<BookResource> outboundBooks =
                 StreamSupport.stream(schoolResourceService.setBooksForSchool(schoolId, books).spliterator(), false)
-                        .map(b -> bookModelAssembler.toModel(b, bookLinkProvider))
+                        .map(bookAssembler::map)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(this::addLinks)
                         .collect(Collectors.toList());
         return CollectionModel.of(outboundBooks);
     }
 
-    @GetMapping("/games")
-    @PreAuthorize("hasAuthority('schoolresources:read')")
-    public CollectionModel<OutboundGame> getSchoolGames(@PathVariable("schoolId") UUID schoolId) {
-        var games = StreamSupport.stream(schoolResourceService.getGamesForSchool(schoolId).spliterator(), false)
-                .map(s -> gameModelAssembler.toModel(s, gameLinkProvider))
-                .collect(Collectors.toList());
-        return CollectionModel.of(games);
-    }
-
     @PutMapping("/games")
     @PreAuthorize("hasAuthority('schoolresources:update')")
-    public CollectionModel<OutboundGame> setSchoolGames(@PathVariable("schoolId") UUID schoolId,
+    public CollectionModel<GameResource> setSchoolGames(@PathVariable("schoolId") UUID schoolId,
             @RequestBody Collection<URI> gameURIs) {
         List<Game> games = gameURIs.stream()
                 .map(uriModelToGameMapper::map)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.toList());
-        List<OutboundGame> outboundGames =
+        List<GameResource> outboundGames =
                 StreamSupport.stream(schoolResourceService.setGamessForSchool(schoolId, games).spliterator(), false)
-                        .map(g -> gameModelAssembler.toModel(g, gameLinkProvider))
+                        .map(gameAssembler::map)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .map(this::addLinks)
                         .collect(Collectors.toList());
         return CollectionModel.of(outboundGames);
     }
 
-    /** {@link LinkProvider} implementation for books. */
-    private final LinkProvider<OutboundBook, Book> bookLinkProvider = (bookModel, book) ->
-            Arrays.asList(
-                    linkTo(BookController.class).slash(book.getId()).withSelfRel()
-            );
+    private BookResource addLinks(BookResource resource) {
+        Book book = resource.getContent();
+        resource.add(linkTo(BookController.class).slash(book.getId()).withSelfRel());
+        return resource;
+    }
 
-    /** {@link LinkProvider} implementation for games. */
-    private final LinkProvider<OutboundGame, Game> gameLinkProvider = (gameModel, game) ->
-            Arrays.asList(
-                    linkTo(GameController.class).slash(game.getId()).withSelfRel()
-            );
+    private GameResource addLinks(GameResource resource) {
+        Game game = resource.getContent();
+        resource.add(linkTo(GameController.class).slash(game.getId()).withSelfRel());
+        return resource;
+    }
 
 }

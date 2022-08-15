@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,8 +21,11 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -31,7 +34,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -41,10 +46,11 @@ import java.util.UUID;
  * @since 0.3.0
  */
 @Entity
+@Table(name = "student_interest")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @ToString(onlyExplicitlyIncluded = true)
 public class StudentInterest {
 
@@ -54,7 +60,7 @@ public class StudentInterest {
     /** The associated {@link Student}. */
     @MapsId("student_id")
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
+    @JoinColumn(name = "studentsession_id", referencedColumnName = "id")
     private Student student;
 
     /** The associated {@link LeadershipSkill}. */
@@ -64,13 +70,6 @@ public class StudentInterest {
     @EqualsAndHashCode.Include
     @ToString.Include
     private Interest interest;
-
-    /** The associated {@link SchoolPersonRole}. */
-    @MapsId("role_id")
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
-    @JoinColumn(name = "role_id", referencedColumnName = "id")
-    @EqualsAndHashCode.Include
-    private SchoolPersonRole role;
 
     @Embeddable
     @NoArgsConstructor
@@ -82,6 +81,19 @@ public class StudentInterest {
         private UUID interest_id;
         private UUID role_id;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        StudentInterest that = (StudentInterest) o;
+        return studentInterestPK != null && Objects.equals(studentInterestPK, that.studentInterestPK);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentInterestPK);
     }
 
 }

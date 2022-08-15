@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,25 +23,21 @@ import io.aiontechnology.atlas.mapping.impl.SimpleOneWayCollectionMapper;
 import io.aiontechnology.atlas.mapping.impl.UpdateMapperBasedOneWayMapper;
 import io.aiontechnology.atlas.synchronization.CollectionSynchronizer;
 import io.aiontechnology.atlas.synchronization.impl.SimpleCollectionSynchronizer;
-import io.aiontechnology.mentorsuccess.api.assembler.MentorModelAssembler;
-import io.aiontechnology.mentorsuccess.api.assembler.PersonModelAssembler;
-import io.aiontechnology.mentorsuccess.api.assembler.TeacherModelAssembler;
-import io.aiontechnology.mentorsuccess.api.controller.MentorController;
-import io.aiontechnology.mentorsuccess.api.controller.PersonController;
-import io.aiontechnology.mentorsuccess.api.controller.TeacherController;
-import io.aiontechnology.mentorsuccess.api.mapping.AssemblerMapperAdaptor;
+import io.aiontechnology.mentorsuccess.api.mapping.toentity.reference.FunctionBasedModelToEntityMapper;
+import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.NameableToStringMapper;
 import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
-import io.aiontechnology.mentorsuccess.entity.StudentTeacher;
+import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
@@ -55,14 +51,13 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundPerson;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundPersonnel;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundSchool;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundSchoolSession;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
-import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundMentor;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundPerson;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentSchoolSession;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
+import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentSchoolSession;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import io.aiontechnology.mentorsuccess.service.BehaviorService;
 import io.aiontechnology.mentorsuccess.service.InterestService;
@@ -74,12 +69,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
-import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Function;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Spring configuration class to establish mappers.
@@ -91,12 +81,50 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class MapperConfiguration {
 
     /*
+     * AbstractReference
+     */
+    @Bean
+    public NameableToStringMapper<ActivityFocus> activityFocusToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    @Bean
+    public NameableToStringMapper<Behavior> behaviorToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    @Bean
+    public NameableToStringMapper<Interest> interestToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    @Bean
+    public NameableToStringMapper<LeadershipSkill> leadershipSkillToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    @Bean
+    public NameableToStringMapper<LeadershipTrait> leadershipTraitToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    @Bean
+    public NameableToStringMapper<Phonogram> phonogramToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    @Bean
+    public NameableToStringMapper<Tag> tagToStringMapper() {
+        return new NameableToStringMapper<>();
+    }
+
+    /*
      * ActivityFocus
      */
 
     @Bean
-    public Function<String, Optional<ActivityFocus>> findActivityFocusFunction(ActivityFocusService activityFocusService) {
-        return activityFocusService::findActivityFocusByName;
+    public OneWayMapper<String, ActivityFocus> stringToActivityFocusMapper(ActivityFocusService activityFocusService) {
+        return new FunctionBasedModelToEntityMapper<>(activityFocusService::findActivityFocusByName);
     }
 
     @Bean
@@ -116,8 +144,8 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public Function<String, Optional<Behavior>> findBehaviorFunction(BehaviorService behaviorService) {
-        return behaviorService::findBehaviorByName;
+    public OneWayMapper<String, Behavior> stringToBehaviorMapper(BehaviorService behaviorService) {
+        return new FunctionBasedModelToEntityMapper<>(behaviorService::findBehaviorByName);
     }
 
     @Bean
@@ -155,8 +183,8 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public Function<String, Optional<Interest>> findInterestFunction(InterestService interestService) {
-        return interestService::findInterestByName;
+    public OneWayMapper<String, Interest> stringToInterestMapper(InterestService interestService) {
+        return new FunctionBasedModelToEntityMapper<>(interestService::findInterestByName);
     }
 
     @Bean
@@ -176,8 +204,8 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public Function<String, Optional<LeadershipSkill>> findLeadershipSkillFunction(LeadershipSkillService leadershipSkillService) {
-        return leadershipSkillService::findLeadershipSkillByName;
+    public OneWayMapper<String, LeadershipSkill> stringToLeadershipSkillMapper(LeadershipSkillService leadershipSkillService) {
+        return new FunctionBasedModelToEntityMapper<>(leadershipSkillService::findLeadershipSkillByName);
     }
 
     @Bean
@@ -197,8 +225,8 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public Function<String, Optional<LeadershipTrait>> findLeadershipTraitFunction(LeadershipTraitService leadershipTraitService) {
-        return leadershipTraitService::findLeadershipTraitByName;
+    public OneWayMapper<String, LeadershipTrait> stringToLeadershipTraitMapper(LeadershipTraitService leadershipTraitService) {
+        return new FunctionBasedModelToEntityMapper<>(leadershipTraitService::findLeadershipTraitByName);
     }
 
     @Bean
@@ -223,15 +251,6 @@ public class MapperConfiguration {
         return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
     }
 
-    @Bean("mentorAssemblerMapperAdaptor")
-    public OneWayMapper<SchoolPersonRole, OutboundMentor> mentorAssemblerMapperAdaptor(MentorModelAssembler mentorModelAssembler) {
-        return new AssemblerMapperAdaptor<>(mentorModelAssembler,
-                (mentorModel, role) -> Arrays.asList(
-                        linkTo(MentorController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel()
-                )
-        );
-    }
-
     /*
      * Person
      */
@@ -239,15 +258,6 @@ public class MapperConfiguration {
     @Bean
     public OneWayMapper<InboundPerson, Person> personModelToEntityMapper(OneWayUpdateMapper<InboundPerson, Person> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, Person.class);
-    }
-
-    @Bean("personAssemblerMapperAdaptor")
-    public OneWayMapper<Person, OutboundPerson> personAssemblerMapperAdaptor(PersonModelAssembler personModelAssembler) {
-        return new AssemblerMapperAdaptor<>(personModelAssembler,
-                (personModel, person) -> Arrays.asList(
-                        linkTo(PersonController.class).slash(person.getId()).withSelfRel()
-                )
-        );
     }
 
     /*
@@ -264,8 +274,8 @@ public class MapperConfiguration {
      */
 
     @Bean
-    public Function<String, Optional<Phonogram>> findPhonogramFunction(PhonogramService phonogramService) {
-        return phonogramService::findPhonogramByName;
+    public OneWayMapper<String, Phonogram> stringToPhonogramMapper(PhonogramService phonogramService) {
+        return new FunctionBasedModelToEntityMapper<>(phonogramService::findPhonogramByName);
     }
 
     @Bean
@@ -300,12 +310,41 @@ public class MapperConfiguration {
     }
 
     /*
+     * SchoolSession
+     */
+
+    @Bean
+    public OneWayMapper<InboundSchoolSession, SchoolSession> schoolSessionModelToEntityMapper(
+            OneWayUpdateMapper<InboundSchoolSession, SchoolSession> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolSession.class);
+    }
+
+    @Bean
+    public OneWayMapper<InboundStudentSchoolSession, StudentSchoolSession> studentSchoolSessionModelToEntityMapper(
+            OneWayUpdateMapper<InboundStudentSchoolSession, StudentSchoolSession> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentSchoolSession.class);
+    }
+
+    @Bean
+    public OneWayCollectionMapper<StudentSchoolSession, OutboundStudentSchoolSession> studentSchoolSessionEntityToModelOneWayCollectionMapper(
+            OneWayMapper<StudentSchoolSession, OutboundStudentSchoolSession> mapper) {
+        return new SimpleOneWayCollectionMapper<>(mapper);
+    }
+
+    /*
      * Student
      */
 
     @Bean
-    public OneWayMapper<InboundStudent, Student> studentModelToEntityMapper(OneWayUpdateMapper<InboundStudent, Student> mapper) {
+    public OneWayMapper<InboundStudent, Student> studentModelToEntityMapper(OneWayUpdateMapper<InboundStudent,
+            Student> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, Student.class);
+    }
+
+    @Bean
+    public OneWayMapper<InboundStudent, StudentSchoolSession> studentModelToSessionEntityMapper(
+            OneWayUpdateMapper<InboundStudent, StudentSchoolSession> mapper) {
+        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentSchoolSession.class);
     }
 
     /*
@@ -357,22 +396,12 @@ public class MapperConfiguration {
     }
 
     /*
-     * StudentTeacher
-     */
-
-    @Bean
-    public OneWayMapper<InboundStudentTeacher, StudentTeacher> studentTeacherModelToEntityMapper(
-            OneWayUpdateMapper<InboundStudentTeacher, StudentTeacher> mapper) {
-        return new UpdateMapperBasedOneWayMapper<>(mapper, StudentTeacher.class);
-    }
-
-    /*
      * Tag
      */
 
     @Bean
-    public Function<String, Optional<Tag>> findTagFunction(TagService tagService) {
-        return tagService::findTagByName;
+    public OneWayMapper<String, Tag> stringToTagMapper(TagService tagService) {
+        return new FunctionBasedModelToEntityMapper<>(tagService::findTagByName);
     }
 
     @Bean
@@ -394,15 +423,6 @@ public class MapperConfiguration {
     @Bean
     public OneWayMapper<InboundTeacher, SchoolPersonRole> teacherModelToEntityMapper(OneWayUpdateMapper<InboundTeacher, SchoolPersonRole> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, SchoolPersonRole.class);
-    }
-
-    @Bean("teacherAssemblerMapperAdaptor")
-    public OneWayMapper<SchoolPersonRole, OutboundTeacher> teacherAssemblerMapperAdaptor(TeacherModelAssembler teacherModelAssembler) {
-        return new AssemblerMapperAdaptor<>(teacherModelAssembler,
-                (teacherModel, role) -> Arrays.asList(
-                        linkTo(TeacherController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel()
-                )
-        );
     }
 
 }

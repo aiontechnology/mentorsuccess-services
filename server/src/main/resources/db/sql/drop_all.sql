@@ -1,4 +1,4 @@
--- Copyright 2020-2021 Aion Technology LLC
+-- Copyright 2020-2022 Aion Technology LLC
 --
 -- Licensed under the Apache License, Version 2.0 (the "License");
 -- you may not use this file except in compliance with the License.
@@ -83,6 +83,7 @@ drop table if exists school cascade;
 drop table if exists school_book cascade;
 drop table if exists school_game cascade;
 drop table if exists school_person_role cascade;
+drop table if exists school_session cascade;
 drop table if exists student cascade;
 drop table if exists student_behavior cascade;
 drop table if exists student_interest cascade;
@@ -90,5 +91,6 @@ drop table if exists student_leadershipskill cascade;
 drop table if exists student_leadershiptrait cascade;
 drop table if exists student_mentor cascade;
 drop table if exists student_person_role cascade;
+drop table if exists student_schoolsession cascade;
 drop table if exists student_teacher cascade;
 drop table if exists tag cascade;

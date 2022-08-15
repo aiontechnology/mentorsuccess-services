@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -78,12 +79,12 @@ public class BookModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
                     book.setGradeLevel(b.getGradeLevel());
                     book.setLocation(b.getLocation());
                     book.setIsActive(true); // TODO Is this correct?
-                    book.setBehaviors(behaviorModelToEntityMapper.map(b.getBehaviors()));
-                    book.setInterests(interestModelToEntityMapper.map(b.getInterests()));
-                    book.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(b.getLeadershipSkills()));
-                    book.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(b.getLeadershipTraits()));
-                    book.setPhonograms(phonogramModelToEntityMapper.map(b.getPhonograms()));
-                    book.setTags(tagModelToEntityMapper.map(Arrays.asList(b.getTag())));
+                    book.setBehaviors(behaviorModelToEntityMapper.map(b.getBehaviors()).orElse(Collections.emptyList()));
+                    book.setInterests(interestModelToEntityMapper.map(b.getInterests()).orElse(Collections.emptyList()));
+                    book.setLeadershipSkills(leadershipSkillModelToEntityMapper.map(b.getLeadershipSkills()).orElse(Collections.emptyList()));
+                    book.setLeadershipTraits(leadershipTraitModelToEntityMapper.map(b.getLeadershipTraits()).orElse(Collections.emptyList()));
+                    book.setPhonograms(phonogramModelToEntityMapper.map(b.getPhonograms()).orElse(Collections.emptyList()));
+                    book.setTags(tagModelToEntityMapper.map(b.getTags()).orElse(Collections.emptyList()));
                     return book;
                 });
     }

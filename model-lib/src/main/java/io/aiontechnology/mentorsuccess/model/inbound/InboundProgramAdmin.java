@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,7 +45,8 @@ public class InboundProgramAdmin {
 
     /** The program admin's email address. */
     @NotNull(message = "{programAdmin.email.notNull}")
-    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{programAdmin.email.invalid}")
+    @Size(max = 50, message = "{programAdmin.email.size}")
+    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$)", message = "{programAdmin.email.invalid}")
     String email;
 
     /** The program admin's work phone number. */

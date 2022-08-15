@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -145,8 +145,6 @@ public class StudentControllerIntegrationTest {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
                 "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
-        final URI MENTOR_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
