@@ -45,6 +45,9 @@ public class InboundBook {
     @Size(max = 100, message = "{book.title.size}")
     String title;
 
+    @Size(max = 255, message = "{book.description.size")
+    String description;
+
     /** The book's author. */
     @Size(max = 30, message = "{book.author.size}")
     String author;

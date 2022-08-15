@@ -34,15 +34,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class OutboundBook<T> extends EntityModel<T> implements LocationHolder {
 
-    public OutboundBook(T content) {
-        super(content);
-    }
-
     /** The book's id. */
     UUID id;
 
     /** The book's title. */
     String title;
+
+    /** The book's description */
+    String description;
 
     /** The book's author. */
     String author;
@@ -70,5 +69,9 @@ public class OutboundBook<T> extends EntityModel<T> implements LocationHolder {
 
     /** The tags associated with the book. */
     Collection<String> tags;
+
+    public OutboundBook(T content) {
+        super(content);
+    }
 
 }

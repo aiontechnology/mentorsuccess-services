@@ -206,7 +206,7 @@ public class TeacherControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.length()", is(7)))
                 .andExpect(jsonPath("$.error.firstName", is("A teacher's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A teacher's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.email", is("The provided teacher's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided teacher's email is invalid or longer than 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided teacher's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided teacher's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.grade1", is("A teacher's grade must be between kindergarten and 5th")))
@@ -242,7 +242,7 @@ public class TeacherControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(1)))
-                .andExpect(jsonPath("$.error.email", is("The provided teacher's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided teacher's email is invalid or longer than 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers")));
     }

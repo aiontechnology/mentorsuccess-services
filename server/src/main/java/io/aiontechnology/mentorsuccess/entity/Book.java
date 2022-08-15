@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -63,32 +63,30 @@ import java.util.UUID;
 @Where(clause = "is_active = true")
 public class Book implements Identifiable<UUID> {
 
-    /** The ID of the book. */
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
-
-    /** The title of the book. */
-    @Column
-    private String title;
-
     /** The author of the book. */
     @Column
     private String author;
+
+    /** A collection behaviors for the book. */
+    @ManyToMany
+    @JoinTable(name = "book_behavior",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "behavior_id"))
+    @ToString.Exclude
+    private Collection<Behavior> behaviors = new ArrayList<>();
+
+    @Column
+    private String description;
 
     /** The grade level of the book. */
     @Column
     private Integer gradeLevel;
 
-    /** Is the book active? */
-    @Column
-    private Boolean isActive;
-
-    /** The location of the resource */
-    @Column
-    @Enumerated(EnumType.STRING)
-    private ResourceLocation location;
+    /** The ID of the book. */
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID id;
 
     /** A collection of interests related to the book. */
     @ManyToMany
@@ -97,6 +95,10 @@ public class Book implements Identifiable<UUID> {
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
     @ToString.Exclude
     private Collection<Interest> interests = new ArrayList<>();
+
+    /** Is the book active? */
+    @Column
+    private Boolean isActive;
 
     /** A collection leadership skills for the book. */
     @ManyToMany
@@ -114,6 +116,11 @@ public class Book implements Identifiable<UUID> {
     @ToString.Exclude
     private Collection<LeadershipTrait> leadershipTraits = new ArrayList<>();
 
+    /** The location of the resource */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
+
     /** A collection phonograms for the book. */
     @ManyToMany
     @JoinTable(name = "book_phonogram",
@@ -122,14 +129,6 @@ public class Book implements Identifiable<UUID> {
     @ToString.Exclude
     private Collection<Phonogram> phonograms = new ArrayList<>();
 
-    /** A collection behaviors for the book. */
-    @ManyToMany
-    @JoinTable(name = "book_behavior",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "behavior_id"))
-    @ToString.Exclude
-    private Collection<Behavior> behaviors = new ArrayList<>();
-
     /** A collection tags for the book. */
     @ManyToMany
     @JoinTable(name = "book_tag",
@@ -137,6 +136,10 @@ public class Book implements Identifiable<UUID> {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     @ToString.Exclude
     private Collection<Tag> tags = new ArrayList<>();
+
+    /** The title of the book. */
+    @Column
+    private String title;
 
     @Override
     public boolean equals(Object o) {
