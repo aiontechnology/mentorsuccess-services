@@ -202,7 +202,7 @@ public class ProgramAdminControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.length()", is(5)))
                 .andExpect(jsonPath("$.error.firstName", is("A program admin's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A program admin's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided program admin's email is longer than 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided program admin's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided program admin's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))

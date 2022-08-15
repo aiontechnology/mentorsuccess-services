@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -206,7 +206,7 @@ public class PersonnelControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.type", is("A personnel's type must be SOCIAL_WORKER, PRINCIPAL, COUNSELOR or STAFF")))
                 .andExpect(jsonPath("$.error.firstName", is("A personnel's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A personnel's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.email", is("The provided personnel's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided personnel's email is invalid or longer than 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided personnel's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided personnel's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
@@ -239,7 +239,7 @@ public class PersonnelControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(1)))
-                .andExpect(jsonPath("$.error.email", is("The provided personnel's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided personnel's email is invalid or longer than 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/personnel")));
     }

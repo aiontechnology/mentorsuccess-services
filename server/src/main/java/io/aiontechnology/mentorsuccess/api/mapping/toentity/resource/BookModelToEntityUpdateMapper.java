@@ -29,7 +29,6 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -75,6 +74,7 @@ public class BookModelToEntityUpdateMapper implements OneWayUpdateMapper<Inbound
         return Optional.ofNullable(inboundBook)
                 .map(b -> {
                     book.setTitle(b.getTitle());
+                    book.setDescription(b.getDescription());
                     book.setAuthor(b.getAuthor());
                     book.setGradeLevel(b.getGradeLevel());
                     book.setLocation(b.getLocation());

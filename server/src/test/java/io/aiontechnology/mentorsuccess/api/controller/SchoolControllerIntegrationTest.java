@@ -285,7 +285,7 @@ public class SchoolControllerIntegrationTest {
                 .andExpect(jsonPath("$.error['address.street2']", is("An address's street2 can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.city']", is("An address's city can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.state']", is("An address's state must be 2 characters long")))
-                .andExpect(jsonPath("$.error['address.zip']", is("An address's zip must be between 5 and 9 charachters long")))
+                .andExpect(jsonPath("$.error['address.zip']", is("An address's zip must be between 5 and 9 characters long")))
                 .andExpect(jsonPath("$.error.phone", is("The school's phone number is invalid")))
                 .andExpect(jsonPath("$.error.district", is("The school's district can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
