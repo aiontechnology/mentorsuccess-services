@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Aion Technology LLC
+ * Copyright 2021-2022 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ public class InboundStudentRegistration {
     String lastName;
 
     @NotNull(message = "{registration.email.notNull}")
-    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$){1,50}", message = "{registration.email.invalid}")
+    @Size(max = 50, message = "{registration.email.size}")
+    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$)", message = "{registration.email.invalid}")
     String parentEmailAddress;
 
 }

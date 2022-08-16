@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-image: gradle:7.0.2-jdk16-hotspot
+image: gradle:7.4.2-jdk18
 
 pipelines:
   branches:

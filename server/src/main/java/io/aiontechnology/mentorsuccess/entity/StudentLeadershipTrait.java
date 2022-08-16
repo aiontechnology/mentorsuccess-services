@@ -1,11 +1,11 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,8 +20,11 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -32,6 +35,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -41,22 +45,13 @@ import java.util.UUID;
  * @since 0.3.0
  */
 @Entity
+@Table(name = "student_leadershiptrait")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
 @ToString(onlyExplicitlyIncluded = true)
-@Table(name = "student_leadershiptrait")
 public class StudentLeadershipTrait {
-
-    @EmbeddedId
-    private StudentLeadershipTraitPK studentLeadershipTraitPK = new StudentLeadershipTraitPK();
-
-    /** The associated {@link Student}. */
-    @MapsId("student_id")
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
-    private Student student;
 
     /** The associated {@link LeadershipTrait}. */
     @MapsId("leadershiptrait_id")
@@ -73,15 +68,44 @@ public class StudentLeadershipTrait {
     @EqualsAndHashCode.Include
     private SchoolPersonRole role;
 
+    @EmbeddedId
+    private StudentLeadershipTraitPK studentLeadershipTraitPK = new StudentLeadershipTraitPK();
+
+    /** The associated {@link Student}. */
+    @MapsId("studentsession_id")
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @JoinColumn(name = "studentsession_id", referencedColumnName = "id")
+    private StudentSchoolSession studentSchoolSession;
+
+    public StudentLeadershipTrait(StudentLeadershipTrait from) {
+        leadershipTrait = from.leadershipTrait;
+        role = from.role;
+        studentSchoolSession = from.studentSchoolSession;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        StudentLeadershipTrait that = (StudentLeadershipTrait) o;
+        return studentLeadershipTraitPK != null && Objects.equals(studentLeadershipTraitPK,
+                that.studentLeadershipTraitPK);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentLeadershipTraitPK);
+    }
+
     @Embeddable
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
     public static class StudentLeadershipTraitPK implements Serializable {
 
-        private UUID student_id;
         private UUID leadershiptrait_id;
         private UUID role_Id;
+        private UUID studentsession_id;
 
     }
 

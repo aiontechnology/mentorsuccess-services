@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import io.aiontechnology.mentorsuccess.model.validation.GradeRange;
 import io.aiontechnology.mentorsuccess.model.validation.GradeRangeHolder;
 import lombok.Builder;
@@ -62,7 +61,6 @@ public class InboundGame implements GradeRangeHolder {
     Integer grade2;
 
     @NotNull(message = "{game.location.notNull}")
-    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
     ResourceLocation location;
 
     /** The activity focus associated with the game. */

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package io.aiontechnology.mentorsuccess.model.outbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
-import org.springframework.hateoas.server.core.Relation;
+import lombok.NoArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -29,11 +29,14 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.4.0
  */
-@Value
+@Data
 @EqualsAndHashCode(callSuper = true)
-@Builder(setterPrefix = "with")
-@Relation(collectionRelation = "gameModelList")
-public class OutboundGame extends OutboundResource<OutboundGame> implements LocationHolder {
+@NoArgsConstructor
+public class OutboundGame<T> extends EntityModel<T> implements LocationHolder {
+
+    public OutboundGame(T content) {
+        super(content);
+    }
 
     /** The game's id. */
     UUID id;

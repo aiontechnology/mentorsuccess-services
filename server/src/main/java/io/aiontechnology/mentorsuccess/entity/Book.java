@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,8 +24,11 @@ import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.entity.reference.Tag;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Where;
 
@@ -38,8 +41,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -49,11 +54,33 @@ import java.util.UUID;
  * @since 0.1.0
  */
 @Entity
+@Table(name = "book")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Where(clause = "is_active = true")
-public class Book {
+public class Book implements Identifiable<UUID> {
+
+    /** The author of the book. */
+    @Column
+    private String author;
+
+    /** A collection behaviors for the book. */
+    @ManyToMany
+    @JoinTable(name = "book_behavior",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "behavior_id"))
+    @ToString.Exclude
+    private Collection<Behavior> behaviors = new ArrayList<>();
+
+    @Column
+    private String description;
+
+    /** The grade level of the book. */
+    @Column
+    private Integer gradeLevel;
 
     /** The ID of the book. */
     @Id
@@ -61,39 +88,24 @@ public class Book {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    /** The title of the book. */
-    @Column
-    private String title;
-
-    /** The author of the book. */
-    @Column
-    private String author;
-
-    /** The grade level of the book. */
-    @Column
-    private Integer gradeLevel;
-
-    /** Is the book active? */
-    @Column
-    private Boolean isActive;
-
-    /** The location of the resource */
-    @Column
-    @Enumerated(EnumType.STRING)
-    private ResourceLocation location;
-
-    /** A collection interests for the book. */
+    /** A collection of interests related to the book. */
     @ManyToMany
     @JoinTable(name = "book_interest",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id"))
+    @ToString.Exclude
     private Collection<Interest> interests = new ArrayList<>();
+
+    /** Is the book active? */
+    @Column
+    private Boolean isActive;
 
     /** A collection leadership skills for the book. */
     @ManyToMany
     @JoinTable(name = "book_leadershipskill",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershipskill_id"))
+    @ToString.Exclude
     private Collection<LeadershipSkill> leadershipSkills = new ArrayList<>();
 
     /** A collection leadership traits for the book. */
@@ -101,27 +113,45 @@ public class Book {
     @JoinTable(name = "book_leadershiptrait",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "leadershiptrait_id"))
+    @ToString.Exclude
     private Collection<LeadershipTrait> leadershipTraits = new ArrayList<>();
+
+    /** The location of the resource */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
 
     /** A collection phonograms for the book. */
     @ManyToMany
     @JoinTable(name = "book_phonogram",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "phonogram_id"))
+    @ToString.Exclude
     private Collection<Phonogram> phonograms = new ArrayList<>();
-
-    /** A collection behaviors for the book. */
-    @ManyToMany
-    @JoinTable(name = "book_behavior",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "behavior_id"))
-    private Collection<Behavior> behaviors = new ArrayList<>();
 
     /** A collection tags for the book. */
     @ManyToMany
     @JoinTable(name = "book_tag",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @ToString.Exclude
     private Collection<Tag> tags = new ArrayList<>();
+
+    /** The title of the book. */
+    @Column
+    private String title;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Book book = (Book) o;
+        return id != null && Objects.equals(id, book.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 
 }

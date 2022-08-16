@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.SchoolModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundSchool;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundSchool;
+import io.aiontechnology.mentorsuccess.resource.SchoolResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,13 +40,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with schools.
@@ -61,25 +57,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class SchoolController {
 
-    /** Assembler for creating {@link InboundSchool} instances */
-    private final SchoolModelAssembler schoolModelAssembler;
+    // Assemblers
+    private final Assembler<School, SchoolResource> schoolAssembler;
 
-    /** A mapper for converting {@link InboundSchool} instances to {@link School} */
+    // Mappers
     private final OneWayMapper<InboundSchool, School> schoolMapper;
-
-    /** An update mapper for converting {@link InboundSchool} instances to {@link School} */
     private final OneWayUpdateMapper<InboundSchool, School> schoolUpdateMapper;
 
-    /** Service with business logic for schools */
+    // Services
     private final SchoolService schoolService;
-
-    /** {@link LinkProvider} implementation for schools. */
-    private final LinkProvider<OutboundSchool, School> linkProvider = (schoolModel, school) ->
-            Arrays.asList(
-                    linkTo(SchoolController.class).slash(school.getId()).withSelfRel(),
-                    linkTo(SchoolController.class).slash(school.getId()).slash("teachers").withRel("teachers"),
-                    linkTo(SchoolController.class).slash(school.getId()).slash("programAdmins").withRel("programAdmins")
-            );
 
     /**
      * A REST endpoint for creating new schools.
@@ -90,12 +76,12 @@ public class SchoolController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('school:create')")
-    public OutboundSchool createSchool(@RequestBody @Valid InboundSchool inboundSchool) {
+    public SchoolResource createSchool(@RequestBody @Valid InboundSchool inboundSchool) {
         log.debug("Creating school: {}", inboundSchool);
         return Optional.ofNullable(inboundSchool)
                 .flatMap(schoolMapper::map)
                 .map(schoolService::createSchool)
-                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
+                .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
     }
 
@@ -106,10 +92,12 @@ public class SchoolController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('schools:read')")
-    public CollectionModel<OutboundSchool> getAllSchools() {
+    public CollectionModel<SchoolResource> getAllSchools() {
         log.debug("Getting all schools");
         var schools = StreamSupport.stream(schoolService.getAllSchools().spliterator(), false)
-                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
+                .map(schoolAssembler::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
         return CollectionModel.of(schools);
     }
@@ -122,10 +110,11 @@ public class SchoolController {
      */
     @GetMapping("/{schoolId}")
     @PreAuthorize("hasAuthority('school:read')")
-    public OutboundSchool getSchool(@PathVariable("schoolId") UUID schoolId) {
+    public SchoolResource getSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting school with id {}", schoolId);
-        return schoolService.getSchoolById(schoolId)
-                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
+        Optional<School> school = schoolService.getSchoolById(schoolId);
+        return school
+                .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new NotFoundException("School was not found"));
     }
 
@@ -138,13 +127,13 @@ public class SchoolController {
      */
     @PutMapping("/{schoolId}")
     @PreAuthorize("hasAuthority('school:update')")
-    public OutboundSchool updateSchool(@PathVariable("schoolId") UUID schoolId,
+    public SchoolResource updateSchool(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundSchool inboundSchool) {
         log.debug("Updating school {} with {}", schoolId, inboundSchool);
         return schoolService.getSchoolById(schoolId)
                 .flatMap(school -> schoolUpdateMapper.map(inboundSchool, school))
                 .map(schoolService::updateSchool)
-                .map(s -> schoolModelAssembler.toModel(s, linkProvider))
+                .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));
     }
 

@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Aion Technology LLC
+# Copyright 2020-2022 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -4256,6 +4256,372 @@ paths:
         httpMethod: "DELETE"
         type: "http"
 
+  # /api/v1/schools/{schoolId}/schoolsessions --------------------------------------
+  /api/v1/schools/{schoolId}/schoolsessions:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+
+    # OPTIONS for /api/v1/schools/{schoolId}/schoolsessions
+    options:
+      tags:
+        - school
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/schoolsessions
+    get:
+      summary: Get a school session
+      description: Get the sessions for a particular school by its id
+      tags:
+        - school
+      operationId: getSchoolSessions
+      responses:
+        200:
+          description: The school sessions were found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/schoolsessions"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+    # POST for /api/v1/schools/{schoolId}/schoolsessions
+    post:
+      summary: Create a new school session
+      description: Create a new school session within the system
+      tags:
+        - school
+      operationId: createSchoolSession
+      responses:
+        201:
+          description: A new school session was created
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolSessionResultModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/schoolsessions"
+        responses:
+          201:
+            statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            description: Unable to process request
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "POST"
+        type: "http"
+
+  # /api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId} --------------------
+  /api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId}:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the school that owns the session
+      - in: path
+        name: schoolSessionId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school session
+
+    # OPTIONS for /api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId}
+    options:
+      tags:
+        - school
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId}
+    get:
+      summary: Get a school session
+      description: Get a particular school session by its id
+      tags:
+        - school
+      operationId: getSchoolSession
+      responses:
+        200:
+          description: The school sessions was found
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId}"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.schoolSessionId: "method.request.path.schoolSessionId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+    # DELETE for /api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId}
+    delete:
+      summary: Disable a school session
+      description: Disable a school session record
+      tags:
+        - school
+      operationId: deactivateSchoolSession
+      responses:
+        204:
+          description: The school session record was deleted
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/schoolsessions/{schoolSessionId}"
+        responses:
+          204:
+            statusCode: "204"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.schoolSessionId: "method.request.path.schoolSessionId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "DELETE"
+        type: "http"
+
   # /api/v1/schools/{schoolId}/students --------------------------------------------
   /api/v1/schools/{schoolId}/students:
     parameters:
@@ -4320,6 +4686,12 @@ paths:
         - school
         - student
       operationId: getStudents
+      parameters:
+        - in: query
+          name: session
+          schema:
+            type: string
+            format: uuid
       responses:
         200:
           description: All students for a school
@@ -4375,6 +4747,7 @@ paths:
           integration.request.header.Accept: "method.request.header.Accept"
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.querystring.session: "method.request.querystring.session"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
@@ -4524,6 +4897,12 @@ paths:
         - school
         - student
       operationId: getStudent
+      parameters:
+        - in: query
+          name: session
+          schema:
+            type: string
+            format: uuid
       responses:
         200:
           description: A student for a school
@@ -4579,6 +4958,7 @@ paths:
           integration.request.header.X-Forwarded-Proto: "'https'"
           integration.request.path.schoolId: "method.request.path.schoolId"
           integration.request.path.studentId: "method.request.path.studentId"
+          integration.request.querystring.session: "method.request.querystring.session"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
@@ -5850,6 +6230,48 @@ components:
                 type: object
                 allOf:
                   - $ref: '#/components/schemas/SchoolResultModel'
+
+    # SchoolSessionModel -----------------------------------------------------------
+    SchoolSessionModel:
+      required:
+        - name
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          example: 01/01/2022
+        endDate:
+          type: string
+          format: date-time
+          example: 01/01/2022
+        label:
+          type: string
+          maxLength: 30
+          example: 2022-23
+
+    # SchoolSessionResultModel -----------------------------------------------------
+    SchoolSessionResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SchoolSessionModel'
+      properties:
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
+
+    # SchoolSessionResultModelCollection -------------------------------------------
+    SchoolSessionResultModelCollection:
+      properties:
+        embedded:
+          type: object
+          properties:
+            schoolModelList:
+              type: array
+              items:
+                type: object
+                allOf:
+                  - $ref: '#/components/schemas/SchoolSessionResultModel'
 
     # SelfLink ---------------------------------------------------------------------
     SelfLink:

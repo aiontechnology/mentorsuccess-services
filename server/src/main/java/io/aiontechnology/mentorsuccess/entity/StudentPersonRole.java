@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,11 @@ import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,7 +37,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -43,10 +49,12 @@ import java.util.UUID;
  * @since 0.3.0
  */
 @Entity
+@Table(name = "student_person_role")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
+@ToString
 public class StudentPersonRole {
 
     @EmbeddedId
@@ -97,6 +105,19 @@ public class StudentPersonRole {
         private UUID student_id;
         private UUID person_id;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        StudentPersonRole that = (StudentPersonRole) o;
+        return studentPersonPK != null && Objects.equals(studentPersonPK, that.studentPersonPK);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentPersonPK);
     }
 
 }

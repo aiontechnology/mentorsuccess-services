@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,11 @@ package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
-import io.aiontechnology.mentorsuccess.api.assembler.LinkProvider;
-import io.aiontechnology.mentorsuccess.api.assembler.PersonnelModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundPersonnel;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundPersonnel;
+import io.aiontechnology.mentorsuccess.resource.PersonnelResource;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +41,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -51,7 +49,6 @@ import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.COUNSEL
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PRINCIPAL;
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.SOCIAL_WORKER;
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.STAFF;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
  * Controller that vends a REST interface for dealing with personnel.
@@ -65,26 +62,16 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 public class PersonnelController {
 
-    /** A mapper for converting {@link InboundPersonnel} instances to {@link SchoolPersonRole Roles}. */
-    private final OneWayMapper<InboundPersonnel, SchoolPersonRole> personnelMapper;
+    // Assemblers
+    private final Assembler<SchoolPersonRole, PersonnelResource> personnelAssembler;
 
-    /** An update mapper for converting {@link InboundPersonnel} instances to {@link SchoolPersonRole Roles}. */
+    // Mappers
+    private final OneWayMapper<InboundPersonnel, SchoolPersonRole> personnelMapper;
     private final OneWayUpdateMapper<InboundPersonnel, SchoolPersonRole> personnelUpdateMapper;
 
-    /** Service with business logic for schools */
-    private final SchoolService schoolService;
-
-    /** Assembler for creating {@link InboundPersonnel} instances */
-    private final PersonnelModelAssembler personnelModelAssembler;
-
-    /** Service with business logic for teachers */
+    // Services
     private final RoleService roleService;
-    /** {@link LinkProvider} implementation for personnel. */
-    private final LinkProvider<OutboundPersonnel, SchoolPersonRole> linkProvider = (personnelModel, role) ->
-            Arrays.asList(
-                    linkTo(PersonnelController.class, role.getSchool().getId()).slash(role.getId()).withSelfRel(),
-                    linkTo(SchoolController.class).slash(role.getSchool().getId()).withRel("school")
-            );
+    private final SchoolService schoolService;
 
     /**
      * A REST endpoint for creating a personnel for a particular school.
@@ -96,14 +83,15 @@ public class PersonnelController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('personnel:create')")
-    public OutboundPersonnel createPersonnel(@PathVariable("schoolId") UUID schoolId, @RequestBody @Valid InboundPersonnel inboundPersonnel) {
+    public PersonnelResource createPersonnel(@PathVariable("schoolId") UUID schoolId,
+            @RequestBody @Valid InboundPersonnel inboundPersonnel) {
         log.debug("Creating personnel: {}", inboundPersonnel);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> Optional.ofNullable(inboundPersonnel)
                         .flatMap(personnelMapper::map)
                         .map(school::addRole)
                         .map(roleService::createRole)
-                        .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                        .flatMap(personnelAssembler::map)
                         .orElseThrow(() -> new IllegalArgumentException("Unable to create personnel")))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
@@ -116,7 +104,7 @@ public class PersonnelController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('personnels:read')")
-    public CollectionModel<OutboundPersonnel> getAllPersonnel(@PathVariable("schoolId") UUID schoolId) {
+    public CollectionModel<PersonnelResource> getAllPersonnel(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Getting all personnel for school {}", schoolId);
         return schoolService.getSchoolById(schoolId)
                 .map(school -> school.getRoles().stream()
@@ -124,7 +112,9 @@ public class PersonnelController {
                                 role.getType().equals(PRINCIPAL) ||
                                 role.getType().equals(COUNSELOR) ||
                                 role.getType().equals(STAFF))
-                        .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                        .map(personnelAssembler::map)
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
                         .collect(Collectors.toList()))
                 .map(teachers -> CollectionModel.of(teachers))
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
@@ -139,10 +129,10 @@ public class PersonnelController {
      */
     @GetMapping("/{personnelId}")
     @PreAuthorize("hasAuthority('personnel:read')")
-    public OutboundPersonnel getPersonnel(@PathVariable("schoolId") UUID schoolId,
+    public PersonnelResource getPersonnel(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("personnelId") UUID personnelId) {
         return roleService.findRoleById(personnelId)
-                .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                .flatMap(personnelAssembler::map)
                 .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
@@ -156,13 +146,13 @@ public class PersonnelController {
      */
     @PutMapping("/{personnelId}")
     @PreAuthorize("hasAuthority('personnel:update')")
-    public OutboundPersonnel updateSchool(@PathVariable("schoolId") UUID schoolId,
+    public PersonnelResource updateSchool(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("personnelId") UUID personnelId,
             @RequestBody @Valid InboundPersonnel inboundPersonnel) {
         return roleService.findRoleById(personnelId)
                 .flatMap(role -> personnelUpdateMapper.map(inboundPersonnel, role))
                 .map(roleService::updateRole)
-                .map(role -> personnelModelAssembler.toModel(role, linkProvider))
+                .flatMap(personnelAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
     }
 

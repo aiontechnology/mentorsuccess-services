@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,17 +74,17 @@ public class BookModelToEntityUpdateMapperTest {
         Book book = new Book();
 
         OneWayCollectionMapper<String, Behavior> behaviorModelToEntityMapper =
-                (b -> Arrays.asList(new Behavior()));
+                (b -> Optional.of(Arrays.asList(new Behavior())));
         OneWayCollectionMapper<String, Interest> interestModelToEntityMapper =
-                (i -> Arrays.asList(new Interest()));
+                (i -> Optional.of(Arrays.asList(new Interest())));
         OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
-                (l -> Arrays.asList(new LeadershipSkill()));
+                (l -> Optional.of(Arrays.asList(new LeadershipSkill())));
         OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
-                (l -> Arrays.asList(new LeadershipTrait()));
+                (l -> Optional.of(Arrays.asList(new LeadershipTrait())));
         OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper =
-                (p -> Arrays.asList(new Phonogram()));
+                (p -> Optional.of(Arrays.asList(new Phonogram())));
         OneWayCollectionMapper<String, Tag> tagModelToEntityMapper =
-                (p -> Arrays.asList(new Tag()));
+                (p -> Optional.of(Arrays.asList(new Tag())));
 
         BookModelToEntityUpdateMapper bookModelToEntityUpdateMapper = new BookModelToEntityUpdateMapper(
                 behaviorModelToEntityMapper, interestModelToEntityMapper, leadershipSkillModelToEntityMapper,
@@ -114,21 +114,21 @@ public class BookModelToEntityUpdateMapperTest {
 
         Behavior behavior = new Behavior();
         OneWayCollectionMapper<String, Behavior> behaviorModelToEntityMapper =
-                (b -> Arrays.asList(behavior));
+                (b -> Optional.of(Arrays.asList(behavior)));
         Interest interest = new Interest();
         OneWayCollectionMapper<String, Interest> interestModelToEntityMapper =
-                (i -> Arrays.asList(interest));
+                (i -> Optional.of(Arrays.asList(interest)));
         LeadershipSkill leadershipSkill = new LeadershipSkill();
         OneWayCollectionMapper<String, LeadershipSkill> leadershipSkillModelToEntityMapper =
-                (l -> Arrays.asList(leadershipSkill));
+                (l -> Optional.of(Arrays.asList(leadershipSkill)));
         LeadershipTrait leadershipTrait = new LeadershipTrait();
         OneWayCollectionMapper<String, LeadershipTrait> leadershipTraitModelToEntityMapper =
-                (l -> Arrays.asList(leadershipTrait));
+                (l -> Optional.of(Arrays.asList(leadershipTrait)));
         Phonogram phonogram = new Phonogram();
         OneWayCollectionMapper<String, Phonogram> phonogramModelToEntityMapper =
-                (p -> Arrays.asList(phonogram));
+                (p -> Optional.of(Arrays.asList(phonogram)));
         OneWayCollectionMapper<String, Tag> tagModelToEntityMapper =
-                (p -> Arrays.asList(new Tag()));
+                (p -> Optional.of(Arrays.asList(new Tag())));
 
         BookModelToEntityUpdateMapper bookModelToEntityUpdateMapper = new BookModelToEntityUpdateMapper(
                 behaviorModelToEntityMapper, interestModelToEntityMapper, leadershipSkillModelToEntityMapper,

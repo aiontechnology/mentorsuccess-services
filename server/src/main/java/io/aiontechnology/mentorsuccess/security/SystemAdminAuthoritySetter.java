@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 Aion Technology LLC
+ * Copyright 2021-2022 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,6 +51,8 @@ public class SystemAdminAuthoritySetter implements BiFunction<Optional<SchoolPer
             authorities.addAll(AuthoritiesBuilder.instance("resources").withUpdate().build());
             authorities.addAll(AuthoritiesBuilder.instance("school").withAll().build());
             authorities.addAll(AuthoritiesBuilder.instance("schoolresources").withAll().build());
+            authorities.addAll(AuthoritiesBuilder.instance("schoolsession").withAll().build());
+            authorities.addAll(AuthoritiesBuilder.instance("schoolsessionstudents").withAll().build());
             authorities.addAll(AuthoritiesBuilder.instance("student").withAll().build());
             authorities.addAll(AuthoritiesBuilder.instance("teacher").withAll().build());
         }

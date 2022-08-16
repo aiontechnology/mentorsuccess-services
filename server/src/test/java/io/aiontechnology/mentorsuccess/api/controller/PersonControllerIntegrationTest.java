@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -195,7 +195,7 @@ public class PersonControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.length()", is(5)))
                 .andExpect(jsonPath("$.error.firstName", is("A person's first name can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error.lastName", is("A person's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.email", is("The provided person's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided person's email is invalid or longer than 50 characters")))
                 .andExpect(jsonPath("$.error.cellPhone", is("The provided person's cell phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.error.workPhone", is("The provided person's work phone must be exactly 14 digits")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
@@ -228,7 +228,7 @@ public class PersonControllerIntegrationTest {
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(1)))
-                .andExpect(jsonPath("$.error.email", is("The provided person's email is invalid or longer that 50 characters")))
+                .andExpect(jsonPath("$.error.email", is("The provided person's email is invalid or longer than 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/people")));
     }

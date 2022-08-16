@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,23 +16,26 @@
 
 package io.aiontechnology.mentorsuccess.entity;
 
-import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -42,10 +45,12 @@ import java.util.UUID;
  * @since 0.6.0
  */
 @Entity
+@Table(name = "student_mentor")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
+@ToString
 public class StudentMentor {
 
     @EmbeddedId
@@ -54,9 +59,9 @@ public class StudentMentor {
 
     /** The associated {@link Student}. */
     @MapsId("student_id")
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
-    @JoinColumn(name = "student_id", referencedColumnName = "id")
-    private Student student;
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.DETACH})
+    @JoinColumn(name = "studentsession_id", referencedColumnName = "id")
+    private StudentSchoolSession studentSchoolSession;
 
     /** The associated {@link SchoolPersonRole}. */
     @MapsId("role_id")
@@ -73,6 +78,19 @@ public class StudentMentor {
         private UUID student_id;
         private UUID role_id;
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        StudentMentor that = (StudentMentor) o;
+        return studentMentorPK != null && Objects.equals(studentMentorPK, that.studentMentorPK);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentMentorPK);
     }
 
 }

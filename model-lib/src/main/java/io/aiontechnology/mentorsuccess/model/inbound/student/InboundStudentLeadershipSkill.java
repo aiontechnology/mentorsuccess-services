@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,12 +33,12 @@ import java.util.Set;
 @Builder(setterPrefix = "with")
 public class InboundStudentLeadershipSkill {
 
-    /** The associated leadership skill */
-    @NotNull
+    /** The associated leadership skills */
+    @NotNull(message = "{studentleadershipskill.leadershipskill.notNull}")
     Set<String> leadershipSkills;
 
     /** The URI of the associated person */
-    @NotNull
+    @NotNull(message = "{studentleadershipskill.teacher.notNull}")
     URI teacher;
 
 }

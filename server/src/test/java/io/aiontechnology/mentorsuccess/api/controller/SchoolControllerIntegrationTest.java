@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -285,8 +285,8 @@ public class SchoolControllerIntegrationTest {
                 .andExpect(jsonPath("$.error['address.street2']", is("An address's street2 can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.city']", is("An address's city can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.error['address.state']", is("An address's state must be 2 characters long")))
-                .andExpect(jsonPath("$.error['address.zip']", is("An address's zip must be between 5 and 9 charachters long")))
-                .andExpect(jsonPath("$.error.phone", is("The school's phone number must be exactly 14 digits")))
+                .andExpect(jsonPath("$.error['address.zip']", is("An address's zip must be between 5 and 9 characters long")))
+                .andExpect(jsonPath("$.error.phone", is("The school's phone number is invalid")))
                 .andExpect(jsonPath("$.error.district", is("The school's district can not be longer than 50 characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools")));
@@ -307,9 +307,9 @@ public class SchoolControllerIntegrationTest {
 
         // validation
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("$._embedded.schoolModelList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.schoolModelList[0].id", is("e96a7158-da3f-48ef-b37a-f2833957bcbd")))
-                .andExpect(jsonPath("$._embedded.schoolModelList[1].id", is("fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
+                .andExpect(jsonPath("$._embedded.schoolList.length()", is(2)))
+                .andExpect(jsonPath("$._embedded.schoolList[0].id", is("e96a7158-da3f-48ef-b37a-f2833957bcbd")))
+                .andExpect(jsonPath("$._embedded.schoolList[1].id", is("fd03c21f-cd39-4c05-b3f1-6d49618b6b10")));
     }
 
     @Test

@@ -1,11 +1,11 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,10 +24,9 @@ import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentLeadershipTrait;
+import io.aiontechnology.mentorsuccess.resource.TeacherResource;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -55,21 +55,22 @@ public class StudentLeadershipTraitEntityCollectionToModelCollectionMapper imple
 
     private final OneWayCollectionMapper<LeadershipTrait, String> leadershipTraitEntityToModelCollectionMapper;
 
-    @Qualifier("teacherAssemblerMapperAdaptor")
-    private final OneWayMapper<SchoolPersonRole, OutboundTeacher> teacherEntityToModelMapper;
+    //    @Qualifier("teacherAssemblerMapperAdaptor")
+    private final OneWayMapper<SchoolPersonRole, TeacherResource> teacherEntityToModelMapper;
 
     @Override
-    public Collection<String> map(Collection<StudentLeadershipTrait> studentLeadershipTraits) {
+    public Optional<Collection<String>> map(Collection<StudentLeadershipTrait> studentLeadershipTraits) {
         Collection<OutboundStudentLeadershipTrait> outboundStudentLeadershipTraits =
                 byRoleListClassifier.classify(studentLeadershipTraits).entrySet().stream()
                         .flatMap(e -> {
-                            Map<RoleType, List<StudentLeadershipTrait>> roleTypeMap = byTypeListClassifier.classify(e.getValue());
+                            Map<RoleType, List<StudentLeadershipTrait>> roleTypeMap =
+                                    byTypeListClassifier.classify(e.getValue());
                             return transformRoleTypeMap(e.getKey(), roleTypeMap).stream();
                         })
                         .collect(Collectors.toCollection(ArrayList::new));
-        return outboundStudentLeadershipTraits.stream().findFirst()
+        return Optional.of(outboundStudentLeadershipTraits.stream().findFirst()
                 .map(OutboundStudentLeadershipTrait::getLeadershipTraits)
-                .orElse(Collections.emptyList());
+                .orElse(Collections.emptyList()));
     }
 
     private Collection<OutboundStudentLeadershipTrait> transformRoleTypeMap(SchoolPersonRole teacher,
@@ -80,7 +81,7 @@ public class StudentLeadershipTraitEntityCollectionToModelCollectionMapper imple
                             .map(StudentLeadershipTrait::getLeadershipTrait)
                             .collect(Collectors.toSet());
                     return OutboundStudentLeadershipTrait.builder()
-                            .withLeadershipTraits(leadershipTraitEntityToModelCollectionMapper.map(leadershipTraits))
+                            .withLeadershipTraits(leadershipTraitEntityToModelCollectionMapper.map(leadershipTraits).orElse(Collections.emptyList()))
                             .withTeacher(teacherEntityToModelMapper.map(teacher).orElse(null))
                             .build();
                 })

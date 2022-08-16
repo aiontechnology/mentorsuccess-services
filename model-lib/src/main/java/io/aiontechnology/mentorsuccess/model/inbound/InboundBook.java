@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +17,6 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
 import lombok.Builder;
 import lombok.Value;
 
@@ -46,6 +45,9 @@ public class InboundBook {
     @Size(max = 100, message = "{book.title.size}")
     String title;
 
+    @Size(max = 255, message = "{book.description.size")
+    String description;
+
     /** The book's author. */
     @Size(max = 30, message = "{book.author.size}")
     String author;
@@ -56,7 +58,7 @@ public class InboundBook {
     @Max(value = 6, message = "{book.gradeLevel.invalid}")
     Integer gradeLevel;
 
-    @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{book.location.invalid}")
+    @NotNull(message = "{book.location.notNull}")
     ResourceLocation location;
 
     /** The interests associated with the book. */
@@ -75,6 +77,6 @@ public class InboundBook {
     Collection<String> behaviors;
 
     /** The tag associated with the book. */
-    String tag;
+    Collection<String> tags;
 
 }

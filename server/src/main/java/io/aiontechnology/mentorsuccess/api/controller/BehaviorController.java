@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
-import io.aiontechnology.mentorsuccess.api.assembler.BehaviorModelAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.NameableToStringModelMapper;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.service.BehaviorService;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ import java.util.stream.StreamSupport;
 public class BehaviorController {
 
     /** A HATEOAS assembler for behavior string. */
-    private final BehaviorModelAssembler behaviorModelAssembler;
+    private final NameableToStringModelMapper<Behavior> behaviorModelAssembler;
 
     /** Service for interacting with {@link Behavior Behaviors}. */
     private final BehaviorService behaviorService;

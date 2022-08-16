@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,20 @@
 package io.aiontechnology.mentorsuccess.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -35,10 +40,13 @@ import java.util.UUID;
  * @since 0.1.0
  */
 @Entity
+@Table(name = "person")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class Person {
+@Getter
+@Setter
+@ToString
+public class Person implements Identifiable<UUID> {
 
     /** The ID of the person. */
     @Id
@@ -67,10 +75,17 @@ public class Person {
     @Column
     private String email;
 
-    /** The roles played by the person. */
-//    @OneToMany(mappedBy = "person")
-//    @Where(clause = "is_active = true")
-//    @EqualsAndHashCode.Exclude
-//    private Collection<SchoolPersonRole> roles;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Person person = (Person) o;
+        return id != null && Objects.equals(id, person.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
+    }
 
 }

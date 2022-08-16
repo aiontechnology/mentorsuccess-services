@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,10 @@
 package io.aiontechnology.mentorsuccess.model.outbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import lombok.Builder;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
-import org.springframework.hateoas.RepresentationModel;
+import lombok.NoArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 
 import java.util.UUID;
 
@@ -30,10 +30,14 @@ import java.util.UUID;
  * @author Whitney Hunter
  * @since 0.3.0
  */
-@Value
+@Data
 @EqualsAndHashCode(callSuper = true)
-@Builder(setterPrefix = "with")
-public class OutboundMentor extends RepresentationModel<OutboundMentor> {
+@NoArgsConstructor
+public class OutboundMentor<T> extends EntityModel<T> {
+
+    public OutboundMentor(T content) {
+        super(content);
+    }
 
     /** The mentor's id. */
     UUID id;

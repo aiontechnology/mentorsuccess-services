@@ -1,4 +1,4 @@
-// Copyright 2020-2021 Aion Technology LLC
+// Copyright 2020-2022 Aion Technology LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +24,12 @@ version = "${version}"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(16)
+        languageVersion = JavaLanguageVersion.of(18)
     }
 }
 
 jacoco {
-    toolVersion = "0.8.7"
+    toolVersion = "0.8.8"
 }
 
 javadoc.options.addStringOption('Xdoclint:none', '-quiet')
@@ -44,7 +44,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven {
-        url 'https://oss.sonatype.org/content/repositories/snapshots'
+        url 'https://s01.oss.sonatype.org/content/repositories/snapshots/'
     }
 }
 

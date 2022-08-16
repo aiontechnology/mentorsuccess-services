@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,11 @@ package io.aiontechnology.mentorsuccess.entity;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.CascadeType;
@@ -32,7 +35,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -42,10 +47,13 @@ import java.util.UUID;
  * @since 0.1.0
  */
 @Entity
+@Table(name = "school_person_role")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class SchoolPersonRole {
+@Getter
+@Setter
+@ToString
+public class SchoolPersonRole implements Identifiable<UUID> {
 
     /** The ID of the role. */
     @Id
@@ -100,13 +108,26 @@ public class SchoolPersonRole {
     @Column
     private UUID idpUserId;
 
-    public static class FirstNameComparitor implements Comparator<SchoolPersonRole> {
+    public static class FirstNameComparator implements Comparator<SchoolPersonRole> {
 
         @Override
         public int compare(SchoolPersonRole role1, SchoolPersonRole role2) {
             return role1.getPerson().getFirstName().compareTo(role2.getPerson().getFirstName());
         }
 
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        SchoolPersonRole that = (SchoolPersonRole) o;
+        return id != null && Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 
 }

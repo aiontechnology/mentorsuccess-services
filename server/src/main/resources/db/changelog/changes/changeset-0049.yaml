@@ -1,0 +1,247 @@
+# Copyright 2021-2022 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - property:
+      dbms: 'postgresql'
+      name: uuid_generator
+      value: uuid_generate_v4()
+  - property:
+      dbms: 'h2'
+      name: uuid_generator
+      value: random_uuid()
+  - changeSet:
+      id: 49
+      author: whitney
+      changes:
+        - sql:
+            dbms: 'postgresql'
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+        - createTable:
+            tableName: school_session
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: ${uuid_generator}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: school_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_schoolsession_school
+                    references: school(id)
+              - column:
+                  name: start_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: label
+                  type: varchar(30)
+                  constraints:
+                    nullable: false
+        - addColumn:
+            tableName: school
+            columns:
+              - column:
+                  name: current_session_id
+                  type: uuid
+                  constraints:
+                    nullable: true # FIX ME
+                    foreignKeyName: fk_school_session
+                    references: school_session(id)
+        - sqlFile:
+            path: db/migration/create_school_sessions.sql
+        - createTable:
+            tableName: student_schoolsession
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: ${uuid_generator}
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: student_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_studentsession_student
+                    references: student(id)
+              - column:
+                  name: schoolsession_id
+                  type: uuid
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_studentsession_session
+                    references: school_session(id)
+              - column:
+                  name: grade
+                  type: integer
+              - column:
+                  name: preferred_time
+                  type: varchar(30)
+              - column:
+                  name: actual_time
+                  type: varchar(30)
+              - column:
+                  name: location
+                  type: varchar(20)
+              - column:
+                  name: is_media_release_signed
+                  type: boolean
+              - column:
+                  name: start_date
+                  type: date
+              - column:
+                  name: teacher_role_id
+                  type: uuid
+              - column:
+                  name: teacher_comment
+                  type: varchar(500)
+              - column:
+                  name: mentor_role_id
+                  type: uuid
+              - column:
+                  name: pre_behavioral_assessment
+                  type: integer
+              - column:
+                  name: post_behavioral_assessment
+                  type: integer
+              - column:
+                  name: is_active
+                  type: boolean
+        - sqlFile:
+            dbms: 'postgresql'
+            path: db/migration/convert_students.sql
+        - dropIndex:
+            tableName: student
+            indexName: idx_active_school_student
+        - dropColumn:
+            tableName: student
+            columns:
+              - column:
+                  name: grade
+              - column:
+                  name: preferred_time
+              - column:
+                  name: actual_time
+              - column:
+                  name: location
+              - column:
+                  name: is_media_release_signed
+              - column:
+                  name: start_date
+              - column:
+                  name: is_active
+              - column:
+                  name: pre_behavioral_assessment
+              - column:
+                  name: post_behavioral_assessment
+        - addNotNullConstraint:
+            tableName: student
+            columnName: first_name
+        - addNotNullConstraint:
+            tableName: student
+            columnName: last_name
+        # Update student_interest relationship
+        - dropForeignKeyConstraint:
+            baseTableName: student_interest
+            constraintName: fk_studentinterest_student
+        - renameColumn:
+            tableName: student_interest
+            oldColumnName: student_id
+            newColumnName: studentsession_id
+        - sqlFile:
+            dbms: 'postgresql'
+            path: db/migration/convert_interests.sql
+        - addForeignKeyConstraint:
+            baseTableName: student_interest
+            baseColumnNames: studentsession_id
+            referencedTableName: student_schoolsession
+            referencedColumnNames: id
+            constraintName: fk_studentinterest_studentsession
+        # Update student_leadershipskill relationship
+        - dropForeignKeyConstraint:
+            baseTableName: student_leadershipskill
+            constraintName: fk_studentleadershipskill_student
+        - renameColumn:
+            tableName: student_leadershipskill
+            oldColumnName: student_id
+            newColumnName: studentsession_id
+        - sqlFile:
+            dbms: 'postgresql'
+            path: db/migration/convert_leadershipskills.sql
+        - addForeignKeyConstraint:
+            baseTableName: student_leadershipskill
+            baseColumnNames: studentsession_id
+            referencedTableName: student_schoolsession
+            referencedColumnNames: id
+            constraintName: fk_studentleadershipskill_studentsession
+        # Update student_leadershiptrait relationship
+        - dropForeignKeyConstraint:
+            baseTableName: student_leadershiptrait
+            constraintName: fk_studentleadershiptrait_student
+        - renameColumn:
+            tableName: student_leadershiptrait
+            oldColumnName: student_id
+            newColumnName: studentsession_id
+        - sqlFile:
+            dbms: 'postgresql'
+            path: db/migration/convert_leadershiptraits.sql
+        - addForeignKeyConstraint:
+            baseTableName: student_leadershiptrait
+            baseColumnNames: studentsession_id
+            referencedTableName: student_schoolsession
+            referencedColumnNames: id
+            constraintName: fk_studentleadershiptrait_studentsession
+        # Update student_behaviour relationship
+        - dropForeignKeyConstraint:
+            baseTableName: student_behavior
+            constraintName: fk_studentbehavior_student
+        - renameColumn:
+            tableName: student_behavior
+            oldColumnName: student_id
+            newColumnName: studentsession_id
+        - sqlFile:
+            dbms: 'postgresql'
+            path: db/migration/convert_behaviors.sql
+        - addForeignKeyConstraint:
+            baseTableName: student_behavior
+            baseColumnNames: studentsession_id
+            referencedTableName: student_schoolsession
+            referencedColumnNames: id
+            constraintName: fk_studentbehavior_studentsession
+        # Drop student_mentor table
+        - dropForeignKeyConstraint:
+            baseTableName: student_mentor
+            constraintName: fk_studentmentor_student
+        - dropTable:
+            tableName: student_mentor
+        # Drop student_teacher table
+        - dropForeignKeyConstraint:
+            baseTableName: student_teacher
+            constraintName: fk_studentteacher_student
+        - dropTable:
+            tableName: student_teacher

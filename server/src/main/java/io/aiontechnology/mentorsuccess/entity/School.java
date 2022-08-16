@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2021 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,11 @@
 package io.aiontechnology.mentorsuccess.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.Hibernate;
 import org.hibernate.annotations.Filter;
 import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.GenericGenerator;
@@ -35,8 +37,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
@@ -48,12 +53,15 @@ import static javax.persistence.CascadeType.ALL;
  * @since 0.1.0
  */
 @Entity
+@Table(name = "school")
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
+@Getter
+@Setter
+@ToString
 @Where(clause = "is_active = true")
 @FilterDef(name = "roleType", parameters = @ParamDef(name = "type", type = "string"))
-public class School {
+public class School implements Identifiable<UUID> {
 
     /** The ID of the school. */
     @Id
@@ -108,6 +116,15 @@ public class School {
     @Filter(name = "roleType", condition = "type = :type")
     private Collection<SchoolPersonRole> roles;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "school")
+    private Collection<SchoolSession> sessions;
+
+    @ToString.Exclude
+    @OneToOne(cascade = ALL)
+    @JoinColumn(name = "current_session_id", referencedColumnName = "id")
+    private SchoolSession currentSession;
+
     /** The collection of {@link Student Students} associated with the school. */
     @ToString.Exclude
     @OneToMany(mappedBy = "school", cascade = ALL)
@@ -150,6 +167,19 @@ public class School {
         students.add(student);
         student.setSchool(this);
         return student;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        School school = (School) o;
+        return id != null && Objects.equals(id, school.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return 0;
     }
 
 }
