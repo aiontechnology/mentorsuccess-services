@@ -25,12 +25,12 @@ dependencyManagement {
 dependencies {
     implementation project(':model-lib')
 
-    implementation 'com.amazonaws:aws-java-sdk-cognitoidp:1.11.943'
+    implementation "com.amazonaws:aws-java-sdk-cognitoidp:${cognitoIDPVersion}"
 
     implementation 'org.apache.commons:commons-lang3'
-    implementation 'org.apache.velocity:velocity-engine-core:2.2'
+    implementation "org.apache.velocity:velocity-engine-core:${velocityVersion}"
 
-    implementation 'org.flowable:flowable-spring-boot-starter-process:6.7.2'
+    implementation "org.flowable:flowable-spring-boot-starter-process:${flowableVersion}"
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
@@ -43,7 +43,7 @@ dependencies {
 
     implementation 'org.liquibase:liquibase-core'
 
-    implementation "io.aiontechnology:atlas:$atlasVersion"
+    implementation "io.aiontechnology:atlas:${atlasVersion}"
 
     implementation 'javax.inject:javax.inject:1'
 
