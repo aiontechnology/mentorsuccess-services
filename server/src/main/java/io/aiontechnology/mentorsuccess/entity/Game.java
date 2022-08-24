@@ -59,15 +59,16 @@ import java.util.UUID;
 @Where(clause = "is_active = true")
 public class Game implements Identifiable<UUID> {
 
-    /** The ID of the game. */
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private UUID id;
+    /** A collection activity focuses for the game. */
+    @ManyToMany
+    @JoinTable(name = "game_activityfocus",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "activityfocus_id"))
+    @ToString.Exclude
+    private Collection<ActivityFocus> activityFocuses = new ArrayList<>();
 
-    /** The name of the game. */
     @Column
-    private String name;
+    private String description;
 
     /** The start of the game's grade level range. */
     @Column
@@ -77,22 +78,15 @@ public class Game implements Identifiable<UUID> {
     @Column
     private Integer grade2;
 
+    /** The ID of the game. */
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    private UUID id;
+
     /** Is the game active? */
     @Column
     private Boolean isActive;
-
-    /** The location of the resource */
-    @Column
-    @Enumerated(EnumType.STRING)
-    private ResourceLocation location;
-
-    /** A collection activity focuses for the game. */
-    @ManyToMany
-    @JoinTable(name = "game_activityfocus",
-            joinColumns = @JoinColumn(name = "game_id"),
-            inverseJoinColumns = @JoinColumn(name = "activityfocus_id"))
-    @ToString.Exclude
-    private Collection<ActivityFocus> activityFocuses = new ArrayList<>();
 
     /** A collection leadership skills for the game. */
     @ManyToMany
@@ -110,6 +104,15 @@ public class Game implements Identifiable<UUID> {
     @ToString.Exclude
     private Collection<LeadershipTrait> leadershipTraits = new ArrayList<>();
 
+    /** The location of the resource */
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ResourceLocation location;
+
+    /** The name of the game. */
+    @Column
+    private String name;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -120,7 +123,7 @@ public class Game implements Identifiable<UUID> {
 
     @Override
     public int hashCode() {
-        return 0;
+        return Objects.hashCode(id);
     }
 
 }
