@@ -48,6 +48,9 @@ public class InboundGame implements GradeRangeHolder {
     @Size(max = 100, message = "{game.name.size}")
     String name;
 
+    @Size(max = 255, message = "{game.description.size}")
+    String description;
+
     /** The game's starting grade level. */
     @NotNull(message = "{game.grade1.notNull}")
     @Min(value = 1, message = "{game.grade1.invalid}")

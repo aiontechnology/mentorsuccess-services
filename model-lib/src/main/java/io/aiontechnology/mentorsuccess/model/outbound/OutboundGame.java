@@ -34,15 +34,14 @@ import java.util.UUID;
 @NoArgsConstructor
 public class OutboundGame<T> extends EntityModel<T> implements LocationHolder {
 
-    public OutboundGame(T content) {
-        super(content);
-    }
-
     /** The game's id. */
     UUID id;
 
     /** The game's name. */
     String name;
+
+    /** The game's description */
+    String description;
 
     /** The game's starting grade level. */
     Integer grade1;
@@ -60,5 +59,9 @@ public class OutboundGame<T> extends EntityModel<T> implements LocationHolder {
 
     /** The leadership traits associated with the game. */
     Collection<String> leadershipTraits;
+
+    public OutboundGame(T content) {
+        super(content);
+    }
 
 }

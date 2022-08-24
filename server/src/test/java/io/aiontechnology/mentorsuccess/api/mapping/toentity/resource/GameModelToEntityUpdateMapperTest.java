@@ -46,6 +46,7 @@ public class GameModelToEntityUpdateMapperTest {
         // setup the fixture
         UUID id = UUID.randomUUID();
         String name = "NAME";
+        String description = "DESCRIPTION";
         Integer gradeLevel1 = 1;
         Integer gradeLevel2 = 2;
         ResourceLocation location = ONLINE;
@@ -55,6 +56,7 @@ public class GameModelToEntityUpdateMapperTest {
         InboundGame inboundGame = InboundGame.builder()
                 .withId(id)
                 .withName(name)
+                .withDescription(description)
                 .withGrade1(gradeLevel1)
                 .withGrade2(gradeLevel2)
                 .withLocation(location)
@@ -82,6 +84,7 @@ public class GameModelToEntityUpdateMapperTest {
         assertThat(result).isNotEmpty();
         assertThat(result.get()).isSameAs(game);
         assertThat(result.get().getName()).isEqualTo(name);
+        assertThat(result.get().getDescription()).isEqualTo(description);
         assertThat(result.get().getGrade1()).isEqualTo(gradeLevel1);
         assertThat(result.get().getGrade2()).isEqualTo(gradeLevel2);
         assertThat(result.get().getLocation()).isEqualTo(location);

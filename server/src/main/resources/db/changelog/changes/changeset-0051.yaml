@@ -1,4 +1,4 @@
-# Copyright 2020-2022 Aion Technology LLC
+# Copyright 2022 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-atlasVersion=0.1.6
-cognitoIDPVersion=1.12.282
-flowableVersion=6.7.2
-springBootVersion=2.7.2
-springCloudVersion=2021.0.3
-springDependencyManagementVersion=1.0.10.RELEASE
-velocityVersion=2.3
-version=1.9.0
+databaseChangeLog:
+  - changeSet:
+      id: 51
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: game
+            columns:
+              - column:
+                  name: description
+                  type: varchar(255)
