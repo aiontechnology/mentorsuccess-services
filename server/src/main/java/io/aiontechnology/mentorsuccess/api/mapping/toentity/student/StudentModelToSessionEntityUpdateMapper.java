@@ -25,14 +25,12 @@ import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.entity.StudentMentor;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentMentor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -74,28 +72,6 @@ public class StudentModelToSessionEntityUpdateMapper
                 .map(s -> mapTeacher(inboundStudent, s));
     }
 
-    private StudentSchoolSession mapProperties(InboundStudent inboundStudent,
-            StudentSchoolSession studentSchoolSession) {
-        studentSchoolSession.setGrade(inboundStudent.getGrade());
-        studentSchoolSession.setPreferredTime(inboundStudent.getPreferredTime());
-        studentSchoolSession.setActualTime(inboundStudent.getActualTime());
-        studentSchoolSession.setStartDate(inboundStudent.getStartDate());
-        studentSchoolSession.setLocation(inboundStudent.getLocation());
-        studentSchoolSession.setIsMediaReleaseSigned(inboundStudent.getMediaReleaseSigned());
-        studentSchoolSession.setPreBehavioralAssessment(inboundStudent.getPreBehavioralAssessment());
-        studentSchoolSession.setPostBehavioralAssessment(inboundStudent.getPostBehavioralAssessment());
-        studentSchoolSession.setIsActive(true);
-        return studentSchoolSession;
-    }
-
-    private StudentSchoolSession mapInterests(InboundStudent inboundStudent,
-            StudentSchoolSession studentSchoolSession) {
-        Optional.ofNullable(interestModelToEntityMapper)
-                .flatMap(mapper -> mapper.map(inboundStudent.getInterests()))
-                .ifPresent(studentSchoolSession::setInterests);
-        return studentSchoolSession;
-    }
-
     private StudentSchoolSession mapBehaviors(InboundStudent inboundStudent,
             StudentSchoolSession studentSchoolSession) {
         Optional.ofNullable(studentBehaviorModelToEntityMapper)
@@ -112,14 +88,11 @@ public class StudentModelToSessionEntityUpdateMapper
         return studentSchoolSession;
     }
 
-    private StudentSchoolSession mapMentor(InboundStudent inboundStudent, StudentSchoolSession studentSchoolSession) {
-        Optional.ofNullable(inboundStudent.getMentor())
-                .ifPresent(inboundMentor -> {
-                    Optional<SchoolPersonRole> requestedRole =
-                            mentorModelToEntityMapper.map(inboundMentor.getUri());
-                    studentSchoolSession.setMentor(requestedRole
-                            .orElseThrow(() -> new NotFoundException("Unable to find specified mentor")));
-                });
+    private StudentSchoolSession mapInterests(InboundStudent inboundStudent,
+            StudentSchoolSession studentSchoolSession) {
+        Optional.ofNullable(interestModelToEntityMapper)
+                .flatMap(mapper -> mapper.map(inboundStudent.getInterests()))
+                .ifPresent(studentSchoolSession::setInterests);
         return studentSchoolSession;
     }
 
@@ -157,13 +130,40 @@ public class StudentModelToSessionEntityUpdateMapper
         return studentSchoolSession;
     }
 
+    private StudentSchoolSession mapMentor(InboundStudent inboundStudent, StudentSchoolSession studentSchoolSession) {
+        Optional.ofNullable(inboundStudent.getMentor())
+                .ifPresent(inboundMentor -> {
+                    Optional<SchoolPersonRole> requestedRole =
+                            mentorModelToEntityMapper.map(inboundMentor.getUri());
+                    studentSchoolSession.setMentor(requestedRole
+                            .orElseThrow(() -> new NotFoundException("Unable to find specified mentor")));
+                });
+        return studentSchoolSession;
+    }
+
+    private StudentSchoolSession mapProperties(InboundStudent inboundStudent,
+            StudentSchoolSession studentSchoolSession) {
+        studentSchoolSession.setGrade(inboundStudent.getGrade());
+        studentSchoolSession.setPreferredTime(inboundStudent.getPreferredTime());
+        studentSchoolSession.setActualTime(inboundStudent.getActualTime());
+        studentSchoolSession.setStartDate(inboundStudent.getStartDate());
+        studentSchoolSession.setLocation(inboundStudent.getLocation());
+        studentSchoolSession.setIsMediaReleaseSigned(inboundStudent.getMediaReleaseSigned());
+        studentSchoolSession.setPreBehavioralAssessment(inboundStudent.getPreBehavioralAssessment());
+        studentSchoolSession.setPostBehavioralAssessment(inboundStudent.getPostBehavioralAssessment());
+        studentSchoolSession.setIsActive(true);
+        return studentSchoolSession;
+    }
+
     private StudentSchoolSession mapTeacher(InboundStudent inboundStudent, StudentSchoolSession studentSchoolSession) {
         Optional.ofNullable(inboundStudent.getTeacher())
                 .ifPresent(inboundTeacher -> {
-                    Optional<SchoolPersonRole> requestedRole =
-                            teacherModelToEntityMapper.map(inboundTeacher.getUri());
-                    studentSchoolSession.setTeacher(requestedRole
-                            .orElseThrow(() -> new NotFoundException("Unable to find specified teacher")));
+                    SchoolPersonRole teacher =
+                            (inboundTeacher.getUri() == null || inboundTeacher.getUri().toString().equals(""))
+                            ? null
+                            : teacherModelToEntityMapper.map(inboundTeacher.getUri())
+                                .orElseThrow(() -> new NotFoundException("Unable to find specified teacher"));
+                    studentSchoolSession.setTeacher(teacher);
                     studentSchoolSession.setTeacherComment(inboundTeacher.getComment());
                 });
         return studentSchoolSession;

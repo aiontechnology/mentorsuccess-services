@@ -19,10 +19,10 @@
 <div>
     <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
     <p>
-        Dear $parentFirstName,
+        Dear ${invitation.parent1FirstName},
     </p>
     <p>
-        MentorSuccess™ is a student mentoring program partnered with $schoolName, focused on creating
+        MentorSuccess™ is a student mentoring program partnered with ${school.name}, focused on creating
         caring connections to inspire success in children. This program is designed to enhance the social and
         educational experience for your child. Students and mentors work together to develop Leadership Success Skills
         involved in making life choices and creating healthy relationships for their future. Your child and their mentor
@@ -30,10 +30,10 @@
         atmosphere of healthy conversations while building resilient and successful life-long learners.
     </p>
     <p>
-        Mentor sessions will take place at school and will be under the supervision of $programAdminName.
+        Mentor sessions will take place at school and will be under the supervision of ${programAdminName}.
     </p>
     <p>
-        We are writing to request permission for your child, $studentFirstName, to participate in the MentorSuccess™
+        We are writing to request permission for your child, ${invitation.studentFirstName}, to participate in the MentorSuccess™
         program. We thank you in advance for letting your child participate in this exciting learning experience!
     </p>
 
@@ -41,12 +41,12 @@
     <p>
         Click the button below to register your child.<br/>
         <br/><br/>
-        <a class="button" href="http://google.com">Register My Child</a>
+        <a class="button" href="${studentRegistrationUri}">Register My Child</a>
     </p>
     <p>
         <br/>
-        If you have any questions, please feel free to contact $programAdminName at
-        <a href="mailto:$programAdminEmail">$programAdminEmail</a>.
+        If you have any questions, please feel free to contact ${programAdminName} at
+        <a href="mailto:${programAdminEmail}">${programAdminEmail}</a>.
     </p>
     <p>
         Thank you!

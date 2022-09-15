@@ -26,6 +26,7 @@ import lombok.Value;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * A model object for the connection between schools and people.
@@ -36,7 +37,7 @@ import javax.validation.constraints.Size;
 @Value
 @Builder(setterPrefix = "with")
 @Contact
-public class InboundContact {
+public class InboundContact implements Serializable {
 
     @Size(max = 50, message = "{contact.label.size}")
     String label;

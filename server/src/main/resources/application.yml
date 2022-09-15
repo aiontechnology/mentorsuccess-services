@@ -15,6 +15,11 @@
 flowable:
   idm:
     password-encoder: spring_delegating
+  mail:
+    server:
+      host: email-smtp.us-west-2.amazonaws.com
+      port: 587
+      use-tls: true
 
 spring:
   liquibase:

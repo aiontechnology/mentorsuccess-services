@@ -26,6 +26,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
@@ -51,7 +52,8 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests(authorize -> authorize.anyRequest().authenticated())
+                .authorizeRequests(authorize -> authorize
+                        .anyRequest().authenticated())
                 .oauth2ResourceServer(oAuth2ResourceServerCustomizer ->
                         oAuth2ResourceServerCustomizer.jwt(jwtCustomizer -> jwtCustomizer.decoder(jwtDecoder())))
                 .addFilterAfter(new AuthoritiesGrantingFilter(), BasicAuthenticationFilter.class);
@@ -62,6 +64,11 @@ public class OAuthSecurityConfig extends WebSecurityConfigurerAdapter {
         NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(jwkSetUri).build();
         jwtDecoder.setClaimSetConverter(cognitoClaimConverterService);
         return jwtDecoder;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web -> web.ignoring().antMatchers("/api/v1/schools/*/registrations/**"));
     }
 
 }
