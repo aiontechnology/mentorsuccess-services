@@ -21,8 +21,10 @@ import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundSchool;
 import io.aiontechnology.mentorsuccess.resource.SchoolResource;
+import io.aiontechnology.mentorsuccess.service.InvitationService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -62,9 +64,12 @@ public class SchoolController {
 
     // Mappers
     private final OneWayMapper<InboundSchool, School> schoolMapper;
+
     private final OneWayUpdateMapper<InboundSchool, School> schoolUpdateMapper;
 
     // Services
+    private final InvitationService invitationService;
+
     private final SchoolService schoolService;
 
     /**
@@ -83,6 +88,20 @@ public class SchoolController {
                 .map(schoolService::createSchool)
                 .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
+    }
+
+    /**
+     * A REST endpoint for deleting a school.
+     *
+     * @param schoolId The id of the school to remove.
+     */
+    @DeleteMapping("/{schoolId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('school:delete')")
+    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Deactivating school: {}", schoolId);
+        schoolService.getSchoolById(schoolId)
+                .ifPresent(schoolService::deactivateSchool);
     }
 
     /**
@@ -118,6 +137,15 @@ public class SchoolController {
                 .orElseThrow(() -> new NotFoundException("School was not found"));
     }
 
+    @PostMapping("/{schoolId}/invitations")
+    @PreAuthorize("hasAuthority('school:update')")
+    public InboundInvitation studentInvitation(@PathVariable("schoolId") UUID schoolId,
+            @RequestBody @Valid InboundInvitation invitation) {
+        schoolService.getSchoolById(schoolId)
+                .ifPresent(school -> invitationService.invite(invitation, school));
+        return invitation;
+    }
+
     /**
      * A REST endpoint for updating a school.
      *
@@ -135,20 +163,6 @@ public class SchoolController {
                 .map(schoolService::updateSchool)
                 .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));
-    }
-
-    /**
-     * A REST endpoint for deleting a school.
-     *
-     * @param schoolId The id of the school to remove.
-     */
-    @DeleteMapping("/{schoolId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('school:delete')")
-    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Deactivating school: {}", schoolId);
-        schoolService.getSchoolById(schoolId)
-                .ifPresent(schoolService::deactivateSchool);
     }
 
 }

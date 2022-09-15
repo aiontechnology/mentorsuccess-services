@@ -41,12 +41,15 @@ public class GenerateEmailTask implements JavaDelegate {
         p.setProperty("class.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
         Velocity.init( p );
         VelocityContext context = new VelocityContext();
-        context.put("firstName", execution.getVariable("firstName"));
+        context.put("schoolName", execution.getVariable("schoolName"));
+        context.put("programAdminName", execution.getVariable("programAdminName"));
+        context.put("programAdminEmail", execution.getVariable("programAdminEmail"));
+        context.put("parentFirstName", execution.getVariable("parentFirstName"));
+        context.put("studentFirstName", execution.getVariable("studentFirstName"));
         Template template = Velocity.getTemplate("templates/registration-email.vm");
         StringWriter writer = new StringWriter();
         template.merge(context, writer);
 
-        execution.setVariable("emailSubject", "This is a custom subject");
         execution.setVariable("emailBody", writer.toString());
     }
 
