@@ -23,39 +23,50 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
-import org.flowable.engine.TaskService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.EMAIL_SUBJECT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_EMAIL;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_NAME;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
+
 @Service
 @RequiredArgsConstructor()
 @Slf4j
-public class InvitationService {
-    private final RuntimeService runtimeService;
+public class StudentInvitationService {
 
-    private final TaskService taskService;
+    // Services
+    private final RuntimeService runtimeService;
 
     public void invite(InboundInvitation invitation, School school) {
         Optional<Person> programAdmin = school.getRoles().stream()
                 .filter(role -> role.getType().equals(RoleType.PROGRAM_ADMIN))
-                .findFirst()
-                .map(role -> role.getPerson());
+                .findFirst().map(role -> role.getPerson());
         String programAdminName =
                 programAdmin.map(person -> person.getFirstName() + " " + person.getLastName()).orElse("");
-        String programAdminEmail = programAdmin.map(person -> person.getEmail()).orElse("");
+        String programAdminEmail = programAdmin
+                .map(person -> person.getEmail())
+                .orElse("");
 
+        Map<String, Object> variables = setProcessVariables(invitation, school, programAdminName,
+                programAdminEmail);
+        runtimeService.startProcessInstanceByKey("student-registration", variables);
+    }
+
+    private Map<String, Object> setProcessVariables(InboundInvitation invitation, School school,
+            String programAdminName, String programAdminEmail) {
         Map<String, Object> variables = new HashMap<>();
-        variables.put("schoolName", school.getName());
-        variables.put("programAdminName", programAdminName);
-        variables.put("programAdminEmail", programAdminEmail);
-        variables.put("parentEmailAddress", invitation.getParentEmailAddress());
-        variables.put("parentFirstName", invitation.getParentFirstName());
-        variables.put("studentFirstName", invitation.getStudentFirstName());
-        variables.put("emailSubject", "His Heart Foundation - MentorSuccess™ Student Registration");
-        runtimeService.startProcessInstanceByKey("reg", variables);
+        variables.put(SCHOOL, school);
+        variables.put(PROGRAM_ADMIN_NAME, programAdminName);
+        variables.put(PROGRAM_ADMIN_EMAIL, programAdminEmail);
+        variables.put(INVITATION, invitation);
+        variables.put(EMAIL_SUBJECT, "His Heart Foundation - MentorSuccess™ Student Registration");
+        return variables;
     }
 
 }

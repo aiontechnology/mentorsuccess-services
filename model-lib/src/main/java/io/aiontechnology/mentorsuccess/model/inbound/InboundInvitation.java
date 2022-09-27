@@ -20,29 +20,36 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Value
 @Builder(setterPrefix = "with")
-public class InboundInvitation {
-    @NotNull()
-    @Size(max = 100)
-    String parentFirstName;
+public class InboundInvitation implements Serializable {
 
     @NotNull()
-    @Size(max = 100)
-    String parentLastName;
+    String studentRegistrationUri;
 
     @NotNull()
-    @Size(max = 100)
-    String parentEmailAddress;
+    @Size(max = 50)
+    String parent1FirstName;
 
     @NotNull()
-    @Size(max = 100)
+    @Size(max = 50)
+    String parent1LastName;
+
+    @NotNull(message = "{registration.parent1.email.notNull}")
+    @Size(max = 50, message = "{registration.parent1.email.size}")
+    @Pattern(regexp = "(^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$)", message = "{registration.parent1.email.invalid}")
+    String parent1EmailAddress;
+
+    @NotNull(message = "{registration.student.firstname.notNull}")
+    @Size(max = 50, message = "{registration.student.firstname.size}")
     String studentFirstName;
 
-    @NotNull()
-    @Size(max = 100)
+    @NotNull(message = "{registration.student.lastname.notNull}")
+    @Size(max = 50, message = "{registration.student.lastname.size}")
     String studentLastName;
 
 }

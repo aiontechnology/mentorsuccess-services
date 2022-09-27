@@ -35,12 +35,17 @@ public abstract class AssemblerSupport<ENTITY, MODEL extends EntityModel<ENTITY>
 
     @Override
     public final Optional<MODEL> map(ENTITY entity) {
-        return Optional.ofNullable(entity).flatMap(this::doMap).map(this::addLinks);
+        return Optional.ofNullable(entity)
+                .flatMap(this::doMap)
+                .map(this::addLinks);
     }
 
     @Override
     public Optional<MODEL> mapWithData(ENTITY entity, Map data) {
-        return Optional.ofNullable(entity).flatMap(e -> doMapWithData(e, data).map(this::addLinks));
+        return Optional.ofNullable(entity)
+                .flatMap(e -> doMapWithData(e, data)
+                        .map(this::addLinks)
+                        .map(model -> addLinks(model, data)));
     }
 
     public AssemblerSupport<ENTITY, MODEL> withSubMapper(String key, OneWayMapper<?, ?> subMapper) {
@@ -49,7 +54,14 @@ public abstract class AssemblerSupport<ENTITY, MODEL extends EntityModel<ENTITY>
     }
 
     protected MODEL addLinks(MODEL model) {
-        getLinks(model).spliterator().forEachRemaining(model::add);
+        getLinks(model).spliterator()
+                .forEachRemaining(model::add);
+        return model;
+    }
+
+    protected MODEL addLinks(MODEL model, Map data) {
+        getLinks(model, data).spliterator()
+                .forEachRemaining(model::add);
         return model;
     }
 
@@ -62,6 +74,10 @@ public abstract class AssemblerSupport<ENTITY, MODEL extends EntityModel<ENTITY>
     }
 
     protected Set<Link> getLinks(MODEL model) {
+        return Collections.emptySet();
+    }
+
+    protected Set<Link> getLinks(MODEL model, Map data) {
         return Collections.emptySet();
     }
 

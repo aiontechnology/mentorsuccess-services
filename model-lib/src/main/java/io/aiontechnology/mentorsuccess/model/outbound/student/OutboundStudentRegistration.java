@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.model.inbound.student;
+package io.aiontechnology.mentorsuccess.model.outbound.student;
 
-import lombok.Builder;
-import lombok.Value;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundSchool;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 
-import java.io.Serializable;
+import java.util.Collection;
 
-@Value
-@Builder(setterPrefix = "with")
-public class InboundStudentRegistration implements Serializable {
+@Data
+@EqualsAndHashCode(callSuper = true)
+@NoArgsConstructor
+public class OutboundStudentRegistration<T> extends EntityModel<T> {
 
     String studentFirstName;
+
     String studentLastName;
-    Integer grade;
+
     String parent1FirstName;
+
     String parent1LastName;
-    String parent1PhoneNumber;
+
     String parent1EmailAddress;
-    String parent1PreferredContactMethod;
-    String parent2FirstName;
-    String parent2LastName;
-    String parent2PhoneNumber;
-    String parent2EmailAddress;
-    String parent2PreferredContactMethod;
-    String teacher;
-    String preferredSession;
-    String emergencyContactFirstName;
-    String emergencyContactLastName;
-    String emergencyContactPhone;
-    String parentSignature;
+
+    OutboundSchool school;
+
+    Collection teachers;
+
+    public OutboundStudentRegistration(T content) {
+        super(content);
+    }
 
 }
