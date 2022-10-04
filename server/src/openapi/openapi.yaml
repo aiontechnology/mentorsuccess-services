@@ -4387,6 +4387,222 @@ paths:
         httpMethod: "DELETE"
         type: "http"
 
+  # /api/v1/schools/{schoolId}/registrations/{registrationId} ----------------------
+  /api/v1/schools/{schoolId}/registrations/{registrationId}:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+      - in: path
+        name: schoolId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired school
+      - in: path
+        name: registrationId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired registration
+
+    # OPTIONS for /api/v1/schools/{schoolId}/registrations/{registrationId}
+    options:
+      tags:
+        - registration
+        - school
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # GET for /api/v1/schools/{schoolId}/registrations/{registrationId}
+    get:
+      summary: Get a registration
+      description: Get a particular registration by id
+      tags:
+        - registration
+        - school
+      operationId: getRegistration
+      responses:
+        200:
+          description: The registration was returned
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationResultModel'
+          links:
+            self:
+              operationId: getRegistration
+              parameters:
+                schoolId: '$request.path.schoolId'
+                personnelId: '$request.path.registrationId'
+              description: >
+                The `Registration` object can be retrieved by doing a `GET`
+                to the current URL
+            school:
+              $ref: '#/components/links/school'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/registrations/{registrationId}"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.registrationId: "method.request.path.registrationId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "GET"
+        type: "http"
+
+    # PUT for /api/v1/schools/{schoolId}/registrations/{registrationId}
+    put:
+      summary: Update a registration
+      description: Update the registration with the given id
+      tags:
+        - registration
+        - school
+      operationId: updateRegistration
+      requestBody:
+        description: The updated registration
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationModel'
+      responses:
+        200:
+          description: The registration was updated
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RegistrationModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/schools/{schoolId}/registrations/{registrationId}"
+        responses:
+          200:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.schoolId: "method.request.path.schoolId"
+          integration.request.path.registrationId: "method.request.path.registrationId"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "PUT"
+        type: "http"
+
   # /api/v1/schools/{schoolId}/schoolsessions --------------------------------------
   /api/v1/schools/{schoolId}/schoolsessions:
     parameters:
@@ -6329,6 +6545,102 @@ components:
         programAdmins:
           allOf:
             - $ref: '#/components/schemas/UrlArray'
+
+    # RegistrationModel ------------------------------------------------------------
+    RegistrationModel:
+      studentFirstName:
+        type: string
+        maxLength: 50
+        example: Sally
+      studentLastName:
+        type: string
+        maxLength: 50
+        example: Student
+      grade:
+        type: integer
+        example: 2
+      parent1FirstName:
+        type: string
+        maxLength: 50
+        example: Pam
+      parent1LastName:
+        type: string
+        maxLength: 50
+        example: Parent
+      parent1EmailAddress:
+        type: string
+        maxLength: 50
+        example: pam@example.com
+      parent1PreferredContactMethod:
+        type: string
+        example: EMAIL
+      parent2FirstName:
+        type: string
+        maxLength: 50
+        example: Pam
+      parent2LastName:
+        type: string
+        maxLength: 50
+        example: Parent
+      parent2EmailAddress:
+        type: string
+        maxLength: 50
+        example: pam@example.com
+      parent2PreferredContactMethod:
+        type: string
+        example: EMAIL
+      teacher:
+        type: string
+      preferredSEssion:
+        type: string
+      emergencyContactFirstName:
+        type: string
+      emergencyContactLastName:
+        type: string
+      emergencyContactPhone:
+        type: string
+      parentSignature:
+        type: string
+
+    # RegistrationResultModel ------------------------------------------------------
+    RegistrationResultModel:
+      required:
+        - studentFirstName
+        - studentLastName
+        - parent1FirstName
+        - parent1LastName
+        - parent1EmailAddress
+      properties:
+        studentFirstName:
+          type: string
+          maxLength: 50
+          example: Sally
+        studentLastName:
+          type: string
+          maxLength: 50
+          example: Student
+        parent1FirstName:
+          type: string
+          maxLength: 50
+          example: Pam
+        parent1LastName:
+          type: string
+          maxLength: 50
+          example: Parent
+        parent1EmailAddress:
+          type: string
+          maxLength: 50
+          example: pam@example.com
+        school:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SchoolResultModel'
+        teachers:
+          type: array
+          items:
+            type: object
+            allOf:
+              - $ref: '#/components/schemas/TeacherResultModel'
 
     # SchoolLink -------------------------------------------------------------------
     SchoolLink:
