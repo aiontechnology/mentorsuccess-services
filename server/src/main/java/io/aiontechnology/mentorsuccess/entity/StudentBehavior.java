@@ -24,7 +24,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.Hibernate;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Embeddable;
@@ -35,7 +34,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -51,6 +49,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class StudentBehavior {
 
     /** The associated {@link Behavior}. */
@@ -81,19 +80,6 @@ public class StudentBehavior {
         behavior = from.behavior;
         role = from.role;
         studentSchoolSession = from.studentSchoolSession;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        StudentBehavior that = (StudentBehavior) o;
-        return studentBehaviorPK != null && Objects.equals(studentBehaviorPK, that.studentBehaviorPK);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(studentBehaviorPK);
     }
 
     @Embeddable
