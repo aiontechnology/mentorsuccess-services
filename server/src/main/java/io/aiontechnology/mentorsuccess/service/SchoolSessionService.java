@@ -67,7 +67,7 @@ public class SchoolSessionService {
         newSchoolSession.setSchool(school);
         schoolRepository.save(school);
 
-        return newSchoolSession;
+        return school.getCurrentSession();
     }
 
     @Transactional
