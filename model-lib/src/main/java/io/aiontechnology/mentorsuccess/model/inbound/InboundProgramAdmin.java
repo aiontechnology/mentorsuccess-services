@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound;
 
+import io.aiontechnology.mentorsuccess.model.validation.ValidOrNullPhone;
 import lombok.Builder;
 import lombok.Value;
 
@@ -50,11 +51,11 @@ public class InboundProgramAdmin {
     String email;
 
     /** The program admin's work phone number. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{programAdmin.workPhone.invalid}")
+    @ValidOrNullPhone(message = "{programAdmin.workPhone.invalid}")
     String workPhone;
 
     /** The program admin's cell phone. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{programAdmin.cellPhone.invalid}")
+    @ValidOrNullPhone(message = "{programAdmin.cellPhone.invalid}")
     String cellPhone;
 
 }
