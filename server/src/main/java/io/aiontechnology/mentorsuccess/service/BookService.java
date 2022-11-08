@@ -58,9 +58,9 @@ public class BookService {
      * @param book The {@link Book} to deactivate.
      */
     @Transactional
-    public void deactivateBook(Book book) {
+    public Book deactivateBook(Book book) {
         book.setIsActive(false);
-        bookRepository.save(book);
+        return bookRepository.save(book);
     }
 
     /**

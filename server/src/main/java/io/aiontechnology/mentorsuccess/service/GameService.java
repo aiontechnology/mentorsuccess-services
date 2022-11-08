@@ -58,9 +58,9 @@ public class GameService {
      * @param game The {@link Game} to deactivate.
      */
     @Transactional
-    public void deactivateGame(Game game) {
+    public Game deactivateGame(Game game) {
         game.setIsActive(false);
-        gameRepository.save(game);
+        return gameRepository.save(game);
     }
 
     /**

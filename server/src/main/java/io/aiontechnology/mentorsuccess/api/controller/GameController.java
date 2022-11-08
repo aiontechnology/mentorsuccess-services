@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -88,6 +88,22 @@ public class GameController {
     }
 
     /**
+     * A REST endpoint for deactivating a specific game.
+     *
+     * @param gameId The id of the game to deactivate.
+     */
+    @DeleteMapping("/{gameId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('game:delete')")
+    public GameResource deactivateGame(@PathVariable("gameId") UUID gameId) {
+        log.debug("Deactivating game: {}", gameId);
+        return gameService.findGameById(gameId)
+                .map(gameService::deactivateGame)
+                .flatMap(gameAssembler::map)
+                .orElseThrow(() -> new NotFoundException("Game not found"));
+    }
+
+    /**
      * A REST endpoint for retrieving all books.
      *
      * @return A collection of {@link InboundGame} instances for all games.
@@ -134,20 +150,6 @@ public class GameController {
                 .map(gameService::updateGame)
                 .flatMap(gameAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update game"));
-    }
-
-    /**
-     * A REST endpoint for deactivating a specific game.
-     *
-     * @param gameId The id of the game to deactivate.
-     */
-    @DeleteMapping("/{gameId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('game:delete')")
-    public void deactivateGame(@PathVariable("gameId") UUID gameId) {
-        log.debug("Deactivating game: {}", gameId);
-        gameService.findGameById(gameId)
-                .ifPresent(gameService::deactivateGame);
     }
 
 }
