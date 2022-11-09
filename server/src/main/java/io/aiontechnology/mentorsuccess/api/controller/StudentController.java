@@ -138,7 +138,7 @@ public class StudentController {
         requireNonNull(currentSession, "Current session is not set");
 
         studentService.getStudentById(studentId, currentSession)
-                .map(student -> student.findCurrentSessionForStudent(currentSession))
+                .flatMap(student -> student.findCurrentSessionForStudent(currentSession))
                 .ifPresent(studentSchoolSessionService::deactivateStudent);
     }
 
@@ -212,7 +212,8 @@ public class StudentController {
         Student student = studentService.getStudentById(studentId, currentSession)
                 .orElseThrow(() -> new NotFoundException("Student was not found"));
 
-        StudentSchoolSession currentStudentSession = student.findCurrentSessionForStudent(currentSession);
+        StudentSchoolSession currentStudentSession = student.findCurrentSessionForStudent(currentSession)
+                .orElseThrow(() -> new NotFoundException("No student session found"));
         studentModelToEntityUpdateMapper.map(inboundStudent, student);
         studentSessionModelToEntityUpdateMapper.map(inboundStudent, currentStudentSession);
         studentService.updateStudent(student);
