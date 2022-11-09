@@ -77,6 +77,25 @@ public class StudentService {
     }
 
     /**
+     * Remove the given students teacher for the current session.
+     *
+     * @param student The student for which the teacher should be removed.
+     * @param currentSession The current session.
+     * @return The student.
+     */
+    @Transactional
+    public Student removeTeacherFromCurrentSession(Student student, SchoolSession currentSession) {
+        if (currentSession != null) {
+            student.findCurrentSessionForStudent(currentSession)
+                    .ifPresent(current -> {
+                        current.setTeacher(null);
+                        current.setTeacherComment(null);
+                    });
+        }
+        return student;
+    }
+
+    /**
      * Update the given {@link Student} in the database.
      *
      * @param student The {@link Student} to update.

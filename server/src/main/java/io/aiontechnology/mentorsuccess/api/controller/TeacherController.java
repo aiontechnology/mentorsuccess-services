@@ -20,11 +20,15 @@ import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
+import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.entity.SchoolSession;
+import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundTeacher;
 import io.aiontechnology.mentorsuccess.resource.TeacherResource;
 import io.aiontechnology.mentorsuccess.service.RoleService;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
+import io.aiontechnology.mentorsuccess.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -43,6 +47,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -71,6 +77,7 @@ public class TeacherController {
     // Services
     private final RoleService roleService;
     private final SchoolService schoolService;
+    private final StudentService studentService;
 
     //Other
     private final EntityManager entityManager;
@@ -99,6 +106,51 @@ public class TeacherController {
     }
 
     /**
+     * A REST endpoint for deactivating a teacher.
+     *
+     * @param studentId The school from which the teacher should be deactivated.
+     * @param teacherId The id of the teacher to remove.
+     */
+    @DeleteMapping("/{teacherId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('teacher:delete')")
+    public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
+        log.debug("Deactivating teacher");
+        Optional<SchoolPersonRole> teacher = roleService.findRoleById(teacherId);
+        teacher.ifPresent(roleService::deactivateRole);
+
+        Optional<School> school = teacher.map(SchoolPersonRole::getSchool);
+
+        SchoolSession currentSession = school
+                .map(School::getCurrentSession)
+                .orElse(null);
+
+        Collection<Student> students = school
+                .map(School::getStudents)
+                .orElse(Collections.emptyList());
+
+        students.stream()
+                .map(student -> studentService.removeTeacherFromCurrentSession(student, currentSession))
+                .forEach(studentService::updateStudent);
+    }
+
+    /**
+     * A REST endpoint for getting a specific teacher for a particular school.
+     *
+     * @param schoolId The id of the school.
+     * @param teacherId The id of the teacher.
+     * @return The personnel if it could be found.
+     */
+    @GetMapping("/{teacherId}")
+    @PreAuthorize("hasAuthority('teacher:read')")
+    public TeacherResource getTeacher(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("teacherId") UUID teacherId) {
+        return roleService.findRoleById(teacherId)
+                .flatMap(teacherAssembler::map)
+                .orElseThrow(() -> new NotFoundException("Requested school not found"));
+    }
+
+    /**
      * A REST endpoint for retrieving all teachers.
      *
      * @param schoolId The id of the school.
@@ -121,22 +173,6 @@ public class TeacherController {
     }
 
     /**
-     * A REST endpoint for getting a specific teacher for a particular school.
-     *
-     * @param schoolId The id of the school.
-     * @param teacherId The id of the teacher.
-     * @return The personnel if it could be found.
-     */
-    @GetMapping("/{teacherId}")
-    @PreAuthorize("hasAuthority('teacher:read')")
-    public TeacherResource getTeacher(@PathVariable("schoolId") UUID schoolId,
-            @PathVariable("teacherId") UUID teacherId) {
-        return roleService.findRoleById(teacherId)
-                .flatMap(teacherAssembler::map)
-                .orElseThrow(() -> new NotFoundException("Requested school not found"));
-    }
-
-    /**
      * A REST endpoint for updating a teacher.
      *
      * @param schoolId The id of the school.
@@ -154,21 +190,6 @@ public class TeacherController {
                 .map(roleService::updateRole)
                 .flatMap(teacherAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update personnel"));
-    }
-
-    /**
-     * A REST endpoint for deactivating a teacher.
-     *
-     * @param studentId The school from which the teacher should be deactivated.
-     * @param teacherId The id of the teacher to remove.
-     */
-    @DeleteMapping("/{teacherId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('teacher:delete')")
-    public void deactivateTeacher(@PathVariable("schoolId") UUID studentId, @PathVariable("teacherId") UUID teacherId) {
-        log.debug("Deactivating teacher");
-        roleService.findRoleById(teacherId)
-                .ifPresent(roleService::deactivateRole);
     }
 
 }
