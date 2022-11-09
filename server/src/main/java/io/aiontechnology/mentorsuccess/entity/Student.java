@@ -40,6 +40,7 @@ import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -119,9 +120,11 @@ public class Student implements Identifiable<UUID> {
         return id != null && Objects.equals(id, student.id);
     }
 
-    public StudentSchoolSession findCurrentSessionForStudent(SchoolSession currentSession) {
+    public Optional<StudentSchoolSession> findCurrentSessionForStudent(SchoolSession currentSession) {
         requireNonNull(currentSession);
-        return getStudentSchoolSessions().stream().filter(s -> s.getSchoolSession().getId().equals(currentSession.getId())).findFirst().orElseThrow(() -> new NotFoundException("No matching student session found for current session"));
+        return getStudentSchoolSessions().stream()
+                .filter(s -> s.getSchoolSession().getId().equals(currentSession.getId()))
+                .findFirst();
     }
 
     @Override

@@ -43,6 +43,29 @@ public class StudentService {
     /** The repository used to interact with the database */
     private final StudentRepository studentRepository;
 
+    public Iterable<Student> getAllStudents(School school, SchoolSession session) {
+        Collection<StudentSchoolSession> studentSchoolSessions = school.getStudents().stream()
+                .map(student -> student.findCurrentSessionForStudent(session))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .filter(StudentSchoolSession::getIsActive)
+                .collect(Collectors.toList());
+        return studentSchoolSessions.stream()
+                .map(StudentSchoolSession::getStudent)
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Student> getStudentById(UUID id, SchoolSession session) {
+        Optional<Student> student = studentRepository.findById(id);
+
+        boolean isActive = student
+                .flatMap(s -> s.findCurrentSessionForStudent(session))
+                .map(ss -> ss.getIsActive())
+                .orElse(false);
+
+        return isActive ? student : Optional.empty();
+    }
+
     /**
      * Find a {@link Student} by its id.
      *
@@ -51,26 +74,6 @@ public class StudentService {
      */
     public Optional<Student> getStudentById(UUID id) {
         return studentRepository.findById(id);
-    }
-
-    public Optional<Student> getStudentById(UUID id, SchoolSession session) {
-        Optional<Student> student = studentRepository.findById(id);
-
-        boolean isActive = student.map(s -> s.findCurrentSessionForStudent(session))
-                .map(ss -> ss.getIsActive())
-                .orElse(false);
-
-        return isActive ? student : Optional.empty();
-    }
-
-    public Iterable<Student> getAllStudents(School school, SchoolSession session) {
-        Collection<StudentSchoolSession> studentSchoolSessions = school.getStudents().stream()
-                .map(student -> student.findCurrentSessionForStudent(session))
-                .filter(StudentSchoolSession::getIsActive)
-                .collect(Collectors.toList());
-        return studentSchoolSessions.stream()
-                .map(StudentSchoolSession::getStudent)
-                .collect(Collectors.toList());
     }
 
     /**
