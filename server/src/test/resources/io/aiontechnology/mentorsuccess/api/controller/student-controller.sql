@@ -14,7 +14,7 @@
 
 INSERT INTO school (id, name, is_active) VALUES ('fd03c21f-cd39-4c05-b3f1-6d49618b6b10', 'test', true);
 
-INSERT INTO school_session(id, start_date, end_date, label, school_id) VALUES ('ea77a2d9-f37e-46eb-8fed-0ad24c28e5a6', '2021-09-01', '2022-05-16', '2021-2022', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10');
+INSERT INTO school_session(id, label, school_id) VALUES ('ea77a2d9-f37e-46eb-8fed-0ad24c28e5a6', '2021-09-01', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10');
 
 UPDATE school set current_session_id='ea77a2d9-f37e-46eb-8fed-0ad24c28e5a6' WHERE id='fd03c21f-cd39-4c05-b3f1-6d49618b6b10';
 

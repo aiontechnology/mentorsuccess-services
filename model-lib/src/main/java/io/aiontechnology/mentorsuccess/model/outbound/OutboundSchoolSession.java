@@ -20,9 +20,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 /**
@@ -40,12 +38,6 @@ public class OutboundSchoolSession<T> extends EntityModel<T> {
 
     /** The session's id */
     UUID id;
-
-    /** The session's start date */
-    LocalDate startDate;
-
-    /** The session's end date */
-    LocalDate endDate;
 
     /** The session's label */
     String label;

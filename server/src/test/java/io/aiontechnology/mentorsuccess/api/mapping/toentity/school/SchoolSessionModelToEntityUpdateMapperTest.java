@@ -20,7 +20,6 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundSchoolSession;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * @author Whitney Hunter
@@ -36,8 +35,6 @@ public class SchoolSessionModelToEntityUpdateMapperTest {
         String label = "LABEL";
 
         InboundSchoolSession inboundSchoolSession = InboundSchoolSession.builder()
-                .withStartDate(startDate)
-                .withEndDate(endDate)
                 .withLabel(label)
                 .build();
 

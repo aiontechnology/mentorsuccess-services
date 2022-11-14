@@ -23,12 +23,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import javax.validation.ConstraintViolation;
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import static java.time.Month.DECEMBER;
-import static java.time.Month.JANUARY;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
@@ -37,21 +34,12 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class InboundSchoolSessionTest extends BaseValidatorTest {
 
-    @Test
-    void testValid() {
-        // set up the fixture
-        InboundSchoolSession inboundSchoolSession = InboundSchoolSession.builder()
-                .withStartDate(LocalDate.of(2022, JANUARY, 1))
-                .withEndDate(LocalDate.of(2022, DECEMBER, 31))
-                .withLabel("TEST")
+    private static Stream<ImmutablePair<InboundSchoolSession, String>> sessionInstanceProvider() {
+        InboundSchoolSession nullLabel = InboundSchoolSession.builder()
+                .withLabel(null)
                 .build();
-
-        // execute the SUT
-        Set<ConstraintViolation<InboundSchoolSession>> constraintViolations =
-                getValidator().validate(inboundSchoolSession);
-
-        // validation
-        assertThat(constraintViolations.size()).isEqualTo(0);
+        return Stream.of(
+                ImmutablePair.of(nullLabel, "{schoolsession.label.notNull}"));
     }
 
     @ParameterizedTest
@@ -68,25 +56,19 @@ public class InboundSchoolSessionTest extends BaseValidatorTest {
         assertThat(constraintViolations.iterator().next().getMessage()).isEqualTo(sessionInstance.getRight());
     }
 
-    private static Stream<ImmutablePair<InboundSchoolSession, String>> sessionInstanceProvider() {
-        InboundSchoolSession nullStartDate = InboundSchoolSession.builder()
-                .withStartDate(null)
-                .withEndDate(LocalDate.now())
-                .withLabel("LABEL")
+    @Test
+    void testValid() {
+        // set up the fixture
+        InboundSchoolSession inboundSchoolSession = InboundSchoolSession.builder()
+                .withLabel("TEST")
                 .build();
-        InboundSchoolSession nullEndDate = InboundSchoolSession.builder()
-                .withStartDate(LocalDate.now())
-                .withEndDate(null)
-                .withLabel("LABEL")
-                .build();
-        InboundSchoolSession nullLabel = InboundSchoolSession.builder()
-                .withStartDate(LocalDate.now())
-                .withEndDate(LocalDate.now())
-                .withLabel(null)
-                .build();
-        return Stream.of(ImmutablePair.of(nullStartDate, "{schoolsession.startdate.notNull}"),
-                ImmutablePair.of(nullEndDate, "{schoolsession.enddate.notNull}"),
-                ImmutablePair.of(nullLabel, "{schoolsession.label.notNull}"));
+
+        // execute the SUT
+        Set<ConstraintViolation<InboundSchoolSession>> constraintViolations =
+                getValidator().validate(inboundSchoolSession);
+
+        // validation
+        assertThat(constraintViolations.size()).isEqualTo(0);
     }
 
 }
