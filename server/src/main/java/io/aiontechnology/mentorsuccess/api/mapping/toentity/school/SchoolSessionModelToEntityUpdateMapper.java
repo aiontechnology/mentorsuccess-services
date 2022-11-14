@@ -38,8 +38,6 @@ public class SchoolSessionModelToEntityUpdateMapper implements OneWayUpdateMappe
         Objects.requireNonNull(schoolSession);
         return Optional.ofNullable(inboundSchoolSession)
                 .map(ss -> {
-                    schoolSession.setStartDate(inboundSchoolSession.getStartDate());
-                    schoolSession.setEndDate(inboundSchoolSession.getEndDate());
                     schoolSession.setLabel(inboundSchoolSession.getLabel());
                     return schoolSession;
                 });

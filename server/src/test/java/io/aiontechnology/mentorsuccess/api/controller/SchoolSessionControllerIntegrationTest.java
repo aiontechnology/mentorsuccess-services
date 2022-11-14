@@ -71,12 +71,8 @@ public class SchoolSessionControllerIntegrationTest {
     @Test
     void testCreateSchoolSession() throws Exception {
         // setup the fixture
-        LocalDate startDate = LocalDate.of(2024, JANUARY, 1);
-        LocalDate endDate = LocalDate.of(2024, DECEMBER, 31);
         String label = "2024-2024";
         InboundSchoolSession schoolSessionModel = InboundSchoolSession.builder()
-                .withStartDate(startDate)
-                .withEndDate(endDate)
                 .withLabel(label)
                 .build();
 
@@ -92,8 +88,6 @@ public class SchoolSessionControllerIntegrationTest {
         // validation
         result.andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.startDate", is(startDate.toString())))
-                .andExpect(jsonPath("$.endDate", is(endDate.toString())))
                 .andExpect(jsonPath("$.label", is(label)));
     }
 
@@ -112,15 +106,7 @@ public class SchoolSessionControllerIntegrationTest {
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
                 .andExpect(jsonPath("$._embedded.schoolSessionList").isArray())
-                .andExpect(jsonPath("$._embedded.schoolSessionList.length()", is(2)))
-                .andExpect(jsonPath("$._embedded.schoolSessionList[?(@.label == '2021-2022')].startDate",
-                        hasItem("2021-01-01")))
-                .andExpect(jsonPath("$._embedded.schoolSessionList[?(@.label == '2021-2022')].endDate",
-                        hasItem("2021-12-31")))
-                .andExpect(jsonPath("$._embedded.schoolSessionList[?(@.label == '2022-2023')].startDate",
-                        hasItem("2022-01-01")))
-                .andExpect(jsonPath("$._embedded.schoolSessionList[?(@.label == '2022-2023')].endDate",
-                        hasItem("2022-12-31")));
+                .andExpect(jsonPath("$._embedded.schoolSessionList.length()", is(2)));
     }
 
     @Test
@@ -138,8 +124,6 @@ public class SchoolSessionControllerIntegrationTest {
         // validation
         result.andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith("application/hal+json"))
-                .andExpect(jsonPath("$.startDate", is("2021-01-01")))
-                .andExpect(jsonPath("$.endDate", is("2021-12-31")))
                 .andExpect(jsonPath("$.label", is("2021-2022")));
     }
 

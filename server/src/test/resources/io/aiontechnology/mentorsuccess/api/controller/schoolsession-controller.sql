@@ -14,8 +14,8 @@
 
 INSERT INTO school (id, name, street1, street2, city, state, zip, phone, district, is_private, is_active) VALUES ('fd03c21f-cd39-4c05-b3f1-6d49618b6b10', 'NAME', 'STREET1', 'STREET2', 'CITY', 'ST', '123456789', '3601234567', 'DISTRICT', true, true);
 
-INSERT INTO school_session(id, school_id, start_date, end_date, label) VALUES ('e618f863-da09-4648-8098-5e0a8b21ff1f', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', '2021-01-01', '2021-12-31', '2021-2022');
-INSERT INTO school_session(id, school_id, start_date, end_date, label) VALUES ('b9875993-c40e-4367-8e21-080579eee039', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', '2022-01-01', '2022-12-31', '2022-2023');
+INSERT INTO school_session(id, school_id, label) VALUES ('e618f863-da09-4648-8098-5e0a8b21ff1f', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', '2021-2022');
+INSERT INTO school_session(id, school_id, label) VALUES ('b9875993-c40e-4367-8e21-080579eee039', 'fd03c21f-cd39-4c05-b3f1-6d49618b6b10', '2022-2023');
 
 INSERT INTO person (id, last_name, first_name, work_phone, cell_phone, email) VALUES ('2f10e8ac-9ad6-4771-a034-ca1d6c387b9b', 'Rogers', 'Fred', '3601112222', '3603334444', 'fred@rogers.com');
 INSERT INTO person (id, last_name, first_name, work_phone, cell_phone, email) VALUES ('9dc31bec-8120-40c7-bcd2-6a2c4c85c033', 'Mentor', 'Mark', '3602223333', '3604445555', 'mark@mentor.com');

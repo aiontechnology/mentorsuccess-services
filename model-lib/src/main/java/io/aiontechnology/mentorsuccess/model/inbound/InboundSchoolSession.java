@@ -20,7 +20,6 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 
 /**
  * @author Whitney Hunter
@@ -29,12 +28,6 @@ import java.time.LocalDate;
 @Value
 @Builder(setterPrefix = "with")
 public class InboundSchoolSession {
-
-    @NotNull(message = "{schoolsession.startdate.notNull}")
-    LocalDate startDate;
-
-    @NotNull(message = "{schoolsession.enddate.notNull}")
-    LocalDate endDate;
 
     @NotNull(message = "{schoolsession.label.notNull}")
     String label;
