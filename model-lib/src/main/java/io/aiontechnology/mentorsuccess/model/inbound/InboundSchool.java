@@ -44,6 +44,9 @@ public class InboundSchool {
     @Size(max = 100, message = "{school.name.size}")
     String name;
 
+    @Size(max = 30, message = "{schoolsession.label.size}")
+    String initialSessionLabel;
+
     /** The school's address */
     @Valid
     InboundAddress address;

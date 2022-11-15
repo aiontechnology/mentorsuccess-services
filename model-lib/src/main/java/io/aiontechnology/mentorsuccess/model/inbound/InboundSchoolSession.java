@@ -20,6 +20,7 @@ import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 /**
  * @author Whitney Hunter
@@ -30,6 +31,7 @@ import javax.validation.constraints.NotNull;
 public class InboundSchoolSession {
 
     @NotNull(message = "{schoolsession.label.notNull}")
+    @Size(max = 30, message = "{schoolsession.label.size}")
     String label;
 
 }
