@@ -97,6 +97,7 @@ public class SchoolController {
     public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
         log.debug("Deactivating school: {}", schoolId);
         schoolService.getSchoolById(schoolId)
+                .map(schoolService::removeAllProgramAdministrators)
                 .ifPresent(schoolService::deactivateSchool);
     }
 
