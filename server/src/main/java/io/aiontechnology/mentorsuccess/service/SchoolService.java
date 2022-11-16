@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
+import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.repository.SchoolRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ import java.util.UUID;
 public class SchoolService {
 
     // Services
+    private final AwsService awsService;
     private final SchoolSessionService schoolSessionService;
 
     // Repositories
@@ -86,6 +88,14 @@ public class SchoolService {
     }
 
     @Transactional
+    public School removeAllProgramAdministrators(School school) {
+        school.getRoles().stream()
+                .filter(role -> role.getType().equals(RoleType.PROGRAM_ADMIN))
+                .forEach(pa -> awsService.removeAwsUser(pa));
+        return school;
+    }
+
+    @Transactional
     public School setInitialSession(School school, String initialSessionLabel) {
         if (initialSessionLabel != null) {
             SchoolSession schoolSession = new SchoolSession();
@@ -96,7 +106,6 @@ public class SchoolService {
         }
         return school;
     }
-
 
     /**
      * Update the given {@link School} in the database.

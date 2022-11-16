@@ -62,12 +62,14 @@ public class SchoolServiceTest {
         UUID id = UUID.randomUUID();
         School school2 = generateSchool(id);
 
+        AwsService awsService = mock(AwsService.class);
+
         SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.save(any(School.class))).thenReturn(school2);
 
-        SchoolService schoolService = new SchoolService(schoolSessionService, schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         School result = schoolService.createSchool(school1);
@@ -82,12 +84,14 @@ public class SchoolServiceTest {
         UUID id = UUID.randomUUID();
         School school = generateSchool(id);
 
+        AwsService awsService = mock(AwsService.class);
+
         SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.findById(any(UUID.class))).thenReturn(Optional.of(school));
 
-        SchoolService schoolService = new SchoolService(schoolSessionService, schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         Optional<School> result = schoolService.getSchoolById(id);
@@ -103,12 +107,14 @@ public class SchoolServiceTest {
         School school1 = generateSchool(UUID.randomUUID());
         School school2 = generateSchool(UUID.randomUUID());
 
+        AwsService awsService = mock(AwsService.class);
+
         SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.findAllByOrderByNameAsc()).thenReturn(Arrays.asList(school1, school2));
 
-        SchoolService schoolService = new SchoolService(schoolSessionService, schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         Iterable<School> schools = schoolService.getAllSchools();
@@ -122,12 +128,14 @@ public class SchoolServiceTest {
         // setup the fixture
         UUID id = UUID.randomUUID();
 
+        AwsService awsService = mock(AwsService.class);
+
         SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
 
-        SchoolService schoolService = new SchoolService(schoolSessionService, schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         Optional<School> result = schoolService.getSchoolById(id);
@@ -141,10 +149,12 @@ public class SchoolServiceTest {
         // setup the fixture
         School school = mock(School.class);
 
+        AwsService awsService = mock(AwsService.class);
+
         SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
-        SchoolService schoolService = new SchoolService(schoolSessionService, schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         schoolService.deactivateSchool(school);
@@ -161,12 +171,15 @@ public class SchoolServiceTest {
         UUID id = UUID.randomUUID();
         School school2 = generateSchool(id);
 
+        AwsService awsService = mock(AwsService.class);
+
         SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
 
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.save(any(School.class))).thenReturn(school2);
 
-        SchoolService schoolService = new SchoolService(schoolSessionService, schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService,
+                schoolSessionService, schoolRepository);
 
         // execute the SUT
         School result = schoolService.updateSchool(school1);
