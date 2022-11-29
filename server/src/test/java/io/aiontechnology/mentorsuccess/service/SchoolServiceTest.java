@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -62,10 +62,14 @@ public class SchoolServiceTest {
         UUID id = UUID.randomUUID();
         School school2 = generateSchool(id);
 
+        AwsService awsService = mock(AwsService.class);
+
+        SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
+
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.save(any(School.class))).thenReturn(school2);
 
-        SchoolService schoolService = new SchoolService(schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         School result = schoolService.createSchool(school1);
@@ -80,10 +84,14 @@ public class SchoolServiceTest {
         UUID id = UUID.randomUUID();
         School school = generateSchool(id);
 
+        AwsService awsService = mock(AwsService.class);
+
+        SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
+
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.findById(any(UUID.class))).thenReturn(Optional.of(school));
 
-        SchoolService schoolService = new SchoolService(schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         Optional<School> result = schoolService.getSchoolById(id);
@@ -94,32 +102,19 @@ public class SchoolServiceTest {
     }
 
     @Test
-    void shouldNotFindSchool() {
-        // setup the fixture
-        UUID id = UUID.randomUUID();
-
-        SchoolRepository schoolRepository = mock(SchoolRepository.class);
-        when(schoolRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
-
-        SchoolService schoolService = new SchoolService(schoolRepository);
-
-        // execute the SUT
-        Optional<School> result = schoolService.getSchoolById(id);
-
-        // validation
-        assertThat(result.isPresent()).isFalse();
-    }
-
-    @Test
     void shouldGetAllSchools() {
         // setup the fixture
         School school1 = generateSchool(UUID.randomUUID());
         School school2 = generateSchool(UUID.randomUUID());
 
+        AwsService awsService = mock(AwsService.class);
+
+        SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
+
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.findAllByOrderByNameAsc()).thenReturn(Arrays.asList(school1, school2));
 
-        SchoolService schoolService = new SchoolService(schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         Iterable<School> schools = schoolService.getAllSchools();
@@ -129,12 +124,37 @@ public class SchoolServiceTest {
     }
 
     @Test
+    void shouldNotFindSchool() {
+        // setup the fixture
+        UUID id = UUID.randomUUID();
+
+        AwsService awsService = mock(AwsService.class);
+
+        SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
+
+        SchoolRepository schoolRepository = mock(SchoolRepository.class);
+        when(schoolRepository.findById(any(UUID.class))).thenReturn(Optional.empty());
+
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
+
+        // execute the SUT
+        Optional<School> result = schoolService.getSchoolById(id);
+
+        // validation
+        assertThat(result.isPresent()).isFalse();
+    }
+
+    @Test
     void shouldRemoveASchool() {
         // setup the fixture
         School school = mock(School.class);
 
+        AwsService awsService = mock(AwsService.class);
+
+        SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
+
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
-        SchoolService schoolService = new SchoolService(schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService, schoolSessionService, schoolRepository);
 
         // execute the SUT
         schoolService.deactivateSchool(school);
@@ -151,10 +171,15 @@ public class SchoolServiceTest {
         UUID id = UUID.randomUUID();
         School school2 = generateSchool(id);
 
+        AwsService awsService = mock(AwsService.class);
+
+        SchoolSessionService schoolSessionService = mock(SchoolSessionService.class);
+
         SchoolRepository schoolRepository = mock(SchoolRepository.class);
         when(schoolRepository.save(any(School.class))).thenReturn(school2);
 
-        SchoolService schoolService = new SchoolService(schoolRepository);
+        SchoolService schoolService = new SchoolService(awsService,
+                schoolSessionService, schoolRepository);
 
         // execute the SUT
         School result = schoolService.updateSchool(school1);

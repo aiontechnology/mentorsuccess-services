@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.api.assembler.impl;
 
 import io.aiontechnology.mentorsuccess.api.assembler.AssemblerSupport;
 import io.aiontechnology.mentorsuccess.api.controller.StudentController;
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
@@ -51,7 +52,8 @@ public class StudentAssembler extends AssemblerSupport<Student, StudentResource>
         SchoolSession schoolSession = Optional.ofNullable(data.get("session"))
                 .map(SchoolSession.class::cast)
                 .orElse(student.getSchool().getCurrentSession());
-        StudentSchoolSession studentSchoolSession = student.findCurrentSessionForStudent(schoolSession);
+        StudentSchoolSession studentSchoolSession = student.findCurrentSessionForStudent(schoolSession)
+                .orElseThrow(() -> new NotFoundException("No student session found"));
 
         StudentResource resource = new StudentResource(student);
 

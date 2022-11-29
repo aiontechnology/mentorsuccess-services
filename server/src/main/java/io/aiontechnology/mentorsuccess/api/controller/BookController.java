@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,6 +86,22 @@ public class BookController {
     }
 
     /**
+     * A REST endpoint for deactivating a specific book.
+     *
+     * @param bookId The id of the book to deactivate.
+     */
+    @DeleteMapping("/{bookId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('book:delete')")
+    public BookResource deactivateBook(@PathVariable("bookId") UUID bookId) {
+        log.debug("Deactivating book: {}", bookId);
+        return bookService.findBookById(bookId)
+                .map(bookService::deactivateBook)
+                .flatMap(bookAssembler::map)
+                .orElseThrow(() -> new NotFoundException("Book not found"));
+    }
+
+    /**
      * A REST endpoint for retrieving all books.
      *
      * @return A collection of {@link InboundBook} instances for all books.
@@ -132,20 +148,6 @@ public class BookController {
                 .map(bookService::updateBook)
                 .flatMap(bookAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update book"));
-    }
-
-    /**
-     * A REST endpoint for deactivating a specific book.
-     *
-     * @param bookId The id of the book to deactivate.
-     */
-    @DeleteMapping("/{bookId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('book:delete')")
-    public void deactivateBook(@PathVariable("bookId") UUID bookId) {
-        log.debug("Deactivating book: {}", bookId);
-        bookService.findBookById(bookId)
-                .ifPresent(bookService::deactivateBook);
     }
 
 }

@@ -19,6 +19,7 @@ package io.aiontechnology.mentorsuccess.model.inbound.student;
 import lombok.Builder;
 import lombok.Value;
 
+import java.io.Serializable;
 import java.net.URI;
 
 /**
@@ -27,7 +28,7 @@ import java.net.URI;
  */
 @Value
 @Builder(setterPrefix = "with")
-public class InboundStudentMentor {
+public class InboundStudentMentor implements Serializable {
 
     URI uri;
 

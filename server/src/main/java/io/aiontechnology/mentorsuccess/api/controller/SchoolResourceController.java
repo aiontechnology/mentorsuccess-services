@@ -84,7 +84,6 @@ public class SchoolResourceController {
                 .map(gameAssembler::map)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .map(this::addLinks)
                 .collect(Collectors.toList());
         return CollectionModel.of(games);
     }

@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -81,8 +81,24 @@ public class SchoolController {
         return Optional.ofNullable(inboundSchool)
                 .flatMap(schoolMapper::map)
                 .map(schoolService::createSchool)
+                .map(s -> schoolService.setInitialSession(s, inboundSchool.getInitialSessionLabel()))
                 .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to create school"));
+    }
+
+    /**
+     * A REST endpoint for deleting a school.
+     *
+     * @param schoolId The id of the school to remove.
+     */
+    @DeleteMapping("/{schoolId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAuthority('school:delete')")
+    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
+        log.debug("Deactivating school: {}", schoolId);
+        schoolService.getSchoolById(schoolId)
+                .map(schoolService::removeAllProgramAdministrators)
+                .ifPresent(schoolService::deactivateSchool);
     }
 
     /**
@@ -135,20 +151,6 @@ public class SchoolController {
                 .map(schoolService::updateSchool)
                 .flatMap(schoolAssembler::map)
                 .orElseThrow(() -> new IllegalArgumentException("Unable to update school"));
-    }
-
-    /**
-     * A REST endpoint for deleting a school.
-     *
-     * @param schoolId The id of the school to remove.
-     */
-    @DeleteMapping("/{schoolId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasAuthority('school:delete')")
-    public void deactivateSchool(@PathVariable("schoolId") UUID schoolId) {
-        log.debug("Deactivating school: {}", schoolId);
-        schoolService.getSchoolById(schoolId)
-                .ifPresent(schoolService::deactivateSchool);
     }
 
 }

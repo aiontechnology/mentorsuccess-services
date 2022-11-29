@@ -81,7 +81,7 @@ public class ProgramAdminAuthoritySetter implements BiFunction<Optional<SchoolPe
                         log.debug("==> Schools match");
                         authorities.addAll(AuthoritiesBuilder.instance("mentor").withAll().build());
                         authorities.addAll(AuthoritiesBuilder.instance("personnel").withAll().build());
-                        authorities.addAll(AuthoritiesBuilder.instance("school").withRead().build());
+                        authorities.addAll(AuthoritiesBuilder.instance("school").withRead().withUpdate().build());
                         authorities.addAll(AuthoritiesBuilder.instance("schoolresources").withAll().build());
                         authorities.addAll(AuthoritiesBuilder.instance("schoolsession").withAll().build());
                         authorities.addAll(AuthoritiesBuilder.instance("schoolsessionstudents").withAll().build());

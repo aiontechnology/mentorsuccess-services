@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.model.inbound;
 
+import io.aiontechnology.mentorsuccess.model.validation.ValidOrNullPhone;
 import lombok.Builder;
 import lombok.Value;
 
@@ -43,12 +44,15 @@ public class InboundSchool {
     @Size(max = 100, message = "{school.name.size}")
     String name;
 
+    @Size(max = 30, message = "{schoolsession.label.size}")
+    String initialSessionLabel;
+
     /** The school's address */
     @Valid
     InboundAddress address;
 
     /** The school's phone number */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{school.phone.invalid}")
+    @ValidOrNullPhone(message = "{school.phone.invalid}")
     String phone;
 
     /** The school district that the school is in */

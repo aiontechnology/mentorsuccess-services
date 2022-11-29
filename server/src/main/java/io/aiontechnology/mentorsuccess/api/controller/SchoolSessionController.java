@@ -93,8 +93,7 @@ public class SchoolSessionController {
     @PreAuthorize("hasAuthority('schoolsession:create')")
     public SchoolSessionResource createSchoolSession(@PathVariable("schoolId") UUID schoolId,
             @RequestBody @Valid InboundSchoolSession inboundSchoolSession) {
-        log.debug("Creating school year {}-{}, for school {}", inboundSchoolSession.getStartDate(),
-                inboundSchoolSession.getEndDate(), schoolId);
+        log.debug("Creating school session {}, for school {}", inboundSchoolSession.getLabel(), schoolId);
 
         School school = schoolService.getSchoolById(schoolId)
                 .orElseThrow(() -> new NotFoundException("School was not found"));

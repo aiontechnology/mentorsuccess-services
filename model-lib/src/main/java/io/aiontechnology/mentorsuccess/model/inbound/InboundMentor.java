@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.model.inbound;
 
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
+import io.aiontechnology.mentorsuccess.model.validation.ValidOrNullPhone;
 import lombok.Builder;
 import lombok.Value;
 
@@ -50,11 +50,11 @@ public class InboundMentor {
     String email;
 
     /** The mentor's work phone number. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{mentor.workPhone.invalid}")
+    @ValidOrNullPhone(message = "{mentor.workPhone.invalid}")
     String workPhone;
 
     /** The mentor's cell phone */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{mentor.cellPhone.invalid}")
+    @ValidOrNullPhone(message = "{mentor.cellPhone.invalid}")
     String cellPhone;
 
     /** The mentor's availability */

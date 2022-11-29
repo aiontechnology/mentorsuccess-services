@@ -30,6 +30,7 @@ import io.aiontechnology.mentorsuccess.api.assembler.impl.SchoolAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.SchoolSessionAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentMentorAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentRegistrationAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentTeacherAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.TeacherAssembler;
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.misc.AddressEntityToModelMapper;
@@ -45,7 +46,6 @@ import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.entity.StudentMentor;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
@@ -54,6 +54,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.entity.reference.Tag;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
 import io.aiontechnology.mentorsuccess.resource.BookResource;
 import io.aiontechnology.mentorsuccess.resource.GameResource;
@@ -64,6 +65,7 @@ import io.aiontechnology.mentorsuccess.resource.ProgramAdminResource;
 import io.aiontechnology.mentorsuccess.resource.SchoolResource;
 import io.aiontechnology.mentorsuccess.resource.SchoolSessionResource;
 import io.aiontechnology.mentorsuccess.resource.StudentMentorResource;
+import io.aiontechnology.mentorsuccess.resource.StudentRegistrationResource;
 import io.aiontechnology.mentorsuccess.resource.StudentResource;
 import io.aiontechnology.mentorsuccess.resource.StudentTeacherResource;
 import io.aiontechnology.mentorsuccess.resource.TeacherResource;
@@ -86,33 +88,6 @@ public class AssemblerConfiguration {
 
     @Bean
     public NameableToStringModelMapper<Behavior> behaviorAssembler(OneWayMapper<Behavior, String> mapper) {
-        return new NameableToStringModelMapper<>(mapper);
-    }
-
-    @Bean
-    public NameableToStringModelMapper<Interest> interestAssembler(OneWayMapper<Interest, String> mapper) {
-        return new NameableToStringModelMapper<>(mapper);
-    }
-
-    @Bean
-    public NameableToStringModelMapper<LeadershipSkill> leadershipSkillAssembler(OneWayMapper<LeadershipSkill,
-            String> mapper) {
-        return new NameableToStringModelMapper<>(mapper);
-    }
-
-    @Bean
-    public NameableToStringModelMapper<LeadershipTrait> leadershipTraitAssembler(OneWayMapper<LeadershipTrait,
-            String> mapper) {
-        return new NameableToStringModelMapper<>(mapper);
-    }
-
-    @Bean
-    public NameableToStringModelMapper<Phonogram> phonogramAssembler(OneWayMapper<Phonogram, String> mapper) {
-        return new NameableToStringModelMapper<>(mapper);
-    }
-
-    @Bean
-    public NameableToStringModelMapper<Tag> tagAssembler(OneWayMapper<Tag, String> mapper) {
         return new NameableToStringModelMapper<>(mapper);
     }
 
@@ -145,6 +120,23 @@ public class AssemblerConfiguration {
     }
 
     @Bean
+    public NameableToStringModelMapper<Interest> interestAssembler(OneWayMapper<Interest, String> mapper) {
+        return new NameableToStringModelMapper<>(mapper);
+    }
+
+    @Bean
+    public NameableToStringModelMapper<LeadershipSkill> leadershipSkillAssembler(OneWayMapper<LeadershipSkill,
+            String> mapper) {
+        return new NameableToStringModelMapper<>(mapper);
+    }
+
+    @Bean
+    public NameableToStringModelMapper<LeadershipTrait> leadershipTraitAssembler(OneWayMapper<LeadershipTrait,
+            String> mapper) {
+        return new NameableToStringModelMapper<>(mapper);
+    }
+
+    @Bean
     public Assembler<SchoolPersonRole, MentorResource> mentorAssembler(
             PhoneService phoneService) {
         return new MentorAssembler(phoneService);
@@ -162,6 +154,11 @@ public class AssemblerConfiguration {
     public Assembler<SchoolPersonRole, PersonnelResource> personnelAssembler(
             PhoneService phoneService) {
         return new PersonnelAssembler(phoneService);
+    }
+
+    @Bean
+    public NameableToStringModelMapper<Phonogram> phonogramAssembler(OneWayMapper<Phonogram, String> mapper) {
+        return new NameableToStringModelMapper<>(mapper);
     }
 
     @Bean
@@ -210,10 +207,22 @@ public class AssemblerConfiguration {
     }
 
     @Bean
+    public Assembler<StudentRegistration, StudentRegistrationResource> studentRegistrationAssembler(
+            Assembler<School, SchoolResource> schoolAssembler,
+            Assembler<SchoolPersonRole, TeacherResource> teacherAssembler) {
+        return new StudentRegistrationAssembler(schoolAssembler, teacherAssembler);
+    }
+
+    @Bean
     public Assembler<StudentSchoolSession, StudentTeacherResource> studentTeacherAssembler(
             Assembler<SchoolPersonRole, TeacherResource> teacherAssembler) {
         return new StudentTeacherAssembler()
                 .withSubMapper("teacher", teacherAssembler);
+    }
+
+    @Bean
+    public NameableToStringModelMapper<Tag> tagAssembler(OneWayMapper<Tag, String> mapper) {
+        return new NameableToStringModelMapper<>(mapper);
     }
 
     @Bean

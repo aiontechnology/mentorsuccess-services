@@ -20,12 +20,14 @@ import io.aiontechnology.mentorsuccess.model.enumeration.ContactMethod;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.validation.Contact;
 import io.aiontechnology.mentorsuccess.model.validation.EnumNamePattern;
+import io.aiontechnology.mentorsuccess.model.validation.ValidOrNullPhone;
 import lombok.Builder;
 import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 /**
  * A model object for the connection between schools and people.
@@ -36,7 +38,7 @@ import javax.validation.constraints.Size;
 @Value
 @Builder(setterPrefix = "with")
 @Contact
-public class InboundContact {
+public class InboundContact implements Serializable {
 
     @Size(max = 50, message = "{contact.label.size}")
     String label;
@@ -57,7 +59,7 @@ public class InboundContact {
     String email;
 
     /** The contact's phone. */
-    @Pattern(regexp = "\\(\\d{3}\\) \\d{3}-\\d{4}", message = "{contact.phone.invalid}")
+    @ValidOrNullPhone(message = "{contact.phone.invalid}")
     String phone;
 
     @NotNull(message = "{contact.isEmergencyContact.notNull}")

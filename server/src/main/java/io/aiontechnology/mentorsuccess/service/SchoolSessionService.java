@@ -50,6 +50,12 @@ public class SchoolSessionService {
     }
 
     @Transactional
+    public SchoolSession saveSchoolSession(SchoolSession schoolSession) {
+        schoolSessionRepository.save(schoolSession);
+        return schoolSession;
+    }
+
+    @Transactional
     public SchoolSession updateSchoolSession(School school, SchoolSession newSchoolSession) {
         Optional.ofNullable(school.getCurrentSession())
                 .ifPresent(currentSession -> {
@@ -67,13 +73,7 @@ public class SchoolSessionService {
         newSchoolSession.setSchool(school);
         schoolRepository.save(school);
 
-        return newSchoolSession;
-    }
-
-    @Transactional
-    public SchoolSession saveSchoolSession(SchoolSession schoolSession) {
-        schoolSessionRepository.save(schoolSession);
-        return schoolSession;
+        return school.getCurrentSession();
     }
 
 }

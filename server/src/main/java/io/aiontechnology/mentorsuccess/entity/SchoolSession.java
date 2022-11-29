@@ -34,7 +34,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
@@ -71,12 +70,6 @@ public class SchoolSession implements Identifiable<UUID> {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "schoolSession", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<StudentSchoolSession> studentSchoolSessions = new ArrayList<>();
-
-    @Column(name = "start_date", nullable = false)
-    private LocalDate startDate;
-
-    @Column(name = "end_date", nullable = false)
-    private LocalDate endDate;
 
     @Column(name = "label", nullable = false, length = 30)
     private String label;

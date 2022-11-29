@@ -22,6 +22,7 @@ import lombok.experimental.NonFinal;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.net.URI;
 
 /**
@@ -31,7 +32,7 @@ import java.net.URI;
 @Value
 @Builder(setterPrefix = "with")
 @NonFinal
-public class InboundStudentTeacher {
+public class InboundStudentTeacher implements Serializable {
 
     @NotNull(message = "{studentteacher.uri.notNull}")
     URI uri;
