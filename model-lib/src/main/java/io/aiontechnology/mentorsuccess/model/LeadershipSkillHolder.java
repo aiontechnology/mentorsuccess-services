@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.entity.workflow;
+package io.aiontechnology.mentorsuccess.model;
 
-import io.aiontechnology.mentorsuccess.model.Identifiable;
-import lombok.Data;
+import java.util.Collection;
 
-import java.util.UUID;
-
-@Data
-public class StudentRegistration implements Identifiable<UUID> {
-
-    private UUID id;
-
-    private String parent1EmailAddress;
-
-    private String parent1FirstName;
-
-    private String parent1LastName;
-
-    private String studentFirstName;
-
-    private String studentLastName;
+public interface LeadershipSkillHolder {
+    Collection<String> getLeadershipSkills();
 
 }

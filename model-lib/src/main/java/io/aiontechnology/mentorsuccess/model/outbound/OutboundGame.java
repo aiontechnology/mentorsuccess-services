@@ -5,7 +5,7 @@
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,6 +16,11 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound;
 
+import io.aiontechnology.mentorsuccess.model.GradeRangeHolder;
+import io.aiontechnology.mentorsuccess.model.Identifiable;
+import io.aiontechnology.mentorsuccess.model.LeadershipSkillHolder;
+import io.aiontechnology.mentorsuccess.model.LeadershipTraitHolder;
+import io.aiontechnology.mentorsuccess.model.LocationHolder;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +37,8 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class OutboundGame<T> extends EntityModel<T> implements LocationHolder {
+public class OutboundGame<T> extends EntityModel<T> implements Identifiable<UUID>, LocationHolder,
+        LeadershipSkillHolder, LeadershipTraitHolder, GradeRangeHolder {
 
     /** The game's id. */
     UUID id;

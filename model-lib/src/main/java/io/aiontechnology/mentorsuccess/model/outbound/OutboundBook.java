@@ -16,6 +16,12 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound;
 
+import io.aiontechnology.mentorsuccess.model.BehaviorHolder;
+import io.aiontechnology.mentorsuccess.model.GradeHolder;
+import io.aiontechnology.mentorsuccess.model.Identifiable;
+import io.aiontechnology.mentorsuccess.model.LeadershipSkillHolder;
+import io.aiontechnology.mentorsuccess.model.LeadershipTraitHolder;
+import io.aiontechnology.mentorsuccess.model.LocationHolder;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,7 +38,8 @@ import java.util.UUID;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
-public class OutboundBook<T> extends EntityModel<T> implements LocationHolder {
+public class OutboundBook<T> extends EntityModel<T> implements Identifiable<UUID>, LocationHolder,
+        BehaviorHolder, LeadershipSkillHolder, LeadershipTraitHolder, GradeHolder {
 
     /** The book's id. */
     UUID id;
