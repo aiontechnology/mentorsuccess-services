@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2020-2022 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.entity;
+package io.aiontechnology.mentorsuccess.model;
+
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 
 /**
  * @author Whitney Hunter
- * @since 1.8.0
+ * @since 0.1.0
  */
-@FunctionalInterface
-public interface Identifiable<T> {
+public interface LocationHolder {
 
-    T getId();
+    ResourceLocation getLocation();
 
 }

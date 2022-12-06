@@ -18,7 +18,7 @@ package io.aiontechnology.mentorsuccess.entity;
 
 import io.aiontechnology.atlas.synchronization.CollectionSynchronizer;
 import io.aiontechnology.atlas.synchronization.impl.SimpleCollectionSynchronizer;
-import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
+import io.aiontechnology.mentorsuccess.model.Identifiable;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
