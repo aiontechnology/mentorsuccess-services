@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
 import io.aiontechnology.mentorsuccess.api.assembler.NameableToStringModelMapper;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.BookAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.GameAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.impl.InterestAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.MentorAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.PersonAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.PersonnelAssembler;
@@ -58,6 +59,7 @@ import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
 import io.aiontechnology.mentorsuccess.resource.BookResource;
 import io.aiontechnology.mentorsuccess.resource.GameResource;
+import io.aiontechnology.mentorsuccess.resource.InterestResource;
 import io.aiontechnology.mentorsuccess.resource.MentorResource;
 import io.aiontechnology.mentorsuccess.resource.PersonResource;
 import io.aiontechnology.mentorsuccess.resource.PersonnelResource;
@@ -120,8 +122,8 @@ public class AssemblerConfiguration {
     }
 
     @Bean
-    public NameableToStringModelMapper<Interest> interestAssembler(OneWayMapper<Interest, String> mapper) {
-        return new NameableToStringModelMapper<>(mapper);
+    public Assembler<Interest, InterestResource> interestAssembler() {
+        return new InterestAssembler();
     }
 
     @Bean
