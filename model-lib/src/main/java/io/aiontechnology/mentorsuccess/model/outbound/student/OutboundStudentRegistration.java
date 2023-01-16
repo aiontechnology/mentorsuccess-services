@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundProgramAdmin;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundSchool;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,6 +41,8 @@ public class OutboundStudentRegistration<T> extends EntityModel<T> {
     String parent1EmailAddress;
 
     OutboundSchool school;
+
+    OutboundProgramAdmin programAdmin;
 
     Collection teachers;
 

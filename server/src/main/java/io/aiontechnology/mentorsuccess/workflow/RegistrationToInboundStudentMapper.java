@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -102,6 +102,9 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
     }
 
     private InboundStudentTeacher mapTeacher(InboundStudentRegistration studentRegistration) {
+        if (studentRegistration == null || studentRegistration.getTeacher() == null) {
+            return null;
+        }
         return InboundStudentTeacher.builder()
                 .withUri(URI.create(studentRegistration.getTeacher()))
                 .build();

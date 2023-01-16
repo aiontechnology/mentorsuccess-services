@@ -1,17 +1,17 @@
 /*
- * Copyright 2021 Aion Technology LLC
+ * Copyright 2021-2023 Aion Technology LLC
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package io.aiontechnology.mentorsuccess.workflow;
@@ -33,6 +33,7 @@ import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConst
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_EMAIL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_NAME;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_PHONE;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 
 /**
@@ -70,6 +71,7 @@ public class StudentRegistrationEmailGenerationTask implements JavaDelegate {
         context.put(BASE_REGISTRATION_URI, registrationUri);
         context.put(PROGRAM_ADMIN_NAME, execution.getVariable(PROGRAM_ADMIN_NAME));
         context.put(PROGRAM_ADMIN_EMAIL, execution.getVariable(PROGRAM_ADMIN_EMAIL));
+        context.put(PROGRAM_ADMIN_PHONE, execution.getVariable(PROGRAM_ADMIN_PHONE));
         context.put(INVITATION, invitation);
         return context;
     }
