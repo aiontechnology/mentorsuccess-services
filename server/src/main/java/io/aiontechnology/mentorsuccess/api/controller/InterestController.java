@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,31 @@
 
 package io.aiontechnology.mentorsuccess.api.controller;
 
-import io.aiontechnology.mentorsuccess.api.assembler.NameableToStringModelMapper;
+import io.aiontechnology.atlas.mapping.OneWayMapper;
+import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.api.assembler.Assembler;
+import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundInterest;
+import io.aiontechnology.mentorsuccess.resource.InterestResource;
 import io.aiontechnology.mentorsuccess.service.InterestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
+import javax.validation.Valid;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -45,11 +56,45 @@ import java.util.stream.StreamSupport;
 @Slf4j
 public class InterestController {
 
-    /** A HATEOAS assembler for interest strings. */
-    private final NameableToStringModelMapper<Interest> interestModelAssembler;
+    // Assemblers
+    private final Assembler<Interest, InterestResource> interestAssembler;
 
-    /** Service for interacting with {@link Interest Interests}. */
+    // Mappers
+    private final OneWayMapper<InboundInterest, Interest> interestMapper =
+            inboundInterest -> Optional.of(new Interest())
+                    .map(i -> {
+                        i.setName(inboundInterest.getName());
+                        return i;
+                    });
+
+    private final OneWayUpdateMapper<InboundInterest, Interest> interestUpdateMapper =
+            (inboundInterest, interest) -> Optional.ofNullable(interest)
+                    .map(i -> {
+                        i.setName(inboundInterest.getName());
+                        return i;
+                    });
+
+    // Services
     private final InterestService interestService;
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAuthority('resources:update')")
+    public InterestResource createInterest(@RequestBody @Valid InboundInterest inboundInterest) {
+        return Optional.ofNullable(inboundInterest)
+                .flatMap(interestMapper::map)
+                .map(interestService::createInterest)
+                .flatMap(interestAssembler::map)
+                .orElseThrow(() -> new IllegalStateException("Unexpected error"));
+    }
+
+    @GetMapping("/{interestId}")
+    @PreAuthorize("hasAuthority('resource:read')")
+    public InterestResource getInterest(@PathVariable("interestId") UUID interestId) {
+        return interestService.findInterestById(interestId)
+                .flatMap(interestAssembler::map)
+                .orElseThrow(() -> new NotFoundException("Interest not found"));
+    }
 
     /**
      * A REST endpoint for getting all interests.
@@ -58,31 +103,25 @@ public class InterestController {
      */
     @GetMapping
     @PreAuthorize("hasAuthority('resource:read')")
-    public CollectionModel<String> getInterests() {
+    public CollectionModel<InterestResource> getInterests() {
         var interestModels = StreamSupport
                 .stream(interestService.getAllInterests().spliterator(), false)
-                .map(interestModelAssembler::toModel)
+                .map(interestAssembler::map)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .collect(Collectors.toList());
         return CollectionModel.of(interestModels);
     }
 
-    /**
-     * The new values are provided as a map from new value to old value. "CREATE_ME" is a special value that means that
-     * the new value should be created.
-     * {
-     * "a": "b"         // b -> a
-     * "c": "CREATE_ME" // null -> c
-     * }
-     *
-     * @param updatedInterests
-     * @return
-     */
-    @PutMapping
+    @PutMapping("/{interestId}")
     @PreAuthorize("hasAuthority('resources:update')")
-    public CollectionModel<String> setInterests(@RequestBody Map<String, String> updatedInterests) {
-        log.debug("Updating updatedInterests: {}", updatedInterests);
-        interestService.updateInterests(updatedInterests);
-        return getInterests();
+    public InterestResource updateInterest(@PathVariable("interestId") UUID interestId,
+            @RequestBody @Valid InboundInterest inboundInterest) {
+        return interestService.findInterestById(interestId)
+                .flatMap(interest -> interestUpdateMapper.map(inboundInterest, interest))
+                .map(interestService::updateInterest)
+                .flatMap(interestAssembler::map)
+                .orElseThrow(() -> new IllegalArgumentException("Unable to update interest"));
     }
 
 }
