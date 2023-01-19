@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
+import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
@@ -33,12 +34,15 @@ import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConst
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_EMAIL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_NAME;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_PHONE;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 
 @Service
 @RequiredArgsConstructor()
 @Slf4j
 public class StudentInvitationService {
+
+    private final PhoneService phoneService;
 
     // Services
     private final RuntimeService runtimeService;
@@ -52,18 +56,23 @@ public class StudentInvitationService {
         String programAdminEmail = programAdmin
                 .map(person -> person.getEmail())
                 .orElse("");
+        String programAdminPhone = programAdmin
+                .map(person -> person.getCellPhone())
+                .map(phoneService::format)
+                .orElse("");
 
         Map<String, Object> variables = setProcessVariables(invitation, school, programAdminName,
-                programAdminEmail);
+                programAdminEmail, programAdminPhone);
         runtimeService.startProcessInstanceByKey("student-registration", variables);
     }
 
     private Map<String, Object> setProcessVariables(InboundInvitation invitation, School school,
-            String programAdminName, String programAdminEmail) {
+            String programAdminName, String programAdminEmail, String programAdminPhone) {
         Map<String, Object> variables = new HashMap<>();
         variables.put(SCHOOL, school);
         variables.put(PROGRAM_ADMIN_NAME, programAdminName);
         variables.put(PROGRAM_ADMIN_EMAIL, programAdminEmail);
+        variables.put(PROGRAM_ADMIN_PHONE, programAdminPhone);
         variables.put(INVITATION, invitation);
         variables.put(EMAIL_SUBJECT, "His Heart Foundation - MentorSuccess™ Student Registration");
         return variables;

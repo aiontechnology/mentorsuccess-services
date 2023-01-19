@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
 
+import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.TEACHER;
 
 /**
@@ -60,6 +61,7 @@ public class StudentRegistrationController {
 
     // Services
     private final StudentRegistrationService studentRegistrationService;
+
     private final SchoolService schoolService;
 
     //Other
@@ -75,7 +77,13 @@ public class StudentRegistrationController {
         session.enableFilter("roleType").setParameter("type", TEACHER.toString());
         Collection<SchoolPersonRole> teachers = school.getRoles();
 
-        Map<String, Object> data = Map.of("school", school, "teachers", teachers);
+        session.enableFilter("roleType").setParameter("type", PROGRAM_ADMIN.toString());
+        SchoolPersonRole programAdmin = school.getRoles().stream().findFirst().orElse(null);
+
+        Map<String, Object> data = Map.of(
+                "school", school,
+                "programAdmin", programAdmin,
+                "teachers", teachers);
 
         return studentRegistrationService.findWorkflowById(registrationId)
                 .flatMap(r -> studentRegistrationAssembler.mapWithData(r, data))

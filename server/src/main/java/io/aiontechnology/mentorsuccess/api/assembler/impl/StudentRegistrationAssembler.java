@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import io.aiontechnology.mentorsuccess.api.controller.StudentRegistrationControl
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
-import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
+import io.aiontechnology.mentorsuccess.resource.ProgramAdminResource;
 import io.aiontechnology.mentorsuccess.resource.SchoolResource;
 import io.aiontechnology.mentorsuccess.resource.StudentRegistrationResource;
 import io.aiontechnology.mentorsuccess.resource.TeacherResource;
@@ -42,6 +42,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 public class StudentRegistrationAssembler extends AssemblerSupport<StudentRegistration, StudentRegistrationResource> {
 
     private final Assembler<School, SchoolResource> schoolAssembler;
+
+    private final Assembler<SchoolPersonRole, ProgramAdminResource> programAdminAssembler;
+
     private final Assembler<SchoolPersonRole, TeacherResource> teacherAssembler;
 
     @Override
@@ -62,6 +65,7 @@ public class StudentRegistrationAssembler extends AssemblerSupport<StudentRegist
         return doMap(studentRegistration)
                 .map(r -> {
                     r.setSchool(assembleSchool(data));
+                    r.setProgramAdmin(assembleProgramAdmin(data));
                     r.setTeachers(assembleTeachers(data));
                     return r;
                 });
@@ -81,6 +85,13 @@ public class StudentRegistrationAssembler extends AssemblerSupport<StudentRegist
                 })
                 .orElse(Collections.emptySet());
 
+    }
+
+    private ProgramAdminResource assembleProgramAdmin(Map data) {
+        return Optional.ofNullable(data.get("programAdmin"))
+                .map(SchoolPersonRole.class::cast)
+                .flatMap(programAdminAssembler::map)
+                .orElse(null);
     }
 
     private SchoolResource assembleSchool(Map data) {

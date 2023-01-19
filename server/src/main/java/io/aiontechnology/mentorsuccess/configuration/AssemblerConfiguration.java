@@ -211,8 +211,9 @@ public class AssemblerConfiguration {
     @Bean
     public Assembler<StudentRegistration, StudentRegistrationResource> studentRegistrationAssembler(
             Assembler<School, SchoolResource> schoolAssembler,
+            Assembler<SchoolPersonRole, ProgramAdminResource> programAdminAssembler,
             Assembler<SchoolPersonRole, TeacherResource> teacherAssembler) {
-        return new StudentRegistrationAssembler(schoolAssembler, teacherAssembler);
+        return new StudentRegistrationAssembler(schoolAssembler, programAdminAssembler, teacherAssembler);
     }
 
     @Bean

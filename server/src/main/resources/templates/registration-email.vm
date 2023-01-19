@@ -1,4 +1,4 @@
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
     <style>
         .button {
@@ -6,7 +6,7 @@
             color: white;
             background-color: #5DADBD;
             padding: 8px 24px 8px 24px;
-            margin: 20px 20px 20px 20px;
+            margin: 20px 20px 20px 0;
             border-radius: 10px;
             border-top: 1px solid #CCCCCC;
             border-right: 1px solid #333333;
@@ -15,48 +15,49 @@
         }
     </style>
 </head>
-<body style="background-image: url('https://mentorsuccess-public.s3.us-west-2.amazonaws.com/home-background.png'); background-repeat: no-repeat; background-size: cover">
+<body>
 <div>
     <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
     <p>
         Dear ${invitation.parent1FirstName},
     </p>
     <p>
-        MentorSuccess™ is a student mentoring program partnered with ${school.name}, focused on creating
-        caring connections to inspire success in children. This program is designed to enhance the social and
+        MentorSuccess™ is a K-5 student mentoring program provided through His Heart Foundation a partnered
+        with ${school.name}.
+        Focused on creating caring connections to inspire success in children, MentorSuccess™ is designed to enhance the
+        social and
         educational experience for your child. Students and mentors work together to develop Leadership Success Skills
-        involved in making life choices and creating healthy relationships for their future. Your child and their mentor
-        will read books, play games, and do small crafts as desired. This program is designed to create an engaging
-        atmosphere of healthy conversations while building resilient and successful life-long learners.
+        involved in making
+        life choices and creating healthy relationships for their future. Your child and their mentor will read books,
+        play games and do crafts as
+        desired. This program is designed to create an engaging atmosphere of healthy conversations while building
+        stronger relationships.
     </p>
     <p>
-        Mentor sessions will take place at school and will be under the supervision of ${programAdminName}.
+        Program Details:
     </p>
     <p>
-        We are writing to request permission for your child, ${invitation.studentFirstName}, to participate in the MentorSuccess™
-        program. We thank you in advance for letting your child participate in this exciting learning experience!
+        Mentor sessions will take place in the designated Mentor Center at ${school.name}.<br/>
+        Mentor sessions will be supervised by ${programAdminName}.<br/>
+        Parents/guardians are always encouraged and welcome to meet their student's mentor!<br/>
+        We thank you in advance for letting your child participate in this exciting learning experience.
+        If you have any additional questions, please feel free to contact ${programAdminName}.<br/>
+        Email: <a href="mailto:${programAdminEmail}">${programAdminEmail}</a>
+        #if($programAdminPhone)
+            <br/>Phone: ${programAdminPhone}
+        #end
     </p>
-
-
     <p>
         Click the button below to register your child.<br/>
         <br/><br/>
         <a class="button" href="${studentRegistrationUri}">Register My Child</a>
+        <br/><br/>
     </p>
     <p>
-        <br/>
-        If you have any questions, please feel free to contact ${programAdminName} at
-        <a href="mailto:${programAdminEmail}">${programAdminEmail}</a>.
-    </p>
-    <p>
-        Thank you!
-    </p>
-    <p>
-        The MentorSuccess™ Team<br/>
-        <a href="http://www.mentorsuccesskids.com">www.mentorsuccesskids.com</a>
-    </p>
-    <p>
-        If you no long wish to receive these types of emails, please click <a href="#">here</a> to unsubscribe.
+        <b>${programAdminName}</b><br/>
+        MentorSuccess™ Program Administrator<br/>
+        <a href="mailto:${programAdminEmail}"><b>${programAdminEmail}</b></a><br/>
+        <a href="https://www.mentorsuccesskids.com">mentorsuccesskids.com</a>
     </p>
 </div>
 </body>
