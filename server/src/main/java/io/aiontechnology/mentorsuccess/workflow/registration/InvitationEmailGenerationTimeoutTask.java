@@ -14,24 +14,30 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.workflow;
+package io.aiontechnology.mentorsuccess.workflow.registration;
 
-import lombok.extern.slf4j.Slf4j;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
+import io.aiontechnology.mentorsuccess.workflow.EmailGenerationTask;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.stereotype.Service;
 
-@Slf4j
-public class StudentRegistrationNotificationEmailGenerationTask extends EmailGenerationTask {
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+
+@Service("invitationEmailGeneratorTimeout")
+public class InvitationEmailGenerationTimeoutTask extends EmailGenerationTask {
 
     @Override
     protected void extendVelocityContext(DelegateExecution execution, VelocityContext context) {
+        InboundInvitation invitation = execution.getVariable(INVITATION, InboundInvitation.class);
+        context.put(INVITATION, invitation);
     }
 
     @Override
     protected Template getTemplate() {
-        return Velocity.getTemplate("templates/registration-notification-email.vm");
+        return Velocity.getTemplate("templates/invitation-timeout-email.vm");
     }
 
 }

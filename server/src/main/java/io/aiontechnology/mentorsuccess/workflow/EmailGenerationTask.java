@@ -23,18 +23,22 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_EMAIL;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_NAME;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN_PHONE;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.EMAIL;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 
 public abstract class EmailGenerationTask implements JavaDelegate {
 
     @Override
     public final void execute(DelegateExecution execution) {
         VelocityContext context = initialize(execution);
-        execution.setVariable("emailBody", generateEmail(context));
+        Map<String, Object> emailConfiguration = (Map<String, Object>) execution.getVariable(EMAIL);
+        Map<String, Object> updatedEmailConfiguration = new HashMap<>(emailConfiguration);
+        updatedEmailConfiguration.put("body", generateEmail(context));
+        execution.setVariable(EMAIL, updatedEmailConfiguration);
     }
 
     protected abstract void extendVelocityContext(DelegateExecution execution, VelocityContext context);
@@ -43,9 +47,7 @@ public abstract class EmailGenerationTask implements JavaDelegate {
 
     private VelocityContext createVelocityContext(DelegateExecution execution) {
         VelocityContext context = new VelocityContext();
-        context.put(PROGRAM_ADMIN_NAME, execution.getVariable(PROGRAM_ADMIN_NAME));
-        context.put(PROGRAM_ADMIN_EMAIL, execution.getVariable(PROGRAM_ADMIN_EMAIL));
-        context.put(PROGRAM_ADMIN_PHONE, execution.getVariable(PROGRAM_ADMIN_PHONE));
+        context.put(PROGRAM_ADMIN, execution.getVariable(PROGRAM_ADMIN));
         extendVelocityContext(execution, context);
         return context;
     }

@@ -20,7 +20,7 @@ public class RegistrationWorkflowConstants {
 
     public static String BASE_REGISTRATION_URI = "studentRegistrationUri";
 
-    public static String EMAIL_SUBJECT = "emailSubject";
+    public static String EMAIL = "email";
 
     public static String INVITATION = "invitation";
 
@@ -30,10 +30,6 @@ public class RegistrationWorkflowConstants {
 
     public static String STUDENT = "student";
 
-    public static String PROGRAM_ADMIN_NAME = "programAdminName";
-
-    public static String PROGRAM_ADMIN_EMAIL = "programAdminEmail";
-
-    public static String PROGRAM_ADMIN_PHONE = "programAdminPhone";
+    public static String PROGRAM_ADMIN = "programAdmin";
 
 }
