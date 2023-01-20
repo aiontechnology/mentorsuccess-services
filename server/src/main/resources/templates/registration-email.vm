@@ -22,26 +22,24 @@
         Dear ${invitation.parent1FirstName},
     </p>
     <p>
-        MentorSuccess™ is a K-5 student mentoring program provided through His Heart Foundation a partnered
-        with ${school.name}.
-        Focused on creating caring connections to inspire success in children, MentorSuccess™ is designed to enhance the
-        social and
-        educational experience for your child. Students and mentors work together to develop Leadership Success Skills
-        involved in making
-        life choices and creating healthy relationships for their future. Your child and their mentor will read books,
-        play games and do crafts as
-        desired. This program is designed to create an engaging atmosphere of healthy conversations while building
-        stronger relationships.
+        MentorSuccess™ is a K-5 student mentoring program provided through His Heart Foundation and partnered
+        with ${school.name}. Focused on creating caring connections to inspire success in children, MentorSuccess™ is
+        designed to enhance the social and educational experience for your child. Students and mentors work together to
+        develop Leadership Success Skills involved in making life choices and creating healthy relationships for their
+        future. Your child and their mentor will read books, play games and do crafts as desired. This program is
+        designed to create an engaging atmosphere of healthy conversations while building stronger relationships.
     </p>
     <p>
         Program Details:
+    <ul>
+        <li>Mentor sessions will take place in the designated Mentor Center at ${school.name}.</li>
+        <li>Mentor sessions will be supervised by ${programAdminName}.</li>
+        <li>Parents/guardians are always encouraged and welcome to meet their student's mentor!</li>
+    </ul>
     </p>
     <p>
-        Mentor sessions will take place in the designated Mentor Center at ${school.name}.<br/>
-        Mentor sessions will be supervised by ${programAdminName}.<br/>
-        Parents/guardians are always encouraged and welcome to meet their student's mentor!<br/>
-        We thank you in advance for letting your child participate in this exciting learning experience.
-        If you have any additional questions, please feel free to contact ${programAdminName}.<br/>
+        We thank you in advance for letting your child participate in this exciting learning experience. If you have any
+        additional questions, please feel free to contact ${programAdminName}.<br/>
         Email: <a href="mailto:${programAdminEmail}">${programAdminEmail}</a>
         #if($programAdminPhone)
             <br/>Phone: ${programAdminPhone}
