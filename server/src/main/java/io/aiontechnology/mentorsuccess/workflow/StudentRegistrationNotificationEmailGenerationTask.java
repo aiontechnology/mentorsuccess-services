@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Aion Technology LLC
+ * Copyright 2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,20 +16,22 @@
 
 package io.aiontechnology.mentorsuccess.workflow;
 
-public class RegistrationWorkflowConstants {
+import lombok.extern.slf4j.Slf4j;
+import org.apache.velocity.Template;
+import org.apache.velocity.VelocityContext;
+import org.apache.velocity.app.Velocity;
+import org.flowable.engine.delegate.DelegateExecution;
 
-    public static String BASE_REGISTRATION_URI = "studentRegistrationUri";
+@Slf4j
+public class StudentRegistrationNotificationEmailGenerationTask extends EmailGenerationTask {
 
-    public static String EMAIL = "email";
+    @Override
+    protected void extendVelocityContext(DelegateExecution execution, VelocityContext context) {
+    }
 
-    public static String INVITATION = "invitation";
-
-    public static String SCHOOL = "school";
-
-    public static String SCHOOL_ID = "schoolId";
-
-    public static String STUDENT = "student";
-
-    public static String PROGRAM_ADMIN = "programAdmin";
+    @Override
+    protected Template getTemplate() {
+        return Velocity.getTemplate("templates/registration-notification-email.vm");
+    }
 
 }

@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="student-registration" name="Student Registration" isExecutable="true">
+        <documentation>MentorSuccess student registration process</documentation>
+
+        <!-- States -->
+
+        <startEvent id="start" flowable:initiator="initiator" flowable:formFieldValidation="true">
+            <documentation>
+                Start the process which invites a parent to register their student into the MentorSuccess program.
+            </documentation>
+        </startEvent>
+
+        <callActivity id="studentInvitationAndRegistration"
+                      name="Invitation and Registration"
+                      calledElement="invite-student">
+            <extensionElements>
+                <flowable:in source="school" target="school"/>
+                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="invitation" target="invitation"/>
+                <flowable:in source="email" target="email"/>
+            </extensionElements>
+        </callActivity>
+
+        <boundaryEvent id="receiveRegistrationTimeout1"
+                       attachedToRef="studentInvitationAndRegistration">
+            <documentation>
+                Boundary event on the "receive registration" task that will route the process if the parent has not
+                responded within a seven-day timeframe.
+            </documentation>
+            <timerEventDefinition>
+                <timeDuration>${email.timeout}</timeDuration>
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <parallelGateway id="afterRegistrationGatewaySplit">
+            <documentation>
+                A gateway the splits the flow after the student registration has been received.
+            </documentation>
+        </parallelGateway>
+
+        <parallelGateway id="afterRegistrationGatewayJoin">
+            <documentation>
+                A gateway that rejoins the flow.
+            </documentation>
+        </parallelGateway>
+
+        <serviceTask id="persistStudentInformation"
+                     name="Persist Student Information"
+                     flowable:delegateExpression="${studentRegistrationStoreStudentTask}">
+            <documentation>
+                Persist the student information into the database.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="generateRegistrationNotificationEmail"
+                     name="Generate the PA Notification Email"
+                     flowable:class="io.aiontechnology.mentorsuccess.workflow.registration.InvitationEmailGenerationTask">
+            <documentation>
+                Generate an email that will be sent to the program administrator to notify him/her that a student has
+                been registered into the program by a parent.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendRegistrationNotificationEmail"
+                     name="Send the PA Notification Email"
+                     flowable:type="mail">
+            <documentation>
+                Send the notification to the program administrator that a student has been registered.
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${invitation.parent1EmailAddress}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from">
+                    <flowable:string><![CDATA[do-not-reply@mentorsuccesskids.com]]></flowable:string>
+                </flowable:field>
+                <flowable:field name="subject">
+                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
+        <callActivity id="studentReminderAndRegistration"
+                      name="Invitation and Registration"
+                      calledElement="invite-student">
+            <extensionElements>
+                <flowable:in source="school" target="school"/>
+                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="invitation" target="invitation"/>
+                <flowable:in source="email" target="email"/>
+            </extensionElements>
+        </callActivity>
+
+        <boundaryEvent id="receiveRegistrationTimeout2"
+                       attachedToRef="studentReminderAndRegistration">
+            <documentation>
+                Boundary even on the "remind parent" task that will route the process if the parent has not responded
+                within a seven-day timeframe.
+            </documentation>
+            <timerEventDefinition>
+                <timeDuration>${email.timeout}</timeDuration>
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <serviceTask id="generateRegistrationTimeoutEmail"
+                     name="Generate Parent Registration Timeout Email"
+                     flowable:delegateExpression="${invitationEmailGeneratorTimeout}">
+            <documentation>
+                Generate an email to inform the program administrator that a student registration workflow has timed out
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendRegistrationTimeoutEmail"
+                     name="Send Timeout Email"
+                     flowable:type="mail">
+            <documentation>
+                Send a notification to the program administrator that a registration has timed out
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from" stringValue="do-not-reply@mentorsuccesskids.com"/>
+                <flowable:field name="subject">
+                    <flowable:expression>
+                        <![CDATA[Registration timed out for ${invitation.studentFirstName} ${invitation.studentLastName}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
+        <endEvent id="end">
+            <documentation>
+                The process is complete
+            </documentation>
+        </endEvent>
+
+        <!-- Transitions -->
+
+        <sequenceFlow id="fromGatewayToGenerateNotification"
+                      sourceRef="afterRegistrationGatewaySplit"
+                      targetRef="generateRegistrationNotificationEmail">
+            <documentation>
+                Transition from the split gateway to the "generate notification email" task
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromGatewayToPersistStudentInfo"
+                      sourceRef="afterRegistrationGatewaySplit"
+                      targetRef="persistStudentInformation">
+            <documentation>
+                Transition from the split gateway to the "persist student info task.
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromGenerateNotificationToSendNotification"
+                      sourceRef="generateRegistrationNotificationEmail"
+                      targetRef="sendRegistrationNotificationEmail">
+        </sequenceFlow>
+
+        <sequenceFlow id="fromGenerateTimeoutEmailToSendTimeoutEmail"
+                      sourceRef="generateRegistrationTimeoutEmail"
+                      targetRef="sendRegistrationTimeoutEmail">
+        </sequenceFlow>
+
+        <sequenceFlow id="fromJoinGatewayToEnd"
+                      sourceRef="afterRegistrationGatewayJoin"
+                      targetRef="end">
+            <documentation>
+                Transition from the join gateway to the end.
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromPersistStudentToAfterJoin"
+                      sourceRef="persistStudentInformation"
+                      targetRef="afterRegistrationGatewayJoin">
+            <documentation>
+                Transition from the "persist student information" task to the join gateway.
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromReceiveRegistrationTimeout1ToSendParentReminder"
+                      sourceRef="receiveRegistrationTimeout1"
+                      targetRef="studentReminderAndRegistration">
+            <documentation>
+                Transition from the timeout boundary event to the "remind parent" task
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromTimeoutBoundaryToGenerateNotification"
+                      sourceRef="receiveRegistrationTimeout2"
+                      targetRef="generateRegistrationTimeoutEmail">
+            <documentation>
+                Transition from receiving the second registration timeout to generating an email to the PA
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromReceiveRegistrationToGateway"
+                      sourceRef="studentInvitationAndRegistration"
+                      targetRef="afterRegistrationGatewaySplit">
+            <documentation>
+                Transition from the "receive registration" task to the "persist student information" task.
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromSendParentReminderToEnd"
+                      sourceRef="sendRegistrationTimeoutEmail"
+                      targetRef="end">
+            <documentation>
+                Transition from the "remind parent" task to the end.
+            </documentation>
+        </sequenceFlow>
+
+        <sequenceFlow id="fromSendRegistrationNotificationEmailToAfterJoin"
+                      sourceRef="sendRegistrationNotificationEmail"
+                      targetRef="afterRegistrationGatewayJoin">
+
+        </sequenceFlow>
+
+        <sequenceFlow id="fromSendTimeoutEmailToEnd"
+                      sourceRef="studentReminderAndRegistration"
+                      targetRef="end">
+        </sequenceFlow>
+
+        <sequenceFlow id="fromStartToInvitationAndRegistration"
+                      sourceRef="start"
+                      targetRef="studentInvitationAndRegistration">
+            <documentation>
+                Transition from the start to the task that will generate the email.
+            </documentation>
+        </sequenceFlow>
+    </process>
+</definitions>
