@@ -24,7 +24,6 @@ import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegis
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -106,7 +105,7 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
             return null;
         }
         return InboundStudentTeacher.builder()
-                .withUri(URI.create(studentRegistration.getTeacher()))
+                .withUri(studentRegistration.getTeacher())
                 .build();
     }
 

@@ -27,7 +27,6 @@ import io.aiontechnology.mentorsuccess.service.SchoolService;
 import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -40,6 +39,7 @@ import javax.validation.Valid;
 import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.TEACHER;
@@ -73,12 +73,14 @@ public class StudentRegistrationController {
         School school = schoolService.getSchoolById(schoolId)
                 .orElseThrow(() -> new NotFoundException("School was not found"));
 
-        var session = entityManager.unwrap(Session.class);
-        session.enableFilter("roleType").setParameter("type", TEACHER.toString());
-        Collection<SchoolPersonRole> teachers = school.getRoles();
-
-        session.enableFilter("roleType").setParameter("type", PROGRAM_ADMIN.toString());
-        SchoolPersonRole programAdmin = school.getRoles().stream().findFirst().orElse(null);
+        Collection<SchoolPersonRole> allRoles = school.getRoles();
+        Collection<SchoolPersonRole> teachers = allRoles.stream()
+                .filter(role -> role.getType().equals(TEACHER))
+                .collect(Collectors.toList());
+        SchoolPersonRole programAdmin = allRoles.stream()
+                .filter(role -> role.getType().equals(PROGRAM_ADMIN))
+                .findFirst()
+                .orElse(null);
 
         Map<String, Object> data = Map.of(
                 "school", school,
@@ -93,12 +95,12 @@ public class StudentRegistrationController {
     @PutMapping("/{registrationId}")
     public InboundStudentRegistration handleRegistration(@PathVariable("schoolId") UUID schoolId,
             @PathVariable("registrationId") UUID registrationId,
-            @RequestBody @Valid InboundStudentRegistration studentRegistration) {
+            @RequestBody @Valid InboundStudentRegistration inboundStudentRegistration) {
         School school = schoolService.getSchoolById(schoolId)
                 .orElseThrow(() -> new NotFoundException("School was not found"));
 
-        studentRegistrationService.processRegistration(school.getId(), registrationId, studentRegistration);
-        return studentRegistration;
+        studentRegistrationService.processRegistration(school.getId(), registrationId, inboundStudentRegistration);
+        return inboundStudentRegistration;
     }
 
 }

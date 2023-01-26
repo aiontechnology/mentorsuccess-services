@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 Aion Technology LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="register-and-notify" name="Send and Receive Registration" isExecutable="true">
+        <documentation>
+            Persist the newly registered student into the database and email the program administrator.
+        </documentation>
+
+        <!-- States -->
+
+        <startEvent id="start" flowable:formFieldValidation="true">
+            <documentation>
+                Start the process which invites a parent to register their student into the MentorSuccess program.
+            </documentation>
+        </startEvent>
+
+        <parallelGateway id="splitFlow">
+            <documentation>
+                A gateway that splits the flow.
+            </documentation>
+        </parallelGateway>
+
+        <parallelGateway id="joinFlow">
+            <documentation>
+                A gateway that rejoins the flow.
+            </documentation>
+        </parallelGateway>
+
+        <serviceTask id="persistStudentInformation"
+                     name="Persist Student Information"
+                     flowable:delegateExpression="${studentRegistrationStoreStudentTask}">
+            <documentation>
+                Persist the student information into the database.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="generateRegistrationCompleteEmail"
+                     name="Generate Registration Complete Email"
+                     flowable:delegateExpression="${registrationCompleteEmailGenerator}">
+            <documentation>
+                Generate an email that will be sent to the program administrator to notify him/her that a student has
+                been registered into the program by a parent.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendRegistrationCompleteEmail"
+                     name="Send the PA Notification Email"
+                     flowable:type="mail">
+            <documentation>
+                Send the notification to the program administrator that a student has been registered.
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from">
+                    <flowable:string><![CDATA[do-not-reply@mentorsuccesskids.com]]></flowable:string>
+                </flowable:field>
+                <flowable:field name="subject">
+                    <flowable:expression>
+                        <![CDATA[Completed Registration: ${invitation.studentFirstName} ${invitation.studentLastName}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
+        <endEvent id="end">
+            <documentation>
+                The process is complete
+            </documentation>
+        </endEvent>
+
+        <!-- Transitions -->
+
+        <sequenceFlow sourceRef="start" targetRef="splitFlow"/>
+        <sequenceFlow sourceRef="splitFlow" targetRef="persistStudentInformation"/>
+        <sequenceFlow sourceRef="splitFlow" targetRef="generateRegistrationCompleteEmail"/>
+        <sequenceFlow sourceRef="generateRegistrationCompleteEmail" targetRef="sendRegistrationCompleteEmail"/>
+        <sequenceFlow sourceRef="persistStudentInformation" targetRef="joinFlow"/>
+        <sequenceFlow sourceRef="sendRegistrationCompleteEmail" targetRef="joinFlow"/>
+        <sequenceFlow sourceRef="joinFlow" targetRef="end"/>
+    </process>
+</definitions>

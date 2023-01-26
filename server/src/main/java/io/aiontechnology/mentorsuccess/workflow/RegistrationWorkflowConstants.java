@@ -24,12 +24,16 @@ public class RegistrationWorkflowConstants {
 
     public static String INVITATION = "invitation";
 
+    public static String PROGRAM_ADMIN = "programAdmin";
+
+    public static String TEACHER_NAME = "teacherName";
+
+    public static String REGISTRATION = "registration";
+
     public static String SCHOOL = "school";
 
     public static String SCHOOL_ID = "schoolId";
 
     public static String STUDENT = "student";
-
-    public static String PROGRAM_ADMIN = "programAdmin";
 
 }

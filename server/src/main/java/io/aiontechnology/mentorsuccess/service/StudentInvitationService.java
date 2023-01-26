@@ -53,7 +53,7 @@ public class StudentInvitationService {
     private Map<String, Object> getEmailConfiguration() {
         return Map.of(
                 "subject", "His Heart Foundation - MentorSuccess™ Student Registration",
-                "timeout", "PT10S"
+                "timeout", "P7D"
         );
     }
 
