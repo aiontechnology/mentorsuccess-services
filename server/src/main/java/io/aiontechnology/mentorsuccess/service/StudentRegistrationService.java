@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 
@@ -49,13 +50,18 @@ public class StudentRegistrationService {
 
     // Mappers
     private final OneWayMapper<InboundStudent, Student> studentModelToEntityMapper;
+
     private final OneWayMapper<InboundStudent, StudentSchoolSession> studentSessionModelToEntityMapper;
+
     private final OneWayMapper<InboundStudentRegistration, InboundStudent> studentRegistrationToStudentMapper;
 
     // Services
     private final TaskService taskService;
+
     private final RuntimeService runtimeService;
+
     private final SchoolService schoolService;
+
     private final StudentService studentService;
 
     @Transactional
@@ -100,12 +106,14 @@ public class StudentRegistrationService {
                 });
     }
 
-    public void processRegistration(UUID schoolId, UUID processId, InboundStudentRegistration registration) {
-        studentRegistrationToStudentMapper.map(registration)
-                .ifPresent(inboundStudent -> {
+    public void processRegistration(UUID schoolId, UUID processId,
+            InboundStudentRegistration inboundStudentRegistration) {
+        studentRegistrationToStudentMapper.map(inboundStudentRegistration)
+                .ifPresent(student -> {
                     completeTask(processId, Map.of(
                             SCHOOL_ID, schoolId,
-                            STUDENT, inboundStudent
+                            REGISTRATION, inboundStudentRegistration,
+                            STUDENT, student
                     ));
                 });
 

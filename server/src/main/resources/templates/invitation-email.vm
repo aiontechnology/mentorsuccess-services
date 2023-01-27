@@ -28,6 +28,11 @@ Parameters:
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <style>
+        img {
+            width: 75%;
+            height: auto;
+        }
+
         .button {
             text-decoration: none;
             color: white;
