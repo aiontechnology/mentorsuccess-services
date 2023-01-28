@@ -44,6 +44,8 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
                             .withLastName(studentRegistration.getStudentLastName())
                             .withGrade(studentRegistration.getGrade())
                             .withPreferredTime(studentRegistration.getPreferredSession())
+                            .withRegistrationSigned(!studentRegistration.getParentSignature().equals(null) &&
+                                    !studentRegistration.getParentSignature().equals(""))
                             .withContacts(contacts)
                             .withTeacher(mapTeacher(studentRegistration))
                             .build();

@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package io.aiontechnology.mentorsuccess.api.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.aiontechnology.mentorsuccess.model.enumeration.ContactMethod;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
-import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentMentor;
@@ -29,7 +28,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
@@ -83,7 +81,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -98,6 +97,7 @@ public class StudentControllerIntegrationTest {
         Date startDate = new Date();
         String preferredTime = "PREFERRED";
         String actualTime = "ACTUAL";
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         int preBehavioralAssessment = 1;
         int postBehavioralAssessment = 5;
@@ -110,6 +110,7 @@ public class StudentControllerIntegrationTest {
                 .withStartDate(startDate)
                 .withPreferredTime(preferredTime)
                 .withActualTime(actualTime)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withPreBehavioralAssessment(preBehavioralAssessment)
                 .withPostBehavioralAssessment(postBehavioralAssessment)
@@ -135,6 +136,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
                 .andExpect(jsonPath("$.preferredTime", is(preferredTime)))
                 .andExpect(jsonPath("$.actualTime", is(actualTime)))
+                .andExpect(jsonPath("$.registrationSigned", is(IS_REGISTRATION_SIGNED)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$.preBehavioralAssessment", is(preBehavioralAssessment)))
                 .andExpect(jsonPath("$.postBehavioralAssessment", is(postBehavioralAssessment)));
@@ -144,7 +146,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudentRequiredOnly() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -155,12 +158,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -181,6 +186,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.lastName", is(LAST_NAME)))
                 .andExpect(jsonPath("$.grade", is(GRADE)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
+                .andExpect(jsonPath("$.registrationSigned", is(IS_REGISTRATION_SIGNED)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$.teacher", notNullValue()))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
@@ -203,6 +209,7 @@ public class StudentControllerIntegrationTest {
                 .withLastName(null)
                 .withGrade(null)
                 .withLocation(null)
+                .withRegistrationSigned(null)
                 .withMediaReleaseSigned(null)
                 .withTeacher(null)
                 .build();
@@ -220,12 +227,16 @@ public class StudentControllerIntegrationTest {
         result.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.timestamp", notNullValue()))
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
-                .andExpect(jsonPath("$.error.length()", is(6)))
+                .andExpect(jsonPath("$.error.length()", is(7)))
                 .andExpect(jsonPath("$.error.firstName", is("A student must have a first name")))
                 .andExpect(jsonPath("$.error.lastName", is("A student must have a last name")))
                 .andExpect(jsonPath("$.error.grade", is("A student must have a grade")))
                 .andExpect(jsonPath("$.error.location", is("A location is required for a student")))
-                .andExpect(jsonPath("$.error.mediaReleaseSigned", is("A media release specification is required for a student")))
+                .andExpect(jsonPath("$.error.mediaReleaseSigned", is("A media release specification is required for a" +
+                        " student")))
+                .andExpect(jsonPath("$.error.registrationSigned", is("A parent signature specification is required " +
+                        "for" +
+                        " a student")))
                 .andExpect(jsonPath("$.error.teacher", is("A student's teacher must be provided")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
@@ -235,9 +246,11 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_fieldsTooLong() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         final URI MENTOR_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5" +
+                        "-c693529cc5a8");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -250,6 +263,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         String PREFERRED_TIME = "1234567890123456789012345678901";
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withStudentId(STUDENT_ID)
@@ -258,6 +272,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withPreferredTime(PREFERRED_TIME)
                 .withLocation(LOCATION)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -277,9 +292,12 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.status", is("BAD_REQUEST")))
                 .andExpect(jsonPath("$.error.length()", is(4)))
                 .andExpect(jsonPath("$.error.studentId", is("A student's id can not be longer than 20 characters")))
-                .andExpect(jsonPath("$.error.firstName", is("A student's first name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.lastName", is("A student's last name can not be longer than 50 characters")))
-                .andExpect(jsonPath("$.error.preferredTime", is("A student's preferred time can not be longer than 30 characters")))
+                .andExpect(jsonPath("$.error.firstName", is("A student's first name can not be longer than 50 " +
+                        "characters")))
+                .andExpect(jsonPath("$.error.lastName", is("A student's last name can not be longer than 50 " +
+                        "characters")))
+                .andExpect(jsonPath("$.error.preferredTime", is("A student's preferred time can not be longer than 30" +
+                        " characters")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }
@@ -295,12 +313,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -328,7 +348,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_invalidTeacherUri() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe04");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe04");
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
                 .build();
@@ -337,12 +358,14 @@ public class StudentControllerIntegrationTest {
         String LAST_NAME = "LAST_NAME";
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
                 .withLastName(LAST_NAME)
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -370,7 +393,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withBehaviors() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -382,6 +406,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -389,6 +414,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withBehaviors(new HashSet(Arrays.asList("Perfectionism", "Bullying / Tattling")))
@@ -414,7 +440,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInvalidBehavior() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -426,6 +453,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -433,6 +461,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withBehaviors(new HashSet<String>(Arrays.asList("INVALID")))
@@ -461,7 +490,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInterests() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -473,6 +503,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -480,6 +511,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withInterests(new HashSet(Arrays.asList("Cats", "Dogs")))
@@ -506,7 +538,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInvalidInterest() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -518,6 +551,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -525,6 +559,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withInterests(new HashSet(Arrays.asList("INVALID")))
@@ -553,7 +588,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withLeadershipSkills() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -565,6 +601,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -572,6 +609,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipSkills(new HashSet(Arrays.asList("Decision Making", "Planning")))
@@ -597,7 +635,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInvalidLeadershipSkill() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -609,6 +648,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -616,6 +656,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipSkills(new HashSet(Arrays.asList("INVALID")))
@@ -644,7 +685,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withLeadershipTraits() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -656,6 +698,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -663,6 +706,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipTraits(new HashSet(Arrays.asList("Humility", "Responsibility")))
@@ -688,7 +732,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInvalidLeadershipTrait() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -700,6 +745,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -707,6 +753,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withLeadershipTraits(new HashSet(Arrays.asList("INVALID")))
@@ -735,7 +782,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withContacts() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -762,6 +810,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -769,6 +818,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withContacts(new HashSet(Arrays.asList(inboundContact)))
@@ -797,7 +847,8 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInvalidContact() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -815,6 +866,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -822,6 +874,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withContacts(new HashSet(Arrays.asList(inboundContact)))
@@ -844,7 +897,8 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.error.['contacts[0]']", is("A contact must have at least one contact method.")))
                 .andExpect(jsonPath("$.error.['contacts[0].firstName']", is("A contact must have a first name")))
                 .andExpect(jsonPath("$.error.['contacts[0].lastName']", is("A contact must have a last name")))
-                .andExpect(jsonPath("$.error.['contacts[0].isEmergencyContact']", is("The contact must be specified as an emergency contact or not")))
+                .andExpect(jsonPath("$.error.['contacts[0].isEmergencyContact']", is("The contact must be specified " +
+                        "as an emergency contact or not")))
                 .andExpect(jsonPath("$.message", is("Validation failed")))
                 .andExpect(jsonPath("$.path", is("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students")));
     }
@@ -853,9 +907,11 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withMentor() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         final URI MENTOR_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5" +
+                        "-c693529cc5a8");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -870,6 +926,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date(121, 2, 9);
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -877,6 +934,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withMentor(inboundStudentMentor)
@@ -899,6 +957,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade", is(GRADE)))
                 .andExpect(jsonPath("$.location", is(LOCATION.toString())))
                 .andExpect(jsonPath("$.startDate", is(new SimpleDateFormat("yyyy-MM-dd").format(startDate))))
+                .andExpect(jsonPath("$.registrationSigned", is(IS_REGISTRATION_SIGNED)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(IS_MEDIA_RELEASE_SIGNED)))
                 .andExpect(jsonPath("$.teacher", notNullValue()))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
@@ -923,9 +982,11 @@ public class StudentControllerIntegrationTest {
     void testCreateStudent_withInvalidMentor() throws Exception {
         // setup the fixture
         final URI TEACHER_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d" +
+                        "-a474-2e36872abe05");
         final URI MENTOR_URI = URI.create(
-                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a9");
+                "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5" +
+                        "-c693529cc5a9");
         String COMMENT = "COMMENT";
         InboundStudentTeacher inboundStudentTeacher = InboundStudentTeacher.builder()
                 .withUri(TEACHER_URI)
@@ -940,6 +1001,7 @@ public class StudentControllerIntegrationTest {
         int GRADE = 1;
         ResourceLocation LOCATION = ResourceLocation.OFFLINE;
         Date startDate = new Date();
+        Boolean IS_REGISTRATION_SIGNED = true;
         Boolean IS_MEDIA_RELEASE_SIGNED = true;
         InboundStudent studentModel = InboundStudent.builder()
                 .withFirstName(FIRST_NAME)
@@ -947,6 +1009,7 @@ public class StudentControllerIntegrationTest {
                 .withGrade(GRADE)
                 .withLocation(LOCATION)
                 .withStartDate(startDate)
+                .withRegistrationSigned(IS_REGISTRATION_SIGNED)
                 .withMediaReleaseSigned(IS_MEDIA_RELEASE_SIGNED)
                 .withTeacher(inboundStudentTeacher)
                 .withMentor(inboundStudentMentor)
@@ -976,7 +1039,8 @@ public class StudentControllerIntegrationTest {
         // setup the fixture
 
         // execute the SUT
-        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+        ResultActions result = mvc.perform(get("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students" +
+                "/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
                         .header("test", "value")
@@ -1001,11 +1065,13 @@ public class StudentControllerIntegrationTest {
     void testUpdateStudent() throws Exception {
         // setup the fixture
         Map<String, Object> teacherModel = new HashMap<>();
-        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers" +
+                "/ba238442-ce51-450d-a474-2e36872abe05");
         teacherModel.put("comment", "We need to talk");
 
         Map<String, Object> mentorModel = new HashMap<>();
-        mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb-a8ef-474e-b8e5-c693529cc5a8");
+        mentorModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/mentors/46771afb" +
+                "-a8ef-474e-b8e5-c693529cc5a8");
         mentorModel.put("time", "Whenever");
         mentorModel.put("location", "ONLINE");
         mentorModel.put("mediaReleaseSigned", true);
@@ -1029,6 +1095,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("preferredTime", "10:00am");
         studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
+        studentModel.put("registrationSigned", false);
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("preBehavioralAssessment", 2);
         studentModel.put("postBehavioralAssessment", 6);
@@ -1041,7 +1108,8 @@ public class StudentControllerIntegrationTest {
         studentModel.put("contacts", Arrays.asList(contact1));
 
         // execute the SUT
-        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students" +
+                "/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
                         .header("test", "value")
@@ -1058,6 +1126,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.registrationSigned", is(false)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
                 .andExpect(jsonPath("$.preBehavioralAssessment", is(2)))
                 .andExpect(jsonPath("$.postBehavioralAssessment", is(6)))
@@ -1080,7 +1149,8 @@ public class StudentControllerIntegrationTest {
     void testUpdateStudent_toNullMentor() throws Exception {
         // setup the fixture
         Map<String, Object> teacherModel = new HashMap<>();
-        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers" +
+                "/ba238442-ce51-450d-a474-2e36872abe05");
         teacherModel.put("comment", "We need to talk");
 
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
@@ -1101,6 +1171,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("grade", 3);
         studentModel.put("preferredTime", "10:00am");
         studentModel.put("location", "OFFLINE");
+        studentModel.put("registrationSigned", false);
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", null);
@@ -1111,7 +1182,8 @@ public class StudentControllerIntegrationTest {
         studentModel.put("contacts", Arrays.asList(contact1));
 
         // execute the SUT
-        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students" +
+                "/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
                         .header("test", "value")
@@ -1127,6 +1199,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.grade", is(3)))
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.registrationSigned", is(false)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
                 .andExpect(jsonPath("$.teacher.teacher.firstName", is("Fred")))
                 .andExpect(jsonPath("$.teacher.teacher.lastName", is("Rogers")))
@@ -1145,7 +1218,8 @@ public class StudentControllerIntegrationTest {
     void testUpdateStudent_fromNullMentor() throws Exception {
         // setup the fixture
         Map<String, Object> teacherModel = new HashMap<>();
-        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers/ba238442-ce51-450d-a474-2e36872abe05");
+        teacherModel.put("uri", "http://localhost/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/teachers" +
+                "/ba238442-ce51-450d-a474-2e36872abe05");
         teacherModel.put("comment", "We need to talk");
 
         Set<String> behaviors = Set.of("Perfectionism", "Bullying / Tattling");
@@ -1167,6 +1241,7 @@ public class StudentControllerIntegrationTest {
         studentModel.put("preferredTime", "10:00am");
         studentModel.put("startDate", "2020-12-01");
         studentModel.put("location", "OFFLINE");
+        studentModel.put("registrationSigned", false);
         studentModel.put("mediaReleaseSigned", false);
         studentModel.put("teacher", teacherModel);
         studentModel.put("mentor", null);
@@ -1177,7 +1252,8 @@ public class StudentControllerIntegrationTest {
         studentModel.put("contacts", Arrays.asList(contact1));
 
         // execute the SUT
-        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/f0c08c26-954b-4d05-8536-522403f9e54e")
+        ResultActions result = mvc.perform(put("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students" +
+                "/f0c08c26-954b-4d05-8536-522403f9e54e")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
                         .header("test", "value")
@@ -1194,6 +1270,7 @@ public class StudentControllerIntegrationTest {
                 .andExpect(jsonPath("$.preferredTime", is("10:00am")))
                 .andExpect(jsonPath("$.startDate", is("2020-12-01")))
                 .andExpect(jsonPath("$.location", is("OFFLINE")))
+                .andExpect(jsonPath("$.registrationSigned", is(false)))
                 .andExpect(jsonPath("$.mediaReleaseSigned", is(false)))
                 .andExpect(jsonPath("$.behaviors.size()", is(2)))
                 .andExpect(jsonPath("$.behaviors", hasItems("Perfectionism", "Bullying / Tattling")))
@@ -1212,7 +1289,8 @@ public class StudentControllerIntegrationTest {
         // See SQL file
 
         // execute the SUT
-        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
+        ResultActions result = mvc.perform(delete("/api/v1/schools/fd03c21f-cd39-4c05-b3f1-6d49618b6b10/students" +
+                "/2a8c5871-a21d-47a1-a516-a6376a6b8bf2")
                 .with(jwt().jwt(Jwt.withTokenValue("1234")
                         .claim("cognito:groups", new SystemAdminAuthoritySetter())
                         .header("test", "value")

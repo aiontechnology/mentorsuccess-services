@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Aion Technology LLC
+ * Copyright 2021-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,6 +99,9 @@ public class StudentSchoolSession {
 
     @Column
     private Boolean isActive;
+
+    @Column(name = "is_registration_signed")
+    private Boolean isRegistrationSigned;
 
     @Column(name = "is_media_release_signed")
     private Boolean isMediaReleaseSigned;
