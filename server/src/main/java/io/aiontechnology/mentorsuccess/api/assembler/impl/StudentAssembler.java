@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -67,6 +67,7 @@ public class StudentAssembler extends AssemblerSupport<Student, StudentResource>
         resource.setActualTime(studentSchoolSession.getActualTime());
         resource.setStartDate(studentSchoolSession.getStartDate());
         resource.setLocation(studentSchoolSession.getLocation());
+        resource.setRegistrationSigned(studentSchoolSession.getIsRegistrationSigned());
         resource.setMediaReleaseSigned(studentSchoolSession.getIsMediaReleaseSigned());
         resource.setPreBehavioralAssessment(studentSchoolSession.getPreBehavioralAssessment());
         resource.setPostBehavioralAssessment(studentSchoolSession.getPostBehavioralAssessment());

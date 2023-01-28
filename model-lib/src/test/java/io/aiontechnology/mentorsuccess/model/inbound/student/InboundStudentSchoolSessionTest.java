@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -85,6 +86,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -94,6 +96,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -103,6 +106,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -112,6 +116,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -121,6 +126,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("1234567890123456789012345678901") // 31 characters
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -130,6 +136,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("1234567890123456789012345678901") // 31 characters
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -139,6 +146,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(null)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -148,6 +156,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(null)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -157,6 +166,7 @@ public class InboundStudentSchoolSessionTest extends BaseValidatorTest {
                 .withPreferredTime("PREFERRED")
                 .withActualTime("ACTUAL")
                 .withLocation(BOTH)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(null)
                 .build();

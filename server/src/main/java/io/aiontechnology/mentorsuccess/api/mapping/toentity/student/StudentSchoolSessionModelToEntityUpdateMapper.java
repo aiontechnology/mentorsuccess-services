@@ -1,11 +1,11 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -24,13 +24,11 @@ import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.entity.StudentMentor;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
-import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentMentor;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentSchoolSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -75,6 +73,7 @@ public class StudentSchoolSessionModelToEntityUpdateMapper implements
                     studentSchoolSession.setActualTime(ss.getActualTime());
                     studentSchoolSession.setStartDate(ss.getStartDate());
                     studentSchoolSession.setLocation(ss.getLocation());
+                    studentSchoolSession.setIsRegistrationSigned(ss.getRegistrationSigned());
                     studentSchoolSession.setIsMediaReleaseSigned(ss.getMediaReleaseSigned());
                     studentSchoolSession.setPreBehavioralAssessment(ss.getPreBehavioralAssessment());
                     studentSchoolSession.setPostBehavioralAssessment(ss.getPostBehavioralAssessment());

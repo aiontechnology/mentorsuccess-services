@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,6 +61,9 @@ public class InboundStudentSchoolSession {
     @NotNull(message = "{studentsession.location.notNull}")
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{student.location.invalid}")
     ResourceLocation location;
+
+    @NotNull(message = "{studentsession.registrationSigned.notNull")
+    Boolean registrationSigned;
 
     @NotNull(message = "{studentsession.mediaRelease.notNull}")
     Boolean mediaReleaseSigned;

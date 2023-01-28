@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -52,10 +52,15 @@ public class StudentModelToSessionEntityUpdateMapper
 
     // Mappers
     private final OneWayCollectionMapper<String, Interest> interestModelToEntityMapper;
+
     private final OneWayMapper<URI, SchoolPersonRole> mentorModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentBehavior, StudentBehavior> studentBehaviorModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipSkill, StudentLeadershipSkill> studentLeadershipSkillModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipTrait, StudentLeadershipTrait> studentLeadershipTraitModelToEntityMapper;
+
     private final OneWayMapper<URI, SchoolPersonRole> teacherModelToEntityMapper;
 
     @Override
@@ -148,6 +153,7 @@ public class StudentModelToSessionEntityUpdateMapper
         studentSchoolSession.setActualTime(inboundStudent.getActualTime());
         studentSchoolSession.setStartDate(inboundStudent.getStartDate());
         studentSchoolSession.setLocation(inboundStudent.getLocation());
+        studentSchoolSession.setIsRegistrationSigned(inboundStudent.getRegistrationSigned());
         studentSchoolSession.setIsMediaReleaseSigned(inboundStudent.getMediaReleaseSigned());
         studentSchoolSession.setPreBehavioralAssessment(inboundStudent.getPreBehavioralAssessment());
         studentSchoolSession.setPostBehavioralAssessment(inboundStudent.getPostBehavioralAssessment());
@@ -160,9 +166,9 @@ public class StudentModelToSessionEntityUpdateMapper
                 .ifPresent(inboundTeacher -> {
                     SchoolPersonRole teacher =
                             (inboundTeacher.getUri() == null || inboundTeacher.getUri().toString().equals(""))
-                            ? null
-                            : teacherModelToEntityMapper.map(inboundTeacher.getUri())
-                                .orElseThrow(() -> new NotFoundException("Unable to find specified teacher"));
+                                    ? null
+                                    : teacherModelToEntityMapper.map(inboundTeacher.getUri())
+                                    .orElseThrow(() -> new NotFoundException("Unable to find specified teacher"));
                     studentSchoolSession.setTeacher(teacher);
                     studentSchoolSession.setTeacherComment(inboundTeacher.getComment());
                 });
