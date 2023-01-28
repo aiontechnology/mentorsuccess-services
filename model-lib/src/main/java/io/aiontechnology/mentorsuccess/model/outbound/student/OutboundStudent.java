@@ -75,6 +75,8 @@ public class OutboundStudent<T> extends EntityModel<T> {
 
     OutboundStudentMentor mentor;
 
+    Collection<String> activityFocuses;
+
     Collection<String> interests;
 
     Collection<String> behaviors;

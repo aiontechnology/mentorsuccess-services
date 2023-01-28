@@ -75,6 +75,8 @@ public class InboundStudentSchoolSession {
     @Valid
     InboundStudentMentor mentor;
 
+    Set<String> activityFocuses;
+
     Set<String> interests;
 
     Set<String> behaviors;

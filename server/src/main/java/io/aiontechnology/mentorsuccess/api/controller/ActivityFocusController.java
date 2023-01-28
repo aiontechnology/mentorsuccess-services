@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.api.controller;
 
 import io.aiontechnology.mentorsuccess.api.assembler.NameableToStringModelMapper;
-import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
+import io.aiontechnology.mentorsuccess.entity.reference.ActivityFocus;
 import io.aiontechnology.mentorsuccess.service.ActivityFocusService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,7 +56,8 @@ public class ActivityFocusController {
     @GetMapping
     @PreAuthorize("hasAuthority('resource:read')")
     public CollectionModel<String> getInterests() {
-        var activityFocusModels = StreamSupport.stream(activityFocusService.getAllActivityFocuses().spliterator(), false)
+        var activityFocusModels = StreamSupport.stream(activityFocusService.getAllActivityFocuses().spliterator(),
+                        false)
                 .map(activityFocusModelAssembler::toModel)
                 .collect(Collectors.toList());
         return CollectionModel.of(activityFocusModels);

@@ -22,12 +22,14 @@ import io.aiontechnology.atlas.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.entity.StudentActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentActivityFocus;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
@@ -55,6 +57,8 @@ public class StudentModelToSessionEntityUpdateMapper
 
     private final OneWayMapper<URI, SchoolPersonRole> mentorModelToEntityMapper;
 
+    private final OneWayToCollectionUpdateMapper<InboundStudentActivityFocus, StudentActivityFocus> studentActivityFocusModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentBehavior, StudentBehavior> studentBehaviorModelToEntityMapper;
 
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipSkill, StudentLeadershipSkill> studentLeadershipSkillModelToEntityMapper;
@@ -72,9 +76,27 @@ public class StudentModelToSessionEntityUpdateMapper
                 .map(s -> mapInterests(inboundStudent, s))
                 .map(s -> mapBehaviors(inboundStudent, s))
                 .map(s -> mapMentor(inboundStudent, s))
+                .map(s -> mapActivityFocuses(inboundStudent, s))
                 .map(s -> mapLeadershipSkills(inboundStudent, s))
                 .map(s -> mapLeadershipTraits(inboundStudent, s))
                 .map(s -> mapTeacher(inboundStudent, s));
+    }
+
+    private StudentSchoolSession mapActivityFocuses(InboundStudent inboundStudent,
+            StudentSchoolSession studentSchoolSession) {
+        Optional.ofNullable(studentActivityFocusModelToEntityMapper)
+                .ifPresent(mapper -> {
+                    Optional.of(inboundStudent)
+                            .map(InboundStudent::getActivityFocuses)
+                            .map(activityFocusModels -> InboundStudentActivityFocus.builder()
+                                    .withActivityFocuses(activityFocusModels)
+                                    .withTeacher(inboundStudent.getTeacher().getUri())
+                                    .build())
+                            .map(activityFocusModel -> mapper.map(activityFocusModel,
+                                    studentSchoolSession.getStudentActivityFocuses()))
+                            .ifPresent(studentSchoolSession::setStudentActivityFocuses);
+                });
+        return studentSchoolSession;
     }
 
     private StudentSchoolSession mapBehaviors(InboundStudent inboundStudent,

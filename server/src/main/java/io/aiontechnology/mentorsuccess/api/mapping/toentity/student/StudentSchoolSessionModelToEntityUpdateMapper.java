@@ -21,11 +21,13 @@ import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.StudentActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentActivityFocus;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
@@ -49,6 +51,8 @@ public class StudentSchoolSessionModelToEntityUpdateMapper implements
 
     private final OneWayCollectionMapper<String, Interest> interestModelToEntityMapper;
 
+    private final OneWayToCollectionUpdateMapper<InboundStudentActivityFocus, StudentActivityFocus> studentActivityFocusModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentBehavior, StudentBehavior> studentBehaviorModelToEntityMapper;
 
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipSkill, StudentLeadershipSkill> studentLeadershipSkillModelToEntityMapper;
@@ -60,6 +64,50 @@ public class StudentSchoolSessionModelToEntityUpdateMapper implements
 //    private final OneWayUpdateMapper<InboundStudentTeacher, StudentTeacher> studentTeacherModelToEntityMapper;
 
 //    private final OneWayUpdateMapper<InboundStudentMentor, StudentMentor> studentMentorModelToEntityMapper;
+
+    /**
+     * Map the set of behavior strings in the {@link InboundStudentSchoolSession} into a new
+     * {@link InboundStudentBehavior} assuming that the behaviors were provided by the student's teacher.
+     */
+    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentBehavior> studentBehaviorModelMapper =
+            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
+                    .map(InboundStudentSchoolSession::getBehaviors)
+                    .map(behaviorModels -> InboundStudentBehavior.builder()
+                            .withBehaviors(behaviorModels)
+                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
+                            .build());
+
+    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentActivityFocus> studentActivityFocusModelMapper =
+            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
+                    .map(InboundStudentSchoolSession::getActivityFocuses)
+                    .map(activityFocusModels -> InboundStudentActivityFocus.builder()
+                            .withActivityFocuses(activityFocusModels)
+                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
+                            .build());
+
+    /**
+     * Map the set of leadership skill strings in the {@link InboundStudentSchoolSession} into a new
+     * {@link InboundStudentLeadershipSkill} assuming that the skills were provided by the student's teacher.
+     */
+    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentLeadershipSkill> studentLeadershipSkillModelMapper =
+            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
+                    .map(InboundStudentSchoolSession::getLeadershipSkills)
+                    .map(leadershipSkillModels -> InboundStudentLeadershipSkill.builder()
+                            .withLeadershipSkills(leadershipSkillModels)
+                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
+                            .build());
+
+    /**
+     * Map the set of leadership trait strings in the {@link InboundStudentSchoolSession} into a new
+     * {@link InboundStudentLeadershipTrait} assuming that the skills were provided by the student's teacher.
+     */
+    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentLeadershipTrait> studentLeadershipTraitModelMapper =
+            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
+                    .map(InboundStudentSchoolSession::getLeadershipTraits)
+                    .map(leadershipTraitModels -> InboundStudentLeadershipTrait.builder()
+                            .withLeadershipTraits(leadershipTraitModels)
+                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
+                            .build());
 
     @Override
     public Optional<StudentSchoolSession> map(InboundStudentSchoolSession inboundStudentSchoolSession,
@@ -78,6 +126,13 @@ public class StudentSchoolSessionModelToEntityUpdateMapper implements
                     studentSchoolSession.setPreBehavioralAssessment(ss.getPreBehavioralAssessment());
                     studentSchoolSession.setPostBehavioralAssessment(ss.getPostBehavioralAssessment());
                     studentSchoolSession.setStudentInterests(interestModelToEntityMapper.map(ss.getInterests()).orElse(Collections.emptyList()));
+                    Collection<StudentActivityFocus> activityFocuses = Optional.of(studentSchoolSession)
+                            .map(sy -> sy.getStudentActivityFocuses()).orElse(Collections.EMPTY_LIST);
+                    studentActivityFocusModelMapper
+                            .map(ss)
+                            .ifPresent(inboundStudentActivityFocusModel ->
+                                    studentSchoolSession.setStudentActivityFocuses(studentActivityFocusModelToEntityMapper
+                                            .map(inboundStudentActivityFocusModel, activityFocuses)));
                     Collection<StudentBehavior> studentBehaviors = Optional.of(studentSchoolSession)
                             .map(sy -> sy.getStudentBehaviors()).orElse(Collections.EMPTY_LIST);
                     studentBehaviorModelMapper
@@ -114,41 +169,5 @@ public class StudentSchoolSessionModelToEntityUpdateMapper implements
                     return studentSchoolSession;
                 });
     }
-
-    /**
-     * Map the set of behavior strings in the {@link InboundStudentSchoolSession} into a new
-     * {@link InboundStudentBehavior} assuming that the behaviors were provided by the student's teacher.
-     */
-    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentBehavior> studentBehaviorModelMapper =
-            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
-                    .map(InboundStudentSchoolSession::getBehaviors)
-                    .map(behaviorModels -> InboundStudentBehavior.builder()
-                            .withBehaviors(behaviorModels)
-                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
-                            .build());
-
-    /**
-     * Map the set of leadership skill strings in the {@link InboundStudentSchoolSession} into a new
-     * {@link InboundStudentLeadershipSkill} assuming that the skills were provided by the student's teacher.
-     */
-    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentLeadershipSkill> studentLeadershipSkillModelMapper =
-            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
-                    .map(InboundStudentSchoolSession::getLeadershipSkills)
-                    .map(leadershipSkillModels -> InboundStudentLeadershipSkill.builder()
-                            .withLeadershipSkills(leadershipSkillModels)
-                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
-                            .build());
-
-    /**
-     * Map the set of leadership trait strings in the {@link InboundStudentSchoolSession} into a new
-     * {@link InboundStudentLeadershipTrait} assuming that the skills were provided by the student's teacher.
-     */
-    private final OneWayMapper<InboundStudentSchoolSession, InboundStudentLeadershipTrait> studentLeadershipTraitModelMapper =
-            inboundStudentSchoolSession -> Optional.of(inboundStudentSchoolSession)
-                    .map(InboundStudentSchoolSession::getLeadershipTraits)
-                    .map(leadershipTraitModels -> InboundStudentLeadershipTrait.builder()
-                            .withLeadershipTraits(leadershipTraitModels)
-                            .withTeacher(inboundStudentSchoolSession.getTeacher().getUri())
-                            .build());
 
 }
