@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 Aion Technology LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="invite-student" name="Send and Receive Registration" isExecutable="true">
+
+        <!-- States -->
+
+        <startEvent id="start" flowable:initiator="initiator" flowable:formFieldValidation="true">
+            <documentation>
+                Start of process.
+            </documentation>
+        </startEvent>
+
+        <serviceTask id="generateInvitationEmail"
+                     name="Generate Invitation Email"
+                     flowable:delegateExpression="${invitationEmailGenerator}">
+            <documentation>
+                Generate the email that should be sent to the parent.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendInvitationEmail"
+                     name="Send Invitation Email"
+                     flowable:type="mail">
+            <documentation>
+                Send the generated email to the parent.
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${invitation.parent1EmailAddress}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from">
+                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="subject">
+                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
+        <userTask id="receiveRegistration"
+                  name="Receive Registration"
+                  flowable:formFieldValidation="true">
+            <documentation>
+                Wait for the registration form to be submitted from the parent.
+            </documentation>
+        </userTask>
+
+        <endEvent id="end">
+            <documentation>
+                The process is complete
+            </documentation>
+        </endEvent>
+
+        <!-- Transitions -->
+
+        <sequenceFlow sourceRef="start" targetRef="generateInvitationEmail"/>
+        <sequenceFlow sourceRef="generateInvitationEmail" targetRef="sendInvitationEmail"/>
+        <sequenceFlow sourceRef="sendInvitationEmail" targetRef="receiveRegistration"/>
+        <sequenceFlow sourceRef="receiveRegistration" targetRef="end"/>
+    </process>
+</definitions>

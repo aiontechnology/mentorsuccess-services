@@ -6762,6 +6762,7 @@ components:
         - lastName
         - grade
         - location
+        - registrationSigned
         - mediaReleaseSigned
         - teacher
       properties:
@@ -6783,6 +6784,9 @@ components:
         location:
           type: string
           example: OFFLINE
+        registrationSigned:
+          type: boolean
+          example: true
         mediaReleaseSigned:
           type: boolean
           example: true
@@ -6833,6 +6837,9 @@ components:
         location:
           type: string
           example: OFFLINE
+        registrationSigned:
+          type: boolean
+          example: true
         mediaReleaseSigned:
           type: boolean
           example: true

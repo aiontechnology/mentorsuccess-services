@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,7 @@ public class InboundStudentTest extends BaseValidatorTest {
                 .withLastName("LAST")
                 .withGrade(1)
                 .withLocation(ONLINE)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -83,6 +84,7 @@ public class InboundStudentTest extends BaseValidatorTest {
                 .withLastName("LAST")
                 .withGrade(1)
                 .withLocation(ONLINE)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -91,6 +93,7 @@ public class InboundStudentTest extends BaseValidatorTest {
                 .withLastName("LAST")
                 .withGrade(1)
                 .withLocation(ONLINE)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -99,6 +102,7 @@ public class InboundStudentTest extends BaseValidatorTest {
                 .withLastName("LAST")
                 .withGrade(1)
                 .withLocation(ONLINE)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -107,6 +111,7 @@ public class InboundStudentTest extends BaseValidatorTest {
                 .withLastName(null)
                 .withGrade(1)
                 .withLocation(ONLINE)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();
@@ -115,6 +120,7 @@ public class InboundStudentTest extends BaseValidatorTest {
                 .withLastName("123456789012345678901234567890123456789012345678901") // 51 characters
                 .withGrade(1)
                 .withLocation(ONLINE)
+                .withRegistrationSigned(true)
                 .withMediaReleaseSigned(true)
                 .withTeacher(inboundStudentTeacher)
                 .build();

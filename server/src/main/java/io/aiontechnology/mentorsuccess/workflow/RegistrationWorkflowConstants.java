@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,21 @@ package io.aiontechnology.mentorsuccess.workflow;
 public class RegistrationWorkflowConstants {
 
     public static String BASE_REGISTRATION_URI = "studentRegistrationUri";
-    public static String EMAIL_SUBJECT = "emailSubject";
+
+    public static String EMAIL = "email";
+
     public static String INVITATION = "invitation";
+
+    public static String PROGRAM_ADMIN = "programAdmin";
+
+    public static String TEACHER_NAME = "teacherName";
+
+    public static String REGISTRATION = "registration";
+
     public static String SCHOOL = "school";
+
     public static String SCHOOL_ID = "schoolId";
+
     public static String STUDENT = "student";
-    public static String PROGRAM_ADMIN_NAME = "programAdminName";
-    public static String PROGRAM_ADMIN_EMAIL = "programAdminEmail";
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.aiontechnology.mentorsuccess.api.mapping.tomodel.student;
 import io.aiontechnology.atlas.mapping.OneWayCollectionMapper;
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
+import io.aiontechnology.mentorsuccess.entity.StudentActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
@@ -46,10 +47,16 @@ public class StudentSchoolSessionEntityToModelUpdateMapper
 
     // Mappers
     private final OneWayCollectionMapper<Interest, String> interestModelToEntityMapper;
+
+    private final OneWayCollectionMapper<StudentActivityFocus, String> studentActivityFocusEntityToModelMapper;
+
     private final OneWayCollectionMapper<StudentBehavior, String> studentBehaviorEntityToModelMapper;
+
     private final OneWayCollectionMapper<StudentLeadershipSkill, String> studentLeadershipSkillEntityToModelMapper;
+
     private final OneWayCollectionMapper<StudentLeadershipTrait, String> studentLeadershipTraitEntityToModelMapper;
-//    private final OneWayMapper<StudentTeacher, OutboundStudentTeacher> studentTeacherEntityToModelMapper;
+
+    //    private final OneWayMapper<StudentTeacher, OutboundStudentTeacher> studentTeacherEntityToModelMapper;
     private final OneWayMapper<StudentMentor, OutboundStudentMentor> studentMentorEntityToModelMapper;
 
     @Override
@@ -61,13 +68,16 @@ public class StudentSchoolSessionEntityToModelUpdateMapper
                     s.setPreferredTime(studentSchoolSession.getPreferredTime());
                     s.setActualTime(studentSchoolSession.getActualTime());
                     s.setLocation(studentSchoolSession.getLocation());
+                    s.setRegistrationSigned(studentSchoolSession.getIsRegistrationSigned());
                     s.setMediaReleaseSigned(studentSchoolSession.getIsMediaReleaseSigned());
                     s.setStartDate(studentSchoolSession.getStartDate());
+                    s.setActivityFocuses(studentActivityFocusEntityToModelMapper.map(studentSchoolSession.getStudentActivityFocuses()).orElse(Collections.emptyList()));
                     s.setInterests(interestModelToEntityMapper.map(studentSchoolSession.getInterests()).orElse(Collections.emptyList()));
                     s.setBehaviors(studentBehaviorEntityToModelMapper.map(studentSchoolSession.getStudentBehaviors()).orElse(Collections.emptyList()));
                     s.setLeadershipSkills(studentLeadershipSkillEntityToModelMapper.map(studentSchoolSession.getStudentLeadershipSkills()).orElse(Collections.emptyList()));
                     s.setLeadershipTraits(studentLeadershipTraitEntityToModelMapper.map(studentSchoolSession.getStudentLeadershipTraits()).orElse(Collections.emptyList()));
-//                    s.setTeacher(studentTeacherEntityToModelMapper.map(studentSchoolSession.getTeacher()).orElse(null));
+//                    s.setTeacher(studentTeacherEntityToModelMapper.map(studentSchoolSession.getTeacher()).orElse
+//                    (null));
 //                    s.setMentor(studentMentorEntityToModelMapper.map(studentSchoolSession.getMentor()).orElse(null));
                     return s;
                 });

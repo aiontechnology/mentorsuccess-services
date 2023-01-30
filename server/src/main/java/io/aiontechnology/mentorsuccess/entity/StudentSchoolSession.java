@@ -1,5 +1,5 @@
 /*
- * Copyright 2021-2022 Aion Technology LLC
+ * Copyright 2021-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.entity;
 
 import io.aiontechnology.atlas.synchronization.CollectionSynchronizer;
 import io.aiontechnology.atlas.synchronization.impl.SimpleCollectionSynchronizer;
+import io.aiontechnology.mentorsuccess.entity.reference.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import lombok.AllArgsConstructor;
@@ -67,6 +68,9 @@ public class StudentSchoolSession {
     private static final CollectionSynchronizer<Interest> interestSyncHelper =
             new SimpleCollectionSynchronizer<>();
 
+    private static final CollectionSynchronizer<StudentActivityFocus> studentActivityFocusSyncHelper =
+            new SimpleCollectionSynchronizer<>();
+
     private static final CollectionSynchronizer<StudentBehavior> studentBehaviorSyncHelper =
             new SimpleCollectionSynchronizer<>();
 
@@ -103,6 +107,9 @@ public class StudentSchoolSession {
     @Column(name = "is_media_release_signed")
     private Boolean isMediaReleaseSigned;
 
+    @Column(name = "is_registration_signed")
+    private Boolean isRegistrationSigned;
+
     /** The location of the resource */
     @Column(name = "location", length = 20)
     @Enumerated(EnumType.STRING)
@@ -131,6 +138,12 @@ public class StudentSchoolSession {
     @ManyToOne(optional = false)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
+
+    /** The collection of {@link ActivityFocus ActivityFocuses} associated with the student. */
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "studentSchoolSession", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Collection<StudentActivityFocus> studentActivityFocuses = new ArrayList<>();
 
     /** The collection of {@link StudentBehavior StudentBehaviors} associated with the student. */
     @ToString.Exclude
@@ -187,6 +200,18 @@ public class StudentSchoolSession {
         this.setSchoolSession(session);
         session.getStudentSchoolSessions().add(this);
         return this;
+    }
+
+    public void setStudentActivityFocuses(Collection<StudentActivityFocus> studentActivityFocuses) {
+        Collection<StudentActivityFocus> newCollection = studentActivityFocuses.stream()
+                .map(studentActivityFocus -> {
+                    studentActivityFocus.getStudentActivityFocusPK().setStudentsession_id(getId());
+                    studentActivityFocus.setStudentSchoolSession(this);
+                    return studentActivityFocus;
+                })
+                .collect(Collectors.toList());
+        this.studentActivityFocuses = studentActivityFocusSyncHelper.sync(this.studentActivityFocuses,
+                newCollection);
     }
 
     public void setStudentBehaviors(Collection<StudentBehavior> studentBehaviors) {

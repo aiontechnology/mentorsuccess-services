@@ -1,0 +1,94 @@
+<!--
+  ~ Copyright 2022-2023 Aion Technology LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<!--
+Template used to generate invitation emails for students.
+
+Parameters:
+  * invitation.parent1FirstName - The first name of the first parent.
+  * school.name - The name of the school which runs the MentorSuccess program.
+  * programAdminName - The name of the school's program administrator.
+  * programAdminEmail - The program administrator's email address.
+  * programAdminPhone - The program administrator's phone number.
+  * studentRegistrationUri - The URI to the registration form.
+-->
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <style>
+        img {
+            width: 75%;
+            height: auto;
+        }
+
+        .button {
+            text-decoration: none;
+            color: white;
+            background-color: #5DADBD;
+            padding: 8px 24px 8px 24px;
+            margin: 20px 20px 20px 0;
+            border-radius: 10px;
+            border-top: 1px solid #CCCCCC;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
+            border-left: 1px solid #CCCCCC;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
+    <p>
+        Dear ${invitation.parent1FirstName},
+    </p>
+    <p>
+        MentorSuccess™ is a K-5 student mentoring program provided through His Heart Foundation and partnered
+        with ${school.name}. Focused on creating caring connections to inspire success in children, MentorSuccess™ is
+        designed to enhance the social and educational experience for your child. Students and mentors work together to
+        develop Leadership Success Skills involved in making life choices and creating healthy relationships for their
+        future. Your child and their mentor will read books, play games and do crafts as desired. This program is
+        designed to create an engaging atmosphere of healthy conversations while building stronger relationships.
+    </p>
+    <p>
+        Program Details:
+    <ul>
+        <li>Mentor sessions will take place in the designated Mentor Center at ${school.name}.</li>
+        <li>Mentor sessions will be supervised by ${programAdmin.name}.</li>
+        <li>Parents/guardians are always encouraged and welcome to meet their student's mentor!</li>
+    </ul>
+    </p>
+    <p>
+        We thank you in advance for letting your child participate in this exciting learning experience. If you have any
+        additional questions, please feel free to contact ${programAdmin.name}.<br/>
+        Email: <a href="mailto:${programAdmin.email}">${programAdmin.email}</a>
+        #if($programAdmin.phone)
+            <br/>Phone: ${programAdmin.phone}
+        #end
+    </p>
+    <p>
+        Click the button below to register your child.<br/>
+        <br/><br/>
+        <a class="button" href="${studentRegistrationUri}">Register My Child</a>
+        <br/><br/>
+    </p>
+    <p>
+        <b>${programAdmin.name}</b><br/>
+        MentorSuccess™ Program Administrator<br/>
+        <a href="mailto:${programAdmin.email}"><b>${programAdmin.email}</b></a><br/>
+        <a href="https://www.mentorsuccesskids.com">mentorsuccesskids.com</a>
+    </p>
+</div>
+</body>
+</html>

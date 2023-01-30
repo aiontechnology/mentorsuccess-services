@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Aion Technology LLC
+ * Copyright 2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,49 +19,20 @@ package io.aiontechnology.mentorsuccess.model.inbound.student;
 import lombok.Builder;
 import lombok.Value;
 
-import java.io.Serializable;
+import javax.validation.constraints.NotNull;
 import java.net.URI;
+import java.util.Set;
 
 @Value
 @Builder(setterPrefix = "with")
-public class InboundStudentRegistration implements Serializable {
+public class InboundStudentActivityFocus {
 
-    String studentFirstName;
+    /** The associated activity focuses */
+    @NotNull(message = "{studentleadershipskill.leadershipskill.notNull}")
+    Set<String> activityFocuses;
 
-    String studentLastName;
-
-    Integer grade;
-
-    String parent1FirstName;
-
-    String parent1LastName;
-
-    String parent1PhoneNumber;
-
-    String parent1EmailAddress;
-
-    String parent1PreferredContactMethod;
-
-    String parent2FirstName;
-
-    String parent2LastName;
-
-    String parent2PhoneNumber;
-
-    String parent2EmailAddress;
-
-    String parent2PreferredContactMethod;
-
+    /** The URI of the associated person */
+    @NotNull(message = "{studentleadershipskill.teacher.notNull}")
     URI teacher;
-
-    String preferredSession;
-
-    String emergencyContactFirstName;
-
-    String emergencyContactLastName;
-
-    String emergencyContactPhone;
-
-    String parentSignature;
 
 }

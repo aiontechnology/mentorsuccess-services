@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -71,6 +71,9 @@ public class InboundStudent implements Serializable {
     @EnumNamePattern(regexp = "ONLINE|OFFLINE|BOTH", message = "{student.location.invalid}")
     ResourceLocation location;
 
+    @NotNull(message = "{student.registrationSigned.notNull}")
+    Boolean registrationSigned;
+
     @NotNull(message = "{student.mediaRelease.notNull}")
     Boolean mediaReleaseSigned;
 
@@ -84,6 +87,8 @@ public class InboundStudent implements Serializable {
 
     @Valid
     InboundStudentMentor mentor;
+
+    Set<String> activityFocuses;
 
     Set<String> behaviors;
 

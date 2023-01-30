@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegis
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentTeacher;
 import org.springframework.stereotype.Service;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +44,8 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
                             .withLastName(studentRegistration.getStudentLastName())
                             .withGrade(studentRegistration.getGrade())
                             .withPreferredTime(studentRegistration.getPreferredSession())
+                            .withRegistrationSigned(!studentRegistration.getParentSignature().equals(null) &&
+                                    !studentRegistration.getParentSignature().equals(""))
                             .withContacts(contacts)
                             .withTeacher(mapTeacher(studentRegistration))
                             .build();
@@ -102,8 +103,11 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
     }
 
     private InboundStudentTeacher mapTeacher(InboundStudentRegistration studentRegistration) {
+        if (studentRegistration == null || studentRegistration.getTeacher() == null) {
+            return null;
+        }
         return InboundStudentTeacher.builder()
-                .withUri(URI.create(studentRegistration.getTeacher()))
+                .withUri(studentRegistration.getTeacher())
                 .build();
     }
 

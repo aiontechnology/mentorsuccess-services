@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -25,7 +25,6 @@ import io.aiontechnology.atlas.synchronization.CollectionSynchronizer;
 import io.aiontechnology.atlas.synchronization.impl.SimpleCollectionSynchronizer;
 import io.aiontechnology.mentorsuccess.api.mapping.toentity.reference.FunctionBasedModelToEntityMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.reference.NameableToStringMapper;
-import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.Person;
@@ -33,11 +32,13 @@ import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.StudentActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
+import io.aiontechnology.mentorsuccess.entity.reference.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
@@ -345,6 +346,15 @@ public class MapperConfiguration {
     public OneWayMapper<InboundStudent, StudentSchoolSession> studentModelToSessionEntityMapper(
             OneWayUpdateMapper<InboundStudent, StudentSchoolSession> mapper) {
         return new UpdateMapperBasedOneWayMapper<>(mapper, StudentSchoolSession.class);
+    }
+
+    /*
+     * StudentActivityFocus
+     */
+
+    @Bean
+    public CollectionSynchronizer<StudentActivityFocus> studentActivityFocusCollectionSyncHelper() {
+        return new SimpleCollectionSynchronizer<>();
     }
 
     /*

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -79,7 +79,7 @@ public class StudentModelToSessionEntityUpdateMapperTest {
         StudentSchoolSession StudentSchoolSession = new StudentSchoolSession();
 
         StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(null, null, null
-                , null, null, null);
+                , null, null, null, null);
 
         // execute the SUT
         Optional<StudentSchoolSession> result = mapper.map(inboundStudent, StudentSchoolSession);
@@ -108,7 +108,7 @@ public class StudentModelToSessionEntityUpdateMapperTest {
         when(interestMapper.map(interestStrings)).thenReturn(Optional.of(interests));
 
         StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(interestMapper,
-                null, null, null, null, null);
+                null, null, null, null, null, null);
 
         // execute the SUT
         mapper.map(inboundStudent, studentSchoolSession);
@@ -141,7 +141,7 @@ public class StudentModelToSessionEntityUpdateMapperTest {
         when(behaviorMapper.map(any(), eq(studentBehaviors))).thenReturn(studentBehaviors);
 
         StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(null,
-                null, behaviorMapper, null, null, null);
+                null, null, behaviorMapper, null, null, null);
 
         // execute the SUT
         mapper.map(inboundStudent, studentSchoolSession);
@@ -198,7 +198,7 @@ public class StudentModelToSessionEntityUpdateMapperTest {
         List<Interest> interests = Arrays.asList(new Interest(), new Interest());
         when(leadershipSkillMapper.map(any(), eq(studentLeadershipSkills))).thenReturn(studentLeadershipSkills);
 
-        StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(null, null,
+        StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(null, null, null,
                 null, leadershipSkillMapper, null, null);
 
         // execute the SUT
@@ -231,7 +231,7 @@ public class StudentModelToSessionEntityUpdateMapperTest {
         List<Interest> interests = Arrays.asList(new Interest(), new Interest());
         when(leadershipTraitMapper.map(any(), eq(studentLeadershipTraits))).thenReturn(studentLeadershipTraits);
 
-        StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(null, null,
+        StudentModelToSessionEntityUpdateMapper mapper = new StudentModelToSessionEntityUpdateMapper(null, null, null,
                 null, null, leadershipTraitMapper, null);
 
         // execute the SUT

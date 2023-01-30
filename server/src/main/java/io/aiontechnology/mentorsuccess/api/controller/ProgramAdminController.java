@@ -1,11 +1,11 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -68,14 +68,17 @@ public class ProgramAdminController {
 
     // Mappers
     private final OneWayMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminMapper;
+
     private final OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminUpdateMapper;
 
     // Services
     private final RoleService roleService;
+
     private final SchoolService schoolService;
 
     // Other
     private final AwsService awsService;
+
     private final EntityManager entityManager;
 
     /**
@@ -123,7 +126,7 @@ public class ProgramAdminController {
                         .map(Optional::get)
                         .collect(Collectors.toList()))
                 .map(programAdmins -> CollectionModel.of(programAdmins))
-                .orElseThrow(() -> new IllegalArgumentException("Requested school not found"));
+                .orElseThrow(() -> new NotFoundException("Requested school not found"));
     }
 
     /**

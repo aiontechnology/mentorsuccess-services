@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Aion Technology LLC
+ * Copyright 2022-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,12 +22,14 @@ import io.aiontechnology.atlas.mapping.OneWayToCollectionUpdateMapper;
 import io.aiontechnology.atlas.mapping.OneWayUpdateMapper;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
+import io.aiontechnology.mentorsuccess.entity.StudentActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentActivityFocus;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentBehavior;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentLeadershipTrait;
@@ -52,10 +54,17 @@ public class StudentModelToSessionEntityUpdateMapper
 
     // Mappers
     private final OneWayCollectionMapper<String, Interest> interestModelToEntityMapper;
+
     private final OneWayMapper<URI, SchoolPersonRole> mentorModelToEntityMapper;
+
+    private final OneWayToCollectionUpdateMapper<InboundStudentActivityFocus, StudentActivityFocus> studentActivityFocusModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentBehavior, StudentBehavior> studentBehaviorModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipSkill, StudentLeadershipSkill> studentLeadershipSkillModelToEntityMapper;
+
     private final OneWayToCollectionUpdateMapper<InboundStudentLeadershipTrait, StudentLeadershipTrait> studentLeadershipTraitModelToEntityMapper;
+
     private final OneWayMapper<URI, SchoolPersonRole> teacherModelToEntityMapper;
 
     @Override
@@ -67,9 +76,27 @@ public class StudentModelToSessionEntityUpdateMapper
                 .map(s -> mapInterests(inboundStudent, s))
                 .map(s -> mapBehaviors(inboundStudent, s))
                 .map(s -> mapMentor(inboundStudent, s))
+                .map(s -> mapActivityFocuses(inboundStudent, s))
                 .map(s -> mapLeadershipSkills(inboundStudent, s))
                 .map(s -> mapLeadershipTraits(inboundStudent, s))
                 .map(s -> mapTeacher(inboundStudent, s));
+    }
+
+    private StudentSchoolSession mapActivityFocuses(InboundStudent inboundStudent,
+            StudentSchoolSession studentSchoolSession) {
+        Optional.ofNullable(studentActivityFocusModelToEntityMapper)
+                .ifPresent(mapper -> {
+                    Optional.of(inboundStudent)
+                            .map(InboundStudent::getActivityFocuses)
+                            .map(activityFocusModels -> InboundStudentActivityFocus.builder()
+                                    .withActivityFocuses(activityFocusModels)
+                                    .withTeacher(inboundStudent.getTeacher().getUri())
+                                    .build())
+                            .map(activityFocusModel -> mapper.map(activityFocusModel,
+                                    studentSchoolSession.getStudentActivityFocuses()))
+                            .ifPresent(studentSchoolSession::setStudentActivityFocuses);
+                });
+        return studentSchoolSession;
     }
 
     private StudentSchoolSession mapBehaviors(InboundStudent inboundStudent,
@@ -148,6 +175,7 @@ public class StudentModelToSessionEntityUpdateMapper
         studentSchoolSession.setActualTime(inboundStudent.getActualTime());
         studentSchoolSession.setStartDate(inboundStudent.getStartDate());
         studentSchoolSession.setLocation(inboundStudent.getLocation());
+        studentSchoolSession.setIsRegistrationSigned(inboundStudent.getRegistrationSigned());
         studentSchoolSession.setIsMediaReleaseSigned(inboundStudent.getMediaReleaseSigned());
         studentSchoolSession.setPreBehavioralAssessment(inboundStudent.getPreBehavioralAssessment());
         studentSchoolSession.setPostBehavioralAssessment(inboundStudent.getPostBehavioralAssessment());
@@ -160,9 +188,9 @@ public class StudentModelToSessionEntityUpdateMapper
                 .ifPresent(inboundTeacher -> {
                     SchoolPersonRole teacher =
                             (inboundTeacher.getUri() == null || inboundTeacher.getUri().toString().equals(""))
-                            ? null
-                            : teacherModelToEntityMapper.map(inboundTeacher.getUri())
-                                .orElseThrow(() -> new NotFoundException("Unable to find specified teacher"));
+                                    ? null
+                                    : teacherModelToEntityMapper.map(inboundTeacher.getUri())
+                                    .orElseThrow(() -> new NotFoundException("Unable to find specified teacher"));
                     studentSchoolSession.setTeacher(teacher);
                     studentSchoolSession.setTeacherComment(inboundTeacher.getComment());
                 });

@@ -1,0 +1,82 @@
+<!--
+  ~ Copyright 2023 Aion Technology LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<html xmlns="http://www.w3.org/1999/html">
+<head>
+    <style>
+        img {
+            width: 75%;
+            height: auto;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td, th {
+            border: black 1px solid;
+            text-align: left;
+            padding: 10px 20px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
+    <p>
+        Dear ${programAdmin.name}
+    </p>
+    <p>
+        An invitation to join the MentorSuccess™ program has not been responded to for 14 days. The registration
+        has been cancelled. Please contact the parent directly.
+    </p>
+    <table>
+        <thead>
+        <tr>
+            <th>Property</th>
+            <th>Value</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Student First Name</td>
+            <td>${invitation.studentFirstName}</td>
+        </tr>
+        <tr>
+            <td>Student Last Name</td>
+            <td>${invitation.studentLastName}</td>
+        </tr>
+        <tr>
+            <td>Parent First Name</td>
+            <td>${invitation.parent1FirstName}</td>
+        </tr>
+        <tr>
+            <td>Parent Last Name</td>
+            <td>${invitation.parent1LastName}</td>
+        </tr>
+        <tr>
+            <td>Parent EMail Address</td>
+            <td>${invitation.parent1EmailAddress}</td>
+        </tr>
+        </tbody>
+    </table>
+    <p>
+        Thank you,<br/>
+        MentorSuccess™
+    </p>
+</div>
+</body>
+</html>
