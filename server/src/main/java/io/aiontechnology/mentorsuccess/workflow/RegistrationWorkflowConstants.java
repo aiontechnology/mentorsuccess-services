@@ -26,6 +26,8 @@ public class RegistrationWorkflowConstants {
 
     public static String PROGRAM_ADMIN = "programAdmin";
 
+    public static String TEACHERS = "teachers";
+
     public static String TEACHER_NAME = "teacherName";
 
     public static String REGISTRATION = "registration";
@@ -33,6 +35,8 @@ public class RegistrationWorkflowConstants {
     public static String SCHOOL = "school";
 
     public static String SCHOOL_ID = "schoolId";
+
+    public static String SHOULD_CANCEL = "shouldCancel";
 
     public static String STUDENT = "student";
 

@@ -25,13 +25,16 @@ import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegis
 import io.aiontechnology.mentorsuccess.resource.StudentRegistrationResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
+import io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.persistence.EntityManager;
@@ -43,6 +46,8 @@ import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.TEACHER;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHERS;
 
 /**
  * Controller that vends a REST interface for registering students.
@@ -53,7 +58,6 @@ import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.TEACHER
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/registrations")
 @RequiredArgsConstructor
-@Slf4j
 public class StudentRegistrationController {
 
     // Assemblers
@@ -83,13 +87,22 @@ public class StudentRegistrationController {
                 .orElse(null);
 
         Map<String, Object> data = Map.of(
-                "school", school,
-                "programAdmin", programAdmin,
-                "teachers", teachers);
+                SCHOOL, school,
+                RegistrationWorkflowConstants.PROGRAM_ADMIN, programAdmin,
+                TEACHERS, teachers);
 
         return studentRegistrationService.findWorkflowById(registrationId)
                 .flatMap(r -> studentRegistrationAssembler.mapWithData(r, data))
                 .orElseThrow(() -> new NotFoundException("Student registration was not found"));
+    }
+
+    @DeleteMapping("/{registrationId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void handleCancellation(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("registrationId") UUID registrationId) {
+        schoolService.getSchoolById(schoolId)
+                .orElseThrow(() -> new NotFoundException("School was not found"));
+        studentRegistrationService.cancelRegistration(registrationId);
     }
 
     @PutMapping("/{registrationId}")

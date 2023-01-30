@@ -89,6 +89,10 @@ Parameters:
         <a href="mailto:${programAdmin.email}"><b>${programAdmin.email}</b></a><br/>
         <a href="https://www.mentorsuccesskids.com">mentorsuccesskids.com</a>
     </p>
+    <p>
+        <br/>
+        Click <a href="${studentRegistrationUri}/cancel">here</a> to cancel this registration.
+    </p>
 </div>
 </body>
 </html>

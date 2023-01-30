@@ -20,6 +20,7 @@
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
+    <error id="cancelProcess" errorCode="cancelProcess"/>
     <process id="student-registration" name="Student Registration" isExecutable="true">
         <documentation>MentorSuccess student registration process</documentation>
 
@@ -69,6 +70,10 @@
             </timerEventDefinition>
         </boundaryEvent>
 
+        <boundaryEvent id="catchInvitation1Error" attachedToRef="sendInvitation1">
+            <errorEventDefinition errorRef="cancelProcess"/>
+        </boundaryEvent>
+
         <callActivity id="sendInvitation2"
                       name="Send Invitation 2"
                       calledElement="invite-student">
@@ -107,6 +112,10 @@
             </timerEventDefinition>
         </boundaryEvent>
 
+        <boundaryEvent id="catchInvitation2Error" attachedToRef="sendInvitation2">
+            <errorEventDefinition errorRef="cancelProcess"/>
+        </boundaryEvent>
+
         <serviceTask id="generateRegistrationTimeoutEmail"
                      name="Generate Parent Registration Timeout Email"
                      flowable:delegateExpression="${invitationEmailGeneratorTimeout}">
@@ -137,6 +146,36 @@
             </extensionElements>
         </serviceTask>
 
+        <serviceTask id="generateCancellationEmail"
+                     name="Generate Process Cancellation Email"
+                     flowable:delegateExpression="${invitationCancellationGenerator}">
+            <documentation>
+                Generate an email to inform the program administrator that the student registration has been cancelled.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendCancellationEmail"
+                     name="Send Cancellation Email"
+                     flowable:type="mail">
+            <documentation>
+                Send a notification to the program administrator that a registration has been cancelled
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from" stringValue="do-not-reply@mentorsuccesskids.com"/>
+                <flowable:field name="subject">
+                    <flowable:expression>
+                        <![CDATA[Registration cancelled for ${invitation.studentFirstName} ${invitation.studentLastName}]]>
+                    </flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
         <endEvent id="end">
             <documentation>
                 The process is complete
@@ -148,11 +187,15 @@
         <sequenceFlow sourceRef="start" targetRef="sendInvitation1"/>
         <sequenceFlow sourceRef="sendInvitation1" targetRef="receiveRegistration1"/>
         <sequenceFlow sourceRef="sendInvitation1Timeout" targetRef="sendInvitation2"/>
+        <sequenceFlow sourceRef="catchInvitation1Error" targetRef="generateCancellationEmail"/>
         <sequenceFlow sourceRef="receiveRegistration1" targetRef="end"/>
         <sequenceFlow sourceRef="sendInvitation2" targetRef="receiveRegistration2"/>
         <sequenceFlow sourceRef="sendInvitation2Timeout" targetRef="generateRegistrationTimeoutEmail"/>
+        <sequenceFlow sourceRef="catchInvitation2Error" targetRef="generateCancellationEmail"/>
         <sequenceFlow sourceRef="receiveRegistration2" targetRef="end"/>
         <sequenceFlow sourceRef="generateRegistrationTimeoutEmail" targetRef="sendRegistrationTimeoutEmail"/>
         <sequenceFlow sourceRef="sendRegistrationTimeoutEmail" targetRef="end"/>
+        <sequenceFlow sourceRef="generateCancellationEmail" targetRef="sendCancellationEmail"/>
+        <sequenceFlow sourceRef="sendCancellationEmail" targetRef="end"/>
     </process>
 </definitions>
