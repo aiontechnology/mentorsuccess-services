@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2023 Aion Technology LLC
+ * Copyright 2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 
-/**
- * Entity that represents a leadership skill.
- *
- * @author Whitney Hunter
- * @since 0.1.0
- */
 @Entity
 @NoArgsConstructor
-public class LeadershipSkill extends AbstractReference {
+public class ActivityFocus extends AbstractReference {
 }

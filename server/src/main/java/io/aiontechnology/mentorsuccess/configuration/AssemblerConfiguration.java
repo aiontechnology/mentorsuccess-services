@@ -36,7 +36,6 @@ import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentTeacherAssemble
 import io.aiontechnology.mentorsuccess.api.assembler.impl.TeacherAssembler;
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.misc.AddressEntityToModelMapper;
 import io.aiontechnology.mentorsuccess.api.mapping.tomodel.misc.PhoneEntityToModelMapper;
-import io.aiontechnology.mentorsuccess.entity.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.Book;
 import io.aiontechnology.mentorsuccess.entity.Game;
 import io.aiontechnology.mentorsuccess.entity.Person;
@@ -44,11 +43,13 @@ import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.StudentActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.StudentBehavior;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.StudentLeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.StudentPersonRole;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
+import io.aiontechnology.mentorsuccess.entity.reference.ActivityFocus;
 import io.aiontechnology.mentorsuccess.entity.reference.Behavior;
 import io.aiontechnology.mentorsuccess.entity.reference.Interest;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
@@ -187,6 +188,7 @@ public class AssemblerConfiguration {
             Assembler<StudentSchoolSession, StudentTeacherResource> teacherAssembler,
             Assembler<StudentSchoolSession, StudentMentorResource> mentorAssembler,
             OneWayCollectionMapper<Interest, String> interestsMapper,
+            OneWayCollectionMapper<StudentActivityFocus, String> activityFocusMapper,
             OneWayCollectionMapper<StudentBehavior, String> behaviorsMapper,
             OneWayCollectionMapper<StudentLeadershipSkill, String> leadershipSkillsMapper,
             OneWayCollectionMapper<StudentLeadershipTrait, String> leadershipTraitsMapper,
@@ -195,6 +197,7 @@ public class AssemblerConfiguration {
                 .withSubMapper("teacher", teacherAssembler)
                 .withSubMapper("mentor", mentorAssembler)
                 .withSubMapper("interests", interestsMapper)
+                .withSubMapper("activityFocuses", activityFocusMapper)
                 .withSubMapper("behaviors", behaviorsMapper)
                 .withSubMapper("leadershipSkills", leadershipSkillsMapper)
                 .withSubMapper("leadershipTraits", leadershipTraitsMapper)

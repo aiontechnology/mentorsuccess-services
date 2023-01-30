@@ -88,6 +88,8 @@ public class InboundStudent implements Serializable {
     @Valid
     InboundStudentMentor mentor;
 
+    Set<String> activityFocuses;
+
     Set<String> behaviors;
 
     Set<String> interests;

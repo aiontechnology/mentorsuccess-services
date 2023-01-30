@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Aion Technology LLC
+ * Copyright 2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,53 +16,22 @@
 
 package io.aiontechnology.mentorsuccess.model.outbound.student;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
+import io.aiontechnology.mentorsuccess.model.outbound.OutboundTeacher;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.util.Collection;
-import java.util.Date;
 
-/**
- * Value object for outbound school sessions.
- *
- * @author Whitney Hunter
- * @since 1.8.0
- */
 @Value
 @EqualsAndHashCode
 @Builder(setterPrefix = "with")
-public class OutboundStudentSchoolSession {
+public class OutboundStudentActivityFocus {
 
-    Integer grade;
-
-    String preferredTime;
-
-    String actualTime;
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    Date startDate;
-
-    ResourceLocation location;
-
-    Boolean registrationSigned;
-
-    Boolean mediaReleaseSigned;
-
-    OutboundStudentTeacher teacher;
-
-    OutboundStudentMentor mentor;
-
+    /** The associated activity focuses */
     Collection<String> activityFocuses;
 
-    Collection<String> interests;
-
-    Collection<String> behaviors;
-
-    Collection<String> leadershipSkills;
-
-    Collection<String> leadershipTraits;
+    /** The URI of the associated person */
+    OutboundTeacher teacher;
 
 }

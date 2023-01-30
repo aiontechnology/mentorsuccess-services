@@ -87,6 +87,11 @@ public class StudentAssembler extends AssemblerSupport<Student, StudentResource>
                 .orElse(Collections.emptyList());
         resource.setInterests((Collection<String>) interests);
 
+        Object activityFocuses = getSubMapper("activityFocuses")
+                .map(studentSchoolSession.getStudentActivityFocuses())
+                .orElse(Collections.emptyList());
+        resource.setActivityFocuses((Collection<String>) activityFocuses);
+
         Object behaviors = getSubMapper("behaviors")
                 .map(studentSchoolSession.getStudentBehaviors())
                 .orElse(Collections.emptyList());
