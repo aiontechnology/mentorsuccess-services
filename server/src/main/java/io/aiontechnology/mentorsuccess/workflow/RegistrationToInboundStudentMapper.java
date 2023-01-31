@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.workflow;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.model.enumeration.ContactMethod;
+import io.aiontechnology.mentorsuccess.model.enumeration.ResourceLocation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundContact;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
@@ -48,6 +49,8 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
                                     !studentRegistration.getParentSignature().equals(""))
                             .withContacts(contacts)
                             .withTeacher(mapTeacher(studentRegistration))
+                            .withLocation(ResourceLocation.OFFLINE)
+                            .withMediaReleaseSigned(false)
                             .build();
 
                 });
