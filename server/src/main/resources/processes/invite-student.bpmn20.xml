@@ -17,6 +17,9 @@
 
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
              xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
+                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
@@ -68,10 +71,12 @@
             </documentation>
         </userTask>
 
-        <endEvent id="end">
-            <documentation>
-                The process is complete
-            </documentation>
+        <exclusiveGateway id="checkForCancel" name="Check for Cancellation"/>
+
+        <endEvent id="end"/>
+
+        <endEvent id="endWithError">
+            <errorEventDefinition errorRef="cancelProcess"/>
         </endEvent>
 
         <!-- Transitions -->
@@ -79,6 +84,12 @@
         <sequenceFlow sourceRef="start" targetRef="generateInvitationEmail"/>
         <sequenceFlow sourceRef="generateInvitationEmail" targetRef="sendInvitationEmail"/>
         <sequenceFlow sourceRef="sendInvitationEmail" targetRef="receiveRegistration"/>
-        <sequenceFlow sourceRef="receiveRegistration" targetRef="end"/>
+        <sequenceFlow sourceRef="receiveRegistration" targetRef="checkForCancel"/>
+        <sequenceFlow sourceRef="checkForCancel" targetRef="end">
+            <conditionExpression xsi:type="tFormalExpression">${shouldCancel == false}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow sourceRef="checkForCancel" targetRef="endWithError">
+            <conditionExpression xsi:type="tFormalExpression">${shouldCancel == true}</conditionExpression>
+        </sequenceFlow>
     </process>
 </definitions>

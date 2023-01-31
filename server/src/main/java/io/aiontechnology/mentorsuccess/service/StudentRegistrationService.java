@@ -41,6 +41,7 @@ import java.util.UUID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SHOULD_CANCEL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 
 @Service
@@ -63,6 +64,12 @@ public class StudentRegistrationService {
     private final SchoolService schoolService;
 
     private final StudentService studentService;
+
+    public void cancelRegistration(UUID processId) {
+        completeTask(processId, Map.of(
+                SHOULD_CANCEL, true
+        ));
+    }
 
     @Transactional
     public void createStudent(UUID schoolId, InboundStudent inboundStudent) {
@@ -113,7 +120,8 @@ public class StudentRegistrationService {
                     completeTask(processId, Map.of(
                             SCHOOL_ID, schoolId,
                             REGISTRATION, inboundStudentRegistration,
-                            STUDENT, student
+                            STUDENT, student,
+                            SHOULD_CANCEL, false
                     ));
                 });
 
