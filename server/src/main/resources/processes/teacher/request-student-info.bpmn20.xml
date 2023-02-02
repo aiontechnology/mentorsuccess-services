@@ -23,36 +23,34 @@
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
-    <process id="invite-student" name="Send and Receive Registration" isExecutable="true">
+    <process id="request-student-info" name="Request student information from a teacher" isExecutable="true">
 
         <!-- States -->
 
-        <startEvent id="start" flowable:initiator="initiator" flowable:formFieldValidation="true">
-            <documentation>
-                Start of process.
-            </documentation>
-        </startEvent>
+        <startEvent id="start"/>
 
-        <serviceTask id="generateInvitationEmail"
-                     name="Generate Invitation Email"
-                     flowable:delegateExpression="${invitationEmailGenerator}">
+        <exclusiveGateway id="checkForTeacher" name="Ensure that we have a valid teacher"/>
+
+        <serviceTask id="generateInfoRequestEmail"
+                     name="Generate Information Request Email"
+                     flowable:delegateExpression="${informationEmailGenerationTask}">
             <documentation>
-                Generate the email that should be sent to the parent.
+                Generate the email that should be sent to the teacher.
             </documentation>
         </serviceTask>
 
-        <serviceTask id="sendInvitationEmail"
-                     name="Send Invitation Email"
+        <serviceTask id="sendInfoRequestEmail"
+                     name="Send Information Request Email"
                      flowable:type="mail">
             <documentation>
                 Send the generated email to the parent.
             </documentation>
             <extensionElements>
                 <flowable:field name="to">
-                    <flowable:expression><![CDATA[${invitation.parent1EmailAddress}]]></flowable:expression>
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
                 </flowable:field>
                 <flowable:field name="from">
-                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
                 </flowable:field>
                 <flowable:field name="subject">
                     <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
@@ -63,33 +61,19 @@
             </extensionElements>
         </serviceTask>
 
-        <userTask id="receiveRegistration"
-                  name="Receive Registration"
-                  flowable:formFieldValidation="true">
-            <documentation>
-                Wait for the registration form to be submitted from the parent.
-            </documentation>
-        </userTask>
-
-        <exclusiveGateway id="checkForCancel" name="Check for Cancellation"/>
-
         <endEvent id="end"/>
-
-        <endEvent id="endWithError">
-            <errorEventDefinition errorRef="cancelProcess"/>
-        </endEvent>
 
         <!-- Transitions -->
 
-        <sequenceFlow sourceRef="start" targetRef="generateInvitationEmail"/>
-        <sequenceFlow sourceRef="generateInvitationEmail" targetRef="sendInvitationEmail"/>
-        <sequenceFlow sourceRef="sendInvitationEmail" targetRef="receiveRegistration"/>
-        <sequenceFlow sourceRef="receiveRegistration" targetRef="checkForCancel"/>
-        <sequenceFlow sourceRef="checkForCancel" targetRef="end">
-            <conditionExpression xsi:type="tFormalExpression">${shouldCancel == false}</conditionExpression>
+        <sequenceFlow sourceRef="start" targetRef="checkForTeacher"/>
+        <sequenceFlow sourceRef="checkForTeacher" targetRef="generateInfoRequestEmail">
+            <conditionExpression xsi:type="tFormalExpression">${teacher != null}</conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="checkForCancel" targetRef="endWithError">
-            <conditionExpression xsi:type="tFormalExpression">${shouldCancel == true}</conditionExpression>
+        <sequenceFlow sourceRef="checkForTeacher" targetRef="end">
+            <conditionExpression xsi:type="tFormalExpression">${teacher == null}</conditionExpression>
         </sequenceFlow>
+        <sequenceFlow sourceRef="generateInfoRequestEmail" targetRef="sendInfoRequestEmail"/>
+        <sequenceFlow sourceRef="sendInfoRequestEmail" targetRef="end"/>
+
     </process>
 </definitions>

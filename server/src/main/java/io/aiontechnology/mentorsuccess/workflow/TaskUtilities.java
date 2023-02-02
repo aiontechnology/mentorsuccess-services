@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 Aion Technology LLC
+ * Copyright 2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,26 +16,18 @@
 
 package io.aiontechnology.mentorsuccess.workflow;
 
-public class RegistrationWorkflowConstants {
+import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.stereotype.Service;
 
-    public static String EMAIL = "email";
+@Service
+public class TaskUtilities {
 
-    public static String INVITATION = "invitation";
-
-    public static String PROGRAM_ADMIN = "programAdmin";
-
-    public static String TEACHER = "teacher";
-
-    public static String TEACHERS = "teachers";
-
-    public static String REGISTRATION = "registration";
-
-    public static String REGISTRATION_TIMEOUT = "registrationTimeout";
-
-    public static String SCHOOL = "school";
-
-    public static String SHOULD_CANCEL = "shouldCancel";
-
-    public static String STUDENT = "student";
+    public <T> T getRequiredVariable(DelegateExecution execution, String variableName, Class<T> clazz) {
+        T value = execution.getVariable(variableName, clazz);
+        if (value == null) {
+            throw new IllegalStateException("Unable to find value for required variable: " + variableName);
+        }
+        return value;
+    }
 
 }

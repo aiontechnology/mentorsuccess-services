@@ -1,4 +1,4 @@
-# Copyright 2020-2021 Aion Technology LLC
+# Copyright 2020-2023 Aion Technology LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ flowable:
       host: email-smtp.us-west-2.amazonaws.com
       port: 587
       use-tls: true
+  process-definition-location-prefix: classpath*:/processes/**/
 
 spring:
   liquibase:

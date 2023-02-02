@@ -37,11 +37,11 @@
 <div>
     <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
     <p>
-        Dear ${programAdmin.name}
+        Dear ${programAdminName}
     </p>
     <p>
-        An invitation to join the MentorSuccess™ program has been cancelled by the parent. Please contact the parent
-        directly.
+        An invitation to join the MentorSuccess™ program has not been responded to for 14 days. The registration
+        has been cancelled. Please contact the parent directly.
     </p>
     <table>
         <thead>

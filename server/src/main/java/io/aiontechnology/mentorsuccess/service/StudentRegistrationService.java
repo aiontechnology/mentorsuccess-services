@@ -27,6 +27,7 @@ import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.task.api.TaskInfo;
@@ -40,7 +41,6 @@ import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SHOULD_CANCEL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 
@@ -72,9 +72,9 @@ public class StudentRegistrationService {
     }
 
     @Transactional
-    public void createStudent(UUID schoolId, InboundStudent inboundStudent) {
-        schoolService.getSchoolById(schoolId)
-                .ifPresent(school -> {
+    public Optional<Pair<Student, StudentSchoolSession>> createStudent(UUID schoolId, InboundStudent inboundStudent) {
+        return schoolService.getSchoolById(schoolId)
+                .map(school -> {
                     SchoolSession currentSession = school.getCurrentSession();
 
                     Student student = studentModelToEntityMapper.map(inboundStudent)
@@ -87,6 +87,8 @@ public class StudentRegistrationService {
                     student.addStudentSession(studentSchoolSession);
                     school.addStudent(student);
                     studentService.updateStudent(student);
+
+                    return Pair.of(student, studentSchoolSession);
                 });
     }
 
@@ -118,7 +120,6 @@ public class StudentRegistrationService {
         studentRegistrationToStudentMapper.map(inboundStudentRegistration)
                 .ifPresent(student -> {
                     completeTask(processId, Map.of(
-                            SCHOOL_ID, schoolId,
                             REGISTRATION, inboundStudentRegistration,
                             STUDENT, student,
                             SHOULD_CANCEL, false
