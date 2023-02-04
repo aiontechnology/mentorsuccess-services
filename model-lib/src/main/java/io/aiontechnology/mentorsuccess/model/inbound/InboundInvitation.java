@@ -52,4 +52,8 @@ public class InboundInvitation implements Serializable {
     @Size(max = 50, message = "{registration.student.lastname.size}")
     String studentLastName;
 
+    public String getStudentFullName() {
+        return studentFirstName + " " + studentLastName;
+    }
+
 }

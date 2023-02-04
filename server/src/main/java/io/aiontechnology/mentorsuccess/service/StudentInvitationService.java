@@ -26,13 +26,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.EMAIL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 
 @Service
@@ -46,35 +44,23 @@ public class StudentInvitationService {
     private final RuntimeService runtimeService;
 
     public void invite(InboundInvitation invitation, School school) {
-        Map<String, Object> variables = setProcessVariables(invitation, school);
-        runtimeService.startProcessInstanceByKey("student-registration", variables);
+        runtimeService.startProcessInstanceByKey("register-student", createProcessVariables(invitation, school));
     }
 
-    private Map<String, Object> getEmailConfiguration() {
+    private Map<String, Object> createProcessVariables(InboundInvitation invitation, School school) {
         return Map.of(
-                "subject", "His Heart Foundation - MentorSuccess™ Student Registration",
-                "timeout", "P7D"
+                SCHOOL, school,
+                PROGRAM_ADMIN, getProgramAdminInfo(school),
+                INVITATION, invitation,
+                REGISTRATION_TIMEOUT, "P7D"
         );
     }
 
-    private Map<String, Object> getProgramAdminInfo(School school) {
-        Optional<Person> programAdmin = school.getRoles().stream()
+    private Person getProgramAdminInfo(School school) {
+        return school.getRoles().stream()
                 .filter(role -> role.getType().equals(RoleType.PROGRAM_ADMIN))
-                .findFirst().map(role -> role.getPerson());
-        return Map.of(
-                "name", programAdmin.map(person -> person.getFullName()).orElse(""),
-                "email", programAdmin.map(person -> person.getEmail()).orElse("do-not-reply@mentorsuccesskids.com"),
-                "phone", programAdmin.map(person -> person.getCellPhone()).map(phoneService::format).orElse("")
-        );
-    }
-
-    private Map<String, Object> setProcessVariables(InboundInvitation invitation, School school) {
-        Map<String, Object> variables = new HashMap<>();
-        variables.put(SCHOOL, school);
-        variables.put(PROGRAM_ADMIN, getProgramAdminInfo(school));
-        variables.put(INVITATION, invitation);
-        variables.put(EMAIL, getEmailConfiguration());
-        return variables;
+                .findFirst().map(role -> role.getPerson())
+                .orElse(null);
     }
 
 }

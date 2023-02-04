@@ -21,16 +21,12 @@
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
     <error id="cancelProcess" errorCode="cancelProcess"/>
-    <process id="student-registration" name="Student Registration" isExecutable="true">
+    <process id="register-student" name="Student Registration" isExecutable="true">
         <documentation>MentorSuccess student registration process</documentation>
 
         <!-- States -->
 
-        <startEvent id="start" flowable:initiator="initiator" flowable:formFieldValidation="true">
-            <documentation>
-                Start the process which invites a parent to register their student into the MentorSuccess program.
-            </documentation>
-        </startEvent>
+        <startEvent id="start"/>
 
         <callActivity id="sendInvitation1"
                       name="Send Invitation 1"
@@ -39,8 +35,6 @@
                 <flowable:in source="school" target="school"/>
                 <flowable:in source="programAdmin" target="programAdmin"/>
                 <flowable:in source="invitation" target="invitation"/>
-                <flowable:in source="email" target="email"/>
-                <flowable:out source="schoolId" target="schoolId"/>
                 <flowable:out source="registration" target="registration"/>
                 <flowable:out source="student" target="student"/>
             </extensionElements>
@@ -50,12 +44,12 @@
                       name="Receive Registration 1"
                       calledElement="register-and-notify">
             <extensionElements>
-                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="school" target="school"/>
                 <flowable:in source="student" target="student"/>
-                <flowable:in source="registration" target="registration"/>
-                <flowable:in source="invitation" target="invitation"/>
                 <flowable:in source="programAdmin" target="programAdmin"/>
-                <flowable:in source="email" target="email"/>
+                <flowable:in source="registration" target="registration"/>
+                <flowable:out source="teacher" target="teacher"/>
+                <flowable:out source="student" target="student"/>
             </extensionElements>
         </callActivity>
 
@@ -66,11 +60,12 @@
                 responded within a seven-day timeframe.
             </documentation>
             <timerEventDefinition>
-                <timeDuration>${email.timeout}</timeDuration>
+                <timeDuration>${registrationTimeout}</timeDuration>
             </timerEventDefinition>
         </boundaryEvent>
 
-        <boundaryEvent id="catchInvitation1Error" attachedToRef="sendInvitation1">
+        <boundaryEvent id="catchInvitation1Error"
+                       attachedToRef="sendInvitation1">
             <errorEventDefinition errorRef="cancelProcess"/>
         </boundaryEvent>
 
@@ -81,8 +76,6 @@
                 <flowable:in source="school" target="school"/>
                 <flowable:in source="programAdmin" target="programAdmin"/>
                 <flowable:in source="invitation" target="invitation"/>
-                <flowable:in source="email" target="email"/>
-                <flowable:out source="schoolId" target="schoolId"/>
                 <flowable:out source="registration" target="registration"/>
                 <flowable:out source="student" target="student"/>
             </extensionElements>
@@ -92,12 +85,12 @@
                       name="Receive Registration 2"
                       calledElement="register-and-notify">
             <extensionElements>
-                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="school" target="school"/>
                 <flowable:in source="student" target="student"/>
-                <flowable:in source="registration" target="registration"/>
-                <flowable:in source="invitation" target="invitation"/>
                 <flowable:in source="programAdmin" target="programAdmin"/>
-                <flowable:in source="email" target="email"/>
+                <flowable:in source="registration" target="registration"/>
+                <flowable:out source="teacher" target="teacher"/>
+                <flowable:out source="student" target="student"/>
             </extensionElements>
         </callActivity>
 
@@ -108,17 +101,18 @@
                 within a seven-day timeframe.
             </documentation>
             <timerEventDefinition>
-                <timeDuration>${email.timeout}</timeDuration>
+                <timeDuration>${registrationTimeout}</timeDuration>
             </timerEventDefinition>
         </boundaryEvent>
 
-        <boundaryEvent id="catchInvitation2Error" attachedToRef="sendInvitation2">
+        <boundaryEvent id="catchInvitation2Error"
+                       attachedToRef="sendInvitation2">
             <errorEventDefinition errorRef="cancelProcess"/>
         </boundaryEvent>
 
         <serviceTask id="generateRegistrationTimeoutEmail"
                      name="Generate Parent Registration Timeout Email"
-                     flowable:delegateExpression="${invitationEmailGeneratorTimeout}">
+                     flowable:delegateExpression="${invitationEmailGenerationTimeoutTask}">
             <documentation>
                 Generate an email to inform the program administrator that a student registration workflow has timed out
             </documentation>
@@ -132,13 +126,13 @@
             </documentation>
             <extensionElements>
                 <flowable:field name="to">
-                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
                 </flowable:field>
-                <flowable:field name="from" stringValue="do-not-reply@mentorsuccesskids.com"/>
+                <flowable:field name="from">
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
+                </flowable:field>
                 <flowable:field name="subject">
-                    <flowable:expression>
-                        <![CDATA[Registration timed out for ${invitation.studentFirstName} ${invitation.studentLastName}]]>
-                    </flowable:expression>
+                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
                 </flowable:field>
                 <flowable:field name="html">
                     <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
@@ -148,7 +142,7 @@
 
         <serviceTask id="generateCancellationEmail"
                      name="Generate Process Cancellation Email"
-                     flowable:delegateExpression="${invitationCancellationGenerator}">
+                     flowable:delegateExpression="${invitationEmailGenerationCancellationTask}">
             <documentation>
                 Generate an email to inform the program administrator that the student registration has been cancelled.
             </documentation>
@@ -162,13 +156,13 @@
             </documentation>
             <extensionElements>
                 <flowable:field name="to">
-                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
                 </flowable:field>
-                <flowable:field name="from" stringValue="do-not-reply@mentorsuccesskids.com"/>
+                <flowable:field name="from">
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
+                </flowable:field>
                 <flowable:field name="subject">
-                    <flowable:expression>
-                        <![CDATA[Registration cancelled for ${invitation.studentFirstName} ${invitation.studentLastName}]]>
-                    </flowable:expression>
+                    <flowable:expression> <![CDATA[${email.subject}]]> </flowable:expression>
                 </flowable:field>
                 <flowable:field name="html">
                     <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
@@ -176,11 +170,15 @@
             </extensionElements>
         </serviceTask>
 
-        <endEvent id="end">
+        <serviceTask id="startTeacherInfoProcessTask"
+                     name="Start the teacher information process"
+                     flowable:delegateExpression="${startTeacherInfoProcess}">
             <documentation>
-                The process is complete
+                Start the Request Student Information process
             </documentation>
-        </endEvent>
+        </serviceTask>
+
+        <endEvent id="end"/>
 
         <!-- Transitions -->
 
@@ -188,14 +186,15 @@
         <sequenceFlow sourceRef="sendInvitation1" targetRef="receiveRegistration1"/>
         <sequenceFlow sourceRef="sendInvitation1Timeout" targetRef="sendInvitation2"/>
         <sequenceFlow sourceRef="catchInvitation1Error" targetRef="generateCancellationEmail"/>
-        <sequenceFlow sourceRef="receiveRegistration1" targetRef="end"/>
+        <sequenceFlow sourceRef="receiveRegistration1" targetRef="startTeacherInfoProcessTask"/>
         <sequenceFlow sourceRef="sendInvitation2" targetRef="receiveRegistration2"/>
         <sequenceFlow sourceRef="sendInvitation2Timeout" targetRef="generateRegistrationTimeoutEmail"/>
         <sequenceFlow sourceRef="catchInvitation2Error" targetRef="generateCancellationEmail"/>
-        <sequenceFlow sourceRef="receiveRegistration2" targetRef="end"/>
+        <sequenceFlow sourceRef="receiveRegistration2" targetRef="startTeacherInfoProcessTask"/>
         <sequenceFlow sourceRef="generateRegistrationTimeoutEmail" targetRef="sendRegistrationTimeoutEmail"/>
         <sequenceFlow sourceRef="sendRegistrationTimeoutEmail" targetRef="end"/>
         <sequenceFlow sourceRef="generateCancellationEmail" targetRef="sendCancellationEmail"/>
         <sequenceFlow sourceRef="sendCancellationEmail" targetRef="end"/>
+        <sequenceFlow sourceRef="startTeacherInfoProcessTask" targetRef="end"/>
     </process>
 </definitions>

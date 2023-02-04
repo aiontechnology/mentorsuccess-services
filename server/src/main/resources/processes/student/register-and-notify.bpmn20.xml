@@ -27,11 +27,7 @@
 
         <!-- States -->
 
-        <startEvent id="start" flowable:formFieldValidation="true">
-            <documentation>
-                Start the process which invites a parent to register their student into the MentorSuccess program.
-            </documentation>
-        </startEvent>
+        <startEvent id="start"/>
 
         <parallelGateway id="splitFlow">
             <documentation>
@@ -55,7 +51,7 @@
 
         <serviceTask id="generateRegistrationCompleteEmail"
                      name="Generate Registration Complete Email"
-                     flowable:delegateExpression="${registrationCompleteEmailGenerator}">
+                     flowable:delegateExpression="${registrationCompleteEmailGenerationTask}">
             <documentation>
                 Generate an email that will be sent to the program administrator to notify him/her that a student has
                 been registered into the program by a parent.
@@ -70,15 +66,13 @@
             </documentation>
             <extensionElements>
                 <flowable:field name="to">
-                    <flowable:expression><![CDATA[${programAdmin.email}]]></flowable:expression>
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
                 </flowable:field>
                 <flowable:field name="from">
-                    <flowable:string><![CDATA[do-not-reply@mentorsuccesskids.com]]></flowable:string>
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
                 </flowable:field>
                 <flowable:field name="subject">
-                    <flowable:expression>
-                        <![CDATA[Completed Registration: ${invitation.studentFirstName} ${invitation.studentLastName}]]>
-                    </flowable:expression>
+                    <flowable:expression> <![CDATA[${email.subject}]]> </flowable:expression>
                 </flowable:field>
                 <flowable:field name="html">
                     <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
@@ -86,11 +80,7 @@
             </extensionElements>
         </serviceTask>
 
-        <endEvent id="end">
-            <documentation>
-                The process is complete
-            </documentation>
-        </endEvent>
+        <endEvent id="end"/>
 
         <!-- Transitions -->
 

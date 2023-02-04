@@ -14,32 +14,39 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.workflow.registration;
+package io.aiontechnology.mentorsuccess.workflow.student;
 
+import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
+import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER;
 
-@Service("studentRegistrationStoreStudentTask")
+@Service
 @RequiredArgsConstructor
 public class StudentRegistrationStoreStudentTask implements JavaDelegate {
 
     private final StudentRegistrationService studentRegistrationService;
 
+    private final TaskUtilities taskUtilities;
+
     @Override
     public void execute(DelegateExecution execution) {
-        UUID schoolId = execution.getVariable(SCHOOL_ID, UUID.class);
-        InboundStudent student = execution.getVariable(STUDENT, InboundStudent.class);
+        School school = taskUtilities.getRequiredVariable(execution, SCHOOL, School.class);
+        InboundStudent student = taskUtilities.getRequiredVariable(execution, STUDENT, InboundStudent.class);
 
-        studentRegistrationService.createStudent(schoolId, student);
+        studentRegistrationService.createStudent(school.getId(), student)
+                .ifPresent(pair -> {
+                    execution.setVariable(TEACHER, pair.getRight().getTeacher().getPerson());
+                    execution.setVariable(STUDENT, pair.getLeft());
+                });
     }
 
 }
