@@ -16,6 +16,7 @@
 
 package io.aiontechnology.mentorsuccess.workflow.student;
 
+import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
@@ -44,7 +45,10 @@ public class StudentRegistrationStoreStudentTask implements JavaDelegate {
 
         studentRegistrationService.createStudent(school.getId(), student)
                 .ifPresent(pair -> {
-                    execution.setVariable(TEACHER, pair.getRight().getTeacher().getPerson());
+                    Person teacher = pair.getRight().getTeacher() != null
+                            ? pair.getRight().getTeacher().getPerson()
+                            : null;
+                    execution.setVariable(TEACHER, teacher);
                     execution.setVariable(STUDENT, pair.getLeft());
                 });
     }

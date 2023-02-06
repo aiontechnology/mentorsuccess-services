@@ -17,11 +17,16 @@
 
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
              xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
     <error id="cancelProcess" errorCode="cancelProcess"/>
-    <process id="register-student" name="Student Registration" isExecutable="true">
+    <process id="register-student" name="Student: Full Registration" isExecutable="true">
         <documentation>MentorSuccess student registration process</documentation>
 
         <!-- States -->
@@ -182,19 +187,197 @@
 
         <!-- Transitions -->
 
-        <sequenceFlow sourceRef="start" targetRef="sendInvitation1"/>
-        <sequenceFlow sourceRef="sendInvitation1" targetRef="receiveRegistration1"/>
-        <sequenceFlow sourceRef="sendInvitation1Timeout" targetRef="sendInvitation2"/>
-        <sequenceFlow sourceRef="catchInvitation1Error" targetRef="generateCancellationEmail"/>
-        <sequenceFlow sourceRef="receiveRegistration1" targetRef="startTeacherInfoProcessTask"/>
-        <sequenceFlow sourceRef="sendInvitation2" targetRef="receiveRegistration2"/>
-        <sequenceFlow sourceRef="sendInvitation2Timeout" targetRef="generateRegistrationTimeoutEmail"/>
-        <sequenceFlow sourceRef="catchInvitation2Error" targetRef="generateCancellationEmail"/>
-        <sequenceFlow sourceRef="receiveRegistration2" targetRef="startTeacherInfoProcessTask"/>
-        <sequenceFlow sourceRef="generateRegistrationTimeoutEmail" targetRef="sendRegistrationTimeoutEmail"/>
-        <sequenceFlow sourceRef="sendRegistrationTimeoutEmail" targetRef="end"/>
-        <sequenceFlow sourceRef="generateCancellationEmail" targetRef="sendCancellationEmail"/>
-        <sequenceFlow sourceRef="sendCancellationEmail" targetRef="end"/>
-        <sequenceFlow sourceRef="startTeacherInfoProcessTask" targetRef="end"/>
+        <sequenceFlow id="startToSendInvitation1"
+                      sourceRef="start"
+                      targetRef="sendInvitation1"/>
+        <sequenceFlow id="sendInvitation1ToReceiveRegistration1"
+                      sourceRef="sendInvitation1"
+                      targetRef="receiveRegistration1"/>
+        <sequenceFlow id="sendInvitation1TimeoutToSendInvitation2"
+                      sourceRef="sendInvitation1Timeout"
+                      targetRef="sendInvitation2"/>
+        <sequenceFlow id="catchInvitation1ErrorToGenerateCancellationEmail"
+                      sourceRef="catchInvitation1Error"
+                      targetRef="generateCancellationEmail"/>
+        <sequenceFlow id="receiveRegistration1ToStartTeacherInfoProcessTack"
+                      sourceRef="receiveRegistration1"
+                      targetRef="startTeacherInfoProcessTask"/>
+        <sequenceFlow id="sendInvitation2ToReceiveRegistration2"
+                      sourceRef="sendInvitation2"
+                      targetRef="receiveRegistration2"/>
+        <sequenceFlow id="sendInvitation2TimeoutToGenerateRegistrationTimeoutEmail"
+                      sourceRef="sendInvitation2Timeout"
+                      targetRef="generateRegistrationTimeoutEmail"/>
+        <sequenceFlow id="catchInvitation2ErrorToGenerateCancellationEmail"
+                      sourceRef="catchInvitation2Error"
+                      targetRef="generateCancellationEmail"/>
+        <sequenceFlow id="receiveRegistration2ToStartTeacherInfoProcessTask"
+                      sourceRef="receiveRegistration2"
+                      targetRef="startTeacherInfoProcessTask"/>
+        <sequenceFlow id="generateRegistrationTimeoutEmailToSendRegistrationTimeoutEmail"
+                      sourceRef="generateRegistrationTimeoutEmail"
+                      targetRef="sendRegistrationTimeoutEmail"/>
+        <sequenceFlow id="sendRegistrationTimeoutEmailToEnd"
+                      sourceRef="sendRegistrationTimeoutEmail"
+                      targetRef="end"/>
+        <sequenceFlow id="generateCancellationEmailToSendCancellationEmail"
+                      sourceRef="generateCancellationEmail"
+                      targetRef="sendCancellationEmail"/>
+        <sequenceFlow id="sendCancellationEmailToEnd"
+                      sourceRef="sendCancellationEmail"
+                      targetRef="end"/>
+        <sequenceFlow id="startTeacherInfoProcessTaskToEnd"
+                      sourceRef="startTeacherInfoProcessTask"
+                      targetRef="end"/>
     </process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_register-student">
+        <bpmndi:BPMNPlane bpmnElement="register-student" id="BPMNPlane_register-student">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="60.0" y="90.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendInvitation1" id="BPMNShape_sendInvitation1">
+                <omgdc:Bounds height="60.0" width="100.0" x="285.0" y="75.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveRegistration1" id="BPMNShape_receiveRegistration1">
+                <omgdc:Bounds height="60.0" width="100.0" x="570.0" y="75.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendInvitation1Timeout" id="BPMNShape_sendInvitation1Timeout">
+                <omgdc:Bounds height="31.0" width="31.0" x="350.20710678118655" y="120.20710678118655"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendInvitation2" id="BPMNShape_sendInvitation2">
+                <omgdc:Bounds height="60.0" width="100.0" x="315.70710678118655" y="240.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveRegistration2" id="BPMNShape_receiveRegistration2">
+                <omgdc:Bounds height="60.0" width="100.0" x="570.0" y="240.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendInvitation2Timeout" id="BPMNShape_sendInvitation2Timeout">
+                <omgdc:Bounds height="31.0" width="31.0" x="380.9142135623731" y="285.20710678118655"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="generateRegistrationTimeoutEmail"
+                              id="BPMNShape_generateRegistrationTimeoutEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="346.4142135623731" y="390.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendRegistrationTimeoutEmail" id="BPMNShape_sendRegistrationTimeoutEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="570.0" y="390.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="generateCancellationEmail" id="BPMNShape_generateCancellationEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="90.0" y="525.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendCancellationEmail" id="BPMNShape_sendCancellationEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="570.0" y="525.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="startTeacherInfoProcessTask" id="BPMNShape_startTeacherInfoProcessTask">
+                <omgdc:Bounds height="60.0" width="100.0" x="765.0" y="150.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="990.0" y="166.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="catchInvitation1Error" id="BPMNShape_catchInvitation1Error">
+                <omgdc:Bounds height="30.0" width="30.0" x="291.1824833681626" y="120.38938117539217"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="catchInvitation2Error" id="BPMNShape_catchInvitation2Error">
+                <omgdc:Bounds height="30.0" width="30.0" x="317.7641902965711" y="285.16853413969164"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="sendInvitation1ToReceiveRegistration1"
+                             id="BPMNEdge_sendInvitation1ToReceiveRegistration1" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="384.94999999998305" y="105.0"></omgdi:waypoint>
+                <omgdi:waypoint x="570.0" y="105.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendInvitation2TimeoutToGenerateRegistrationTimeoutEmail"
+                             id="BPMNEdge_sendInvitation2TimeoutToGenerateRegistrationTimeoutEmail"
+                             flowable:sourceDockerX="15.500000000000002" flowable:sourceDockerY="15.500000000000002"
+                             flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="396.4142135623731" y="316.157105454287"></omgdi:waypoint>
+                <omgdi:waypoint x="396.4142135623731" y="390.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="startToSendInvitation1" id="BPMNEdge_startToSendInvitation1"
+                             flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="89.9499997295667" y="105.0"></omgdi:waypoint>
+                <omgdi:waypoint x="285.0" y="105.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="generateRegistrationTimeoutEmailToSendRegistrationTimeoutEmail"
+                             id="BPMNEdge_generateRegistrationTimeoutEmailToSendRegistrationTimeoutEmail"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="446.36421356237315" y="420.0"></omgdi:waypoint>
+                <omgdi:waypoint x="570.0" y="420.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveRegistration1ToStartTeacherInfoProcessTack"
+                             id="BPMNEdge_receiveRegistration1ToStartTeacherInfoProcessTack"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="669.9499999999944" y="105.0"></omgdi:waypoint>
+                <omgdi:waypoint x="815.0" y="105.0"></omgdi:waypoint>
+                <omgdi:waypoint x="815.0" y="150.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveRegistration2ToStartTeacherInfoProcessTask"
+                             id="BPMNEdge_receiveRegistration2ToStartTeacherInfoProcessTask"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="669.9499999999803" y="270.0"></omgdi:waypoint>
+                <omgdi:waypoint x="815.0" y="270.0"></omgdi:waypoint>
+                <omgdi:waypoint x="815.0" y="209.95000000000002"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="generateCancellationEmailToSendCancellationEmail"
+                             id="BPMNEdge_generateCancellationEmailToSendCancellationEmail"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="189.95" y="555.0"></omgdi:waypoint>
+                <omgdi:waypoint x="570.0" y="555.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="startTeacherInfoProcessTaskToEnd"
+                             id="BPMNEdge_startTeacherInfoProcessTaskToEnd" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="864.9499999999999" y="180.0"></omgdi:waypoint>
+                <omgdi:waypoint x="990.0" y="180.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="catchInvitation1ErrorToGenerateCancellationEmail"
+                             id="BPMNEdge_catchInvitation1ErrorToGenerateCancellationEmail"
+                             flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="292.5570322247531" y="141.64981674378149"></omgdi:waypoint>
+                <omgdi:waypoint x="140.0" y="212.0"></omgdi:waypoint>
+                <omgdi:waypoint x="140.0" y="525.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendInvitation2ToReceiveRegistration2"
+                             id="BPMNEdge_sendInvitation2ToReceiveRegistration2" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="415.6571067811866" y="270.0"></omgdi:waypoint>
+                <omgdi:waypoint x="570.0" y="270.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendInvitation1TimeoutToSendInvitation2"
+                             id="BPMNEdge_sendInvitation1TimeoutToSendInvitation2"
+                             flowable:sourceDockerX="15.500000000000002" flowable:sourceDockerY="15.500000000000002"
+                             flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="365.70710678118655" y="151.1571057340578"></omgdi:waypoint>
+                <omgdi:waypoint x="365.70710678118655" y="240.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendRegistrationTimeoutEmailToEnd"
+                             id="BPMNEdge_sendRegistrationTimeoutEmailToEnd" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="669.9499999999505" y="420.0"></omgdi:waypoint>
+                <omgdi:waypoint x="850.5" y="420.0"></omgdi:waypoint>
+                <omgdi:waypoint x="996.4558028387394" y="191.75336067764115"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="catchInvitation2ErrorToGenerateCancellationEmail"
+                             id="BPMNEdge_catchInvitation2ErrorToGenerateCancellationEmail"
+                             flowable:sourceDockerX="14.999999999999998" flowable:sourceDockerY="15.0"
+                             flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="321.41972992692826" y="309.94960843648073"></omgdi:waypoint>
+                <omgdi:waypoint x="292.5" y="335.0"></omgdi:waypoint>
+                <omgdi:waypoint x="140.0" y="361.0"></omgdi:waypoint>
+                <omgdi:waypoint x="140.0" y="525.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendCancellationEmailToEnd" id="BPMNEdge_sendCancellationEmailToEnd"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="669.9499999995019" y="555.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1004.0" y="555.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1004.0" y="193.94991867595243"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
 </definitions>

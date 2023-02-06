@@ -25,7 +25,7 @@
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
-    <process id="register-and-notify" name="Student: Register Student And Notify PA" isExecutable="true">
+    <process id="record-and-notify" name="Teacher: Record Student Info And Notify PA" isExecutable="true">
         <documentation>
             Persist the newly registered student into the database and email the program administrator.
         </documentation>
@@ -48,22 +48,22 @@
 
         <serviceTask id="persistStudentInformation"
                      name="Persist Student Information"
-                     flowable:delegateExpression="${studentRegistrationStoreStudentTask}">
+                     flowable:delegateExpression="${studentInformationStoreTask}">
             <documentation>
                 Persist the student information into the database.
             </documentation>
         </serviceTask>
 
-        <serviceTask id="generateRegistrationCompleteEmail"
+        <serviceTask id="generateInfoSubmissionCompleteEmail"
                      name="Generate Registration Complete Email"
-                     flowable:delegateExpression="${registrationCompleteEmailGenerationTask}">
+                     flowable:delegateExpression="${studentInformationCompleteEmailGenerationTask}">
             <documentation>
                 Generate an email that will be sent to the program administrator to notify him/her that a student has
                 been registered into the program by a parent.
             </documentation>
         </serviceTask>
 
-        <serviceTask id="sendRegistrationCompleteEmail"
+        <serviceTask id="sendInfoSubmissionCompleteEmail"
                      name="Send the PA Notification Email"
                      flowable:type="mail">
             <documentation>
@@ -95,93 +95,94 @@
         <sequenceFlow id="splitFlowToPersistStudentInformation"
                       sourceRef="splitFlow"
                       targetRef="persistStudentInformation"/>
-        <sequenceFlow id="splitFlowToGenerateRegistrationCompleteEmail"
+        <sequenceFlow id="splitFlowToGenerateInfoSubmissionCompleteEmail"
                       sourceRef="splitFlow"
-                      targetRef="generateRegistrationCompleteEmail"/>
-        <sequenceFlow id="generateRegistrationCompleteEmailToSendRegistrationCompleteEmail"
-                      sourceRef="generateRegistrationCompleteEmail"
-                      targetRef="sendRegistrationCompleteEmail"/>
+                      targetRef="generateInfoSubmissionCompleteEmail"/>
+        <sequenceFlow id="generateRegistrationCompleteEmailToSendInfoSubmissionCompleteEmail"
+                      sourceRef="generateInfoSubmissionCompleteEmail"
+                      targetRef="sendInfoSubmissionCompleteEmail"/>
         <sequenceFlow id="persistStudentInformationToJoinFlow"
                       sourceRef="persistStudentInformation"
                       targetRef="joinFlow"/>
         <sequenceFlow id="sendRegistrationCompleteEmailToJoinFlow"
-                      sourceRef="sendRegistrationCompleteEmail"
+                      sourceRef="sendInfoSubmissionCompleteEmail"
                       targetRef="joinFlow"/>
         <sequenceFlow id="joinFlowToEnd"
                       sourceRef="joinFlow"
                       targetRef="end"/>
     </process>
 
-    <bpmndi:BPMNDiagram id="BPMNDiagram_register-and-notify">
-        <bpmndi:BPMNPlane bpmnElement="register-and-notify" id="BPMNPlane_register-and-notify">
+    <bpmndi:BPMNDiagram id="BPMNDiagram_record-and-notify">
+        <bpmndi:BPMNPlane bpmnElement="record-and-notify" id="BPMNPlane_record-and-notify">
             <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
-                <omgdc:Bounds height="30.0" width="30.0" x="75.0" y="175.0"></omgdc:Bounds>
+                <omgdc:Bounds height="30.0" width="30.0" x="135.0" y="185.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="splitFlow" id="BPMNShape_splitFlow">
-                <omgdc:Bounds height="40.0" width="40.0" x="155.0" y="170.0"></omgdc:Bounds>
+                <omgdc:Bounds height="40.0" width="40.0" x="215.0" y="180.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="joinFlow" id="BPMNShape_joinFlow">
-                <omgdc:Bounds height="40.0" width="40.0" x="545.0" y="170.0"></omgdc:Bounds>
+                <omgdc:Bounds height="40.0" width="40.0" x="705.0" y="165.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="persistStudentInformation" id="BPMNShape_persistStudentInformation">
-                <omgdc:Bounds height="60.0" width="100.0" x="345.0" y="80.0"></omgdc:Bounds>
+                <omgdc:Bounds height="60.0" width="100.0" x="435.0" y="60.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="generateRegistrationCompleteEmail"
-                              id="BPMNShape_generateRegistrationCompleteEmail">
-                <omgdc:Bounds height="60.0" width="100.0" x="245.0" y="240.0"></omgdc:Bounds>
+            <bpmndi:BPMNShape bpmnElement="generateInfoSubmissionCompleteEmail"
+                              id="BPMNShape_generateInfoSubmissionCompleteEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="345.0" y="270.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
-            <bpmndi:BPMNShape bpmnElement="sendRegistrationCompleteEmail" id="BPMNShape_sendRegistrationCompleteEmail">
-                <omgdc:Bounds height="60.0" width="100.0" x="435.0" y="240.0"></omgdc:Bounds>
+            <bpmndi:BPMNShape bpmnElement="sendInfoSubmissionCompleteEmail"
+                              id="BPMNShape_sendInfoSubmissionCompleteEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="555.0" y="270.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
-                <omgdc:Bounds height="28.0" width="28.0" x="645.0" y="176.0"></omgdc:Bounds>
+                <omgdc:Bounds height="28.0" width="28.0" x="840.0" y="171.0"></omgdc:Bounds>
             </bpmndi:BPMNShape>
             <bpmndi:BPMNEdge bpmnElement="splitFlowToPersistStudentInformation"
                              id="BPMNEdge_splitFlowToPersistStudentInformation" flowable:sourceDockerX="20.0"
                              flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
-                <omgdi:waypoint x="194.91892523364484" y="190.0"></omgdi:waypoint>
-                <omgdi:waypoint x="207.0" y="190.0"></omgdi:waypoint>
-                <omgdi:waypoint x="207.0" y="110.0"></omgdi:waypoint>
-                <omgdi:waypoint x="345.0" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="254.91892523364453" y="200.0"></omgdi:waypoint>
+                <omgdi:waypoint x="267.0" y="200.0"></omgdi:waypoint>
+                <omgdi:waypoint x="267.0" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="435.0" y="90.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="generateRegistrationCompleteEmailToSendInfoSubmissionCompleteEmail"
+                             id="BPMNEdge_generateRegistrationCompleteEmailToSendInfoSubmissionCompleteEmail"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="444.95000000000005" y="300.0"></omgdi:waypoint>
+                <omgdi:waypoint x="555.0" y="300.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="startToSplitFlow" id="BPMNEdge_startToSplitFlow" flowable:sourceDockerX="15.0"
                              flowable:sourceDockerY="15.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
-                <omgdi:waypoint x="104.94999747176031" y="190.0"></omgdi:waypoint>
-                <omgdi:waypoint x="155.0" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="164.94999747176033" y="200.0"></omgdi:waypoint>
+                <omgdi:waypoint x="215.0" y="200.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="joinFlowToEnd" id="BPMNEdge_joinFlowToEnd" flowable:sourceDockerX="20.0"
                              flowable:sourceDockerY="20.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
-                <omgdi:waypoint x="584.9393995749138" y="190.0"></omgdi:waypoint>
-                <omgdi:waypoint x="645.0" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="744.942273431355" y="185.0"></omgdi:waypoint>
+                <omgdi:waypoint x="840.0" y="185.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="splitFlowToGenerateRegistrationCompleteEmail"
-                             id="BPMNEdge_splitFlowToGenerateRegistrationCompleteEmail" flowable:sourceDockerX="20.0"
+            <bpmndi:BPMNEdge bpmnElement="splitFlowToGenerateInfoSubmissionCompleteEmail"
+                             id="BPMNEdge_splitFlowToGenerateInfoSubmissionCompleteEmail" flowable:sourceDockerX="20.0"
                              flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
-                <omgdi:waypoint x="194.91892523364484" y="190.0"></omgdi:waypoint>
-                <omgdi:waypoint x="207.0" y="190.0"></omgdi:waypoint>
-                <omgdi:waypoint x="207.0" y="270.0"></omgdi:waypoint>
-                <omgdi:waypoint x="244.99999999997692" y="270.0"></omgdi:waypoint>
+                <omgdi:waypoint x="254.91892523364453" y="200.0"></omgdi:waypoint>
+                <omgdi:waypoint x="267.0" y="200.0"></omgdi:waypoint>
+                <omgdi:waypoint x="267.0" y="300.0"></omgdi:waypoint>
+                <omgdi:waypoint x="344.999999999966" y="300.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="persistStudentInformationToJoinFlow"
                              id="BPMNEdge_persistStudentInformationToJoinFlow" flowable:sourceDockerX="50.0"
                              flowable:sourceDockerY="30.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
-                <omgdi:waypoint x="444.95000000000005" y="110.0"></omgdi:waypoint>
-                <omgdi:waypoint x="565.0" y="110.0"></omgdi:waypoint>
-                <omgdi:waypoint x="565.0" y="170.0"></omgdi:waypoint>
-            </bpmndi:BPMNEdge>
-            <bpmndi:BPMNEdge bpmnElement="generateRegistrationCompleteEmailToSendRegistrationCompleteEmail"
-                             id="BPMNEdge_generateRegistrationCompleteEmailToSendRegistrationCompleteEmail"
-                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
-                             flowable:targetDockerY="30.0">
-                <omgdi:waypoint x="344.9499999999207" y="270.0"></omgdi:waypoint>
-                <omgdi:waypoint x="434.9999999998277" y="270.0"></omgdi:waypoint>
+                <omgdi:waypoint x="534.9499999999618" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="725.0" y="90.0"></omgdi:waypoint>
+                <omgdi:waypoint x="725.0" y="165.0"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
             <bpmndi:BPMNEdge bpmnElement="sendRegistrationCompleteEmailToJoinFlow"
                              id="BPMNEdge_sendRegistrationCompleteEmailToJoinFlow" flowable:sourceDockerX="50.0"
                              flowable:sourceDockerY="30.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
-                <omgdi:waypoint x="534.95" y="270.0"></omgdi:waypoint>
-                <omgdi:waypoint x="565.0" y="270.0"></omgdi:waypoint>
-                <omgdi:waypoint x="565.0" y="209.9124217772216"></omgdi:waypoint>
+                <omgdi:waypoint x="654.9499999999756" y="300.0"></omgdi:waypoint>
+                <omgdi:waypoint x="725.0" y="300.0"></omgdi:waypoint>
+                <omgdi:waypoint x="725.0" y="204.9086379460401"></omgdi:waypoint>
             </bpmndi:BPMNEdge>
         </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>
