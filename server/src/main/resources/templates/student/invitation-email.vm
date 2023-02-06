@@ -14,17 +14,6 @@
   ~ limitations under the License.
   -->
 
-<!--
-Template used to generate invitation emails for students.
-
-Parameters:
-  * invitation.parent1FirstName - The first name of the first parent.
-  * school.name - The name of the school which runs the MentorSuccess program.
-  * programAdminName - The name of the school's program administrator.
-  * programAdminEmail - The program administrator's email address.
-  * programAdminPhone - The program administrator's phone number.
-  * studentRegistrationUri - The URI to the registration form.
--->
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <style>
@@ -51,11 +40,11 @@ Parameters:
 <div>
     <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
     <p>
-        Dear ${invitation.parent1FirstName},
+        Dear ${parentFirstName},
     </p>
     <p>
         MentorSuccess™ is a K-5 student mentoring program provided through His Heart Foundation and partnered
-        with ${school.name}. Focused on creating caring connections to inspire success in children, MentorSuccess™ is
+        with ${schoolName}. Focused on creating caring connections to inspire success in children, MentorSuccess™ is
         designed to enhance the social and educational experience for your child. Students and mentors work together to
         develop Leadership Success Skills involved in making life choices and creating healthy relationships for their
         future. Your child and their mentor will read books, play games and do crafts as desired. This program is
@@ -64,30 +53,34 @@ Parameters:
     <p>
         Program Details:
     <ul>
-        <li>Mentor sessions will take place in the designated Mentor Center at ${school.name}.</li>
-        <li>Mentor sessions will be supervised by ${programAdmin.name}.</li>
+        <li>Mentor sessions will take place in the designated Mentor Center at ${schoolName}.</li>
+        <li>Mentor sessions will be supervised by ${programAdminName}.</li>
         <li>Parents/guardians are always encouraged and welcome to meet their student's mentor!</li>
     </ul>
     </p>
     <p>
         We thank you in advance for letting your child participate in this exciting learning experience. If you have any
-        additional questions, please feel free to contact ${programAdmin.name}.<br/>
-        Email: <a href="mailto:${programAdmin.email}">${programAdmin.email}</a>
-        #if($programAdmin.phone)
-            <br/>Phone: ${programAdmin.phone}
+        additional questions, please feel free to contact ${programAdminName}.<br/>
+        Email: <a href="mailto:${programAdminEmail}">${programAdminEmail}</a>
+        #if($programAdminPhone)
+            <br/>Phone: ${programAdminPhone}
         #end
     </p>
     <p>
         Click the button below to register your child.<br/>
         <br/><br/>
-        <a class="button" href="${studentRegistrationUri}">Register My Child</a>
+        <a class="button" href="${registrationUri}">Register My Child</a>
         <br/><br/>
     </p>
     <p>
-        <b>${programAdmin.name}</b><br/>
+        <b>${programAdminName}</b><br/>
         MentorSuccess™ Program Administrator<br/>
-        <a href="mailto:${programAdmin.email}"><b>${programAdmin.email}</b></a><br/>
+        <a href="mailto:${programAdminEmail}"><b>${programAdminEmail}</b></a><br/>
         <a href="https://www.mentorsuccesskids.com">mentorsuccesskids.com</a>
+    </p>
+    <p>
+        <br/>
+        Click <a href="${registrationUri}/cancel">here</a> to cancel this registration.
     </p>
 </div>
 </body>

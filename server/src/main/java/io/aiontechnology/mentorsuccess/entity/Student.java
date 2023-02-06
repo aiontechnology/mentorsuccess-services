@@ -1,5 +1,5 @@
 /*
- * Copyright 2020-2022 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,6 +138,10 @@ public class Student implements Identifiable<UUID> {
             studentPerson.setStudent(this);
         }).collect(Collectors.toList());
         this.studentPersonRoles = studentPersonRoleSyncHelper.sync(this.studentPersonRoles, newCollection);
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
 }

@@ -37,7 +37,7 @@
 <div>
     <img src="https://mentorsuccess-public.s3.us-west-2.amazonaws.com/email-logo.png"/>
     <p>
-        Dear ${programAdmin.name}
+        Dear ${programAdminName}
     </p>
     <p>
         An invitation to join the MentorSuccess™ program has not been responded to for 14 days. The registration

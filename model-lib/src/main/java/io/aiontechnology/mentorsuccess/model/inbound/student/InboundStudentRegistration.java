@@ -64,4 +64,8 @@ public class InboundStudentRegistration implements Serializable {
 
     String parentSignature;
 
+    public String getStudentFullName() {
+        return studentFirstName + " " + studentLastName;
+    }
+
 }
