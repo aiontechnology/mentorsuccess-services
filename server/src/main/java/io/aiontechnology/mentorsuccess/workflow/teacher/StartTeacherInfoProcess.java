@@ -16,12 +16,22 @@
 
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
+import io.aiontechnology.mentorsuccess.entity.Person;
+import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
+
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER;
 
 @Service
 @RequiredArgsConstructor
@@ -33,18 +43,18 @@ public class StartTeacherInfoProcess implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
-//        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-//                InboundInvitation.class);
-//        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
-//        Person teacher = taskUtilities.getRequiredVariable(execution, TEACHER, Person.class);
-//        Student student = taskUtilities.getRequiredVariable(execution, STUDENT, Student.class);
-//        runtimeService.startProcessInstanceByKey("request-student-info",
-//                Map.of(
-//                        INVITATION, invitation,
-//                        PROGRAM_ADMIN, programAdmin,
-//                        TEACHER, teacher,
-//                        STUDENT, student
-//                ));
+        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
+                InboundInvitation.class);
+        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
+        Person teacher = taskUtilities.getRequiredVariable(execution, TEACHER, Person.class);
+        Student student = taskUtilities.getRequiredVariable(execution, STUDENT, Student.class);
+        runtimeService.startProcessInstanceByKey("request-student-info",
+                Map.of(
+                        INVITATION, invitation,
+                        PROGRAM_ADMIN, programAdmin,
+                        TEACHER, teacher,
+                        STUDENT, student
+                ));
     }
 
 }
