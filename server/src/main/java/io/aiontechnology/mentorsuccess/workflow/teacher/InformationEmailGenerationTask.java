@@ -68,6 +68,8 @@ public class InformationEmailGenerationTask extends EmailGeneratorSupport {
 
     private String createInformationUri(DelegateExecution execution, Student student, InboundInvitation invitation) {
         return new UriBuilder(invitation.getStudentRegistrationUri())
+                .withPathAddition("schools")
+                .withPathAddition(student.getSchool().getId().toString())
                 .withPathAddition("students")
                 .withPathAddition(student.getId().toString())
                 .withPathAddition("information")

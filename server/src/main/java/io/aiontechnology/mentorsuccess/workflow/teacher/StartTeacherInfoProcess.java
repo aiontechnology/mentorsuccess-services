@@ -26,6 +26,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
@@ -46,15 +47,18 @@ public class StartTeacherInfoProcess implements JavaDelegate {
         InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
                 InboundInvitation.class);
         Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
-        Person teacher = taskUtilities.getRequiredVariable(execution, TEACHER, Person.class);
+        Person teacher = execution.getVariable(TEACHER, Person.class);
         Student student = taskUtilities.getRequiredVariable(execution, STUDENT, Student.class);
-        runtimeService.startProcessInstanceByKey("request-student-info",
-                Map.of(
-                        INVITATION, invitation,
-                        PROGRAM_ADMIN, programAdmin,
-                        TEACHER, teacher,
-                        STUDENT, student
-                ));
+
+        Map<String, Object> variables = new HashMap<>();
+        variables.put(INVITATION, invitation);
+        variables.put(PROGRAM_ADMIN, programAdmin);
+        variables.put(STUDENT, student);
+        if (teacher != null) {
+            variables.put(TEACHER, teacher);
+        }
+
+        runtimeService.startProcessInstanceByKey("request-student-info", variables);
     }
 
 }

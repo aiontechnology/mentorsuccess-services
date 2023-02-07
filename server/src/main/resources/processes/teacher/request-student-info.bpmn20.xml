@@ -18,12 +18,11 @@
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
              xmlns:flowable="http://flowable.org/bpmn"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
-                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
-    <process id="request-student-info" name="Request student information from a teacher" isExecutable="true">
+    <process id="request-student-info" name="Teacher: Request student information" isExecutable="true">
 
         <!-- States -->
 
@@ -31,49 +30,40 @@
 
         <exclusiveGateway id="checkForTeacher" name="Ensure that we have a valid teacher"/>
 
-        <serviceTask id="generateInfoRequestEmail"
-                     name="Generate Information Request Email"
-                     flowable:delegateExpression="${informationEmailGenerationTask}">
-            <documentation>
-                Generate the email that should be sent to the teacher.
-            </documentation>
-        </serviceTask>
-
-        <serviceTask id="sendInfoRequestEmail"
-                     name="Send Information Request Email"
-                     flowable:type="mail">
-            <documentation>
-                Send the generated email to the parent.
-            </documentation>
+        <callActivity id="requestInfo1"
+                      name="Request Student Info 1"
+                      calledElement="contact-teacher">
             <extensionElements>
-                <flowable:field name="to">
-                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
-                </flowable:field>
-                <flowable:field name="from">
-                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
-                </flowable:field>
-                <flowable:field name="subject">
-                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
-                </flowable:field>
-                <flowable:field name="html">
-                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
-                </flowable:field>
+                <flowable:in source="invitation" target="invitation"/>
+                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="teacher" target="teacher"/>
+                <flowable:in source="student" target="student"/>
             </extensionElements>
-        </serviceTask>
+        </callActivity>
 
         <endEvent id="end"/>
 
         <!-- Transitions -->
 
-        <sequenceFlow sourceRef="start" targetRef="checkForTeacher"/>
-        <sequenceFlow sourceRef="checkForTeacher" targetRef="generateInfoRequestEmail">
-            <conditionExpression xsi:type="tFormalExpression">${teacher != null}</conditionExpression>
+        <sequenceFlow id="startToCheckForTeacher"
+                      sourceRef="start"
+                      targetRef="checkForTeacher"/>
+        <sequenceFlow id="checkForTeacherToRequestInfo1"
+                      sourceRef="checkForTeacher"
+                      targetRef="requestInfo1">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${variables:exists(teacher) && (teacher.getEmail() != null || !teacher.getEmail().equal(""))}]]>
+            </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="checkForTeacher" targetRef="end">
-            <conditionExpression xsi:type="tFormalExpression">${teacher == null}</conditionExpression>
+        <sequenceFlow id="checkForTeacherToEnd"
+                      sourceRef="checkForTeacher"
+                      targetRef="end">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${!(variables:exists(teacher) && (teacher.getEmail() != null || !teacher.getEmail().equal("")))}]]>
+            </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="generateInfoRequestEmail" targetRef="sendInfoRequestEmail"/>
-        <sequenceFlow sourceRef="sendInfoRequestEmail" targetRef="end"/>
-
+        <sequenceFlow id="requestInfo1ToEnd"
+                      sourceRef="requestInfo1"
+                      targetRef="end"/>
     </process>
 </definitions>
