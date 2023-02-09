@@ -135,6 +135,111 @@ public class StudentSchoolSession {
     @Column(name = "start_date")
     private Date startDate;
 
+    @Column(name = "question1")
+    private Integer question1;
+
+    @Column(name = "question2")
+    private Integer question2;
+
+    @Column(name = "question3")
+    private Integer question3;
+
+    @Column(name = "question4")
+    private Integer question4;
+
+    @Column(name = "question5")
+    private Integer question5;
+
+    @Column(name = "question6")
+    private Integer question6;
+
+    @Column(name = "question7")
+    private Integer question7;
+
+    @Column(name = "question8")
+    private Integer question8;
+
+    @Column(name = "question9")
+    private Integer question9;
+
+    @Column(name = "question10")
+    private Integer question10;
+
+    @Column(name = "question11")
+    private Integer question11;
+
+    @Column(name = "question12")
+    private Integer question12;
+
+    @Column(name = "question13")
+    private Integer question13;
+
+    @Column(name = "question14")
+    private Integer question14;
+
+    @Column(name = "question15")
+    private Integer question15;
+
+    @Column(name = "question16")
+    private Integer question16;
+
+    @Column(name = "question17")
+    private Integer question17;
+
+    @Column(name = "question18")
+    private Integer question18;
+
+    @Column(name = "question19")
+    private Integer question19;
+
+    @Column(name = "question20")
+    private Integer question20;
+
+    @Column(name = "question21")
+    private Integer question21;
+
+    @Column(name = "question22")
+    private Integer question22;
+
+    @Column(name = "question23")
+    private Integer question23;
+
+    @Column(name = "question24")
+    private Integer question24;
+
+    @Column(name = "question25")
+    private Integer question25;
+
+    @Column(name = "question26")
+    private Integer question26;
+
+    @Column(name = "question27")
+    private Integer question27;
+
+    @Column(name = "question28")
+    private Integer question28;
+
+    @Column(name = "question29")
+    private Integer question29;
+
+    @Column(name = "question30")
+    private Integer question30;
+
+    @Column(name = "question31")
+    private Integer question31;
+
+    @Column(name = "question32")
+    private Integer question32;
+
+    @Column(name = "question33")
+    private Integer question33;
+
+    @Column(name = "question34")
+    private Integer question34;
+
+    @Column(name = "question35")
+    private Integer question35;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;

@@ -16,8 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +28,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,19 +42,20 @@ public class StartTeacherInfoProcess implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
+        String schoolId = taskUtilities.getRequiredVariable(execution, SCHOOL_ID, String.class);
+        String studentId = taskUtilities.getRequiredVariable(execution, STUDENT_ID, String.class);
+        String teacherId = execution.getVariable(TEACHER_ID, String.class);
+
         InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
                 InboundInvitation.class);
-        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
-        Person teacher = execution.getVariable(TEACHER, Person.class);
-        Student student = taskUtilities.getRequiredVariable(execution, STUDENT, Student.class);
 
         Map<String, Object> variables = new HashMap<>();
-        variables.put(INVITATION, invitation);
-        variables.put(PROGRAM_ADMIN, programAdmin);
-        variables.put(STUDENT, student);
-        if (teacher != null) {
-            variables.put(TEACHER, teacher);
+        variables.put(SCHOOL_ID, schoolId);
+        variables.put(STUDENT_ID, studentId);
+        if (teacherId != null) {
+            variables.put(TEACHER_ID, teacherId);
         }
+        variables.put(INVITATION, invitation);
 
         runtimeService.startProcessInstanceByKey("request-student-info", variables);
     }

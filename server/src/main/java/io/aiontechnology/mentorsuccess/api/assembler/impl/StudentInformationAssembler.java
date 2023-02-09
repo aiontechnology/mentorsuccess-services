@@ -17,20 +17,44 @@
 package io.aiontechnology.mentorsuccess.api.assembler.impl;
 
 import io.aiontechnology.mentorsuccess.api.assembler.AssemblerSupport;
+import io.aiontechnology.mentorsuccess.api.controller.StudentInformationController;
+import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.resource.StudentInformationResource;
+import org.springframework.hateoas.Link;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
+
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class StudentInformationAssembler extends AssemblerSupport<Student, StudentInformationResource> {
 
     @Override
-    protected Optional<StudentInformationResource> doMap(Student student) {
+    protected Optional<StudentInformationResource> doMapWithData(Student student, Map data) {
         return Optional.ofNullable(student).map(s -> {
             StudentInformationResource resource = new StudentInformationResource(s);
             resource.setStudentName(s.getFullName());
             return resource;
         });
+    }
+
+    @Override
+    protected Set<Link> getLinks(StudentInformationResource model, Map data) {
+        School school = (School) data.get(SCHOOL);
+        Student student = (Student) data.get(STUDENT);
+        UUID registrationId = (UUID) data.get(REGISTRATION);
+
+        return Set.of(
+                linkTo(StudentInformationController.class, school.getId(), student.getId())
+                        .slash(registrationId.toString())
+                        .withSelfRel()
+        );
     }
 
 }

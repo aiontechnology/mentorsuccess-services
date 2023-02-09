@@ -65,7 +65,6 @@ public class StudentRegistrationController {
 
     // Services
     private final StudentRegistrationService studentRegistrationService;
-
     private final SchoolService schoolService;
 
     //Other

@@ -68,17 +68,14 @@ public class ProgramAdminController {
 
     // Mappers
     private final OneWayMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminMapper;
-
     private final OneWayUpdateMapper<Pair<InboundProgramAdmin, UUID>, SchoolPersonRole> programAdminUpdateMapper;
 
     // Services
     private final RoleService roleService;
-
     private final SchoolService schoolService;
 
     // Other
     private final AwsService awsService;
-
     private final EntityManager entityManager;
 
     /**

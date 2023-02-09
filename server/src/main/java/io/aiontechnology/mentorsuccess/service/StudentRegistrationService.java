@@ -24,6 +24,7 @@ import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,8 @@ import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConst
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SHOULD_CANCEL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_INFORMATION;
 
 @Service
 @RequiredArgsConstructor()
@@ -51,18 +54,13 @@ public class StudentRegistrationService {
 
     // Mappers
     private final OneWayMapper<InboundStudent, Student> studentModelToEntityMapper;
-
     private final OneWayMapper<InboundStudent, StudentSchoolSession> studentSessionModelToEntityMapper;
-
     private final OneWayMapper<InboundStudentRegistration, InboundStudent> studentRegistrationToStudentMapper;
 
     // Services
     private final TaskService taskService;
-
     private final RuntimeService runtimeService;
-
     private final SchoolService schoolService;
-
     private final StudentService studentService;
 
     public void cancelRegistration(UUID processId) {
@@ -115,17 +113,25 @@ public class StudentRegistrationService {
                 });
     }
 
-    public void processRegistration(UUID schoolId, UUID processId,
-            InboundStudentRegistration inboundStudentRegistration) {
-        studentRegistrationToStudentMapper.map(inboundStudentRegistration)
+    public void processRegistration(UUID schoolId, UUID processId, InboundStudentRegistration studentRegistration) {
+        studentRegistrationToStudentMapper.map(studentRegistration)
                 .ifPresent(student -> {
                     completeTask(processId, Map.of(
-                            REGISTRATION, inboundStudentRegistration,
+                            REGISTRATION, studentRegistration,
                             STUDENT, student,
                             SHOULD_CANCEL, false
                     ));
                 });
 
+    }
+
+    public void processStudentInformation(UUID schoolId, UUID studentId, UUID processId,
+            InboundStudentInformation studentInformation) {
+        completeTask(processId, Map.of(
+                STUDENT_ID, studentId,
+                STUDENT_INFORMATION, studentInformation,
+                SHOULD_CANCEL, false
+        ));
     }
 
     private void completeTask(UUID processId, Map<String, Object> variables) {

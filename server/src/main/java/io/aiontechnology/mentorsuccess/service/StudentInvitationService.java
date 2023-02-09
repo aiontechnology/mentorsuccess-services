@@ -16,8 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.service;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.School;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.util.PhoneService;
@@ -27,11 +27,13 @@ import org.flowable.engine.RuntimeService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 
 @Service
 @RequiredArgsConstructor()
@@ -48,19 +50,20 @@ public class StudentInvitationService {
     }
 
     private Map<String, Object> createProcessVariables(InboundInvitation invitation, School school) {
+        Optional<SchoolPersonRole> programAdmin = getProgramAdminInfo(school);
         return Map.of(
                 SCHOOL, school,
-                PROGRAM_ADMIN, getProgramAdminInfo(school),
+                SCHOOL_ID, school.getId().toString(),
+                PROGRAM_ADMIN, programAdmin.map(SchoolPersonRole::getPerson).orElse(null),
                 INVITATION, invitation,
                 REGISTRATION_TIMEOUT, "P7D"
         );
     }
 
-    private Person getProgramAdminInfo(School school) {
+    private Optional<SchoolPersonRole> getProgramAdminInfo(School school) {
         return school.getRoles().stream()
                 .filter(role -> role.getType().equals(RoleType.PROGRAM_ADMIN))
-                .findFirst().map(role -> role.getPerson())
-                .orElse(null);
+                .findFirst();
     }
 
 }

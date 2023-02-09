@@ -1,0 +1,127 @@
+# Copyright 2023 Aion Technology LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+databaseChangeLog:
+  - changeSet:
+      id: 55
+      author: whitney
+      changes:
+        - addColumn:
+            tableName: student_schoolsession
+            columns:
+              - column:
+                  name: question1
+                  type: number
+              - column:
+                  name: question2
+                  type: number
+              - column:
+                  name: question3
+                  type: number
+              - column:
+                  name: question4
+                  type: number
+              - column:
+                  name: question5
+                  type: number
+              - column:
+                  name: question6
+                  type: number
+              - column:
+                  name: question7
+                  type: number
+              - column:
+                  name: question8
+                  type: number
+              - column:
+                  name: question9
+                  type: number
+              - column:
+                  name: question10
+                  type: number
+              - column:
+                  name: question11
+                  type: number
+              - column:
+                  name: question12
+                  type: number
+              - column:
+                  name: question13
+                  type: number
+              - column:
+                  name: question14
+                  type: number
+              - column:
+                  name: question15
+                  type: number
+              - column:
+                  name: question16
+                  type: number
+              - column:
+                  name: question17
+                  type: number
+              - column:
+                  name: question18
+                  type: number
+              - column:
+                  name: question19
+                  type: number
+              - column:
+                  name: question20
+                  type: number
+              - column:
+                  name: question21
+                  type: number
+              - column:
+                  name: question22
+                  type: number
+              - column:
+                  name: question23
+                  type: number
+              - column:
+                  name: question24
+                  type: number
+              - column:
+                  name: question25
+                  type: number
+              - column:
+                  name: question26
+                  type: number
+              - column:
+                  name: question27
+                  type: number
+              - column:
+                  name: question28
+                  type: number
+              - column:
+                  name: question29
+                  type: number
+              - column:
+                  name: question30
+                  type: number
+              - column:
+                  name: question31
+                  type: number
+              - column:
+                  name: question32
+                  type: number
+              - column:
+                  name: question33
+                  type: number
+              - column:
+                  name: question34
+                  type: number
+              - column:
+                  name: question35
+                  type: number

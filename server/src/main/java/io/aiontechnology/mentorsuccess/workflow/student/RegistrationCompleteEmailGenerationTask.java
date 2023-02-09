@@ -18,6 +18,7 @@ package io.aiontechnology.mentorsuccess.workflow.student;
 
 import io.aiontechnology.mentorsuccess.api.mapping.toentity.misc.UriModelToRoleMapper;
 import io.aiontechnology.mentorsuccess.entity.Person;
+import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
 import io.aiontechnology.mentorsuccess.velocity.RegistrationCompleteEmailGenerator;
 import io.aiontechnology.mentorsuccess.workflow.EmailGeneratorSupport;
@@ -28,10 +29,11 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
 
 @Slf4j
 @Service
@@ -49,7 +51,7 @@ public class RegistrationCompleteEmailGenerationTask extends EmailGeneratorSuppo
         Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
         InboundStudentRegistration studentRegistration = taskUtilities.getRequiredVariable(execution, REGISTRATION,
                 InboundStudentRegistration.class);
-        Optional<Person> teacher = getTeacher(studentRegistration);
+        Optional<Person> teacher = getTeacher(studentRegistration).map(SchoolPersonRole::getPerson);
         return emailGenerator.render(programAdmin.getFullName(),
                 teacher.map(Person::getFullName).orElse(""), studentRegistration);
     }
@@ -75,14 +77,16 @@ public class RegistrationCompleteEmailGenerationTask extends EmailGeneratorSuppo
     protected void setAdditionalVariables(DelegateExecution execution) {
         InboundStudentRegistration studentRegistration = taskUtilities.getRequiredVariable(execution, REGISTRATION,
                 InboundStudentRegistration.class);
-        Optional<Person> teacher = getTeacher(studentRegistration);
-        execution.setVariable(TEACHER, teacher.orElse(null));
+        Optional<SchoolPersonRole> teacher = getTeacher(studentRegistration);
+        execution.setVariable(TEACHER_ID, teacher
+                .map(SchoolPersonRole::getId)
+                .map(UUID::toString)
+                .orElse(null));
     }
 
-    private Optional<Person> getTeacher(InboundStudentRegistration studentRegistration) {
+    private Optional<SchoolPersonRole> getTeacher(InboundStudentRegistration studentRegistration) {
         return Optional.ofNullable(studentRegistration.getTeacher())
-                .flatMap(uriToRoleMapper::map)
-                .map(role -> role.getPerson());
+                .flatMap(uriToRoleMapper::map);
     }
 
 }
