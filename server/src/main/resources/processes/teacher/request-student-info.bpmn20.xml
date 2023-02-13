@@ -28,16 +28,33 @@
 
         <startEvent id="start"/>
 
-        <exclusiveGateway id="checkForTeacher" name="Ensure that we have a valid teacher"/>
+        <serviceTask id="loadTeacherEmail"
+                     name="Load the teacher's email address"
+                     flowable:delegateExpression="${loadTeacherEmailAddressTask}"/>
+
+        <exclusiveGateway id="checkForTeacher"
+                          name="Ensure that we have a valid teacher"/>
 
         <callActivity id="requestInfo1"
                       name="Request Student Info 1"
                       calledElement="contact-teacher">
             <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
                 <flowable:in source="invitation" target="invitation"/>
-                <flowable:in source="programAdmin" target="programAdmin"/>
-                <flowable:in source="teacher" target="teacher"/>
-                <flowable:in source="student" target="student"/>
+                <flowable:out source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <callActivity id="receiveInfo1"
+                      name="Receive Student Info 1"
+                      calledElement="record-and-notify">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="studentInformation" target="studentInformation"/>
             </extensionElements>
         </callActivity>
 
@@ -45,25 +62,31 @@
 
         <!-- Transitions -->
 
-        <sequenceFlow id="startToCheckForTeacher"
+        <sequenceFlow id="startToLoadTeacherEmail"
                       sourceRef="start"
+                      targetRef="loadTeacherEmail"/>
+        <sequenceFlow id="loadTeacherEmailToCheckForTeacher"
+                      sourceRef="loadTeacherEmail"
                       targetRef="checkForTeacher"/>
         <sequenceFlow id="checkForTeacherToRequestInfo1"
                       sourceRef="checkForTeacher"
                       targetRef="requestInfo1">
             <conditionExpression xsi:type="tFormalExpression">
-                <![CDATA[${variables:exists(teacher) && (teacher.getEmail() != null || !teacher.getEmail().equal(""))}]]>
+                <![CDATA[${variables:exists(teacherEmailAddress)}]]>
             </conditionExpression>
         </sequenceFlow>
         <sequenceFlow id="checkForTeacherToEnd"
                       sourceRef="checkForTeacher"
                       targetRef="end">
             <conditionExpression xsi:type="tFormalExpression">
-                <![CDATA[${!(variables:exists(teacher) && (teacher.getEmail() != null || !teacher.getEmail().equal("")))}]]>
+                <![CDATA[${!(variables:exists(teacherEmailAddress))}]]>
             </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow id="requestInfo1ToEnd"
+        <sequenceFlow id="requestInfo1ToReceiveInfo1"
                       sourceRef="requestInfo1"
+                      targetRef="receiveInfo1"/>
+        <sequenceFlow id="receiveInfo1ToEnd"
+                      sourceRef="receiveInfo1"
                       targetRef="end"/>
     </process>
 </definitions>

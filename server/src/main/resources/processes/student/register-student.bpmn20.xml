@@ -53,8 +53,8 @@
                 <flowable:in source="student" target="student"/>
                 <flowable:in source="programAdmin" target="programAdmin"/>
                 <flowable:in source="registration" target="registration"/>
-                <flowable:out source="teacher" target="teacher"/>
-                <flowable:out source="student" target="student"/>
+                <flowable:out source="teacherId" target="teacherId"/>
+                <flowable:out source="studentId" target="studentId"/>
             </extensionElements>
         </callActivity>
 
@@ -94,8 +94,8 @@
                 <flowable:in source="student" target="student"/>
                 <flowable:in source="programAdmin" target="programAdmin"/>
                 <flowable:in source="registration" target="registration"/>
-                <flowable:out source="teacher" target="teacher"/>
-                <flowable:out source="student" target="student"/>
+                <flowable:out source="teacherId" target="teacherId"/>
+                <flowable:out source="studentId" target="studentId"/>
             </extensionElements>
         </callActivity>
 

@@ -21,17 +21,29 @@ import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
 import io.aiontechnology.mentorsuccess.resource.StudentInformationResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
+import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
 import io.aiontechnology.mentorsuccess.service.StudentService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/schools/{schoolId}/students/{studentId}/registrations")
 @RequiredArgsConstructor
@@ -42,6 +54,7 @@ public class StudentInformationController {
 
     // Services
     private final SchoolService schoolService;
+    private final StudentRegistrationService studentRegistrationService;
     private final StudentService studentService;
 
     @GetMapping("/{registrationId}")
@@ -50,9 +63,28 @@ public class StudentInformationController {
         School school = schoolService.getSchoolById(schoolId)
                 .orElseThrow(() -> new NotFoundException("School was not found"));
         SchoolSession currentSession = school.getCurrentSession();
-        return studentService.getStudentById(studentId, currentSession)
-                .flatMap(studentInformationAssembler::map)
+
+        Student student = studentService.getStudentById(studentId, currentSession)
                 .orElse(null);
+
+        Map<String, Object> data = Map.of(
+                SCHOOL, school,
+                STUDENT, student,
+                REGISTRATION, registrationId
+        );
+
+        return Optional.ofNullable(student)
+                .flatMap(s -> studentInformationAssembler.mapWithData(s, data))
+                .orElse(null);
+    }
+
+    @PutMapping("/{registrationId}")
+    public InboundStudentInformation updateRegistration(@PathVariable("schoolId") UUID schoolId,
+            @PathVariable("studentId") UUID studentId, @PathVariable("registrationId") UUID registrationId,
+            @RequestBody InboundStudentInformation studentInformation) {
+        log.debug("==> Updating registration: {}", studentInformation);
+        studentRegistrationService.processStudentInformation(schoolId, studentId, registrationId, studentInformation);
+        return studentInformation;
     }
 
 }

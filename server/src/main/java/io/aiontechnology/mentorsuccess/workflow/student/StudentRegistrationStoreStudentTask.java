@@ -28,7 +28,8 @@ import org.springframework.stereotype.Service;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
 
 @Service
 @RequiredArgsConstructor
@@ -48,8 +49,8 @@ public class StudentRegistrationStoreStudentTask implements JavaDelegate {
                     Person teacher = pair.getRight().getTeacher() != null
                             ? pair.getRight().getTeacher().getPerson()
                             : null;
-                    execution.setVariable(TEACHER, teacher);
-                    execution.setVariable(STUDENT, pair.getLeft());
+                    execution.setVariable(TEACHER_ID, teacher.getId().toString());
+                    execution.setVariable(STUDENT_ID, pair.getLeft().getId().toString());
                 });
     }
 

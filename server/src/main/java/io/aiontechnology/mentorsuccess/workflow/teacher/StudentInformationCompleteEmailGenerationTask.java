@@ -16,29 +16,44 @@
 
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
+import io.aiontechnology.mentorsuccess.velocity.TeacherInvitationCompleteEmailGenerator;
 import io.aiontechnology.mentorsuccess.workflow.EmailGeneratorSupport;
+import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
+import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
+import org.springframework.stereotype.Service;
 
+@Service
+@RequiredArgsConstructor
 public class StudentInformationCompleteEmailGenerationTask extends EmailGeneratorSupport {
+
+    private final TeacherInvitationCompleteEmailGenerator emailGenerator;
+
+    private final TaskUtilities taskUtilities;
 
     @Override
     protected String getBody(DelegateExecution execution) {
-        return null;
+        String programAdminName = taskUtilities.getProgramAdminFullName(execution);
+        String studentName = taskUtilities.getStudentFullName(execution).orElse("");
+        InboundStudentInformation studentInformation =
+                taskUtilities.getInboundStudentInformation(execution).orElseThrow();
+        return emailGenerator.render(programAdminName, studentName, studentInformation);
     }
 
     @Override
     protected String getFrom(DelegateExecution execution) {
-        return null;
+        return "do-not-reply@mentorsuccesskids.com";
     }
 
     @Override
     protected String getSubject(DelegateExecution execution) {
-        return null;
+        return "Student Information Received: " + taskUtilities.getStudentFullName(execution).orElse("");
     }
 
     @Override
     protected String getTo(DelegateExecution execution) {
-        return null;
+        return taskUtilities.getProgramAdminEmail(execution);
     }
 
 }

@@ -27,7 +27,7 @@ public abstract class EmailGeneratorSupport implements JavaDelegate {
 
     @Override
     public final void execute(DelegateExecution execution) {
-        execution.setVariable(EMAIL, createEmailConfiguration(execution));
+        execution.setTransientVariable(EMAIL, createEmailConfiguration(execution));
         setAdditionalVariables(execution);
     }
 

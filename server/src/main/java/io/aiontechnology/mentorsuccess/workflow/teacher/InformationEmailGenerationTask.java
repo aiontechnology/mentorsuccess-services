@@ -16,8 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
-import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.util.UriBuilder;
 import io.aiontechnology.mentorsuccess.velocity.TeacherInvitationEmailGenerator;
@@ -27,33 +25,33 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER;
 
 @Service
 @RequiredArgsConstructor
 public class InformationEmailGenerationTask extends EmailGeneratorSupport {
 
+    // Email generation strategy
     private final TeacherInvitationEmailGenerator emailGenerator;
 
+    // Other
     private final TaskUtilities taskUtilities;
 
     @Override
     protected String getBody(DelegateExecution execution) {
-        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-                InboundInvitation.class);
-        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
-        Person teacher = taskUtilities.getRequiredVariable(execution, TEACHER, Person.class);
-        Student student = taskUtilities.getRequiredVariable(execution, STUDENT, Student.class);
-        return emailGenerator.render(teacher.getFirstName(), student.getFullName(), programAdmin.getFullName(),
-                programAdmin.getEmail(), createInformationUri(execution, student, invitation));
+        return emailGenerator.render(
+                taskUtilities.getTeacherFullName(execution).orElse(""),
+                taskUtilities.getStudentFullName(execution).orElse(""),
+                taskUtilities.getProgramAdminFullName(execution),
+                taskUtilities.getProgramAdminEmail(execution),
+                createInformationUri(execution).orElse(""));
     }
 
     @Override
     protected String getFrom(DelegateExecution execution) {
-        return taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class).getEmail();
+        return taskUtilities.getProgramAdminEmail(execution);
     }
 
     @Override
@@ -63,18 +61,22 @@ public class InformationEmailGenerationTask extends EmailGeneratorSupport {
 
     @Override
     protected String getTo(DelegateExecution execution) {
-        return taskUtilities.getRequiredVariable(execution, TEACHER, Person.class).getEmail();
+        return taskUtilities.getTeacherEmailAddress(execution)
+                .orElseThrow(() -> new IllegalStateException("Unable to find teacher email address"));
     }
 
-    private String createInformationUri(DelegateExecution execution, Student student, InboundInvitation invitation) {
-        return new UriBuilder(invitation.getStudentRegistrationUri())
-                .withPathAddition("schools")
-                .withPathAddition(student.getSchool().getId().toString())
-                .withPathAddition("students")
-                .withPathAddition(student.getId().toString())
-                .withPathAddition("information")
-                .withPathAddition(execution.getProcessInstanceId())
-                .build();
+    private Optional<String> createInformationUri(DelegateExecution execution) {
+        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
+                InboundInvitation.class);
+        return taskUtilities.getStudent(execution)
+                .map(student -> new UriBuilder(invitation.getStudentRegistrationUri())
+                        .withPathAddition("schools")
+                        .withPathAddition(student.getSchool().getId().toString())
+                        .withPathAddition("students")
+                        .withPathAddition(student.getId().toString())
+                        .withPathAddition("information")
+                        .withPathAddition(execution.getProcessInstanceId())
+                        .build());
     }
 
 }
