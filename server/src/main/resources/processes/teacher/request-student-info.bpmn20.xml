@@ -17,6 +17,9 @@
 
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
              xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
@@ -58,6 +61,73 @@
             </extensionElements>
         </callActivity>
 
+        <boundaryEvent id="requestInfo1Timeout" attachedToRef="requestInfo1">
+            <timerEventDefinition>
+                <timeDuration>${registrationTimeout}</timeDuration>
+                <!--                <timeDuration>PT20S</timeDuration>-->
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <callActivity id="requestInfo2"
+                      name="Request Student Info 2"
+                      calledElement="contact-teacher">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="invitation" target="invitation"/>
+                <flowable:out source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <callActivity id="receiveInfo2"
+                      name="Receive Student Info 2"
+                      calledElement="record-and-notify">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <boundaryEvent id="requestInfo2Timeout" attachedToRef="requestInfo2">
+            <timerEventDefinition>
+                <timeDuration>${registrationTimeout}</timeDuration>
+                <!--                <timeDuration>PT20S</timeDuration>-->
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <serviceTask id="generateTeacherInformationTimeoutEmail"
+                     name="Generate TeacherInformation Timeout Email"
+                     flowable:delegateExpression="${studentInfoEmailGenerationTimeoutTask}">
+            <documentation>
+                Generate an email to inform the program administrator that a student registration workflow has timed out
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendTeacherInformationTimeoutEmail"
+                     name="Send Timeout Email"
+                     flowable:type="mail">
+            <documentation>
+                Send a notification to the program administrator that a registration has timed out
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from">
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="subject">
+                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
         <endEvent id="end"/>
 
         <!-- Transitions -->
@@ -85,8 +155,148 @@
         <sequenceFlow id="requestInfo1ToReceiveInfo1"
                       sourceRef="requestInfo1"
                       targetRef="receiveInfo1"/>
+        <sequenceFlow id="requestInfo1TimeoutToRequestInfo2"
+                      sourceRef="requestInfo1Timeout"
+                      targetRef="requestInfo2"/>
+        <sequenceFlow id="requestInfo2ToReceiveInfo2"
+                      sourceRef="requestInfo2"
+                      targetRef="receiveInfo2"/>
+        <sequenceFlow id="requestInfo2TimeoutToGenerateTeacherInformationTimeoutEmail"
+                      sourceRef="requestInfo2Timeout"
+                      targetRef="generateTeacherInformationTimeoutEmail"/>
+        <sequenceFlow id="generateTeacherInformationTimeoutEmailToSendTeacherInformationTimeoutEmail"
+                      sourceRef="generateTeacherInformationTimeoutEmail"
+                      targetRef="sendTeacherInformationTimeoutEmail"/>
         <sequenceFlow id="receiveInfo1ToEnd"
                       sourceRef="receiveInfo1"
                       targetRef="end"/>
+        <sequenceFlow id="receiveInfo2ToEnd"
+                      sourceRef="receiveInfo2"
+                      targetRef="end"/>
+        <sequenceFlow id="sendTeacherInformationTimeoutEmailToEnd"
+                      sourceRef="sendTeacherInformationTimeoutEmail"
+                      targetRef="end"/>
     </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_request-student-info">
+        <bpmndi:BPMNPlane bpmnElement="request-student-info" id="BPMNPlane_request-student-info">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="75.0" y="135.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="loadTeacherEmail" id="BPMNShape_loadTeacherEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="180.0" y="120.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="checkForTeacher" id="BPMNShape_checkForTeacher">
+                <omgdc:Bounds height="40.0" width="40.0" x="330.0" y="130.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo1" id="BPMNShape_requestInfo1">
+                <omgdc:Bounds height="60.0" width="100.0" x="420.0" y="120.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveInfo1" id="BPMNShape_receiveInfo1">
+                <omgdc:Bounds height="60.0" width="100.0" x="645.0" y="120.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo1Timeout" id="BPMNShape_requestInfo1Timeout">
+                <omgdc:Bounds height="31.0" width="31.0" x="485.20710678118655" y="165.20710678118655"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo2" id="BPMNShape_requestInfo2">
+                <omgdc:Bounds height="60.0" width="100.0" x="450.70710678118655" y="310.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveInfo2" id="BPMNShape_receiveInfo2">
+                <omgdc:Bounds height="60.0" width="100.0" x="645.0" y="310.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo2Timeout" id="BPMNShape_requestInfo2Timeout">
+                <omgdc:Bounds height="31.0" width="31.0" x="515.9142135623731" y="355.20710678118655"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="generateTeacherInformationTimeoutEmail"
+                              id="BPMNShape_generateTeacherInformationTimeoutEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="481.4142135623731" y="475.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendTeacherInformationTimeoutEmail"
+                              id="BPMNShape_sendTeacherInformationTimeoutEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="645.0" y="475.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="855.0" y="231.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="generateTeacherInformationTimeoutEmailToSendTeacherInformationTimeoutEmail"
+                             id="BPMNEdge_generateTeacherInformationTimeoutEmailToSendTeacherInformationTimeoutEmail"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="581.3642135623732" y="505.0"></omgdi:waypoint>
+                <omgdi:waypoint x="644.9999999999893" y="505.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="checkForTeacherToRequestInfo1" id="BPMNEdge_checkForTeacherToRequestInfo1"
+                             flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="369.9416944212398" y="150.0"></omgdi:waypoint>
+                <omgdi:waypoint x="419.9999999999097" y="150.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo1TimeoutToRequestInfo2"
+                             id="BPMNEdge_requestInfo1TimeoutToRequestInfo2" flowable:sourceDockerX="15.500000000000002"
+                             flowable:sourceDockerY="15.500000000000002" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="500.70710678118655" y="196.15710603686816"></omgdi:waypoint>
+                <omgdi:waypoint x="500.70710678118655" y="310.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="loadTeacherEmailToCheckForTeacher"
+                             id="BPMNEdge_loadTeacherEmailToCheckForTeacher" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
+                <omgdi:waypoint x="279.9499999999756" y="150.0"></omgdi:waypoint>
+                <omgdi:waypoint x="330.0" y="150.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo1ToReceiveInfo1" id="BPMNEdge_requestInfo1ToReceiveInfo1"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="519.95" y="150.0"></omgdi:waypoint>
+                <omgdi:waypoint x="645.0" y="150.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo2ToReceiveInfo2" id="BPMNEdge_requestInfo2ToReceiveInfo2"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="550.6571067811014" y="340.0"></omgdi:waypoint>
+                <omgdi:waypoint x="644.9999999999333" y="340.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendTeacherInformationTimeoutEmailToEnd"
+                             id="BPMNEdge_sendTeacherInformationTimeoutEmailToEnd" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="744.9499999999999" y="505.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="505.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="258.9499214228143"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveInfo1ToEnd" id="BPMNEdge_receiveInfo1ToEnd"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="744.9499999999999" y="150.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="150.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="231.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="startToLoadTeacherEmail" id="BPMNEdge_startToLoadTeacherEmail"
+                             flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="104.94999906759469" y="150.0"></omgdi:waypoint>
+                <omgdi:waypoint x="180.0" y="150.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo2TimeoutToGenerateTeacherInformationTimeoutEmail"
+                             id="BPMNEdge_requestInfo2TimeoutToGenerateTeacherInformationTimeoutEmail"
+                             flowable:sourceDockerX="15.500000000000002" flowable:sourceDockerY="15.500000000000002"
+                             flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="531.4142135623731" y="386.1571057340638"></omgdi:waypoint>
+                <omgdi:waypoint x="531.4142135623731" y="475.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="checkForTeacherToEnd" id="BPMNEdge_checkForTeacherToEnd"
+                             flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="350.0" y="130.0"></omgdi:waypoint>
+                <omgdi:waypoint x="350.0" y="52.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="52.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="231.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveInfo2ToEnd" id="BPMNEdge_receiveInfo2ToEnd"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="744.9499999999999" y="340.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="340.0"></omgdi:waypoint>
+                <omgdi:waypoint x="869.0" y="258.9499360950052"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
 </definitions>
