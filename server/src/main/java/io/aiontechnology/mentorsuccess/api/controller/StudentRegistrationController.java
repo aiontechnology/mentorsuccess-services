@@ -90,7 +90,7 @@ public class StudentRegistrationController {
                 RegistrationWorkflowConstants.PROGRAM_ADMIN, programAdmin,
                 TEACHERS, teachers);
 
-        return studentRegistrationService.findWorkflowById(registrationId)
+        return studentRegistrationService.findStudentRegistrationWorkflowById(registrationId)
                 .flatMap(r -> studentRegistrationAssembler.mapWithData(r, data))
                 .orElseThrow(() -> new NotFoundException("Student registration was not found"));
     }

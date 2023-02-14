@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
@@ -45,6 +46,7 @@ public class StartTeacherInfoProcess implements JavaDelegate {
         String schoolId = taskUtilities.getRequiredVariable(execution, SCHOOL_ID, String.class);
         String studentId = taskUtilities.getRequiredVariable(execution, STUDENT_ID, String.class);
         String teacherId = execution.getVariable(TEACHER_ID, String.class);
+        String registrationTimeout = taskUtilities.getRequiredVariable(execution, REGISTRATION_TIMEOUT, String.class);
 
         InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
                 InboundInvitation.class);
@@ -56,6 +58,7 @@ public class StartTeacherInfoProcess implements JavaDelegate {
             variables.put(TEACHER_ID, teacherId);
         }
         variables.put(INVITATION, invitation);
+        variables.put(REGISTRATION_TIMEOUT, registrationTimeout);
 
         runtimeService.startProcessInstanceByKey("request-student-info", variables);
     }

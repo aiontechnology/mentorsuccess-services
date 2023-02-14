@@ -21,6 +21,7 @@ import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
 import io.aiontechnology.mentorsuccess.resource.StudentInformationResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -36,7 +37,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
@@ -50,7 +50,7 @@ import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConst
 public class StudentInformationController {
 
     // Assemblers
-    private final Assembler<Student, StudentInformationResource> studentInformationAssembler;
+    private final Assembler<StudentInformation, StudentInformationResource> studentInformationAssembler;
 
     // Services
     private final SchoolService schoolService;
@@ -73,9 +73,9 @@ public class StudentInformationController {
                 REGISTRATION, registrationId
         );
 
-        return Optional.ofNullable(student)
+        return studentRegistrationService.findStudentInformationWorkflowById(registrationId)
                 .flatMap(s -> studentInformationAssembler.mapWithData(s, data))
-                .orElse(null);
+                .orElseThrow(() -> new NotFoundException("Student information was not found"));
     }
 
     @PutMapping("/{registrationId}")
