@@ -64,7 +64,6 @@
         <boundaryEvent id="requestInfo1Timeout" attachedToRef="requestInfo1">
             <timerEventDefinition>
                 <timeDuration>${registrationTimeout}</timeDuration>
-                <!--                <timeDuration>PT20S</timeDuration>-->
             </timerEventDefinition>
         </boundaryEvent>
 
@@ -94,7 +93,6 @@
         <boundaryEvent id="requestInfo2Timeout" attachedToRef="requestInfo2">
             <timerEventDefinition>
                 <timeDuration>${registrationTimeout}</timeDuration>
-                <!--                <timeDuration>PT20S</timeDuration>-->
             </timerEventDefinition>
         </boundaryEvent>
 

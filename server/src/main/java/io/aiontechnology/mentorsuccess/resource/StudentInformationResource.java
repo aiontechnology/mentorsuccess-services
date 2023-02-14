@@ -17,7 +17,7 @@
 package io.aiontechnology.mentorsuccess.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudentInformation;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -25,10 +25,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties({"content"})
-public class StudentInformationResource extends OutboundStudentInformation<Student> {
+public class StudentInformationResource extends OutboundStudentInformation<StudentInformation> {
 
-    public StudentInformationResource(Student student) {
-        super(student);
+    public StudentInformationResource(StudentInformation studentInformation) {
+        super(studentInformation);
     }
 
 }

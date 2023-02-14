@@ -57,6 +57,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.entity.reference.Tag;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
 import io.aiontechnology.mentorsuccess.resource.BookResource;
@@ -214,7 +215,7 @@ public class AssemblerConfiguration {
     }
 
     @Bean
-    public Assembler<Student, StudentInformationResource> studentInformationAssembler() {
+    public Assembler<StudentInformation, StudentInformationResource> studentInformationAssembler() {
         return new StudentInformationAssembler();
     }
 

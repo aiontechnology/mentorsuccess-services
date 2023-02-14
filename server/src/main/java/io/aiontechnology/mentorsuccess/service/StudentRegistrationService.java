@@ -18,9 +18,11 @@ package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
+import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
@@ -42,6 +44,7 @@ import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SHOULD_CANCEL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
@@ -90,7 +93,33 @@ public class StudentRegistrationService {
                 });
     }
 
-    public Optional<StudentRegistration> findWorkflowById(UUID processId) {
+    public Optional<StudentInformation> findStudentInformationWorkflowById(UUID processId) {
+        StudentInformation studentInformation = new StudentInformation();
+        TaskQuery query = taskService.createTaskQuery()
+                .processInstanceId(processId.toString())
+                .includeProcessVariables();
+        return query.list().stream()
+                .findFirst()
+                .map(task -> {
+                    studentInformation.setId(UUID.fromString(task.getProcessInstanceId()));
+                    return task;
+                })
+                .map(TaskInfo::getProcessVariables)
+                .flatMap(variables -> {
+                    UUID schoolId = UUID.fromString((String) variables.get(SCHOOL_ID));
+                    UUID studentId = UUID.fromString((String) variables.get(STUDENT_ID));
+                    School school = schoolService.getSchoolById(schoolId)
+                            .orElseThrow(() -> new NotFoundException("School was not found"));
+                    SchoolSession currentSession = school.getCurrentSession();
+                    return studentService.getStudentById(studentId, currentSession);
+                })
+                .map(student -> {
+                    studentInformation.setStudentName(student.getFullName());
+                    return studentInformation;
+                });
+    }
+
+    public Optional<StudentRegistration> findStudentRegistrationWorkflowById(UUID processId) {
         StudentRegistration studentRegistration = new StudentRegistration();
         TaskQuery query = taskService.createTaskQuery()
                 .processInstanceId(processId.toString())
