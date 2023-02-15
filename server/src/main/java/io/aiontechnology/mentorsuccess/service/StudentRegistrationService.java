@@ -199,8 +199,6 @@ public class StudentRegistrationService {
 
                             ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
                                     "request-student-info", variables);
-
-                            currentStudentSchoolSession.setStartedInfoFlowId(processInstance.getProcessInstanceId());
                         },
                         () -> {
                             throw new WorkflowException("Student info workflow may not be run twice");

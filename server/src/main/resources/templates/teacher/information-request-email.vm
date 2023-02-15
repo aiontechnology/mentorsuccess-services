@@ -43,7 +43,8 @@
         Dear ${teacherFirstName},
     </p>
     <p>
-        Please provide feedback on ${studentName} by clicking the button below. Data collection is a necessary piece of
+        Please provide feedback on <b>${studentName}</b> by clicking the button below. Data collection is a necessary
+        piece of
         this program. We need your input and value your time. If you have any questions, please email
         <a href="mailto:${programAdminEmail}"><b>${programAdminEmail}</b></a>. Thank you!
     </p>
