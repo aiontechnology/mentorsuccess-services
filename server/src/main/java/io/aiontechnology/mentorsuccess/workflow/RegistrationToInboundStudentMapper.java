@@ -71,7 +71,7 @@ public class RegistrationToInboundStudentMapper implements OneWayMapper<InboundS
         return Optional.ofNullable(studentRegistration)
                 .map(registration -> InboundContact.builder()
                         .withFirstName(studentRegistration.getEmergencyContactFirstName())
-                        .withLastName(studentRegistration.getEmergencyContactFirstName())
+                        .withLastName(studentRegistration.getEmergencyContactLastName())
                         .withPhone(studentRegistration.getEmergencyContactPhone())
                         .withIsEmergencyContact(true)
                         .build());
