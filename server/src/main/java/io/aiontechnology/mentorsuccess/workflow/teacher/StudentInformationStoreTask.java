@@ -60,11 +60,11 @@ public class StudentInformationStoreTask implements JavaDelegate {
     @Override
     public void execute(DelegateExecution execution) {
         School school = taskUtilities.getSchool(execution).orElseThrow();
-        SchoolSession currentSchoolService = school.getCurrentSession();
+        SchoolSession currentSchoolSession = school.getCurrentSession();
         Student student = taskUtilities.getStudent(execution).orElseThrow();
         SchoolPersonRole teacher = taskUtilities.getTeacher(execution).orElseThrow();
         StudentSchoolSession currentStudentSchoolSession =
-                student.findCurrentSessionForStudent(currentSchoolService).orElseThrow();
+                student.findCurrentSessionForStudent(currentSchoolSession).orElseThrow();
 
         taskUtilities.getInboundStudentInformation(execution)
                 .ifPresent(studentInformation -> {

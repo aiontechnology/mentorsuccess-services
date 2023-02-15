@@ -17,15 +17,13 @@
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
+import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
 import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
@@ -37,8 +35,13 @@ import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConst
 @RequiredArgsConstructor
 public class StartTeacherInfoProcess implements JavaDelegate {
 
+    // Flowable
     private final RuntimeService runtimeService;
 
+    // Services
+    private final StudentRegistrationService studentRegistrationService;
+
+    // Other
     private final TaskUtilities taskUtilities;
 
     @Override
@@ -51,16 +54,8 @@ public class StartTeacherInfoProcess implements JavaDelegate {
         InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
                 InboundInvitation.class);
 
-        Map<String, Object> variables = new HashMap<>();
-        variables.put(SCHOOL_ID, schoolId);
-        variables.put(STUDENT_ID, studentId);
-        if (teacherId != null) {
-            variables.put(TEACHER_ID, teacherId);
-        }
-        variables.put(INVITATION, invitation);
-        variables.put(REGISTRATION_TIMEOUT, registrationTimeout);
-
-        runtimeService.startProcessInstanceByKey("request-student-info", variables);
+        studentRegistrationService.startStudentInformationProcess(schoolId, studentId, teacherId,
+                invitation.getStudentRegistrationUri(), registrationTimeout);
     }
 
 }

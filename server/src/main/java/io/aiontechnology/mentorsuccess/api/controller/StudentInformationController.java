@@ -21,7 +21,9 @@ import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
+import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
+import io.aiontechnology.mentorsuccess.model.inbound.InboundBaseUri;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
 import io.aiontechnology.mentorsuccess.resource.StudentInformationResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
@@ -29,17 +31,21 @@ import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
 import io.aiontechnology.mentorsuccess.service.StudentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT_VALUE;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 
@@ -76,6 +82,22 @@ public class StudentInformationController {
         return studentRegistrationService.findStudentInformationWorkflowById(registrationId)
                 .flatMap(s -> studentInformationAssembler.mapWithData(s, data))
                 .orElseThrow(() -> new NotFoundException("Student information was not found"));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasAuthority('school:update')")
+    public void startRegistration(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId,
+            @RequestBody @Valid InboundBaseUri baseUri) {
+        SchoolSession currentSession = schoolService.getSchoolById(schoolId)
+                .map(School::getCurrentSession)
+                .orElseThrow();
+        studentService.getStudentById(studentId, currentSession)
+                .flatMap(student -> student.findCurrentSessionForStudent(currentSession))
+                .map(StudentSchoolSession::getTeacher)
+                .ifPresent(teacher -> {
+                    studentRegistrationService.startStudentInformationProcess(schoolId.toString(), studentId.toString(),
+                            teacher.getId().toString(), baseUri.getUri(), REGISTRATION_TIMEOUT_VALUE);
+                });
     }
 
     @PutMapping("/{registrationId}")

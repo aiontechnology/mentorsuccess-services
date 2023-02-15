@@ -240,6 +240,12 @@ public class StudentSchoolSession {
     @Column(name = "question35")
     private Integer question35;
 
+    @Column(name = "completed_info_flow_id")
+    private String completedInfoFlowId;
+
+    @Column(name = "started_info_flow_id")
+    private String startedInfoFlowId;
+
     @ManyToOne(optional = false)
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;

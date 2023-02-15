@@ -20,7 +20,6 @@ import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolPersonRole;
 import io.aiontechnology.mentorsuccess.model.enumeration.RoleType;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
-import io.aiontechnology.mentorsuccess.util.PhoneService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.RuntimeService;
@@ -32,6 +31,7 @@ import java.util.Optional;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT_VALUE;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 
@@ -39,8 +39,6 @@ import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConst
 @RequiredArgsConstructor()
 @Slf4j
 public class StudentInvitationService {
-
-    private final PhoneService phoneService;
 
     // Services
     private final RuntimeService runtimeService;
@@ -56,7 +54,7 @@ public class StudentInvitationService {
                 SCHOOL_ID, school.getId().toString(),
                 PROGRAM_ADMIN, programAdmin.map(SchoolPersonRole::getPerson).orElse(null),
                 INVITATION, invitation,
-                REGISTRATION_TIMEOUT, "P7D"
+                REGISTRATION_TIMEOUT, REGISTRATION_TIMEOUT_VALUE
         );
     }
 
