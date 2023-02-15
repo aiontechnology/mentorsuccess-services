@@ -49,7 +49,9 @@ public class StudentRegistrationStoreStudentTask implements JavaDelegate {
                     Person teacher = pair.getRight().getTeacher() != null
                             ? pair.getRight().getTeacher().getPerson()
                             : null;
-                    execution.setVariable(TEACHER_ID, teacher.getId().toString());
+                    if (teacher != null) {
+                        execution.setVariable(TEACHER_ID, teacher.getId().toString());
+                    }
                     execution.setVariable(STUDENT_ID, pair.getLeft().getId().toString());
                 });
     }
