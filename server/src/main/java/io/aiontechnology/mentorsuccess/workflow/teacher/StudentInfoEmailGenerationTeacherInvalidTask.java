@@ -45,7 +45,7 @@ public class StudentInfoEmailGenerationTeacherInvalidTask extends EmailGenerator
     @Override
     protected String getSubject(DelegateExecution execution) {
         String studentName = taskUtilities.getStudentFullName(execution).orElse("");
-        return "Unable to request additional information for " + studentName;
+        return "Unable to Request Additional Information for " + studentName;
     }
 
     @Override
