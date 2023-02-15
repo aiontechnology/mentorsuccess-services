@@ -71,6 +71,8 @@ public class OutboundStudent<T> extends EntityModel<T> {
 
     Integer postBehavioralAssessment;
 
+    Boolean teacherInfoWorkflowAllowed;
+
     OutboundStudentTeacher teacher;
 
     OutboundStudentMentor mentor;

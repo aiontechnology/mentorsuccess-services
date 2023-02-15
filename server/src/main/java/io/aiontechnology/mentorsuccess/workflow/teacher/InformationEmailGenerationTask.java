@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
-import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.util.UriBuilder;
 import io.aiontechnology.mentorsuccess.velocity.TeacherInvitationEmailGenerator;
 import io.aiontechnology.mentorsuccess.workflow.EmailGeneratorSupport;
@@ -27,7 +26,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_BASE;
 
 @Service
 @RequiredArgsConstructor
@@ -66,10 +65,9 @@ public class InformationEmailGenerationTask extends EmailGeneratorSupport {
     }
 
     private Optional<String> createInformationUri(DelegateExecution execution) {
-        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-                InboundInvitation.class);
+        String registrationBase = taskUtilities.getRequiredVariable(execution, REGISTRATION_BASE, String.class);
         return taskUtilities.getStudent(execution)
-                .map(student -> new UriBuilder(invitation.getStudentRegistrationUri())
+                .map(student -> new UriBuilder(registrationBase)
                         .withPathAddition("schools")
                         .withPathAddition(student.getSchool().getId().toString())
                         .withPathAddition("students")

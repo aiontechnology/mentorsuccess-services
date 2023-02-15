@@ -18,10 +18,12 @@ package io.aiontechnology.mentorsuccess.workflow;
 
 public class RegistrationWorkflowConstants {
 
+    // Keys
     public static String EMAIL = "email";
     public static String INVITATION = "invitation";
     public static String PROGRAM_ADMIN = "programAdmin";
     public static String REGISTRATION = "registration";
+    public static String REGISTRATION_BASE = "registrationBase";
     public static String REGISTRATION_TIMEOUT = "registrationTimeout";
     public static String SCHOOL = "school";
     public static String SCHOOL_ID = "schoolId";
@@ -33,5 +35,8 @@ public class RegistrationWorkflowConstants {
     public static String TEACHER_ID = "teacherId";
     public static String TEACHER_EMAIL_ADDRESS = "teacherEmailAddress";
     public static String TEACHERS = "teachers";
+
+    // Values
+    public static String REGISTRATION_TIMEOUT_VALUE = "P7D";
 
 }
