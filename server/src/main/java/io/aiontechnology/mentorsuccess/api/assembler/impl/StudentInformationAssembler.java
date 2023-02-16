@@ -30,8 +30,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class StudentInformationAssembler extends AssemblerSupport<StudentInformation, StudentInformationResource> {
@@ -47,8 +45,8 @@ public class StudentInformationAssembler extends AssemblerSupport<StudentInforma
 
     @Override
     protected Set<Link> getLinks(StudentInformationResource model, Map data) {
-        School school = (School) data.get(SCHOOL);
-        Student student = (Student) data.get(STUDENT);
+        School school = (School) data.get("school");
+        Student student = (Student) data.get("student");
         UUID registrationId = (UUID) data.get(REGISTRATION);
 
         return Set.of(

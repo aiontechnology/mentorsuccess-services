@@ -46,8 +46,6 @@ import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT_VALUE;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
 
 @Slf4j
 @RestController
@@ -74,8 +72,8 @@ public class StudentInformationController {
                 .orElse(null);
 
         Map<String, Object> data = Map.of(
-                SCHOOL, school,
-                STUDENT, student,
+                "school", school,
+                "student", student,
                 REGISTRATION, registrationId
         );
 

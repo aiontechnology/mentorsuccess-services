@@ -29,10 +29,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT_VALUE;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 
 @Service
@@ -48,11 +46,8 @@ public class StudentInvitationService {
     }
 
     private Map<String, Object> createProcessVariables(InboundInvitation invitation, School school) {
-        Optional<SchoolPersonRole> programAdmin = getProgramAdminInfo(school);
         return Map.of(
-                SCHOOL, school,
                 SCHOOL_ID, school.getId().toString(),
-                PROGRAM_ADMIN, programAdmin.map(SchoolPersonRole::getPerson).orElse(null),
                 INVITATION, invitation,
                 REGISTRATION_TIMEOUT, REGISTRATION_TIMEOUT_VALUE
         );

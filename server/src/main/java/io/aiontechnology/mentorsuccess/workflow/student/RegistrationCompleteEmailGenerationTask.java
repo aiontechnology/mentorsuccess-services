@@ -31,7 +31,6 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
 
@@ -48,12 +47,12 @@ public class RegistrationCompleteEmailGenerationTask extends EmailGeneratorSuppo
 
     @Override
     protected String getBody(DelegateExecution execution) {
-        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
+        String programAdminName = taskUtilities.getProgramAdminFullName(execution);
         InboundStudentRegistration studentRegistration = taskUtilities.getRequiredVariable(execution, REGISTRATION,
                 InboundStudentRegistration.class);
         Optional<Person> teacher = getTeacher(studentRegistration).map(SchoolPersonRole::getPerson);
-        return emailGenerator.render(programAdmin.getFullName(),
-                teacher.map(Person::getFullName).orElse(""), studentRegistration);
+        return emailGenerator.render(programAdminName, teacher.map(Person::getFullName).orElse(""),
+                studentRegistration);
     }
 
     @Override
@@ -70,7 +69,7 @@ public class RegistrationCompleteEmailGenerationTask extends EmailGeneratorSuppo
 
     @Override
     protected String getTo(DelegateExecution execution) {
-        return taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class).getEmail();
+        return taskUtilities.getProgramAdminEmail(execution);
     }
 
     @Override
