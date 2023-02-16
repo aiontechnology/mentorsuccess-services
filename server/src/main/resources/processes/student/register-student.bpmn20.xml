@@ -37,11 +37,10 @@
                       name="Send Invitation 1"
                       calledElement="invite-student">
             <extensionElements>
-                <flowable:in source="school" target="school"/>
-                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="schoolId" target="schoolId"/>
                 <flowable:in source="invitation" target="invitation"/>
                 <flowable:out source="registration" target="registration"/>
-                <flowable:out source="student" target="student"/>
+                <flowable:out source="newStudent" target="newStudent"/>
             </extensionElements>
         </callActivity>
 
@@ -49,9 +48,8 @@
                       name="Receive Registration 1"
                       calledElement="register-and-notify">
             <extensionElements>
-                <flowable:in source="school" target="school"/>
-                <flowable:in source="student" target="student"/>
-                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="newStudent" target="newStudent"/>
                 <flowable:in source="registration" target="registration"/>
                 <flowable:out source="teacherId" target="teacherId"/>
                 <flowable:out source="studentId" target="studentId"/>
@@ -78,11 +76,10 @@
                       name="Send Invitation 2"
                       calledElement="invite-student">
             <extensionElements>
-                <flowable:in source="school" target="school"/>
-                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="schoolId" target="schoolId"/>
                 <flowable:in source="invitation" target="invitation"/>
                 <flowable:out source="registration" target="registration"/>
-                <flowable:out source="student" target="student"/>
+                <flowable:out source="newStudent" target="newStudent"/>
             </extensionElements>
         </callActivity>
 
@@ -90,9 +87,8 @@
                       name="Receive Registration 2"
                       calledElement="register-and-notify">
             <extensionElements>
-                <flowable:in source="school" target="school"/>
-                <flowable:in source="student" target="student"/>
-                <flowable:in source="programAdmin" target="programAdmin"/>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="newStudent" target="newStudent"/>
                 <flowable:in source="registration" target="registration"/>
                 <flowable:out source="teacherId" target="teacherId"/>
                 <flowable:out source="studentId" target="studentId"/>

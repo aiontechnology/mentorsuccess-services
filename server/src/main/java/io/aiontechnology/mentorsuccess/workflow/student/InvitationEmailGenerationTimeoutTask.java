@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.workflow.student;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.velocity.RegistrationTimeoutEmailGenerator;
 import io.aiontechnology.mentorsuccess.workflow.EmailGeneratorSupport;
@@ -26,7 +25,6 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
 
 @Service
 @RequiredArgsConstructor
@@ -38,10 +36,10 @@ public class InvitationEmailGenerationTimeoutTask extends EmailGeneratorSupport 
 
     @Override
     protected String getBody(DelegateExecution execution) {
-        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
+        String programAdminName = taskUtilities.getProgramAdminFullName(execution);
         InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
                 InboundInvitation.class);
-        return emailGenerator.render(programAdmin.getFirstName(), invitation);
+        return emailGenerator.render(programAdminName, invitation);
     }
 
     @Override
@@ -58,7 +56,7 @@ public class InvitationEmailGenerationTimeoutTask extends EmailGeneratorSupport 
 
     @Override
     protected String getTo(DelegateExecution execution) {
-        return taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class).getEmail();
+        return taskUtilities.getProgramAdminEmail(execution);
     }
 
 }

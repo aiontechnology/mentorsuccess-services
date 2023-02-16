@@ -26,8 +26,7 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.NEW_STUDENT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
 
@@ -41,8 +40,8 @@ public class StudentRegistrationStoreStudentTask implements JavaDelegate {
 
     @Override
     public void execute(DelegateExecution execution) {
-        School school = taskUtilities.getRequiredVariable(execution, SCHOOL, School.class);
-        InboundStudent student = taskUtilities.getRequiredVariable(execution, STUDENT, InboundStudent.class);
+        School school = taskUtilities.getSchool(execution).orElseThrow();
+        InboundStudent student = taskUtilities.getRequiredVariable(execution, NEW_STUDENT, InboundStudent.class);
 
         studentRegistrationService.createStudent(school.getId(), student)
                 .ifPresent(pair -> {
