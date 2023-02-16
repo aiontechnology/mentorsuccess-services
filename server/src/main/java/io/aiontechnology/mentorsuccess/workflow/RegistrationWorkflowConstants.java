@@ -38,5 +38,6 @@ public class RegistrationWorkflowConstants {
 
     // Values
     public static String REGISTRATION_TIMEOUT_VALUE = "P7D";
+    public static String SA_EMAIL_ADDRESS = "kathryn.anderson@hisheartfoundation.org";
 
 }

@@ -24,6 +24,10 @@ import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SA_EMAIL_ADDRESS;
+
 @Service
 @RequiredArgsConstructor
 public class StudentInformationCompleteEmailGenerationTask extends EmailGeneratorSupport {
@@ -53,7 +57,7 @@ public class StudentInformationCompleteEmailGenerationTask extends EmailGenerato
 
     @Override
     protected String getTo(DelegateExecution execution) {
-        return taskUtilities.getProgramAdminEmail(execution);
+        return String.join(", ", Arrays.asList(SA_EMAIL_ADDRESS, taskUtilities.getProgramAdminEmail(execution)));
     }
 
 }
