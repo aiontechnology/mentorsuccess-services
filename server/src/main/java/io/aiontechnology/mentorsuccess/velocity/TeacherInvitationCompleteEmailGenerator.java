@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.velocity;
 
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
+import io.aiontechnology.mentorsuccess.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -25,28 +27,28 @@ import java.io.StringWriter;
 
 @Service
 @RequiredArgsConstructor
-public class TeacherInvitationEmailGenerator extends VelocityGenerationStrategySupport {
+public class TeacherInvitationCompleteEmailGenerator extends VelocityGenerationStrategySupport {
 
-    private static final String TEMPLATE_NAME = "templates/teacher/information-request-email.vm";
+    private static final String TEMPLATE_NAME = "templates/teacher/information-request-complete-email.vm";
+    private final PersonRepository personRepository;
 
-    public String render(String teacherFirstName, String studentName, String programAdminName, String programAdminEmail,
-            String studentInfoUri) {
-        VelocityContext context = createContext(teacherFirstName, studentName, programAdminName, programAdminEmail,
-                studentInfoUri);
+    public String render(String programAdminName, String studentName, InboundStudentInformation studentInformation) {
+        VelocityContext context = createContext(programAdminName, studentName, studentInformation);
         StringWriter writer = new StringWriter();
 
         Velocity.getTemplate(TEMPLATE_NAME).merge(context, writer);
         return writer.toString();
     }
 
-    private VelocityContext createContext(String teacherFirstName, String studentName, String programAdminName,
-            String programAdminEmail, String studentInfoUri) {
+    private VelocityContext createContext(String programAdminName, String studentName,
+            InboundStudentInformation studentInformation) {
         VelocityContext context = new VelocityContext();
-        context.put("teacherFirstName", teacherFirstName);
-        context.put("studentName", studentName);
         context.put("programAdminName", programAdminName);
-        context.put("programAdminEmail", programAdminEmail);
-        context.put("studentInfoUri", studentInfoUri);
+        context.put("studentName", studentName);
+        context.put("studentInformation", studentInformation);
+        context.put("behaviors", String.join(", ", studentInformation.getBehaviors()));
+        context.put("leadershipSkills", String.join(", ", studentInformation.getLeadershipSkills()));
+        context.put("leadershipTraits", String.join(", ", studentInformation.getLeadershipTraits()));
         return context;
     }
 

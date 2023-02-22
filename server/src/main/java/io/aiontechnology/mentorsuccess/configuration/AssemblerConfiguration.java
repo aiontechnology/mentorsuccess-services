@@ -30,6 +30,7 @@ import io.aiontechnology.mentorsuccess.api.assembler.impl.ProgramAdminAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.SchoolAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.SchoolSessionAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentAssembler;
+import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentInformationAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentMentorAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentRegistrationAssembler;
 import io.aiontechnology.mentorsuccess.api.assembler.impl.StudentTeacherAssembler;
@@ -56,6 +57,7 @@ import io.aiontechnology.mentorsuccess.entity.reference.LeadershipSkill;
 import io.aiontechnology.mentorsuccess.entity.reference.LeadershipTrait;
 import io.aiontechnology.mentorsuccess.entity.reference.Phonogram;
 import io.aiontechnology.mentorsuccess.entity.reference.Tag;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundContact;
 import io.aiontechnology.mentorsuccess.resource.BookResource;
@@ -67,6 +69,7 @@ import io.aiontechnology.mentorsuccess.resource.PersonnelResource;
 import io.aiontechnology.mentorsuccess.resource.ProgramAdminResource;
 import io.aiontechnology.mentorsuccess.resource.SchoolResource;
 import io.aiontechnology.mentorsuccess.resource.SchoolSessionResource;
+import io.aiontechnology.mentorsuccess.resource.StudentInformationResource;
 import io.aiontechnology.mentorsuccess.resource.StudentMentorResource;
 import io.aiontechnology.mentorsuccess.resource.StudentRegistrationResource;
 import io.aiontechnology.mentorsuccess.resource.StudentResource;
@@ -209,6 +212,11 @@ public class AssemblerConfiguration {
             Assembler<SchoolPersonRole, MentorResource> mentorAssembler) {
         return new StudentMentorAssembler()
                 .withSubMapper("mentor", mentorAssembler);
+    }
+
+    @Bean
+    public Assembler<StudentInformation, StudentInformationResource> studentInformationAssembler() {
+        return new StudentInformationAssembler();
     }
 
     @Bean

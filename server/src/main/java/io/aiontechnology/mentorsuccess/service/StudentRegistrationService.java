@@ -18,31 +18,43 @@ package io.aiontechnology.mentorsuccess.service;
 
 import io.aiontechnology.atlas.mapping.OneWayMapper;
 import io.aiontechnology.mentorsuccess.api.error.NotFoundException;
+import io.aiontechnology.mentorsuccess.api.error.WorkflowException;
+import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.entity.SchoolSession;
 import io.aiontechnology.mentorsuccess.entity.Student;
 import io.aiontechnology.mentorsuccess.entity.StudentSchoolSession;
+import io.aiontechnology.mentorsuccess.entity.workflow.StudentInformation;
 import io.aiontechnology.mentorsuccess.entity.workflow.StudentRegistration;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
 import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegistration;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
+import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.task.api.TaskInfo;
 import org.flowable.task.api.TaskQuery;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.NEW_STUDENT;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_BASE;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SHOULD_CANCEL;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_INFORMATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
 
 @Service
 @RequiredArgsConstructor()
@@ -51,18 +63,13 @@ public class StudentRegistrationService {
 
     // Mappers
     private final OneWayMapper<InboundStudent, Student> studentModelToEntityMapper;
-
     private final OneWayMapper<InboundStudent, StudentSchoolSession> studentSessionModelToEntityMapper;
-
     private final OneWayMapper<InboundStudentRegistration, InboundStudent> studentRegistrationToStudentMapper;
 
     // Services
     private final TaskService taskService;
-
     private final RuntimeService runtimeService;
-
     private final SchoolService schoolService;
-
     private final StudentService studentService;
 
     public void cancelRegistration(UUID processId) {
@@ -92,7 +99,33 @@ public class StudentRegistrationService {
                 });
     }
 
-    public Optional<StudentRegistration> findWorkflowById(UUID processId) {
+    public Optional<StudentInformation> findStudentInformationWorkflowById(UUID processId) {
+        StudentInformation studentInformation = new StudentInformation();
+        TaskQuery query = taskService.createTaskQuery()
+                .processInstanceId(processId.toString())
+                .includeProcessVariables();
+        return query.list().stream()
+                .findFirst()
+                .map(task -> {
+                    studentInformation.setId(UUID.fromString(task.getProcessInstanceId()));
+                    return task;
+                })
+                .map(TaskInfo::getProcessVariables)
+                .flatMap(variables -> {
+                    UUID schoolId = UUID.fromString((String) variables.get(SCHOOL_ID));
+                    UUID studentId = UUID.fromString((String) variables.get(STUDENT_ID));
+                    School school = schoolService.getSchoolById(schoolId)
+                            .orElseThrow(() -> new NotFoundException("School was not found"));
+                    SchoolSession currentSession = school.getCurrentSession();
+                    return studentService.getStudentById(studentId, currentSession);
+                })
+                .map(student -> {
+                    studentInformation.setStudentName(student.getFullName());
+                    return studentInformation;
+                });
+    }
+
+    public Optional<StudentRegistration> findStudentRegistrationWorkflowById(UUID processId) {
         StudentRegistration studentRegistration = new StudentRegistration();
         TaskQuery query = taskService.createTaskQuery()
                 .processInstanceId(processId.toString())
@@ -115,17 +148,62 @@ public class StudentRegistrationService {
                 });
     }
 
-    public void processRegistration(UUID schoolId, UUID processId,
-            InboundStudentRegistration inboundStudentRegistration) {
-        studentRegistrationToStudentMapper.map(inboundStudentRegistration)
+    public void processRegistration(UUID schoolId, UUID processId, InboundStudentRegistration studentRegistration) {
+        studentRegistrationToStudentMapper.map(studentRegistration)
                 .ifPresent(student -> {
                     completeTask(processId, Map.of(
-                            REGISTRATION, inboundStudentRegistration,
-                            STUDENT, student,
+                            REGISTRATION, studentRegistration,
+                            NEW_STUDENT, student,
                             SHOULD_CANCEL, false
                     ));
                 });
 
+    }
+
+    public void processStudentInformation(UUID schoolId, UUID studentId, UUID processId,
+            InboundStudentInformation studentInformation) {
+        completeTask(processId, Map.of(
+                STUDENT_ID, studentId,
+                STUDENT_INFORMATION, studentInformation,
+                SHOULD_CANCEL, false
+        ));
+    }
+
+    /**
+     * Start the student information flow unless it is currently running or has run to completion
+     *
+     * @param schoolId
+     * @param studentId
+     * @param teacherId
+     * @param registrationBase
+     * @param registrationTimeout
+     */
+    @Transactional
+    public void startStudentInformationProcess(String schoolId, String studentId, String teacherId,
+            String registrationBase, String registrationTimeout) {
+        final SchoolSession currentSchoolSession = schoolService.getSchoolById(UUID.fromString(schoolId))
+                .map(School::getCurrentSession)
+                .orElseThrow();
+        studentService.getStudentById(UUID.fromString(studentId))
+                .flatMap(student -> student.findCurrentSessionForStudent(currentSchoolSession))
+                .filter(currentStudentSchoolSession -> currentStudentSchoolSession.getCompletedInfoFlowId() == null)
+                .ifPresentOrElse(currentStudentSchoolSession -> {
+                            Map<String, Object> variables = new HashMap<>();
+                            variables.put(SCHOOL_ID, schoolId);
+                            variables.put(STUDENT_ID, studentId);
+                            if (teacherId != null) {
+                                variables.put(TEACHER_ID, teacherId);
+                            }
+                            variables.put(REGISTRATION_BASE, registrationBase);
+                            variables.put(REGISTRATION_TIMEOUT, registrationTimeout);
+
+                            ProcessInstance processInstance = runtimeService.startProcessInstanceByKey(
+                                    "request-student-info", variables);
+                        },
+                        () -> {
+                            throw new WorkflowException("Student info workflow may not be run twice");
+                        }
+                );
     }
 
     private void completeTask(UUID processId, Map<String, Object> variables) {

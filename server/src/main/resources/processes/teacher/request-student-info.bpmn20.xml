@@ -17,33 +17,44 @@
 
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
              xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL
-                    http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
              typeLanguage="http://www.w3.org/2001/XMLSchema"
              expressionLanguage="http://www.w3.org/1999/XPath"
              targetNamespace="http://www.flowable.org/processdef">
-    <process id="request-student-info" name="Request student information from a teacher" isExecutable="true">
+    <process id="request-student-info" name="Teacher: Request student information" isExecutable="true">
 
         <!-- States -->
 
         <startEvent id="start"/>
 
-        <exclusiveGateway id="checkForTeacher" name="Ensure that we have a valid teacher"/>
+        <serviceTask id="loadTeacherEmail"
+                     name="Load the teacher's email address"
+                     flowable:delegateExpression="${loadTeacherEmailAddressTask}"/>
 
-        <serviceTask id="generateInfoRequestEmail"
-                     name="Generate Information Request Email"
-                     flowable:delegateExpression="${informationEmailGenerationTask}">
+        <exclusiveGateway id="checkForTeacher"
+                          name="Ensure that we have a valid teacher"/>
+
+        <serviceTask id="storeProcessStart"
+                     name="Store that the process is started"
+                     flowable:delegateExpression="${storeStudentInfoProcessStartedTask}"/>
+
+        <serviceTask id="generateTeacherInformationTimeoutEmail"
+                     name="Generate TeacherInformation Timeout Email"
+                     flowable:delegateExpression="${studentInfoEmailGenerationTimeoutTask}">
             <documentation>
-                Generate the email that should be sent to the teacher.
+                Generate an email to inform the program administrator that a student registration workflow has timed out
             </documentation>
         </serviceTask>
 
-        <serviceTask id="sendInfoRequestEmail"
-                     name="Send Information Request Email"
+        <serviceTask id="sendTeacherInformationTimeoutEmail"
+                     name="Send Timeout Email"
                      flowable:type="mail">
             <documentation>
-                Send the generated email to the parent.
+                Send a notification to the program administrator that a registration has timed out
             </documentation>
             <extensionElements>
                 <flowable:field name="to">
@@ -61,19 +72,319 @@
             </extensionElements>
         </serviceTask>
 
+        <callActivity id="requestInfo1"
+                      name="Request Student Info 1"
+                      calledElement="contact-teacher">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="registrationBase" target="registrationBase"/>
+                <flowable:out source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <callActivity id="receiveInfo1"
+                      name="Receive Student Info 1"
+                      calledElement="record-and-notify">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <boundaryEvent id="requestInfo1Timeout" attachedToRef="requestInfo1">
+            <timerEventDefinition>
+                <timeDuration>${registrationTimeout}</timeDuration>
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <callActivity id="requestInfo2"
+                      name="Request Student Info 2"
+                      calledElement="contact-teacher">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="registrationBase" target="registrationBase"/>
+                <flowable:out source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <callActivity id="receiveInfo2"
+                      name="Receive Student Info 2"
+                      calledElement="record-and-notify">
+            <extensionElements>
+                <flowable:in source="schoolId" target="schoolId"/>
+                <flowable:in source="studentId" target="studentId"/>
+                <flowable:in source="teacherId" target="teacherId"/>
+                <flowable:in source="studentInformation" target="studentInformation"/>
+            </extensionElements>
+        </callActivity>
+
+        <boundaryEvent id="requestInfo2Timeout" attachedToRef="requestInfo2">
+            <timerEventDefinition>
+                <timeDuration>${registrationTimeout}</timeDuration>
+            </timerEventDefinition>
+        </boundaryEvent>
+
+        <serviceTask id="generateTeacherInvalidEmail"
+                     name="Generate teacher not valid email"
+                     flowable:delegateExpression="${studentInfoEmailGenerationTeacherInvalidTask}">
+            <documentation>
+                Generate an email to inform the program administrator that a teacher is not valid
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendTeacherInvalidEmail"
+                     name="Send teacher not valid email"
+                     flowable:type="mail">
+            <documentation>
+                Send a notification to the program administrator that a teacher is not valid
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from">
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="subject">
+                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
+        <serviceTask id="storeProcessFinished"
+                     name="Store that the process is finished"
+                     flowable:delegateExpression="${storeWorkflowIdTask}"/>
+
         <endEvent id="end"/>
 
         <!-- Transitions -->
 
-        <sequenceFlow sourceRef="start" targetRef="checkForTeacher"/>
-        <sequenceFlow sourceRef="checkForTeacher" targetRef="generateInfoRequestEmail">
-            <conditionExpression xsi:type="tFormalExpression">${teacher != null}</conditionExpression>
+        <sequenceFlow id="startToLoadTeacherEmail"
+                      sourceRef="start"
+                      targetRef="loadTeacherEmail"/>
+        <sequenceFlow id="loadTeacherEmailToCheckForTeacher"
+                      sourceRef="loadTeacherEmail"
+                      targetRef="checkForTeacher"/>
+        <sequenceFlow id="checkForTeacherToRequestInfo1"
+                      sourceRef="checkForTeacher"
+                      targetRef="storeProcessStart">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${variables:exists(teacherEmailAddress)}]]>
+            </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="checkForTeacher" targetRef="end">
-            <conditionExpression xsi:type="tFormalExpression">${teacher == null}</conditionExpression>
+        <sequenceFlow id="checkForTeacherToGenerateTeacherInvalidEmail"
+                      sourceRef="checkForTeacher"
+                      targetRef="generateTeacherInvalidEmail">
+            <conditionExpression xsi:type="tFormalExpression">
+                <![CDATA[${!(variables:exists(teacherEmailAddress))}]]>
+            </conditionExpression>
         </sequenceFlow>
-        <sequenceFlow sourceRef="generateInfoRequestEmail" targetRef="sendInfoRequestEmail"/>
-        <sequenceFlow sourceRef="sendInfoRequestEmail" targetRef="end"/>
-
+        <sequenceFlow id="generateTeacherInvalidEmailToSendTeacherInvalidEmail"
+                      sourceRef="generateTeacherInvalidEmail"
+                      targetRef="sendTeacherInvalidEmail"/>
+        <sequenceFlow id="sendTeacherInvalidEmailToEnd"
+                      sourceRef="sendTeacherInvalidEmail"
+                      targetRef="end"/>
+        <sequenceFlow id="StoreProcessStartToRequestInfo1"
+                      sourceRef="storeProcessStart"
+                      targetRef="requestInfo1"/>
+        <sequenceFlow id="requestInfo1ToReceiveInfo1"
+                      sourceRef="requestInfo1"
+                      targetRef="receiveInfo1"/>
+        <sequenceFlow id="requestInfo1TimeoutToRequestInfo2"
+                      sourceRef="requestInfo1Timeout"
+                      targetRef="requestInfo2"/>
+        <sequenceFlow id="requestInfo2ToReceiveInfo2"
+                      sourceRef="requestInfo2"
+                      targetRef="receiveInfo2"/>
+        <sequenceFlow id="requestInfo2TimeoutToGenerateTeacherInformationTimeoutEmail"
+                      sourceRef="requestInfo2Timeout"
+                      targetRef="generateTeacherInformationTimeoutEmail"/>
+        <sequenceFlow id="generateTeacherInformationTimeoutEmailToSendTeacherInformationTimeoutEmail"
+                      sourceRef="generateTeacherInformationTimeoutEmail"
+                      targetRef="sendTeacherInformationTimeoutEmail"/>
+        <sequenceFlow id="receiveInfo1ToStoreProcessFinished"
+                      sourceRef="receiveInfo1"
+                      targetRef="storeProcessFinished"/>
+        <sequenceFlow id="receiveInfo2ToStoreProcessFinished"
+                      sourceRef="receiveInfo2"
+                      targetRef="storeProcessFinished"/>
+        <sequenceFlow id="storeProcessFinishedToEnd"
+                      sourceRef="storeProcessFinished"
+                      targetRef="end"/>
+        <sequenceFlow id="sendTeacherInformationTimeoutEmailToEnd"
+                      sourceRef="sendTeacherInformationTimeoutEmail"
+                      targetRef="end"/>
     </process>
+    <bpmndi:BPMNDiagram id="BPMNDiagram_request-student-info">
+        <bpmndi:BPMNPlane bpmnElement="request-student-info" id="BPMNPlane_request-student-info">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="35.0" y="95.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="loadTeacherEmail" id="BPMNShape_loadTeacherEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="150.0" y="80.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="checkForTeacher" id="BPMNShape_checkForTeacher">
+                <omgdc:Bounds height="40.0" width="40.0" x="300.0" y="90.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="storeProcessStart" id="BPMNShape_storeProcessStart">
+                <omgdc:Bounds height="60.0" width="100.0" x="390.0" y="160.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="generateTeacherInformationTimeoutEmail"
+                              id="BPMNShape_generateTeacherInformationTimeoutEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="632.6213203435597" y="495.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendTeacherInformationTimeoutEmail"
+                              id="BPMNShape_sendTeacherInformationTimeoutEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="825.0" y="495.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo1" id="BPMNShape_requestInfo1">
+                <omgdc:Bounds height="60.0" width="100.0" x="571.2071067811866" y="160.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveInfo1" id="BPMNShape_receiveInfo1">
+                <omgdc:Bounds height="60.0" width="100.0" x="825.0" y="160.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo1Timeout" id="BPMNShape_requestInfo1Timeout">
+                <omgdc:Bounds height="31.0" width="31.0" x="636.4142135623731" y="205.20710678118655"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo2" id="BPMNShape_requestInfo2">
+                <omgdc:Bounds height="60.0" width="100.0" x="601.9142135623731" y="345.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveInfo2" id="BPMNShape_receiveInfo2">
+                <omgdc:Bounds height="60.0" width="100.0" x="825.0" y="345.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="requestInfo2Timeout" id="BPMNShape_requestInfo2Timeout">
+                <omgdc:Bounds height="31.0" width="31.0" x="667.1213203435597" y="390.20710678118655"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="generateTeacherInvalidEmail" id="BPMNShape_generateTeacherInvalidEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="390.0" y="0.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendTeacherInvalidEmail" id="BPMNShape_sendTeacherInvalidEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="571.2071067811866" y="0.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="storeProcessFinished" id="BPMNShape_storeProcessFinished">
+                <omgdc:Bounds height="60.0" width="100.0" x="960.0" y="255.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="1110.0" y="271.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="generateTeacherInformationTimeoutEmailToSendTeacherInformationTimeoutEmail"
+                             id="BPMNEdge_generateTeacherInformationTimeoutEmailToSendTeacherInformationTimeoutEmail"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="732.5713203435596" y="525.0"></omgdi:waypoint>
+                <omgdi:waypoint x="824.9999999997196" y="525.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo1TimeoutToRequestInfo2"
+                             id="BPMNEdge_requestInfo1TimeoutToRequestInfo2" flowable:sourceDockerX="15.500000000000002"
+                             flowable:sourceDockerY="15.500000000000002" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="651.9142135623731" y="236.15710598786572"></omgdi:waypoint>
+                <omgdi:waypoint x="651.9142135623731" y="345.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveInfo1ToStoreProcessFinished"
+                             id="BPMNEdge_receiveInfo1ToStoreProcessFinished" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="924.9499999999999" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1010.0" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1010.0" y="255.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo2ToReceiveInfo2" id="BPMNEdge_requestInfo2ToReceiveInfo2"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="701.864213562373" y="375.0"></omgdi:waypoint>
+                <omgdi:waypoint x="824.9999999998889" y="375.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="checkForTeacherToGenerateTeacherInvalidEmail"
+                             id="BPMNEdge_checkForTeacherToGenerateTeacherInvalidEmail" flowable:sourceDockerX="20.0"
+                             flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="339.9189252336448" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="352.0" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="352.0" y="30.000000000000007"></omgdi:waypoint>
+                <omgdi:waypoint x="389.99999999999045" y="30.000000000000007"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendTeacherInvalidEmailToEnd" id="BPMNEdge_sendTeacherInvalidEmailToEnd"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="671.1571067811537" y="30.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1124.0" y="30.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1124.0" y="271.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="storeProcessFinishedToEnd" id="BPMNEdge_storeProcessFinishedToEnd"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="1059.949999999996" y="285.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1110.0" y="285.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="startToLoadTeacherEmail" id="BPMNEdge_startToLoadTeacherEmail"
+                             flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="64.94999918773193" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="150.0" y="110.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="StoreProcessStartToRequestInfo1" id="BPMNEdge_StoreProcessStartToRequestInfo1"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="489.95000000000005" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="571.2071067811866" y="190.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="checkForTeacherToRequestInfo1" id="BPMNEdge_checkForTeacherToRequestInfo1"
+                             flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="339.9189252336448" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="352.0" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="352.0" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="390.0" y="190.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveInfo2ToStoreProcessFinished"
+                             id="BPMNEdge_receiveInfo2ToStoreProcessFinished" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="924.9499999999999" y="375.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1010.0" y="375.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1010.0" y="314.95"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="loadTeacherEmailToCheckForTeacher"
+                             id="BPMNEdge_loadTeacherEmailToCheckForTeacher" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
+                <omgdi:waypoint x="249.9499999999898" y="110.0"></omgdi:waypoint>
+                <omgdi:waypoint x="300.0" y="110.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo1ToReceiveInfo1" id="BPMNEdge_requestInfo1ToReceiveInfo1"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="671.1571067811865" y="190.0"></omgdi:waypoint>
+                <omgdi:waypoint x="825.0" y="190.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendTeacherInformationTimeoutEmailToEnd"
+                             id="BPMNEdge_sendTeacherInformationTimeoutEmailToEnd" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="14.0" flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="924.9499999999999" y="525.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1124.0" y="525.0"></omgdi:waypoint>
+                <omgdi:waypoint x="1124.0" y="298.9499221612399"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="generateTeacherInvalidEmailToSendTeacherInvalidEmail"
+                             id="BPMNEdge_generateTeacherInvalidEmailToSendTeacherInvalidEmail"
+                             flowable:sourceDockerX="50.0" flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="489.95000000000005" y="30.0"></omgdi:waypoint>
+                <omgdi:waypoint x="571.2071067811866" y="30.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="requestInfo2TimeoutToGenerateTeacherInformationTimeoutEmail"
+                             id="BPMNEdge_requestInfo2TimeoutToGenerateTeacherInformationTimeoutEmail"
+                             flowable:sourceDockerX="15.500000000000002" flowable:sourceDockerY="15.500000000000002"
+                             flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="682.6213203435597" y="421.1571054542987"></omgdi:waypoint>
+                <omgdi:waypoint x="682.6213203435597" y="495.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
 </definitions>

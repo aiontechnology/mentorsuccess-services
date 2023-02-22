@@ -71,6 +71,10 @@ public class StudentAssembler extends AssemblerSupport<Student, StudentResource>
         resource.setMediaReleaseSigned(studentSchoolSession.getIsMediaReleaseSigned());
         resource.setPreBehavioralAssessment(studentSchoolSession.getPreBehavioralAssessment());
         resource.setPostBehavioralAssessment(studentSchoolSession.getPostBehavioralAssessment());
+        resource.setTeacherInfoWorkflowAllowed(
+                studentSchoolSession.getStartedInfoFlowId() == null &&
+                        studentSchoolSession.getCompletedInfoFlowId() == null
+        );
 
         Object teacher = getSubMapper("teacher")
                 .map(studentSchoolSession)

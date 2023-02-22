@@ -16,7 +16,6 @@
 
 package io.aiontechnology.mentorsuccess.workflow.student;
 
-import io.aiontechnology.mentorsuccess.entity.Person;
 import io.aiontechnology.mentorsuccess.entity.School;
 import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
 import io.aiontechnology.mentorsuccess.util.UriBuilder;
@@ -30,8 +29,6 @@ import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
 import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.PROGRAM_ADMIN;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
 
 /**
  * {@link JavaDelegate} that will set the email property that is needed to send an email.
@@ -69,18 +66,20 @@ public class InvitationEmailGenerationTask extends EmailGeneratorSupport {
 
     @Override
     protected String getBody(DelegateExecution execution) {
-        School school = taskUtilities.getRequiredVariable(execution, SCHOOL, School.class);
+        School school = taskUtilities.getSchool(execution).orElseThrow();
         InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
                 InboundInvitation.class);
-        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
+        String programAdminName = taskUtilities.getProgramAdminFullName(execution);
+        String programAdminEmail = taskUtilities.getProgramAdminEmail(execution);
+        String programAdminPhone = taskUtilities.getProgramAdminEmail(execution);
         String registrationUri = createRegistrationUri(execution, school, invitation);
-        return emailGenerator.render(invitation.getParent1FirstName(), school.getName(),
-                programAdmin.getFullName(), programAdmin.getEmail(), programAdmin.getCellPhone(), registrationUri);
+        return emailGenerator.render(invitation.getParent1FirstName(), school.getName(), programAdminName,
+                programAdminEmail, programAdminPhone, registrationUri);
     }
 
     @Override
     protected String getFrom(DelegateExecution execution) {
-        return taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class).getEmail();
+        return taskUtilities.getProgramAdminEmail(execution);
     }
 
     @Override

@@ -1,11 +1,11 @@
 /*
- * Copyright 2020 Aion Technology LLC
+ * Copyright 2020-2023 Aion Technology LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -88,6 +88,22 @@ public class RestResponseExceptionHandler {
                 .withStatus(HttpStatus.BAD_REQUEST)
                 .withError(extractErrors(methodArgumentNotValidException, locale))
                 .withMessage("Validation failed")
+                .withPath(httpServletRequest.getRequestURI())
+                .build();
+        log.debug("Error {}", errorModel);
+        return new ResponseEntity<>(errorModel, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WorkflowException.class)
+    public ResponseEntity<ErrorModel> handleWorkflowExceptions(
+            WorkflowException workflowException,
+            HttpServletRequest httpServletRequest,
+            Locale locale) {
+        ErrorModel<Map<String, String>> errorModel = ErrorModel.<Map<String, String>>builder()
+                .withTimestamp(ZonedDateTime.now(ZoneOffset.UTC))
+                .withStatus(HttpStatus.BAD_REQUEST)
+                .withError(Map.of("Cause", workflowException.getMessage()))
+                .withMessage("Workflow failure")
                 .withPath(httpServletRequest.getRequestURI())
                 .build();
         log.debug("Error {}", errorModel);

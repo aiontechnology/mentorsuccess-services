@@ -14,32 +14,35 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.workflow.student;
+package io.aiontechnology.mentorsuccess.workflow.teacher;
 
-import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
-import io.aiontechnology.mentorsuccess.velocity.RegistrationTimeoutEmailGenerator;
+import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentInformation;
+import io.aiontechnology.mentorsuccess.velocity.TeacherInvitationCompleteEmailGenerator;
 import io.aiontechnology.mentorsuccess.workflow.EmailGeneratorSupport;
 import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import java.util.Arrays;
+
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SA_EMAIL_ADDRESS;
 
 @Service
 @RequiredArgsConstructor
-public class InvitationEmailGenerationTimeoutTask extends EmailGeneratorSupport {
+public class StudentInformationCompleteEmailGenerationTask extends EmailGeneratorSupport {
 
-    private final RegistrationTimeoutEmailGenerator emailGenerator;
+    private final TeacherInvitationCompleteEmailGenerator emailGenerator;
 
     private final TaskUtilities taskUtilities;
 
     @Override
     protected String getBody(DelegateExecution execution) {
         String programAdminName = taskUtilities.getProgramAdminFullName(execution);
-        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-                InboundInvitation.class);
-        return emailGenerator.render(programAdminName, invitation);
+        String studentName = taskUtilities.getStudentFullName(execution).orElse("");
+        InboundStudentInformation studentInformation =
+                taskUtilities.getInboundStudentInformation(execution).orElseThrow();
+        return emailGenerator.render(programAdminName, studentName, studentInformation);
     }
 
     @Override
@@ -49,14 +52,12 @@ public class InvitationEmailGenerationTimeoutTask extends EmailGeneratorSupport 
 
     @Override
     protected String getSubject(DelegateExecution execution) {
-        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-                InboundInvitation.class);
-        return "Registration timed out for " + invitation.getStudentFullName();
+        return "Student Information Received: " + taskUtilities.getStudentFullName(execution).orElse("");
     }
 
     @Override
     protected String getTo(DelegateExecution execution) {
-        return taskUtilities.getProgramAdminEmail(execution);
+        return String.join(", ", Arrays.asList(SA_EMAIL_ADDRESS, taskUtilities.getProgramAdminEmail(execution)));
     }
 
 }

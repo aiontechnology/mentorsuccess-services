@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2023 Aion Technology LLC
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:flowable="http://flowable.org/bpmn"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL http://www.omg.org/spec/BPMN/2.0/20100501/BPMN20.xsd"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+    <process id="contact-teacher" name="Teacher: Email and Await Response" isExecutable="true">
+
+        <!-- States -->
+
+        <startEvent id="start"/>
+
+        <serviceTask id="generateInfoRequestEmail"
+                     name="Generate Information Request Email"
+                     flowable:delegateExpression="${informationEmailGenerationTask}">
+            <documentation>
+                Generate the email that should be sent to the teacher.
+            </documentation>
+        </serviceTask>
+
+        <serviceTask id="sendInfoRequestEmail"
+                     name="Send Information Request Email"
+                     flowable:type="mail">
+            <documentation>
+                Send the generated email to the parent.
+            </documentation>
+            <extensionElements>
+                <flowable:field name="to">
+                    <flowable:expression><![CDATA[${email.to}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="from">
+                    <flowable:expression><![CDATA[${email.from}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="subject">
+                    <flowable:expression><![CDATA[${email.subject}]]></flowable:expression>
+                </flowable:field>
+                <flowable:field name="html">
+                    <flowable:expression><![CDATA[${email.body}]]></flowable:expression>
+                </flowable:field>
+            </extensionElements>
+        </serviceTask>
+
+        <userTask id="receiveStudentInfo"
+                  name="Receive Student Info">
+            <documentation>
+                Wait for the student information form to be submitted from the teacher.
+            </documentation>
+        </userTask>
+
+        <exclusiveGateway id="checkForCancel" name="Check for Cancellation"/>
+
+        <endEvent id="end"/>
+
+        <endEvent id="endWithError">
+            <errorEventDefinition errorRef="cancelProcess"/>
+        </endEvent>
+
+        <!-- Transitions -->
+
+        <sequenceFlow id="startToGenerateInfoRequestEmail"
+                      sourceRef="start"
+                      targetRef="generateInfoRequestEmail"/>
+        <sequenceFlow id="generateInfoRequestEmailToSendInfoRequestEmail"
+                      sourceRef="generateInfoRequestEmail"
+                      targetRef="sendInfoRequestEmail"/>
+        <sequenceFlow id="sendInfoRequestEmailToReceiveStudentInfo"
+                      sourceRef="sendInfoRequestEmail"
+                      targetRef="receiveStudentInfo"/>
+        <sequenceFlow id="receiveStudentInfoToCheckForCancel"
+                      sourceRef="receiveStudentInfo"
+                      targetRef="checkForCancel"/>
+        <sequenceFlow id="checkForCancelToEnd"
+                      sourceRef="checkForCancel"
+                      targetRef="end">
+            <conditionExpression xsi:type="tFormalExpression">${shouldCancel == false}</conditionExpression>
+        </sequenceFlow>
+        <sequenceFlow id="checkForCancelToEndWithError"
+                      sourceRef="checkForCancel"
+                      targetRef="endWithError">
+            <conditionExpression xsi:type="tFormalExpression">${shouldCancel == true}</conditionExpression>
+        </sequenceFlow>
+    </process>
+
+    <bpmndi:BPMNDiagram id="BPMNDiagram_contact-teacher">
+        <bpmndi:BPMNPlane bpmnElement="contact-teacher" id="BPMNPlane_contact-teacher">
+            <bpmndi:BPMNShape bpmnElement="start" id="BPMNShape_start">
+                <omgdc:Bounds height="30.0" width="30.0" x="135.0" y="140.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="generateInfoRequestEmail" id="BPMNShape_generateInfoRequestEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="215.0" y="125.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="sendInfoRequestEmail" id="BPMNShape_sendInfoRequestEmail">
+                <omgdc:Bounds height="60.0" width="100.0" x="365.0" y="125.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="receiveStudentInfo" id="BPMNShape_receiveStudentInfo">
+                <omgdc:Bounds height="60.0" width="100.0" x="515.0" y="125.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="checkForCancel" id="BPMNShape_checkForCancel">
+                <omgdc:Bounds height="40.0" width="40.0" x="665.0" y="135.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="end" id="BPMNShape_end">
+                <omgdc:Bounds height="28.0" width="28.0" x="810.0" y="75.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape bpmnElement="endWithError" id="BPMNShape_endWithError">
+                <omgdc:Bounds height="28.0" width="28.0" x="810.0" y="210.0"></omgdc:Bounds>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNEdge bpmnElement="checkForCancelToEndWithError" id="BPMNEdge_checkForCancelToEndWithError"
+                             flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="704.9332634228188" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="744.5" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="744.5" y="224.0"></omgdi:waypoint>
+                <omgdi:waypoint x="810.0" y="224.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="receiveStudentInfoToCheckForCancel"
+                             id="BPMNEdge_receiveStudentInfoToCheckForCancel" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="20.0" flowable:targetDockerY="20.0">
+                <omgdi:waypoint x="614.9499999999999" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="665.0" y="155.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="startToGenerateInfoRequestEmail" id="BPMNEdge_startToGenerateInfoRequestEmail"
+                             flowable:sourceDockerX="15.0" flowable:sourceDockerY="15.0" flowable:targetDockerX="50.0"
+                             flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="164.94999861835544" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="214.9999999999394" y="155.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="sendInfoRequestEmailToReceiveStudentInfo"
+                             id="BPMNEdge_sendInfoRequestEmailToReceiveStudentInfo" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="464.95000000000005" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="515.0" y="155.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="checkForCancelToEnd" id="BPMNEdge_checkForCancelToEnd"
+                             flowable:sourceDockerX="20.0" flowable:sourceDockerY="20.0" flowable:targetDockerX="14.0"
+                             flowable:targetDockerY="14.0">
+                <omgdi:waypoint x="704.9332634228188" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="744.5" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="744.5" y="89.0"></omgdi:waypoint>
+                <omgdi:waypoint x="810.0" y="89.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+            <bpmndi:BPMNEdge bpmnElement="generateInfoRequestEmailToSendInfoRequestEmail"
+                             id="BPMNEdge_generateInfoRequestEmailToSendInfoRequestEmail" flowable:sourceDockerX="50.0"
+                             flowable:sourceDockerY="30.0" flowable:targetDockerX="50.0" flowable:targetDockerY="30.0">
+                <omgdi:waypoint x="314.95000000000005" y="155.0"></omgdi:waypoint>
+                <omgdi:waypoint x="364.9999999999364" y="155.0"></omgdi:waypoint>
+            </bpmndi:BPMNEdge>
+        </bpmndi:BPMNPlane>
+    </bpmndi:BPMNDiagram>
+</definitions>

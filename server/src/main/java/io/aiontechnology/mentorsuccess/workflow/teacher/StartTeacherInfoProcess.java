@@ -16,6 +16,8 @@
 
 package io.aiontechnology.mentorsuccess.workflow.teacher;
 
+import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
+import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
 import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.RuntimeService;
@@ -23,28 +25,37 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Service;
 
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.REGISTRATION_TIMEOUT;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.STUDENT_ID;
+import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHER_ID;
+
 @Service
 @RequiredArgsConstructor
 public class StartTeacherInfoProcess implements JavaDelegate {
 
+    // Flowable
     private final RuntimeService runtimeService;
 
+    // Services
+    private final StudentRegistrationService studentRegistrationService;
+
+    // Other
     private final TaskUtilities taskUtilities;
 
     @Override
     public void execute(DelegateExecution execution) {
-//        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-//                InboundInvitation.class);
-//        Person programAdmin = taskUtilities.getRequiredVariable(execution, PROGRAM_ADMIN, Person.class);
-//        Person teacher = taskUtilities.getRequiredVariable(execution, TEACHER, Person.class);
-//        Student student = taskUtilities.getRequiredVariable(execution, STUDENT, Student.class);
-//        runtimeService.startProcessInstanceByKey("request-student-info",
-//                Map.of(
-//                        INVITATION, invitation,
-//                        PROGRAM_ADMIN, programAdmin,
-//                        TEACHER, teacher,
-//                        STUDENT, student
-//                ));
+        String schoolId = taskUtilities.getRequiredVariable(execution, SCHOOL_ID, String.class);
+        String studentId = taskUtilities.getRequiredVariable(execution, STUDENT_ID, String.class);
+        String teacherId = execution.getVariable(TEACHER_ID, String.class);
+        String registrationTimeout = taskUtilities.getRequiredVariable(execution, REGISTRATION_TIMEOUT, String.class);
+
+        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
+                InboundInvitation.class);
+
+        studentRegistrationService.startStudentInformationProcess(schoolId, studentId, teacherId,
+                invitation.getStudentRegistrationUri(), registrationTimeout);
     }
 
 }

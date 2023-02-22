@@ -14,32 +14,27 @@
  * limitations under the License.
  */
 
-package io.aiontechnology.mentorsuccess.workflow.student;
+package io.aiontechnology.mentorsuccess.workflow.teacher;
 
-import io.aiontechnology.mentorsuccess.model.inbound.InboundInvitation;
-import io.aiontechnology.mentorsuccess.velocity.RegistrationTimeoutEmailGenerator;
+import io.aiontechnology.mentorsuccess.velocity.TeacherInvalidEmailGenerator;
 import io.aiontechnology.mentorsuccess.workflow.EmailGeneratorSupport;
 import io.aiontechnology.mentorsuccess.workflow.TaskUtilities;
 import lombok.RequiredArgsConstructor;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.springframework.stereotype.Service;
 
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.INVITATION;
-
 @Service
 @RequiredArgsConstructor
-public class InvitationEmailGenerationTimeoutTask extends EmailGeneratorSupport {
+public class StudentInfoEmailGenerationTeacherInvalidTask extends EmailGeneratorSupport {
 
-    private final RegistrationTimeoutEmailGenerator emailGenerator;
-
+    private final TeacherInvalidEmailGenerator emailGenerator;
     private final TaskUtilities taskUtilities;
 
     @Override
     protected String getBody(DelegateExecution execution) {
         String programAdminName = taskUtilities.getProgramAdminFullName(execution);
-        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-                InboundInvitation.class);
-        return emailGenerator.render(programAdminName, invitation);
+        String studentName = taskUtilities.getStudentFullName(execution).orElseThrow();
+        return emailGenerator.render(programAdminName, studentName);
     }
 
     @Override
@@ -49,9 +44,8 @@ public class InvitationEmailGenerationTimeoutTask extends EmailGeneratorSupport 
 
     @Override
     protected String getSubject(DelegateExecution execution) {
-        InboundInvitation invitation = taskUtilities.getRequiredVariable(execution, INVITATION,
-                InboundInvitation.class);
-        return "Registration timed out for " + invitation.getStudentFullName();
+        String studentName = taskUtilities.getStudentFullName(execution).orElse("");
+        return "Unable to Request Additional Information for " + studentName;
     }
 
     @Override

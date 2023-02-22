@@ -25,7 +25,6 @@ import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudentRegis
 import io.aiontechnology.mentorsuccess.resource.StudentRegistrationResource;
 import io.aiontechnology.mentorsuccess.service.SchoolService;
 import io.aiontechnology.mentorsuccess.service.StudentRegistrationService;
-import io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -46,8 +45,6 @@ import java.util.stream.Collectors;
 
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.PROGRAM_ADMIN;
 import static io.aiontechnology.mentorsuccess.model.enumeration.RoleType.TEACHER;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.SCHOOL;
-import static io.aiontechnology.mentorsuccess.workflow.RegistrationWorkflowConstants.TEACHERS;
 
 /**
  * Controller that vends a REST interface for registering students.
@@ -65,7 +62,6 @@ public class StudentRegistrationController {
 
     // Services
     private final StudentRegistrationService studentRegistrationService;
-
     private final SchoolService schoolService;
 
     //Other
@@ -87,11 +83,11 @@ public class StudentRegistrationController {
                 .orElse(null);
 
         Map<String, Object> data = Map.of(
-                SCHOOL, school,
-                RegistrationWorkflowConstants.PROGRAM_ADMIN, programAdmin,
-                TEACHERS, teachers);
+                "school", school,
+                "programAdmin", programAdmin,
+                "teachers", teachers);
 
-        return studentRegistrationService.findWorkflowById(registrationId)
+        return studentRegistrationService.findStudentRegistrationWorkflowById(registrationId)
                 .flatMap(r -> studentRegistrationAssembler.mapWithData(r, data))
                 .orElseThrow(() -> new NotFoundException("Student registration was not found"));
     }

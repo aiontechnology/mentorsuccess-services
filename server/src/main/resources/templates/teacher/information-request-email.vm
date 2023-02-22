@@ -43,9 +43,10 @@
         Dear ${teacherFirstName},
     </p>
     <p>
-        Please provide information on ${studentName} by clicking the button below. This information will be used to
-        evaluate social-emotional learning and academic progress while participating in MentorSuccess™ program. Thank
-        you for your feedback!
+        Please provide feedback on <b>${studentName}</b> by clicking the button below. Data collection is a necessary
+        piece of
+        this program. We need your input and value your time. If you have any questions, please email
+        <a href="mailto:${programAdminEmail}"><b>${programAdminEmail}</b></a>. Thank you!
     </p>
     <p>
         <br/><br/>

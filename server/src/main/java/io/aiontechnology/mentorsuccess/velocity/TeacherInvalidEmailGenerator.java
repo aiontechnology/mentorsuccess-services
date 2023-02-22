@@ -25,28 +25,22 @@ import java.io.StringWriter;
 
 @Service
 @RequiredArgsConstructor
-public class TeacherInvitationEmailGenerator extends VelocityGenerationStrategySupport {
+public class TeacherInvalidEmailGenerator {
 
-    private static final String TEMPLATE_NAME = "templates/teacher/information-request-email.vm";
+    private static final String TEMPLATE_NAME = "templates/teacher/invalid-teacher-email.vm";
 
-    public String render(String teacherFirstName, String studentName, String programAdminName, String programAdminEmail,
-            String studentInfoUri) {
-        VelocityContext context = createContext(teacherFirstName, studentName, programAdminName, programAdminEmail,
-                studentInfoUri);
+    public String render(String programAdminName, String studentName) {
+        VelocityContext context = createContext(programAdminName, studentName);
         StringWriter writer = new StringWriter();
 
         Velocity.getTemplate(TEMPLATE_NAME).merge(context, writer);
         return writer.toString();
     }
 
-    private VelocityContext createContext(String teacherFirstName, String studentName, String programAdminName,
-            String programAdminEmail, String studentInfoUri) {
+    private VelocityContext createContext(String programAdminName, String studentName) {
         VelocityContext context = new VelocityContext();
-        context.put("teacherFirstName", teacherFirstName);
-        context.put("studentName", studentName);
         context.put("programAdminName", programAdminName);
-        context.put("programAdminEmail", programAdminEmail);
-        context.put("studentInfoUri", studentInfoUri);
+        context.put("studentName", studentName);
         return context;
     }
 
