@@ -1294,22 +1294,22 @@ paths:
         httpMethod: "GET"
         type: "http"
 
-    # PUT for /api/v1/interests
-    put:
-      summary: Update the set of interests
-      description: Update the interests with the given data
+    # POST for /api/v1/interests
+    post:
+      summary: Add an interest
+      description: Add an interest with the given data
       tags:
         - resource
-      operationId: updateInterests
+      operationId: addInterest
       requestBody:
-        description: The updated interests
+        description: The added interest
         content:
           application/json:
             schema:
               type: object
       responses:
-        200:
-          description: The new set of interests
+        201:
+          description: The new interest
           headers:
             Access-Control-Allow-Origin:
               schema:
@@ -1317,7 +1317,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/InterestModelCollection'
+                $ref: '#/components/schemas/InterestResultModel'
         400:
           $ref: '#/components/responses/BadRequest'
         401:
@@ -1332,6 +1332,134 @@ paths:
         type: None
       x-amazon-apigateway-integration:
         uri: "${lb_url}/api/v1/interests"
+        responses:
+          201:
+            statusCode: "201"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          400:
+            statusCode: "400"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          401:
+            statusCode: "401"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          403:
+            statusCode: "403"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          404:
+            statusCode: "404"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+          default:
+            statusCode: "500"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.header.Authorization: "method.request.header.Authorization"
+          integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
+        passthroughBehavior: "when_no_match"
+        connectionType: "VPC_LINK"
+        connectionId: "$${stageVariables.vpc_link_id}"
+        httpMethod: "POST"
+        type: "http"
+
+  # /api/v1/interests/{interestId} -------------------------------------------------
+  /api/v1/interests/{interestId}:
+    parameters:
+      - in: header
+        name: Authorization
+        schema:
+          type: string
+      - in: header
+        name: Accept
+        schema:
+          type:string
+      - in: path
+        name: interestId
+        schema:
+          type: string
+          format: uuid
+        required: true
+        description: The id of the desired interest
+
+    # OPTIONS for /api/v1/interests/{interestId}
+    options:
+      tags:
+        - resource
+      responses:
+        200:
+          description: Success
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Empty'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        passthroughBehavior: "when_no_match"
+        type: "mock"
+
+    # PUT for /api/v1/interests/{interestId}
+    put:
+      summary: Update an interest
+      description: Update an interest with the given data
+      tags:
+        - resource
+      operationId: updateInterest
+      requestBody:
+        description: The updated interest
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        200:
+          description: The new set of interests
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InterestModel'
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/NotAuthenticated'
+        403:
+          $ref: '#/components/responses/NotAuthorized'
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/Error'
+      x-amazon-apigateway-auth:
+        type: None
+      x-amazon-apigateway-integration:
+        uri: "${lb_url}/api/v1/interests/{interestId}"
         responses:
           200:
             statusCode: "200"
@@ -1360,6 +1488,7 @@ paths:
         requestParameters:
           integration.request.header.Authorization: "method.request.header.Authorization"
           integration.request.header.X-Forwarded-Proto: "'https'"
+          integration.request.path.interestId: "method.request.path.interestId"
           integration.request.header.X-Forwarded-Host: "stageVariables.api_url"
         passthroughBehavior: "when_no_match"
         connectionType: "VPC_LINK"
@@ -6569,6 +6698,33 @@ components:
                 type: object
                 allOf:
                   - $ref: '#/components/schemas/GameResultModel'
+
+    # InterestModel ----------------------------------------------------------------
+    InterestModel:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 734aa3e8-52e4-488b-8922-09d8eb803ad8
+        name:
+          type: string
+          maxLength: 50
+          example: Cars
+
+    # InterestResultModel ----------------------------------------------------------
+    InterestResultModel:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/InterestModel'
+      properties:
+        _links:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/SelfLink'
 
     # InterestModelCollection ------------------------------------------------------
     InterestModelCollection:
