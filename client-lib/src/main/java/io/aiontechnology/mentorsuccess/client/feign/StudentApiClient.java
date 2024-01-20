@@ -20,7 +20,11 @@ import io.aiontechnology.mentorsuccess.model.inbound.student.InboundStudent;
 import io.aiontechnology.mentorsuccess.model.outbound.student.OutboundStudent;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -42,7 +46,7 @@ public interface StudentApiClient {
      * @param student The new student.
      * @return The created student.
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/api/v1/schools/{schoolId}/students")
+    @PostMapping(value = "/api/v1/schools/{schoolId}/students")
     OutboundStudent createStudent(@PathVariable("schoolId") UUID schoolId, InboundStudent student);
 
     /**
@@ -51,7 +55,7 @@ public interface StudentApiClient {
      * @param schoolId The id of the school.
      * @return A collection of students for the school.
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}")
+    @GetMapping(value = "/api/v1/schools/{schoolId}")
     CollectionModel<OutboundStudent> getAllStudents(@PathVariable("schoolId") UUID schoolId);
 
     /**
@@ -61,7 +65,7 @@ public interface StudentApiClient {
      * @param studentId The id of the desired student.
      * @return The student.
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}/students/{studentId}")
+    @GetMapping(value = "/api/v1/schools/{schoolId}/students/{studentId}")
     OutboundStudent getStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId);
 
     /**
@@ -72,7 +76,7 @@ public interface StudentApiClient {
      * @param student The student model to update to.
      * @return The updated student.
      */
-    @RequestMapping(method = RequestMethod.PUT, value = "/api/v1/schools/{schoolId}/students/{studentId}")
+    @PutMapping(value = "/api/v1/schools/{schoolId}/students/{studentId}")
     OutboundStudent updateStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId,
             InboundStudent student);
 
@@ -82,7 +86,7 @@ public interface StudentApiClient {
      * @param schoolId The id of the school.
      * @param studentId The id of the student to deactivate.
      */
-    @RequestMapping(method = RequestMethod.DELETE, value = "/api/v1/schools/{schoolId}/students/{studentId}")
+    @DeleteMapping(value = "/api/v1/schools/{schoolId}/students/{studentId}")
     void deleteStudent(@PathVariable("schoolId") UUID schoolId, @PathVariable("studentId") UUID studentId);
 
 }

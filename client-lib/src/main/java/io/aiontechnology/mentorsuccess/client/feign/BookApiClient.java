@@ -20,6 +20,8 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundBook;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundBook;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -30,10 +32,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient("books")
 public interface BookApiClient {
 
-    @RequestMapping(method = RequestMethod.POST, value = "/api/v1/books")
+    @PostMapping(value = "/api/v1/books")
     OutboundBook createBook(InboundBook book);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/books")
+    @GetMapping(value = "/api/v1/books")
     CollectionModel<OutboundBook> getAllBooks();
 
 }

@@ -22,7 +22,9 @@ import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundSchool;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -43,7 +45,7 @@ public interface SchoolApiClient {
      * @param school The new school.
      * @return The created school.
      */
-    @RequestMapping(method = RequestMethod.POST, value = "/api/v1/schools")
+    @PostMapping(value = "/api/v1/schools")
     OutboundSchool createSchool(InboundSchool school);
 
     /**
@@ -52,13 +54,13 @@ public interface SchoolApiClient {
      * @param shoolId The id of the desired school.
      * @return The school.
      */
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}")
+    @GetMapping(value = "/api/v1/schools/{schoolId}")
     OutboundSchool getSchool(@PathVariable("schoolId") UUID shoolId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}/books")
+    @GetMapping(value = "/api/v1/schools/{schoolId}/books")
     CollectionModel<OutboundBook> getBooksForSchool(@PathVariable("schoolId") UUID schoolId);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/schools/{schoolId}/games")
+    @GetMapping(value = "/api/v1/schools/{schoolId}/games")
     CollectionModel<OutboundGame> getGamesForSchool(@PathVariable("schoolId") UUID schoolId);
 
 }

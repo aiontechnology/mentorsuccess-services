@@ -20,6 +20,8 @@ import io.aiontechnology.mentorsuccess.model.inbound.InboundGame;
 import io.aiontechnology.mentorsuccess.model.outbound.OutboundGame;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -32,10 +34,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient("games")
 public interface GameApiClient {
 
-    @RequestMapping(method = RequestMethod.POST, value = "/api/v1/games")
+    @PostMapping(value = "/api/v1/games")
     OutboundGame createGame(InboundGame game);
 
-    @RequestMapping(method = RequestMethod.GET, value = "/api/v1/games")
+    @GetMapping(value = "/api/v1/games")
     CollectionModel<OutboundGame> getAllGames();
 
 }
